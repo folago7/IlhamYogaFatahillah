@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 存储App需要用到的颜色 -->
+	<color name="white">#FFFFFF</color>
+	<color name="black">#000000</color>
+	<color name="gray">#808080</color>
+	<color name="red">#FF0000</color>
+	<color name="gold">#FFD700</color>
+	<color name="yellow">#FFFF00</color>
+	<color name="green">#008000</color>
+	<color name="blue">#0000FF</color>
+	<color name="purple">#800080</color>
+	<color name="pink">#FFC0CB</color>
+	<color name="orange">#FFA500</color>
+	<color name="lemonyellow">#FFFACD</color>
+	<color name="graywhite">#F5F5F5</color>
+	<color name="grayslate">#708090</color>
+	<color name="lightblue">#0083FF</color>
+	
+	<color name="actionBar_color">#ff474d57</color>
+    <color name="accent_color">#ff30a1ba</color>
+    <color name="pressed_gitlab">#CC30A1BA</color>
+    <color name="slidingmenu_bg">#212121</color>
+    <color name="transparent">#00000000</color>
+
+    <!-- Holo Light Colors -->
+    <color name="background_holo_light">#fff3f3f3</color>
+    <color name="holo_light_seperator_color">#ffb2b2b2</color>
+	
+</resources>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/space_10"
+            android:layout_marginTop="@dimen/space_10"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/space_15"
+            android:paddingRight="@dimen/space_15" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/login_account" />
+
+            <net.oschina.gitapp.widget.EditTextWithDel
+                android:id="@+id/login_account"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/space_10"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="@string/login_account_hint"
+                android:singleLine="true" >
+
+                <requestFocus />
+            </net.oschina.gitapp.widget.EditTextWithDel>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/space_10"
+            android:layout_marginTop="@dimen/space_10"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/space_15"
+            android:paddingRight="@dimen/space_15" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/login_password" />
+
+            <net.oschina.gitapp.widget.EditTextWithDel
+                android:id="@+id/login_password"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/space_10"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="@string/login_password_hint"
+                android:password="true"
+                android:singleLine="true" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/login_btn_login"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/space_14"
+            android:layout_marginRight="@dimen/space_14"
+            android:layout_marginTop="@dimen/space_11"
+            android:enabled="false"
+            android:text="@string/login_title" />
+    </LinearLayout>
+
+</LinearLayout>
