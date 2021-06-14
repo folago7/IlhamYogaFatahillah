@@ -5,7 +5,6 @@ import java.util.Properties;
 import java.util.UUID;
 
 import net.oschina.gitapp.common.StringUtils;
-import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -101,7 +100,6 @@ public class AppContext extends Application {
 	 * 获取当前网络类型
 	 * @return 0：没有网络   1：WIFI网络   2：WAP网络    3：NET网络
 	 */
-	@SuppressLint("DefaultLocale")
 	public int getNetworkType() {
 		int netType = 0;
 		ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

@@ -1,7 +1,6 @@
 package net.oschina.gitapp.ui;
 
 import net.oschina.gitapp.R;
-import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -20,7 +19,6 @@ import net.oschina.gitapp.interfaces.*;
  * @author 火蚁（http://my.oschina.net/LittleDY）
  * @created 201-04-29
  */
-@SuppressLint("NewApi")
 public class MainActivity extends FragmentActivity {
 	
 	private Context mContext;

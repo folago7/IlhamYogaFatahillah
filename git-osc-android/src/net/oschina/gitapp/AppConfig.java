@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.util.Properties;
 
 import net.oschina.gitapp.common.StringUtils;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
@@ -19,7 +18,6 @@ import android.preference.PreferenceManager;
  * @version 1.0
  * @created 2014-04-21
  */
-@SuppressLint("NewApi")
 public class AppConfig {
 
 	private final static String APP_CONFIG = "config";
@@ -44,7 +42,6 @@ public class AppConfig {
 	public final static String CONF_CHECKUP = "perf_checkup";
 
 	public final static String SAVE_IMAGE_PATH = "save_image_path";
-	@SuppressLint("NewApi")
 	public final static String DEFAULT_SAVE_IMAGE_PATH = Environment.getExternalStorageDirectory()+ File.separator+ "OSChina"+ File.separator;
 			
 	private Context mContext;

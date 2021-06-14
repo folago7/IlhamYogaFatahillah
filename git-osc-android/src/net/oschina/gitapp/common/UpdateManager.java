@@ -14,7 +14,6 @@ import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.ApiClient;
 import net.oschina.gitapp.bean.Update;
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -42,7 +41,6 @@ import android.widget.Toast;
  * @version 1.1
  * @created 2012-6-29
  */
-@SuppressLint("HandlerLeak")
 public class UpdateManager {
 
 	private static final int DOWN_NOSDCARD = 0;
@@ -92,7 +90,6 @@ public class UpdateManager {
 	private Update mUpdate;
     
     private Handler mHandler = new Handler(){
-    	@SuppressLint("ShowToast")
 		public void handleMessage(Message msg) {
     		switch (msg.what) {
 			case DOWN_UPDATE:

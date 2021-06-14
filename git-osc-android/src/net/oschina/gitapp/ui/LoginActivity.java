@@ -33,7 +33,6 @@ public class LoginActivity extends BaseActionBarActivity implements OnClickListe
 	private final String TAG = LoginActivity.class.getName();
 	
 	private Context mContext;
-	private final AppContext ac = (AppContext) this.getApplication();
 	private EditTextWithDel mAccount;
 	private EditTextWithDel mPassword;
 	private ProgressDialog dialog;
@@ -46,7 +45,7 @@ public class LoginActivity extends BaseActionBarActivity implements OnClickListe
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.login);
 		initActionBar();
-		//init();
+		init();
 	}
 	
 	// 初始化ActionBar
@@ -98,61 +97,7 @@ public class LoginActivity extends BaseActionBarActivity implements OnClickListe
 	@Override
 	public void onClick(View v) {
 		imm.hideSoftInputFromWindow(mPassword.getWindowToken(), 0);
-		//String username = mAccount.getText().toString();
-		//String pwd = mPassword.getText().toString();
-		
-		new Thread(){
-			
-			public void run() {
-				
-				String username = mAccount.getText().toString();
-				String pwd = mPassword.getText().toString();
-				
-				try {
-					GitlabSession session = GitlabAPI.connect("http://git.oschina.net", username, pwd);
-					Log.i("Login", session.getPrivateToken());
-					UIHelper.ToastMessage(mContext, session.getPrivateToken());
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				/*try {
-					//ApiClient.login(ac, username, pwd);
-					//ApiClient.getAllProject(ac, "n5Ex6qGzq76mgAxozxx7");
-				} catch (AppException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}*/
-			}
-		}.start();
-		
-	}
-	
-	class LoginTask extends AsyncTask<String, Integer, GitlabUser>  {
-
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			Log.i("Login", "显示");
-			dialog.show();
-		}
-
-		@Override
-		protected void onPostExecute(GitlabUser result) {
-			super.onPostExecute(result);
-			Log.i("Login", "结束");
-			dialog.dismiss();
-		}
-
-		@Override
-		protected GitlabUser doInBackground(String... params) {
-			try {
-				//ApiClient.login(ac, params[0], params[1]);
-				ApiClient.getAllProject(ac, "n5Ex6qGzq76mgAxozxx7");
-			} catch (AppException e) {
-				e.printStackTrace();
-			}
-			return null;
-		}
+		String username = mAccount.getText().toString();
+		String pwd = mPassword.getText().toString();
 	}
 }

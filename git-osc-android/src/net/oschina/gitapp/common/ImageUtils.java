@@ -11,7 +11,6 @@ import java.io.InputStream;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -45,7 +44,6 @@ import android.util.DisplayMetrics;
  * @version 1.0
  * @created 2012-3-21
  */
-@SuppressLint("SdCardPath")
 public class ImageUtils {
 
 	public final static String SDCARD_MNT = "/mnt/sdcard";
@@ -224,7 +222,6 @@ public class ImageUtils {
 	 * @param format
 	 * @return
 	 */
-	@SuppressLint("SimpleDateFormat")
 	public static String getTempFileName() {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss_SS");
 		String fileName = format.format(new Timestamp(System

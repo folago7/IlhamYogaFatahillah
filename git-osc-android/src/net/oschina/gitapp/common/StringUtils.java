@@ -1,6 +1,5 @@
 package net.oschina.gitapp.common;
 
-import android.annotation.SuppressLint;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -28,7 +27,6 @@ public class StringUtils {
 	// SimpleDateFormat("yyyy-MM-dd");
 
 	private final static ThreadLocal<SimpleDateFormat> dateFormater = new ThreadLocal<SimpleDateFormat>() {
-		@SuppressLint("SimpleDateFormat")
 		@Override
 		protected SimpleDateFormat initialValue() {
 			return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -36,7 +34,6 @@ public class StringUtils {
 	};
 
 	private final static ThreadLocal<SimpleDateFormat> dateFormater2 = new ThreadLocal<SimpleDateFormat>() {
-		@SuppressLint("SimpleDateFormat")
 		@Override
 		protected SimpleDateFormat initialValue() {
 			return new SimpleDateFormat("yyyy-MM-dd");
