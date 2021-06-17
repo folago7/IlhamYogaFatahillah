@@ -1,40 +1,48 @@
 package net.oschina.gitapp.bean;
 
 import java.util.Date;
+
 import org.codehaus.jackson.annotate.JsonProperty;
 
 public class GitlabUser {
-    public static String URL = "/users";
-
+	public static final String URL = "/users";
+	
+    @JsonProperty("id")
     private Integer _id;
+    
+    @JsonProperty("username")
     private String _username;
+    
+    @JsonProperty("email")
     private String _email;
+    
+    @JsonProperty("name")
     private String _name;
-    private String _skype;
-    private String _linkedin;
-    private String _twitter;
-    private String _provider;
-    private String _state;
-    private boolean _blocked;
-
-    @JsonProperty("created_at")
-    private Date _createdAt;
-
+    
     @JsonProperty("bio")
     private String _bio;
-
-    @JsonProperty("dark_scheme")
-    private boolean _darkScheme;
-
+    
+    @JsonProperty("weibo")
+    private String _weibo;
+    
+    @JsonProperty("blog")
+    private String _blog;
+    
     @JsonProperty("theme_id")
-    private Integer _themeId;
-
-    @JsonProperty("extern_uid")
-    private String _externUid;
-
+    private Integer _theme_id;
+    
+    @JsonProperty("state")
+    private String _state;
+    
+    @JsonProperty("created_at")
+    private String _created_at;
+    
+    @JsonProperty("portrait")
+    private String _portrait;// 头像
+    
     @JsonProperty("is_admin")
     private boolean _isAdmin;
-
+    
     @JsonProperty("can_create_group")
     private boolean _canCreateGroup;
 
@@ -44,155 +52,124 @@ public class GitlabUser {
     @JsonProperty("can_create_team")
     private boolean _canCreateTeam;
 
-    public Integer getId() {
-        return _id;
-    }
+	public Integer get_id() {
+		return _id;
+	}
 
-    public void setId(Integer id) {
-        _id = id;
-    }
+	public void set_id(Integer _id) {
+		this._id = _id;
+	}
 
-    public String getUsername() {
-        return _username;
-    }
+	public String get_username() {
+		return _username;
+	}
 
-    public void setUsername(String userName) {
-        _username = userName;
-    }
+	public void set_username(String _username) {
+		this._username = _username;
+	}
 
-    public String getEmail() {
-        return _email;
-    }
+	public String get_email() {
+		return _email;
+	}
 
-    public void setEmail(String email) {
-        _email = email;
-    }
+	public void set_email(String _email) {
+		this._email = _email;
+	}
 
-    public String getName() {
-        return _name;
-    }
+	public String get_name() {
+		return _name;
+	}
 
-    public void setName(String name) {
-        _name = name;
-    }
+	public void set_name(String _name) {
+		this._name = _name;
+	}
 
-    public boolean isBlocked() {
-        return _blocked;
-    }
+	public String get_bio() {
+		return _bio;
+	}
 
-    public void setBlocked(boolean blocked) {
-        _blocked = blocked;
-    }
+	public void set_bio(String _bio) {
+		this._bio = _bio;
+	}
 
-    public Date getCreatedAt() {
-        return _createdAt;
-    }
+	public String get_weibo() {
+		return _weibo;
+	}
 
-    public void setCreatedAt(Date createdAt) {
-        _createdAt = createdAt;
-    }
+	public void set_weibo(String _weibo) {
+		this._weibo = _weibo;
+	}
 
-    public String getBio() {
-        return _bio;
-    }
+	public String get_blog() {
+		return _blog;
+	}
 
-    public void setBio(String bio) {
-        _bio = bio;
-    }
+	public void set_blog(String _blog) {
+		this._blog = _blog;
+	}
 
-    public String getSkype() {
-        return _skype;
-    }
+	public Integer get_theme_id() {
+		return _theme_id;
+	}
 
-    public void setSkype(String skype) {
-        _skype = skype;
-    }
+	public void set_theme_id(Integer _theme_id) {
+		this._theme_id = _theme_id;
+	}
 
-    public String getLinkedin() {
-        return _linkedin;
-    }
+	public String get_state() {
+		return _state;
+	}
 
-    public void setLinkedin(String linkedin) {
-        _linkedin = linkedin;
-    }
+	public void set_state(String _state) {
+		this._state = _state;
+	}
 
-    public String getTwitter() {
-        return _twitter;
-    }
+	public String get_created_at() {
+		return _created_at;
+	}
 
-    public void setTwitter(String twitter) {
-        _twitter = twitter;
-    }
+	public void set_created_at(String _created_at) {
+		this._created_at = _created_at;
+	}
 
-    public boolean isDarkScheme() {
-        return _darkScheme;
-    }
+	public String get_portrait() {
+		return _portrait;
+	}
 
-    public void setDarkScheme(boolean darkScheme) {
-        _darkScheme = darkScheme;
-    }
+	public void set_portrait(String _portrait) {
+		this._portrait = _portrait;
+	}
 
-    public Integer getThemeId() {
-        return _themeId;
-    }
+	public boolean is_isAdmin() {
+		return _isAdmin;
+	}
 
-    public void setThemeId(Integer themeId) {
-        _themeId = themeId;
-    }
+	public void set_isAdmin(boolean _isAdmin) {
+		this._isAdmin = _isAdmin;
+	}
 
-    public String getExternUid() {
-        return _externUid;
-    }
+	public boolean is_canCreateGroup() {
+		return _canCreateGroup;
+	}
 
-    public void setExternUid(String externUid) {
-        _externUid = externUid;
-    }
+	public void set_canCreateGroup(boolean _canCreateGroup) {
+		this._canCreateGroup = _canCreateGroup;
+	}
 
-    public String getProvider() {
-        return _provider;
-    }
+	public boolean is_canCreateProject() {
+		return _canCreateProject;
+	}
 
-    public void setProvider(String provider) {
-        _provider = provider;
-    }
+	public void set_canCreateProject(boolean _canCreateProject) {
+		this._canCreateProject = _canCreateProject;
+	}
 
-    public String getState() {
-        return _state;
-    }
+	public boolean is_canCreateTeam() {
+		return _canCreateTeam;
+	}
 
-    public void setState(String state) {
-        _state = state;
-    }
-
-    public boolean isAdmin() {
-        return _isAdmin;
-    }
-
-    public void setAdmin(boolean admin) {
-        _isAdmin = admin;
-    }
-
-    public boolean isCanCreateGroup() {
-        return _canCreateGroup;
-    }
-
-    public void setCanCreateGroup(boolean canCreateGroup) {
-        _canCreateGroup = canCreateGroup;
-    }
-
-    public boolean isCanCreateProject() {
-        return _canCreateProject;
-    }
-
-    public void setCanCreateProject(boolean canCreateProject) {
-        _canCreateProject = canCreateProject;
-    }
-
-    public boolean isCanCreateTeam() {
-        return _canCreateTeam;
-    }
-
-    public void setCanCreateTeam(boolean canCreateTeam) {
-        _canCreateTeam = canCreateTeam;
-    }
+	public void set_canCreateTeam(boolean _canCreateTeam) {
+		this._canCreateTeam = _canCreateTeam;
+	}
+    
 }

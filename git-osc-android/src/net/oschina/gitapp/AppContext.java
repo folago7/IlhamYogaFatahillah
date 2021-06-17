@@ -1,9 +1,12 @@
 package net.oschina.gitapp;
 
+import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Properties;
 import java.util.UUID;
 
+import net.oschina.gitapp.api.ApiClient;
+import net.oschina.gitapp.bean.GitlabUser;
 import net.oschina.gitapp.common.StringUtils;
 import android.app.Application;
 import android.content.Context;
@@ -159,5 +162,18 @@ public class AppContext extends Application {
 		} 
 		if(info == null) info = new PackageInfo();
 		return info;
+	}
+	
+	/**
+	 * 用户登录
+	 * @param account
+	 * @param pwd
+	 * @return
+	 * @throws AppException
+	 * @throws IOException 
+	 */
+	public GitlabUser loginVerify(String account, String pwd) throws AppException, IOException{
+		GitlabUser user = ApiClient.login(this, account, pwd);
+		return user;
 	}
 }

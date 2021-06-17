@@ -28,6 +28,7 @@ import javax.net.ssl.X509TrustManager;
 
 import org.apache.commons.io.IOUtils;
 
+import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.common.StringUtils;
 
 /**
@@ -100,11 +101,11 @@ public class GitlabHTTPRequestor {
         return this;
     }
 
-    public <T> T to(String tailAPIUrl, T instance) throws IOException {
+    public <T> T to(String tailAPIUrl, T instance) throws IOException, AppException {
         return to(tailAPIUrl, null, instance);
     }
 
-    public <T> T to(String tailAPIUrl, Class<T> type) throws IOException {
+    public <T> T to(String tailAPIUrl, Class<T> type) throws IOException, AppException {
         return to(tailAPIUrl, type, null);
     }
 
@@ -118,7 +119,7 @@ public class GitlabHTTPRequestor {
      * @return                 An object of type T
      * @throws java.io.IOException
      */
-    public <T> T to(String tailAPIUrl, Class<T> type, T instance) throws IOException {
+    public <T> T to(String tailAPIUrl, Class<T> type, T instance) throws IOException, AppException {
         HttpURLConnection connection = setupConnection(_root.getAPIUrl(tailAPIUrl));
         
         if (hasOutput()) {

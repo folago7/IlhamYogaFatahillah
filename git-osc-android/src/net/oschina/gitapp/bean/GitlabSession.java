@@ -8,12 +8,12 @@ public class GitlabSession extends GitlabUser {
 	@JsonProperty("private_token")
 	private String _privateToken;
 
-	public String getPrivateToken() {
+	public String get_privateToken() {
 		return _privateToken;
 	}
 
-	public void setPrivateToken(String privateToken) {
-		_privateToken = privateToken;
+	public void set_privateToken(String _privateToken) {
+		this._privateToken = _privateToken;
 	}
-	
+
 }

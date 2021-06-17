@@ -10,6 +10,7 @@ import java.util.Map;
 
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
+import net.oschina.gitapp.bean.GitlabSession;
 import net.oschina.gitapp.bean.GitlabUser;
 import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.common.StringUtils;
@@ -295,26 +296,16 @@ public class ApiClient {
 	 * @param password
 	 * @return GitlabUser用户信息
 	 * @throws AppException
+	 * @throws IOException 
 	 */
-	public static GitlabUser login(AppContext appContext, String username, String password) throws AppException {
-		String url = URLs.SESSION;
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("email", username);
-		params.put("password", password);
-		
-		return null;
-		/*try {
-			GitlabUser user = GitlabUser.parse(http_post(appContext, url, params, null));
-			// 保存用户的私有token
-			if (user != null && null != user.getPrivate_token()) {
-				appContext.setProperty("private_token", user.getPrivate_token());
-			}
-			return user;
-		} catch (Exception e) {
-			if (e instanceof AppException)
-				throw (AppException)e;
-			throw AppException.network(e);
-		}*/
+	public static GitlabUser login(AppContext appContext, String username, String password) throws AppException, IOException {
+		GitlabSession session = null;
+		session = GitlabAPI.connect(username, password);
+		// 保存用户的私有token
+		if (session != null && null != session.get_privateToken()) {
+			appContext.setProperty("private_token", session.get_privateToken());
+		}
+		return session;
 	}
 	
 	public static void getAllProject(AppContext appContext, String private_token) throws AppException {

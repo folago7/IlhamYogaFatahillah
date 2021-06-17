@@ -4,6 +4,10 @@ import java.lang.reflect.Field;
 
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.interfaces.ActivityHelperInterface;
+import net.oschina.gitapp.ui.ActivityHelper;
+
+import com.umeng.analytics.MobclickAgent;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -33,11 +37,13 @@ public class BaseActionBarActivity extends ActionBarActivity
 	@Override
 	public void onResume() {
 		super.onResume();
+	    MobclickAgent.onResume(this);   
 	}
 	
 	@Override
 	public void onPause() {
 		super.onPause();
+		MobclickAgent.onPause(this);
 	}
 	
 	@Override
@@ -50,11 +56,6 @@ public class BaseActionBarActivity extends ActionBarActivity
 	public void onDetachedFromWindow() {
 		super.onDetachedFromWindow();
 		mHelper.onDetachedFromWindow();
-	}
-	
-	@Override
-	public AppContext getOsChinaApplication() {
-		return mHelper.getOsChinaApplication();
 	}
 
 	@Override
@@ -76,5 +77,10 @@ public class BaseActionBarActivity extends ActionBarActivity
 		} catch (Exception e) {
 			// presumably, not relevant
 		}
+	}
+
+	@Override
+	public AppContext getGitApplication() {
+		return mHelper.getGitApplication();
 	}
 }
