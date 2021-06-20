@@ -14,7 +14,6 @@ import android.app.Activity;
  * 说明 类的描述
  */
 public interface ActivityHelperInterface {
-	
 	public AppContext getGitApplication();
 	public Activity getActivity();
 }

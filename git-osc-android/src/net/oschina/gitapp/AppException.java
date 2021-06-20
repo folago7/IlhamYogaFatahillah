@@ -39,8 +39,10 @@ public class AppException extends Exception implements UncaughtExceptionHandler{
 	public final static byte TYPE_IO	 	= 0x06;
 	public final static byte TYPE_RUN	 	= 0x07;
 	public final static byte TYPE_JSON	 	= 0x08;
+	public final static byte TYPE_FILENOTFOUND = 0x09;
 	
-	private byte type;
+	private byte type;// 异常的类型
+	// 异常的状态码，这里一般是网络请求的状态码
 	private int code;
 	
 	/** 系统默认的UncaughtException处理类 */
@@ -53,7 +55,8 @@ public class AppException extends Exception implements UncaughtExceptionHandler{
 	private AppException(byte type, int code, Exception excp) {
 		super(excp);
 		this.type = type;
-		this.code = code;		
+		this.code = code;
+		// 保存debug的
 		if(Debug){
 			this.saveErrorLog(excp);
 		}
@@ -96,6 +99,8 @@ public class AppException extends Exception implements UncaughtExceptionHandler{
 		case TYPE_RUN:
 			Toast.makeText(ctx, R.string.app_run_code_error, Toast.LENGTH_SHORT).show();
 			break;
+		case TYPE_FILENOTFOUND:// 文件没有找到
+			Toast.makeText(ctx, R.string.app_run_code_error, Toast.LENGTH_SHORT).show();
 		}
 	}
 	
@@ -156,12 +161,22 @@ public class AppException extends Exception implements UncaughtExceptionHandler{
 		return new AppException(TYPE_SOCKET, 0 ,e);
 	}
 	
+	public static AppException file(Exception e) {
+		return new AppException(TYPE_FILENOTFOUND, 0 ,e);
+	}
+	
+	// io异常
 	public static AppException io(Exception e) {
+		return io(e, 0);
+	}
+	
+	// io异常
+	public static AppException io(Exception e, int code) {
 		if(e instanceof UnknownHostException || e instanceof ConnectException){
-			return new AppException(TYPE_NETWORK, 0, e);
+			return new AppException(TYPE_NETWORK, code, e);
 		}
 		else if(e instanceof IOException){
-			return new AppException(TYPE_IO, 0 ,e);
+			return new AppException(TYPE_IO, code ,e);
 		}
 		return run(e);
 	}
@@ -174,6 +189,7 @@ public class AppException extends Exception implements UncaughtExceptionHandler{
 		return new AppException(TYPE_JSON, 0, e);
 	}
 	
+	// 网络请求异常
 	public static AppException network(Exception e) {
 		if(e instanceof UnknownHostException || e instanceof ConnectException){
 			return new AppException(TYPE_NETWORK, 0, e);

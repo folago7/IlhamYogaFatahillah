@@ -1,5 +1,6 @@
 package net.oschina.gitapp.ui;
 
+import java.io.IOException;
 import java.util.regex.Pattern;
 
 import android.app.ProgressDialog;
@@ -18,6 +19,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
@@ -32,7 +34,6 @@ public class LoginActivity extends BaseActionBarActivity
 	
 	private final String TAG = LoginActivity.class.getName();
 	
-	private Context mContext;
 	private EditTextWithDel mAccountEditText;
 	private EditTextWithDel mPasswordEditText;
 	private ProgressDialog mLoginProgressDialog;
@@ -56,6 +57,7 @@ public class LoginActivity extends BaseActionBarActivity
         bar.setDisplayOptions(change, flags);
 	}
 	
+	// 关闭该Activity
 	@Override
 	public boolean onSupportNavigateUp() {
 		finish();
@@ -63,16 +65,13 @@ public class LoginActivity extends BaseActionBarActivity
 	}
 
 	private void init() {
-		mContext = this;
 		mAccountEditText = (EditTextWithDel) findViewById(R.id.login_account);
 		mPasswordEditText = (EditTextWithDel) findViewById(R.id.login_password);
 		mLogin = (Button) findViewById(R.id.login_btn_login);
 		mLogin.setOnClickListener(this);
 		imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 		textWatcher = new TextWatcher() {
-			//账号只能输入特定的字符
-	    	String regEx = "[^-._@0123456789abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ]";
-	    	Pattern p = Pattern.compile(regEx);
+			
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
 			}
@@ -91,26 +90,6 @@ public class LoginActivity extends BaseActionBarActivity
 				} else {
 					mLogin.setEnabled(true);
 				}
-				
-				// 判断输入的帐号字符是否正确
-				int editEnd = mAccountEditText.getSelectionEnd();
-				String text = s.toString();
-				String resultText = p.matcher(text).replaceAll("");
-				//如果处理后的文本是一样的，则不再需要执行以下
-				if(text.equals(resultText)) {
-					return;
-				}
-				
-				if(editEnd > resultText.length()) {
-					editEnd = resultText.length();
-				} else {
-					editEnd = editEnd - 1;
-				}
-				editEnd = editEnd < 0 ? 0 : editEnd;
-				mAccountEditText.removeTextChangedListener(this);
-				mAccountEditText.setText(resultText);
-				mAccountEditText.setSelection(editEnd);
-				mAccountEditText.addTextChangedListener(this);
 			}
 		};
 		// 添加文本变化监听事件
@@ -160,19 +139,17 @@ public class LoginActivity extends BaseActionBarActivity
     		mLoginProgressDialog.setCancelable(false);
     		mLoginProgressDialog.setMessage(getString(R.string.login_tips));
     	}
-		
 		//异步登录
     	new AsyncTask<Void, Void, Message>() {
 			@Override
 			protected Message doInBackground(Void... params) {
 				Message msg =new Message();
 				try {
-					AppContext ac = getGitApplication(); 
+					AppContext ac = getGitApplication();
 	                GitlabUser user = ac.loginVerify(account, passwd);
 	                msg.what = 1;
 	                msg.obj = user;
 	            } catch (Exception e) {
-	            	e.printStackTrace();
 			    	msg.what = -1;
 			    	msg.obj = e;
 	            }
@@ -196,9 +173,7 @@ public class LoginActivity extends BaseActionBarActivity
 					mLoginProgressDialog.dismiss();
 				}
 				Context context = LoginActivity.this;
-				GitlabUser user = (GitlabUser)msg.obj;
-				UIHelper.ToastMessage(context, user.get_name());
-				/*if(msg.what == 1){
+				if(msg.what == 1){
 					GitlabUser user = (GitlabUser)msg.obj;
 					if(user != null){
 						//提示登陆成功
@@ -211,8 +186,13 @@ public class LoginActivity extends BaseActionBarActivity
 					UIHelper.ToastMessage(context, getString(
 							R.string.msg_login_fail) + msg.obj);
 				} else if(msg.what == -1){
-					((AppException)msg.obj).makeToast(context);
-				}*/
+					AppException e = ((AppException)msg.obj);
+					if (e.getCode() == 401) {
+						UIHelper.ToastMessage(context, R.string.msg_login_error);
+					} else {
+						((AppException)msg.obj).makeToast(context);
+					}
+				}
 			}
 		}.execute();
 	}

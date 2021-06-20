@@ -295,12 +295,10 @@ public class ApiClient {
 	 * @param username
 	 * @param password
 	 * @return GitlabUser用户信息
-	 * @throws AppException
 	 * @throws IOException 
 	 */
-	public static GitlabUser login(AppContext appContext, String username, String password) throws AppException, IOException {
-		GitlabSession session = null;
-		session = GitlabAPI.connect(username, password);
+	public static GitlabUser login(AppContext appContext, String username, String password) throws AppException {
+		GitlabSession session = GitlabAPI.connect(username, password);
 		// 保存用户的私有token
 		if (session != null && null != session.get_privateToken()) {
 			appContext.setProperty("private_token", session.get_privateToken());

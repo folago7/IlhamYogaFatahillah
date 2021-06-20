@@ -172,7 +172,7 @@ public class AppContext extends Application {
 	 * @throws AppException
 	 * @throws IOException 
 	 */
-	public GitlabUser loginVerify(String account, String pwd) throws AppException, IOException{
+	public GitlabUser loginVerify(String account, String pwd) throws AppException {
 		GitlabUser user = ApiClient.login(this, account, pwd);
 		return user;
 	}

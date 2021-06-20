@@ -5,10 +5,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Field;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -27,23 +29,25 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 import org.apache.commons.io.IOUtils;
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.map.JsonMappingException;
 
 import net.oschina.gitapp.AppException;
-import net.oschina.gitapp.common.StringUtils;
 
 /**
- * 网络请求类
+ * gitlabApi网络请求类
  * Gitlab HTTP Requestor
  *
  * Responsible for handling HTTP requests to the Gitlab API
  *
  * @author @timols
+ * 最后更新时间：2014-05-10
  */
 public class GitlabHTTPRequestor {
 
     private final GitlabAPI _root;
-    private String _method = "GET"; // Default to GET requests
-    private Map<String, Object> _data = new HashMap<String, Object>();
+    private String _method = "GET"; // 默认用GET方式请求
+    private Map<String, Object> _data = new HashMap<String, Object>();// 请求参数
 
     private enum METHOD {
         GET, PUT, POST, PATCH, DELETE, HEAD, OPTIONS, TRACE;
@@ -86,7 +90,7 @@ public class GitlabHTTPRequestor {
     }
 
     /**
-     * 设置post请求的参数
+     * 拼接请求的参数
      *
      * Has a fluent api for method chaining
      *
@@ -101,11 +105,11 @@ public class GitlabHTTPRequestor {
         return this;
     }
 
-    public <T> T to(String tailAPIUrl, T instance) throws IOException, AppException {
+    public <T> T to(String tailAPIUrl, T instance) throws AppException {
         return to(tailAPIUrl, null, instance);
     }
 
-    public <T> T to(String tailAPIUrl, Class<T> type) throws IOException, AppException {
+    public <T> T to(String tailAPIUrl, Class<T> type) throws AppException {
         return to(tailAPIUrl, type, null);
     }
 
@@ -119,24 +123,23 @@ public class GitlabHTTPRequestor {
      * @return                 An object of type T
      * @throws java.io.IOException
      */
-    public <T> T to(String tailAPIUrl, Class<T> type, T instance) throws IOException, AppException {
-        HttpURLConnection connection = setupConnection(_root.getAPIUrl(tailAPIUrl));
-        
-        if (hasOutput()) {
-            submitData(connection);
-        } else if( "PUT".equals(_method) ) {
-        	// PUT requires Content-Length: 0 even when there is no body (eg: API for protecting a branch)
-        	connection.setDoOutput(true);
-        	connection.setFixedLengthStreamingMode(0);
-        }
+    public <T> T to(String tailAPIUrl, Class<T> type, T instance) throws AppException {
+        HttpURLConnection connection = null;
+		try {
+			connection = setupConnection(_root.getAPIUrl(tailAPIUrl));
+			
+			if (hasOutput()) {
+	            submitData(connection);
+	        } else if( "PUT".equals(_method) ) {
+	        	// PUT requires Content-Length: 0 even when there is no body (eg: API for protecting a branch)
+	        	connection.setDoOutput(true);
+	        	connection.setFixedLengthStreamingMode(0);
+	        }
+			return parse(connection, type, instance);
+		} catch (Exception e) {
+			throw handleAPIError(e, connection);
+		}
 
-        try {
-            return parse(connection, type, instance);
-        } catch (IOException e) {
-            handleAPIError(e, connection);
-        }
-
-        return null;
     }
 
     public <T> List<T> getAll(final String tailUrl, final Class<T[]> type) {
@@ -209,8 +212,10 @@ public class GitlabHTTPRequestor {
 
                 try {
                     HttpURLConnection connection = setupConnection(_url);
-                    // 设置超时
+                    // 设置主机连接超时
                     connection.setConnectTimeout(ApiClient.TIMEOUT_CONNECTION);
+                    // 设置读取连接超时
+                    connection.setReadTimeout(ApiClient.TIMEOUT_SOCKET);
                     try {
                         _next = parse(connection, type, null);
                         assert _next != null;
@@ -218,7 +223,7 @@ public class GitlabHTTPRequestor {
                     } catch (IOException e) {
                         handleAPIError(e, connection);
                     }
-                } catch (IOException e) {
+                } catch (Exception e) {
                     throw new Error(e);
                 }
             }
@@ -280,7 +285,15 @@ public class GitlabHTTPRequestor {
         connection.setRequestProperty("Accept-Encoding", "gzip");
         return connection;
     }
-
+    
+    /**
+     * 传入一个类的类型，用json格式字符串给对象初始化
+     * @param connection
+     * @param type
+     * @param instance
+     * @return
+     * @throws IOException
+     */
     private <T> T parse(HttpURLConnection connection, Class<T> type, T instance) throws IOException {
         InputStreamReader reader = null;
         try {
@@ -312,22 +325,37 @@ public class GitlabHTTPRequestor {
             throw new UnsupportedOperationException("Unexpected Content-Encoding: " + encoding);
         }
     }
-
-    private void handleAPIError(IOException e, HttpURLConnection connection) throws IOException {
-        if (e instanceof FileNotFoundException) {
-            throw e;    // pass through 404 Not Found to allow the caller to handle it intelligently
+    
+    /**
+     * 处理错误异常
+     * @param e
+     * @param connection
+     * @throws Exception 
+     */
+    private AppException handleAPIError(Exception e, HttpURLConnection connection) {
+    	AppException exception = null;
+    	
+    	if (e instanceof FileNotFoundException) {
+    		return AppException.file(e);    // pass through 404 Not Found to allow the caller to handle it intelligently
+        } else if (e instanceof UnknownHostException || e instanceof ConnectException) {
+        	return AppException.network(e);
         }
 
-        InputStream es = wrapStream(connection, connection.getErrorStream());
-        try {
-            if (es != null) {
-                throw (IOException) new IOException(IOUtils.toString(es, "UTF-8")).initCause(e);
+        InputStream es = null;
+		try {
+			es = wrapStream(connection, connection.getErrorStream());
+			int code = connection.getResponseCode();
+			if (es != null) {
+                exception = AppException.io((IOException) new IOException(IOUtils.toString(es, "UTF-8")).initCause(e), code);
             } else {
-                throw e;
+            	exception = AppException.run(e);
             }
-        } finally {
-            IOUtils.closeQuietly(es);
-        }
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		} finally {
+			IOUtils.closeQuietly(es);
+		}
+    	return exception;
     }
 
     private void ignoreCertificateErrors() {
