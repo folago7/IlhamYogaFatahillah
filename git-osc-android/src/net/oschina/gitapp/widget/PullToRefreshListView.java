@@ -64,6 +64,10 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
   
     public OnRefreshListener refreshListener;  
     
+    public PullToRefreshListView(Context context) {
+    	super(context);
+    }
+    
     public PullToRefreshListView(Context context, AttributeSet attrs) {  
         super(context, attrs);  
         init(context);  
@@ -72,7 +76,8 @@ public class PullToRefreshListView extends ListView implements OnScrollListener 
     public PullToRefreshListView(Context context, AttributeSet attrs, int defStyle) {  
         super(context, attrs, defStyle);  
         init(context);  
-    }  
+    }
+    
   
     private void init(Context context) {   
     	//设置滑动效果

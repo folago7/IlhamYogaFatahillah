@@ -171,5 +171,4 @@ public class GitlabUser {
 	public void set_canCreateTeam(boolean _canCreateTeam) {
 		this._canCreateTeam = _canCreateTeam;
 	}
-    
 }

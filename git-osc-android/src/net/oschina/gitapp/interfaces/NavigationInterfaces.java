@@ -1,7 +1,7 @@
 package net.oschina.gitapp.interfaces;
 
-public class Interfaces {
-    private Interfaces() {
+public class NavigationInterfaces {
+    private NavigationInterfaces() {
         super();
     }
 

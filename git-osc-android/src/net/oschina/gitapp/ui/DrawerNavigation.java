@@ -83,7 +83,7 @@ public class DrawerNavigation extends ListFragment {
     private void switchFragments(Fragment fragment) {
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.main_content_container, fragment)
+                .replace(R.id.main_content, fragment)
                 .commit();
     }
 
@@ -157,7 +157,7 @@ public class DrawerNavigation extends ListFragment {
         }
     }
 
-    public final class NavigationTransactionListener implements Interfaces.NavigationDrawerListener {
+    public final class NavigationTransactionListener implements NavigationInterfaces.NavigationDrawerListener {
 
         @Override
         public void onDrawerClosed() {

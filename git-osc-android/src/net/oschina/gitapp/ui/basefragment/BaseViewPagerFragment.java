@@ -22,7 +22,7 @@ import android.view.ViewGroup;
  * @created 2014-04-30 11:47
  * @param <T>
  */
-public class BaseViewPagerFragment<T extends BaseListFragment> extends Fragment implements
+public class BaseViewPagerFragment<T extends BaseFragment> extends Fragment implements
 		OnPageChangeListener, OnBaseListFragmentResumeListener {
 	protected List<T> fragmentList = new ArrayList<T>();
 	protected List<String> titleList = new ArrayList<String>();
@@ -49,7 +49,7 @@ public class BaseViewPagerFragment<T extends BaseListFragment> extends Fragment 
 	}
 	
 	// pager适配器
-	private static class ListFragmentPagerAdapter<T extends BaseListFragment> extends FragmentPagerAdapter {
+	private static class ListFragmentPagerAdapter<T extends BaseFragment> extends FragmentPagerAdapter {
 		private List<T> fragmentList;
 		private List<String> titleList;
 
@@ -89,7 +89,7 @@ public class BaseViewPagerFragment<T extends BaseListFragment> extends Fragment 
 
 	@Override
 	public void onPageSelected(int arg0) {
-		fragmentList.get(arg0).showList();
+		//fragmentList.get(arg0).showList();
 	}
 
 	@Override

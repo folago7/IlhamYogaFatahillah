@@ -3,9 +3,7 @@ package net.oschina.gitapp.ui.basefragment;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.interfaces.OnBaseListFragmentResumeListener;
-import net.oschina.gitapp.widget.PullToRefreshListView;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +14,9 @@ import android.widget.TextView;
 /**
  * 列表Fragment基础类
  * @author 火蚁（http://my.oschina.net/LittleDY）
- * @created 2014-04-30 11:09
+ * @created 2014-04-30 上午11:09
  */
-public abstract class BaseListFragment extends Fragment {
+public abstract class BaseListFragment extends BaseFragment {
 
 	protected ListView listView;
 	protected View list_footer;
@@ -36,11 +34,11 @@ public abstract class BaseListFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.listview_fragment, container,
+		View view = inflater.inflate(R.layout.listview_fragment, null,
 				false);
-		TextView textView = (TextView) view.findViewById(R.id.textView);
+		//TextView textView = (TextView) view.findViewById(R.id.textView);
 		listView = (ListView) view.findViewById(R.id.listView);
-		listView.setEmptyView(textView);
+		//listView.setEmptyView(textView);
 
 		list_footer = inflater.inflate(R.layout.listview_footer, null);
 		list_foot_more = (TextView) list_footer
@@ -54,7 +52,7 @@ public abstract class BaseListFragment extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		appContext = (AppContext) getActivity().getApplication();
+		appContext = getGitApplication();
 	}
 
 	@Override

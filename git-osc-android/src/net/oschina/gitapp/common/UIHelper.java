@@ -133,30 +133,4 @@ public class UIHelper {
 	public static void ToastMessage(Context cont, String msg, int time) {
 		Toast.makeText(cont, msg, time).show();
 	}
-
-	/**
-	 * 退出程序
-	 * 
-	 * @param cont
-	 */
-	public static void Exit(final Context cont) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(cont);
-		builder.setIcon(android.R.drawable.ic_dialog_info);
-		builder.setTitle(R.string.app_menu_surelogout);
-		builder.setPositiveButton(R.string.sure,
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-						// 退出
-						AppManager.getAppManager().AppExit(cont);
-					}
-				});
-		builder.setNegativeButton(R.string.cancle,
-				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
-					}
-				});
-		builder.show();
-	}
 }

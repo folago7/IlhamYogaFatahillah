@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import net.oschina.gitapp.api.ApiClient;
 import net.oschina.gitapp.bean.GitlabUser;
+import net.oschina.gitapp.bean.MySelfProjectList;
 import net.oschina.gitapp.common.StringUtils;
 import android.app.Application;
 import android.content.Context;
@@ -33,6 +34,22 @@ public class AppContext extends Application {
 	
 	public static final int PAGE_SIZE = 20;//默认分页大小
 	private static final int CACHE_TIME = 60*60000;//缓存失效时间
+	
+	public static final String PROP_KEY_UID = "user.uid";
+	public static final String PROP_KEY_USERNAME = "user.username";
+	public static final String PROP_KEY_EMAIL = "user.useremail";
+	public static final String PROP_KEY_NAME = "user.name";
+	public static final String PROP_KEY_BIO = "user.bio";// 个人介绍
+	public static final String PROP_KEY_WEIBO = "user.weibo";
+	public static final String PROP_KEY_BLOG = "user.blog";
+	public static final String PROP_KEY_THEME_ID = "user.theme_id";
+	public static final String PROP_KEY_STATE = "user.state";
+	public static final String PROP_KEY_CREATED_AT = "user.created_at";
+	public static final String PROP_KEY_PORTRAIT = "user.portrait";// 用户头像-文件名
+	public static final String PROP_KEY_IS_ADMIN = "user.is_admin";
+	public static final String PROP_KEY_CAN_CREATE_GROUP = "user.can_create_group";
+	public static final String PROP_KEY_CAN_CREATE_PROJECT = "user.can_create_project";
+	public static final String PROP_KEY_CAN_CREATE_TEAM = "user.can_create_team";
 	
 	private boolean login = false;	//登录状态
 	private int loginUid = 0;	//登录用户的id
@@ -174,6 +191,49 @@ public class AppContext extends Application {
 	 */
 	public GitlabUser loginVerify(String account, String pwd) throws AppException {
 		GitlabUser user = ApiClient.login(this, account, pwd);
+		if (null != user) {
+			// 保存登录用户的信息
+			saveLoginInfo(user);
+		}
 		return user;
+	}
+	
+	/**
+	 * 获得个人的所有项目
+	 * @param page
+	 * @return
+	 * @throws AppException
+	 */
+	public MySelfProjectList getMySelfProjectList(int page) throws AppException {
+		return ApiClient.getMySelfProjectList(this, page);
+	}
+	
+	/**
+	 * 保存登录用户的信息
+	 * @param user
+	 */
+	@SuppressWarnings("serial")
+	private void saveLoginInfo(final GitlabUser user) {
+		if (null == user) {
+			return;
+		}
+		this.loginUid = user.get_id();
+		this.login = true;
+		setProperties(new Properties(){{
+			setProperty(PROP_KEY_UID, String.valueOf(user.get_id()));
+			setProperty(PROP_KEY_USERNAME, user.get_username());
+			setProperty(PROP_KEY_EMAIL, user.get_email());
+			setProperty(PROP_KEY_BIO, user.get_bio());// 个人介绍
+			setProperty(PROP_KEY_WEIBO, user.get_weibo());
+			setProperty(PROP_KEY_BLOG, user.get_blog());
+			setProperty(PROP_KEY_THEME_ID, String.valueOf(user.get_theme_id()));
+			setProperty(PROP_KEY_STATE, user.get_state());
+			setProperty(PROP_KEY_CREATED_AT, user.get_created_at());
+			setProperty(PROP_KEY_PORTRAIT, user.get_portrait());// 个人头像
+			setProperty(PROP_KEY_IS_ADMIN, String.valueOf(user.is_isAdmin()));
+			setProperty(PROP_KEY_CAN_CREATE_GROUP, String.valueOf(user.is_canCreateGroup()));
+			setProperty(PROP_KEY_CAN_CREATE_PROJECT, String.valueOf(user.is_canCreateProject()));
+			setProperty(PROP_KEY_CAN_CREATE_TEAM, String.valueOf(user.is_canCreateTeam()));
+		}});
 	}
 }

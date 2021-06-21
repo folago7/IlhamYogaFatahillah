@@ -9,9 +9,15 @@
     <string name="socket_exception_error">网络异常，读取数据超时</string>
     <string name="app_run_code_error">应用程序运行时异常</string>
     
-    <string name="app_menu_surelogout">确定退出程序吗？</string>
     <string name="sure">确定</string>
     <string name="cancle">取消</string>
+    <string name="back_exit_tips">再按一次返回键退出应用</string>
+    
+    <string name="load_more">更多</string>
+    <string name="load_ing">加载中···</string>
+    <string name="load_full">已加载全部</string>
+    <string name="load_empty">暂无数据</string>
+    <string name="load_error">加载数据出错</string>
     
     <string name="new_data_toast_message">有 %d 条更新</string>
     <string name="new_data_toast_none">没有新更新</string>

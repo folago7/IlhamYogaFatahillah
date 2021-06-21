@@ -6,12 +6,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
+import net.oschina.gitapp.bean.GitlabProject;
 import net.oschina.gitapp.bean.GitlabSession;
 import net.oschina.gitapp.bean.GitlabUser;
+import net.oschina.gitapp.bean.MySelfProjectList;
 import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.common.StringUtils;
 
@@ -304,6 +307,21 @@ public class ApiClient {
 			appContext.setProperty("private_token", session.get_privateToken());
 		}
 		return session;
+	}
+	
+	/**
+	 * 获得个人的所有项目
+	 * @param appContext
+	 * @param page
+	 * @return
+	 * @throws AppException
+	 */
+	public static MySelfProjectList getMySelfProjectList(AppContext appContext, int page) throws AppException {
+		MySelfProjectList msProject = new MySelfProjectList();
+		
+		List<GitlabProject> list = GitlabAPI.connect(getToken(appContext)).getProjects();
+		msProject.setList(list);
+		return msProject;
 	}
 	
 	public static void getAllProject(AppContext appContext, String private_token) throws AppException {

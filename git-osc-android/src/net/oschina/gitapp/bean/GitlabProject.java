@@ -3,7 +3,7 @@ package net.oschina.gitapp.bean;
 import java.util.Date;
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class GitlabProject {
+public class GitlabProject extends Entity {
 
     public static final String URL = "/projects";
 
@@ -41,7 +41,7 @@ public class GitlabProject {
 
     @JsonProperty("http_url_to_repo")
     private String _httpUrl;
-
+    
     private GitlabNamespace _namespace;
 
     public Integer getId() {

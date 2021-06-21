@@ -1,49 +1,56 @@
 package net.oschina.gitapp.ui;
 
 import net.oschina.gitapp.R;
-import android.app.ActionBar;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import net.oschina.gitapp.common.DoubleClickExitHelper;
 import net.oschina.gitapp.interfaces.*;
+import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
+import net.oschina.gitapp.ui.fragments.ExploreViewPagerFragment;
 
 /**
  * 程序主界面
- * @author 火蚁（http://my.oschina.net/LittleDY）
  * @created 201-04-29
+ * @author 火蚁（http://my.oschina.net/LittleDY）
+ * 
  */
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends BaseActionBarActivity {
 	
-	private Context mContext;
     protected static ToggleListener sToggleListener;
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
+    private FragmentManager mFragmentManager;
+    private DoubleClickExitHelper mDoubleClickExitHelper;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initView();
+        initView(savedInstanceState);
     }
     
-    private void initView() {
+    private void initView(Bundle savedInstanceState) {
     	
-    	mContext = getApplicationContext();
-        
-        ActionBar actionBar = getActionBar();
+    	mDoubleClickExitHelper = new DoubleClickExitHelper(this);
+        ActionBar actionBar = getSupportActionBar();
         sToggleListener = new ToggleListener();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setHomeButtonEnabled(true);
-
+        
         mDrawerToggle = new ActionBarDrawerToggle(this,
                 mDrawerLayout,
                 R.drawable.ic_navigation_drawer,
@@ -60,13 +67,15 @@ public class MainActivity extends FragmentActivity {
                 DrawerNavigation.sNavigationTransactionListener.onDrawerOpened();
             }
         };
-
+        
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.main_slidingmenu_frame, new DrawerNavigation())
-                .commit();
-
+        mFragmentManager = getSupportFragmentManager();
+        if (null == savedInstanceState) {
+        	FragmentTransaction ft = mFragmentManager.beginTransaction();
+        	ft.replace(R.id.main_slidingmenu_frame, new DrawerNavigation())
+        		.replace(R.id.main_content, new ExploreViewPagerFragment())
+            	.commit();
+        }
     }
 
     @Override
@@ -96,6 +105,19 @@ public class MainActivity extends FragmentActivity {
         return mDrawerToggle.onOptionsItemSelected(item) || super.onOptionsItemSelected(item);
 
     }
+    
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if(keyCode == KeyEvent.KEYCODE_BACK) {
+			//判断菜单是否打开
+			if(mDrawerLayout.isDrawerOpen(Gravity.START)) {
+				mDrawerLayout.closeDrawers();
+				return true;
+			}
+			return mDoubleClickExitHelper.onKeyDown(keyCode, event);
+		}
+		return super.onKeyDown(keyCode, event);
+	}
 
     @Override
     protected void onDestroy() {
@@ -103,7 +125,7 @@ public class MainActivity extends FragmentActivity {
         super.onDestroy();
     }
 
-    public final class ToggleListener implements Interfaces.SlidingMenuListener {
+    public final class ToggleListener implements NavigationInterfaces.SlidingMenuListener {
 
         @Override
         public void onShowAbove() {
