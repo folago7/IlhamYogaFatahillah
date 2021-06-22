@@ -42,8 +42,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dip"
-            android:text="最近更新"
+            android:text="最近更新:"
             android:textSize="@dimen/text_size_10" />
 
         <TextView

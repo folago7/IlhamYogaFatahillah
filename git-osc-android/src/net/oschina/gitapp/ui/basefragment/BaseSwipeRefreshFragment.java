@@ -2,11 +2,9 @@ package net.oschina.gitapp.ui.basefragment;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import net.oschina.gitapp.bean.Entity;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
-import net.oschina.gitapp.adapter.MyBaseAdapter;
+import net.oschina.gitapp.bean.Entity;
 import net.oschina.gitapp.bean.MessageData;
 import net.oschina.gitapp.bean.PageList;
 import net.oschina.gitapp.common.DataRequestThreadHandler;
@@ -22,6 +20,7 @@ import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AbsListView;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -60,7 +59,7 @@ public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result exte
 	protected ListView mListView;
 	private View mHeaderView;
 	private View mFooterView;
-	private MyBaseAdapter mAdapter;
+	private BaseAdapter mAdapter;
 	
 	private View mFooterProgressBar;
 	private TextView mFooterTextView;
@@ -126,12 +125,20 @@ public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result exte
 		mFooterProgressBar = mFooterView.findViewById(R.id.listview_foot_progress);
 		mFooterTextView = (TextView) mFooterView.findViewById(R.id.listview_foot_more);
 		
-		return inflater.inflate(R.layout.listview_fragment, null);
+		return inflater.inflate(R.layout.fragment_base_swiperefresh, null);
 	}
 	
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
-		mListView = (ListView)view.findViewById(R.id.listView);
+		mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_swiperefreshlayout);
+		mListView = (ListView)view.findViewById(R.id.fragment_listview);
+		
+		mSwipeRefreshLayout.setOnRefreshListener(this);
+		mSwipeRefreshLayout.setColorScheme(
+				R.color.swiperefresh_color1, 
+				R.color.swiperefresh_color2, 
+				R.color.swiperefresh_color3, 
+				R.color.swiperefresh_color4);
 		
 		setupListView();
 		
@@ -164,7 +171,7 @@ public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result exte
 	}
 	
 	/** 获取适配器*/
-	public abstract MyBaseAdapter getAdapter(List<Data> list);
+	public abstract BaseAdapter getAdapter(List<Data> list);
 	/** 异步加载数据*/
 	protected abstract MessageData<Result> asyncLoadList(int page, boolean reflash);
 

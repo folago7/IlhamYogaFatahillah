@@ -43,8 +43,19 @@ public class GitlabProject extends Entity {
     private String _httpUrl;
     
     private GitlabNamespace _namespace;
+    
+    @JsonProperty("last_push_at")
+    private Date _last_push_at;
+    
+    public Date getLast_push_at() {
+		return _last_push_at;
+	}
 
-    public Integer getId() {
+	public void setLast_push_at(Date last_push_at) {
+		this._last_push_at = last_push_at;
+	}
+
+	public Integer getId() {
         return _id;
     }
 

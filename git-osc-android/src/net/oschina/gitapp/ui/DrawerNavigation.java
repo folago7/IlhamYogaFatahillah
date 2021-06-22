@@ -9,7 +9,6 @@ import net.oschina.gitapp.ui.fragments.SuggestViewPagerFragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.location.Address;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;

@@ -321,6 +321,8 @@ public class ApiClient {
 		
 		List<GitlabProject> list = GitlabAPI.connect(getToken(appContext)).getProjects();
 		msProject.setList(list);
+		msProject.setCount(list.size());
+		msProject.setPageSize(list.size());
 		return msProject;
 	}
 	

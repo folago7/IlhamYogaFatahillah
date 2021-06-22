@@ -1,6 +1,10 @@
 package net.oschina.gitapp.adapter;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.SimpleFormatter;
+
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.GitlabProject;
 import net.oschina.gitapp.common.StringUtils;
@@ -23,7 +27,7 @@ public class ListMySelfProjectAdapter<T> extends MyBaseAdapter<T> {
 	static class ListItemView {
 		public ImageView flag;// 项目标识
 		public TextView project_name;
-		public TextView data;//日期
+		public TextView updateData;//日期
 	}
 	
 	public ListMySelfProjectAdapter(Context context, List<T> data, int resource) {
@@ -57,7 +61,7 @@ public class ListMySelfProjectAdapter<T> extends MyBaseAdapter<T> {
 			//获取控件对象
 			listItemView.flag = (ImageView) convertView.findViewById(R.id.myself_project_listitem_flag);
 			listItemView.project_name = (TextView) convertView.findViewById(R.id.myself_project_listitem_name);
-			listItemView.data = (TextView) convertView.findViewById(R.id.myself_project_listitem_date);
+			listItemView.updateData = (TextView) convertView.findViewById(R.id.myself_project_listitem_date);
 			
 			//设置控件集到convertView
 			convertView.setTag(listItemView);
@@ -66,8 +70,12 @@ public class ListMySelfProjectAdapter<T> extends MyBaseAdapter<T> {
 		}
 		
 		GitlabProject project = (GitlabProject) listData.get(position);
-		listItemView.project_name.setText(project.getName());
-		listItemView.data.setText(StringUtils.friendly_time(project.getCreatedAt().toLocaleString()));
+		
+		listItemView.project_name.setText(project.getOwner().get_name() + " / " + project.getName());
+		
+		SimpleDateFormat f = new  SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date last_push_at = project.getLast_push_at() != null ? project.getLast_push_at() : project.getCreatedAt();
+		listItemView.updateData.setText(StringUtils.friendly_time(f.format(last_push_at)));
 		
 		// 判断项目的类型，显示不同的图标（私有项目、公有项目、fork项目）
 		

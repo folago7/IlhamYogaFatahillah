@@ -59,6 +59,17 @@ public class NewDataToast extends Toast{
 	/**
 	 * 获取控件实例
 	 * @param context
+	 * @param resId 文本资源oid
+	 * @param isSound 是否播放声音
+	 * @return
+	 */
+	public static NewDataToast makeText(Context context, int resId, boolean isSound) {
+		return makeText(context, context.getString(resId), isSound);
+	}
+	
+	/**
+	 * 获取控件实例
+	 * @param context
 	 * @param text 提示消息
 	 * @param isSound 是否播放声音
 	 * @return
@@ -77,8 +88,9 @@ public class NewDataToast extends Toast{
         tv.setText(text);
         
         result.setView(v);
-        result.setDuration(600);
-        result.setGravity(Gravity.TOP, 0, (int)(dm.density*75));
+        result.setDuration(Toast.LENGTH_SHORT);
+        //显示最顶部
+        result.setGravity(Gravity.TOP, 0, 0);
 
         return result;
     }

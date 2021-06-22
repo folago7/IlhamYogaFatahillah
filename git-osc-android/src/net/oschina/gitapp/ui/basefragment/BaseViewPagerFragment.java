@@ -23,7 +23,7 @@ import android.view.ViewGroup;
  * @param <T>
  */
 public class BaseViewPagerFragment<T extends BaseFragment> extends Fragment implements
-		OnPageChangeListener, OnBaseListFragmentResumeListener {
+		OnPageChangeListener{
 	protected List<T> fragmentList = new ArrayList<T>();
 	protected List<String> titleList = new ArrayList<String>();
 	protected ViewPager pager;
@@ -91,15 +91,7 @@ public class BaseViewPagerFragment<T extends BaseFragment> extends Fragment impl
 	public void onPageSelected(int arg0) {
 		//fragmentList.get(arg0).showList();
 	}
-
-	@Override
-	public void onBaseListFragmentResume(BaseListFragment baseListFragment) {
-		if(!isHasBaseListFragmentResumed()) {
-			baseListFragment.showList();
-			setHasBaseListFragmentResumed(true);
-		} 
-	}
-
+	
 	public boolean isHasBaseListFragmentResumed() {
 		return hasBaseListFragmentResumed;
 	}

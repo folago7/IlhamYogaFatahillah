@@ -2,10 +2,11 @@ package net.oschina.gitapp.ui.fragments;
 
 import java.util.List;
 
+import android.util.Log;
+import android.widget.BaseAdapter;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.ListMySelfProjectAdapter;
-import net.oschina.gitapp.adapter.MyBaseAdapter;
 import net.oschina.gitapp.bean.GitlabProject;
 import net.oschina.gitapp.bean.MessageData;
 import net.oschina.gitapp.bean.MySelfProjectList;
@@ -24,16 +25,18 @@ public class MySelfListProjectFragment extends BaseSwipeRefreshFragment<GitlabPr
 	}
 	
 	@Override
-	public MyBaseAdapter getAdapter(List<GitlabProject> list) {
+	public BaseAdapter getAdapter(List<GitlabProject> list) {
 		return new ListMySelfProjectAdapter<GitlabProject>(getActivity(), list, R.layout.myselfproject_listitem);
 	}
 
 	@Override
-	protected MessageData<MySelfProjectList> asyncLoadList(int page,
+	public MessageData<MySelfProjectList> asyncLoadList(int page,
 			boolean reflash) {
 		MessageData<MySelfProjectList> msg = null;
 		try {
+			Log.i("MySelfViewPagerFragment", "开始取数据......");
 			MySelfProjectList list = mApplication.getMySelfProjectList(page);
+			Log.i("MySelfViewPagerFragment", list.getCount() + "");
 			msg = new MessageData<MySelfProjectList>(list);
 		} catch (AppException e) {
 			e.makeToast(mApplication);
@@ -42,6 +45,4 @@ public class MySelfListProjectFragment extends BaseSwipeRefreshFragment<GitlabPr
 		}
 		return msg;
 	}
-	
-	
 }

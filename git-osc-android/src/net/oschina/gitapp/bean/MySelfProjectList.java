@@ -9,8 +9,21 @@ public class MySelfProjectList extends Entity implements PageList<GitlabProject>
 	private int catalog;
 	private int pageSize;
 	private int count;
+	
 	private List<GitlabProject> list = new ArrayList<GitlabProject>();
 	
+	public void setCatalog(int catalog) {
+		this.catalog = catalog;
+	}
+
+	public void setPageSize(int pageSize) {
+		this.pageSize = pageSize;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
+	}
+
 	@Override
 	public int getCount() {
 		return count;
