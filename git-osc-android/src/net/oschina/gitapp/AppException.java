@@ -47,9 +47,11 @@ public class AppException extends Exception implements UncaughtExceptionHandler{
 	
 	/** 系统默认的UncaughtException处理类 */
 	private Thread.UncaughtExceptionHandler mDefaultHandler;
+	private Context mContext;
 	
-	private AppException(){
+	private AppException(Context context){
 		this.mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();
+		this.mContext = context;
 	}
 	
 	private AppException(byte type, int code, Exception excp) {
@@ -212,8 +214,8 @@ public class AppException extends Exception implements UncaughtExceptionHandler{
 	 * @param context
 	 * @return
 	 */
-	public static AppException getAppExceptionHandler(){
-		return new AppException();
+	public static AppException getAppExceptionHandler(Context context){
+		return new AppException(context.getApplicationContext());
 	}
 	
 	@Override

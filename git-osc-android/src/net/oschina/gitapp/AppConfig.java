@@ -31,7 +31,7 @@ public class AppConfig {
 	public final static String TEMP_POST_CONTENT = "temp_post_content";
 
 	public final static String CONF_APP_UNIQUEID = "APP_UNIQUEID";
-	public final static String CONF_COOKIE = "cookie";
+	public final static String CONF_PRIVATE_TOKEN = "private_token";
 	public final static String CONF_ACCESSTOKEN = "accessToken";
 	public final static String CONF_ACCESSSECRET = "accessSecret";
 	public final static String CONF_EXPIRESIN = "expiresIn";
@@ -68,9 +68,13 @@ public class AppConfig {
 	public static boolean isLoadImage(Context context) {
 		return getSharedPreferences(context).getBoolean(CONF_LOAD_IMAGE, true);
 	}
-
-	public String getCookie() {
-		return get(CONF_COOKIE);
+	
+	/**
+	 * 获得用户的token
+	 * @return
+	 */
+	public String getPrivateToken() {
+		return get(CONF_PRIVATE_TOKEN);
 	}
 
 	public void setAccessToken(String accessToken) {

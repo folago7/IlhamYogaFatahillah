@@ -92,9 +92,21 @@ public class GitlabAPI {
         String tailUrl = GitlabProject.URL + "/" + projectId;
         return retrieve().to(tailUrl, GitlabProject.class);
     }
-
-    public List<GitlabProject> getProjects() throws AppException {
+    
+    
+    public List<GitlabProject> getMySelfProjects(int page) throws AppException {
         String tailUrl = GitlabProject.URL;
+        return retrieve().getAll(tailUrl, GitlabProject[].class);
+    }
+    
+    /**
+     * 获得发现页面最新发布的项目列表
+     * @param page
+     * @return
+     * @throws AppException
+     */
+    public List<GitlabProject> getExploreLatestProject(int page) throws AppException {
+        String tailUrl = "/projects/latest" + "?page=" + page;
         return retrieve().getAll(tailUrl, GitlabProject[].class);
     }
 

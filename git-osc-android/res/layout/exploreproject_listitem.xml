@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="horizontal"
+    android:paddingBottom="7dip"
+    android:paddingLeft="6dip"
+    android:paddingRight="6dip"
+    android:paddingTop="8dip" >
+
+    <!-- 项目作者头像 -->
+    <ImageView
+        android:id="@+id/exploreproject_listitem_userface"
+        style="@style/UserFaceImageStyle" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="6dip"
+        android:orientation="vertical" >
+
+        <!-- 项目名称 -->
+        <TextView
+            android:id="@+id/exploreproject_listitem_pname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:text="SandKing"
+            android:textColor="@color/listitem_blue"
+            android:textSize="@dimen/text_size_14" />
+
+        <!-- 项目描述 -->
+        <TextView
+            android:id="@+id/exploreproject_listitem_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dip"
+            android:text="一个高效率的Java游戏服务器框架！ 1.支持集群 2.缓存有2层 3.支持落地..."
+            android:textColor="@color/listitem_black"
+            android:textColorLink="@color/listitem_blue"
+            android:textSize="@dimen/text_size_14" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dip"
+            android:orientation="horizontal" >
+			
+            <!-- 项目作者名称 -->
+            <TextView
+                android:id="@+id/exploreproject_listitem_owner_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dip"
+                android:text="SandKing"
+                android:textColor="@color/listitem_gray"
+                android:textSize="@dimen/text_size_10" />
+			
+            <!-- 项目加星数量 -->
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dip"
+                android:src="@drawable/star" />
+			
+            <TextView
+                android:id="@+id/exploreproject_listitem_star"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/listitem_gray"
+                android:textSize="@dimen/text_size_10" />
+				
+            <!-- fork数量 -->
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dip"
+                android:src="@drawable/fork" />
+
+            <TextView
+                android:id="@+id/exploreproject_listitem_fork"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dip"
+                android:textColor="@color/listitem_gray"
+                android:textSize="@dimen/text_size_10" />
+            
+            <!-- language类型 -->
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dip"
+                android:src="@drawable/language" />
+
+            <TextView
+                android:id="@+id/exploreproject_listitem_language"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dip"
+                android:textColor="@color/listitem_gray"
+                android:textSize="@dimen/text_size_10" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

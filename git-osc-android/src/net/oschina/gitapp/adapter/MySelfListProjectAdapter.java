@@ -22,7 +22,7 @@ import android.widget.TextView;
  * 最后更新：
  * 更新者：
  */
-public class ListMySelfProjectAdapter<T> extends MyBaseAdapter<T> {
+public class MySelfListProjectAdapter extends MyBaseAdapter<GitlabProject> {
 	
 	static class ListItemView {
 		public ImageView flag;// 项目标识
@@ -30,7 +30,7 @@ public class ListMySelfProjectAdapter<T> extends MyBaseAdapter<T> {
 		public TextView updateData;//日期
 	}
 	
-	public ListMySelfProjectAdapter(Context context, List<T> data, int resource) {
+	public MySelfListProjectAdapter(Context context, List<GitlabProject> data, int resource) {
 		super(context, data, resource);
 	}
 
@@ -69,9 +69,9 @@ public class ListMySelfProjectAdapter<T> extends MyBaseAdapter<T> {
 			listItemView = (ListItemView)convertView.getTag();
 		}
 		
-		GitlabProject project = (GitlabProject) listData.get(position);
+		GitlabProject project = listData.get(position);
 		
-		listItemView.project_name.setText(project.getOwner().get_name() + " / " + project.getName());
+		listItemView.project_name.setText(project.getOwner().getName() + " / " + project.getName());
 		
 		SimpleDateFormat f = new  SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date last_push_at = project.getLast_push_at() != null ? project.getLast_push_at() : project.getCreatedAt();

@@ -3,9 +3,17 @@ package net.oschina.gitapp.bean;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("serial")
-public class MySelfProjectList extends Entity implements PageList<GitlabProject> {
+/**
+ * 项目列表
+ * @created 2014-05-13
+ * @author 火蚁（http://my.oschina.net/LittleDY）
+ * 
+ * 最后更新
+ * 更新者
+ */
+public class ProjectList extends Entity implements PageList<GitlabProject> {
 
+	private static final long serialVersionUID = -2634938988973534994L;
 	private int catalog;
 	private int pageSize;
 	private int count;

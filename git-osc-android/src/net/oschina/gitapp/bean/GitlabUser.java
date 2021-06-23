@@ -13,9 +13,6 @@ public class GitlabUser {
     @JsonProperty("username")
     private String _username;
     
-    @JsonProperty("email")
-    private String _email;
-    
     @JsonProperty("name")
     private String _name;
     
@@ -52,123 +49,115 @@ public class GitlabUser {
     @JsonProperty("can_create_team")
     private boolean _canCreateTeam;
 
-	public Integer get_id() {
+	public Integer getId() {
 		return _id;
 	}
 
-	public void set_id(Integer _id) {
+	public void setId(Integer _id) {
 		this._id = _id;
 	}
 
-	public String get_username() {
+	public String getUsername() {
 		return _username;
 	}
 
-	public void set_username(String _username) {
+	public void setUsername(String _username) {
 		this._username = _username;
 	}
-
-	public String get_email() {
-		return _email;
-	}
-
-	public void set_email(String _email) {
-		this._email = _email;
-	}
-
-	public String get_name() {
+	
+	public String getName() {
 		return _name;
 	}
 
-	public void set_name(String _name) {
+	public void setName(String _name) {
 		this._name = _name;
 	}
 
-	public String get_bio() {
+	public String getBio() {
 		return _bio;
 	}
 
-	public void set_bio(String _bio) {
+	public void setBio(String _bio) {
 		this._bio = _bio;
 	}
 
-	public String get_weibo() {
+	public String getWeibo() {
 		return _weibo;
 	}
 
-	public void set_weibo(String _weibo) {
+	public void setWeibo(String _weibo) {
 		this._weibo = _weibo;
 	}
 
-	public String get_blog() {
+	public String getBlog() {
 		return _blog;
 	}
 
-	public void set_blog(String _blog) {
+	public void setBlog(String _blog) {
 		this._blog = _blog;
 	}
 
-	public Integer get_theme_id() {
+	public Integer getTheme_id() {
 		return _theme_id;
 	}
 
-	public void set_theme_id(Integer _theme_id) {
+	public void setTheme_id(Integer _theme_id) {
 		this._theme_id = _theme_id;
 	}
 
-	public String get_state() {
+	public String getState() {
 		return _state;
 	}
 
-	public void set_state(String _state) {
+	public void setState(String _state) {
 		this._state = _state;
 	}
 
-	public String get_created_at() {
+	public String getCreated_at() {
 		return _created_at;
 	}
 
-	public void set_created_at(String _created_at) {
+	public void setCreated_at(String _created_at) {
 		this._created_at = _created_at;
 	}
 
-	public String get_portrait() {
+	public String getPortrait() {
 		return _portrait;
 	}
 
-	public void set_portrait(String _portrait) {
+	public void setPortrait(String _portrait) {
 		this._portrait = _portrait;
 	}
 
-	public boolean is_isAdmin() {
+	public boolean isIsAdmin() {
 		return _isAdmin;
 	}
 
-	public void set_isAdmin(boolean _isAdmin) {
+	public void setIsAdmin(boolean _isAdmin) {
 		this._isAdmin = _isAdmin;
 	}
 
-	public boolean is_canCreateGroup() {
+	public boolean isCanCreateGroup() {
 		return _canCreateGroup;
 	}
 
-	public void set_canCreateGroup(boolean _canCreateGroup) {
+	public void setCanCreateGroup(boolean _canCreateGroup) {
 		this._canCreateGroup = _canCreateGroup;
 	}
 
-	public boolean is_canCreateProject() {
+	public boolean isCanCreateProject() {
 		return _canCreateProject;
 	}
 
-	public void set_canCreateProject(boolean _canCreateProject) {
+	public void setCanCreateProject(boolean _canCreateProject) {
 		this._canCreateProject = _canCreateProject;
 	}
 
-	public boolean is_canCreateTeam() {
+	public boolean isCanCreateTeam() {
 		return _canCreateTeam;
 	}
 
-	public void set_canCreateTeam(boolean _canCreateTeam) {
+	public void setCanCreateTeam(boolean _canCreateTeam) {
 		this._canCreateTeam = _canCreateTeam;
 	}
 }

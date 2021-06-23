@@ -22,7 +22,7 @@ import net.oschina.gitapp.ui.fragments.ExploreViewPagerFragment;
 
 /**
  * 程序主界面
- * @created 201-04-29
+ * @created 2014-04-29
  * @author 火蚁（http://my.oschina.net/LittleDY）
  * 
  */
@@ -38,6 +38,8 @@ public class MainActivity extends BaseActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
+        requestActionBarMenu();
         initView(savedInstanceState);
     }
     

@@ -14,7 +14,7 @@ import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.bean.GitlabProject;
 import net.oschina.gitapp.bean.GitlabSession;
 import net.oschina.gitapp.bean.GitlabUser;
-import net.oschina.gitapp.bean.MySelfProjectList;
+import net.oschina.gitapp.bean.ProjectList;
 import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.common.StringUtils;
 
@@ -316,10 +316,26 @@ public class ApiClient {
 	 * @return
 	 * @throws AppException
 	 */
-	public static MySelfProjectList getMySelfProjectList(AppContext appContext, int page) throws AppException {
-		MySelfProjectList msProject = new MySelfProjectList();
+	public static ProjectList getMySelfProjectList(AppContext appContext, int page) throws AppException {
+		ProjectList msProject = new ProjectList();
 		
-		List<GitlabProject> list = GitlabAPI.connect(getToken(appContext)).getProjects();
+		List<GitlabProject> list = GitlabAPI.connect(getToken(appContext)).getMySelfProjects(page);
+		msProject.setList(list);
+		msProject.setPageSize(list.size());
+		return msProject;
+	}
+	
+	/**
+	 * 获得发现页面最近更新的项目列表
+	 * @param appContext
+	 * @param page 页数
+	 * @return
+	 * @throws AppException
+	 */
+	public static ProjectList getExploreLatestProject(AppContext appContext, int page) throws AppException {
+		ProjectList msProject = new ProjectList();
+		
+		List<GitlabProject> list = GitlabAPI.connect(getToken(appContext)).getExploreLatestProject(page);
 		msProject.setList(list);
 		msProject.setCount(list.size());
 		msProject.setPageSize(list.size());

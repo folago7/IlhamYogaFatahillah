@@ -7,7 +7,7 @@ import java.util.UUID;
 
 import net.oschina.gitapp.api.ApiClient;
 import net.oschina.gitapp.bean.GitlabUser;
-import net.oschina.gitapp.bean.MySelfProjectList;
+import net.oschina.gitapp.bean.ProjectList;
 import net.oschina.gitapp.common.StringUtils;
 import android.app.Application;
 import android.content.Context;
@@ -35,6 +35,9 @@ public class AppContext extends Application {
 	public static final int PAGE_SIZE = 20;//默认分页大小
 	private static final int CACHE_TIME = 60*60000;//缓存失效时间
 	
+	// 用户私有token
+	public static final String PROP_KEY_PRIVATE_TOKEN = "private_token";
+	
 	public static final String PROP_KEY_UID = "user.uid";
 	public static final String PROP_KEY_USERNAME = "user.username";
 	public static final String PROP_KEY_EMAIL = "user.useremail";
@@ -55,8 +58,6 @@ public class AppContext extends Application {
 	private int loginUid = 0;	//登录用户的id
 	private Hashtable<String, Object> memCacheRegion = new Hashtable<String, Object>();
 	
-	private String saveImagePath;//保存图片路径
-	
 	private Handler unLoginHandler = new Handler(){
 		public void handleMessage(Message msg) {
 			if(msg.what == 1){
@@ -70,7 +71,21 @@ public class AppContext extends Application {
 	public void onCreate() {
 		super.onCreate();
         //注册App异常崩溃处理器
-        Thread.setDefaultUncaughtExceptionHandler(AppException.getAppExceptionHandler());
+        Thread.setDefaultUncaughtExceptionHandler(AppException.getAppExceptionHandler(this));
+        init();
+	}
+	
+	/**
+	 * 初始化Application
+	 */
+	private void init() {
+		//初始化用记的登录信息
+		GitlabUser loginUser = getLoginInfo();
+		if(null != loginUser && loginUser.getId() > 0 && StringUtils.isEmpty(getProperty(PROP_KEY_PRIVATE_TOKEN))){
+			// 记录用户的id和状态
+			this.loginUid = loginUser.getId();
+			this.login = true;
+		}
 	}
 	
 	public boolean containsProperty(String key){
@@ -104,6 +119,28 @@ public class AppContext extends Application {
 	public boolean isAudioNormal() {
 		AudioManager mAudioManager = (AudioManager)getSystemService(AUDIO_SERVICE); 
 		return mAudioManager.getRingerMode() == AudioManager.RINGER_MODE_NORMAL;
+	}
+	
+	/**
+	 * 应用程序是否发出提示音
+	 * @return
+	 */
+	public boolean isAppSound() {
+		return isAudioNormal() && isVoice();
+	}
+	
+	/**
+	 * 是否发出提示音
+	 * @return
+	 */
+	public boolean isVoice() {
+		String perf_voice = getProperty(AppConfig.CONF_VOICE);
+		//默认是开启提示声音
+		if(StringUtils.isEmpty(perf_voice)) {
+			return true;
+		} else {
+			return StringUtils.toBool(perf_voice);
+		}
 	}
 	
 	/**
@@ -199,13 +236,27 @@ public class AppContext extends Application {
 	}
 	
 	/**
-	 * 获得个人的所有项目
-	 * @param page
+	 * 获取登录信息
 	 * @return
-	 * @throws AppException
 	 */
-	public MySelfProjectList getMySelfProjectList(int page) throws AppException {
-		return ApiClient.getMySelfProjectList(this, page);
+	public GitlabUser getLoginInfo() {		
+		GitlabUser user = new GitlabUser();		
+		user.setId(StringUtils.toInt(getProperty(PROP_KEY_UID), 0));
+		user.setUsername(getProperty(PROP_KEY_USERNAME));
+		//user.setEmail(getProperty(PROP_KEY_EMAIL));
+		user.setName(getProperty(PROP_KEY_NAME));
+		user.setBio(getProperty(PROP_KEY_BIO));
+		user.setWeibo(getProperty(PROP_KEY_WEIBO));
+		user.setBlog(getProperty(PROP_KEY_BLOG));
+		user.setTheme_id(StringUtils.toInt(getProperty(PROP_KEY_THEME_ID), 1));
+		user.setState(getProperty(PROP_KEY_STATE));
+		user.setCreated_at(getProperty(PROP_KEY_STATE));
+		user.setPortrait(getProperty(PROP_KEY_STATE));
+		user.setIsAdmin(StringUtils.toBool(getProperty(PROP_KEY_IS_ADMIN)));
+		user.setCanCreateGroup(StringUtils.toBool(getProperty(PROP_KEY_CAN_CREATE_GROUP)));
+		user.setCanCreateProject(StringUtils.toBool(getProperty(PROP_KEY_CAN_CREATE_PROJECT)));
+		user.setCanCreateTeam(StringUtils.toBool(getProperty(PROP_KEY_CAN_CREATE_TEAM)));
+		return user;
 	}
 	
 	/**
@@ -217,23 +268,86 @@ public class AppContext extends Application {
 		if (null == user) {
 			return;
 		}
-		this.loginUid = user.get_id();
+		// 保存用户的信息
+		this.loginUid = user.getId();
 		this.login = true;
 		setProperties(new Properties(){{
-			setProperty(PROP_KEY_UID, String.valueOf(user.get_id()));
-			setProperty(PROP_KEY_USERNAME, user.get_username());
-			setProperty(PROP_KEY_EMAIL, user.get_email());
-			setProperty(PROP_KEY_BIO, user.get_bio());// 个人介绍
-			setProperty(PROP_KEY_WEIBO, user.get_weibo());
-			setProperty(PROP_KEY_BLOG, user.get_blog());
-			setProperty(PROP_KEY_THEME_ID, String.valueOf(user.get_theme_id()));
-			setProperty(PROP_KEY_STATE, user.get_state());
-			setProperty(PROP_KEY_CREATED_AT, user.get_created_at());
-			setProperty(PROP_KEY_PORTRAIT, user.get_portrait());// 个人头像
-			setProperty(PROP_KEY_IS_ADMIN, String.valueOf(user.is_isAdmin()));
-			setProperty(PROP_KEY_CAN_CREATE_GROUP, String.valueOf(user.is_canCreateGroup()));
-			setProperty(PROP_KEY_CAN_CREATE_PROJECT, String.valueOf(user.is_canCreateProject()));
-			setProperty(PROP_KEY_CAN_CREATE_TEAM, String.valueOf(user.is_canCreateTeam()));
+			setProperty(PROP_KEY_UID, String.valueOf(user.getId()));
+			setProperty(PROP_KEY_USERNAME, user.getUsername());
+			//setProperty(PROP_KEY_EMAIL, user.getEmail());
+			setProperty(PROP_KEY_NAME, user.getName());
+			setProperty(PROP_KEY_BIO, user.getBio());// 个人介绍
+			setProperty(PROP_KEY_WEIBO, user.getWeibo());
+			setProperty(PROP_KEY_BLOG, user.getBlog());
+			setProperty(PROP_KEY_THEME_ID, String.valueOf(user.getTheme_id()));
+			setProperty(PROP_KEY_STATE, user.getState());
+			setProperty(PROP_KEY_CREATED_AT, user.getCreated_at());
+			setProperty(PROP_KEY_PORTRAIT, user.getPortrait());// 个人头像
+			setProperty(PROP_KEY_IS_ADMIN, String.valueOf(user.isIsAdmin()));
+			setProperty(PROP_KEY_CAN_CREATE_GROUP, String.valueOf(user.isCanCreateGroup()));
+			setProperty(PROP_KEY_CAN_CREATE_PROJECT, String.valueOf(user.isCanCreateProject()));
+			setProperty(PROP_KEY_CAN_CREATE_TEAM, String.valueOf(user.isCanCreateTeam()));
 		}});
+	}
+	
+	/**
+	 * 清除登录信息，用户的私有token也一并清除
+	 */
+	void cleanLoginInfo() {
+		this.loginUid = 0;
+		this.login = false;
+		removeProperty(PROP_KEY_UID, PROP_KEY_USERNAME, PROP_KEY_EMAIL, PROP_KEY_NAME,
+				PROP_KEY_BIO, PROP_KEY_WEIBO, PROP_KEY_BLOG, PROP_KEY_THEME_ID, PROP_KEY_STATE, PROP_KEY_CREATED_AT,
+				PROP_KEY_PORTRAIT, PROP_KEY_IS_ADMIN, PROP_KEY_CAN_CREATE_GROUP, PROP_KEY_CAN_CREATE_PROJECT, PROP_KEY_CAN_CREATE_TEAM);
+	}
+	
+	/**
+	 * 清除保存的Token
+	 */
+	public void cleanToken() {
+		removeProperty(AppConfig.CONF_PRIVATE_TOKEN);
+	}
+	
+	/**
+	 * 用户是否登录
+	 * @return
+	 */
+	public boolean isLogin() {
+		return login;
+	}
+	
+	/**
+	 * 获取登录用户id
+	 * @return
+	 */
+	public int getLoginUid() {
+		return this.loginUid;
+	}
+	
+	/**
+	 * 用户注销
+	 */
+	public void logout() {
+		ApiClient.cleanToken();
+		// 清除token
+		cleanToken();
+		this.login = false;
+		this.loginUid = 0;
+		//发送广播通知
+		//BroadcastController.sendUserChangeBroadcase(this);
+	}
+	
+	/**
+	 * 获得个人的所有项目
+	 * @param page
+	 * @return
+	 * @throws AppException
+	 */
+	public ProjectList getMySelfProjectList(int page) throws AppException {
+		return ApiClient.getMySelfProjectList(this, page);
+	}
+	
+	public ProjectList getExploreLatestProject(int page) throws AppException {
+		return ApiClient.getExploreLatestProject(this, page);
 	}
 }

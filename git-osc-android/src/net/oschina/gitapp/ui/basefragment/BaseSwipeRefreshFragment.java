@@ -445,7 +445,7 @@ public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result exte
 						if (newdata > 0) {
 							NewDataToast.makeText( getActivity(),
 											getString(R.string.new_data_toast_message,
-											newdata), mApplication.isAudioNormal()).show();
+											newdata), mApplication.isAppSound()).show();
 						} else {
 							NewDataToast.makeText(getActivity(),
 									getString(R.string.new_data_toast_none), false).show();

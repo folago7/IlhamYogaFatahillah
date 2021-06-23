@@ -24,7 +24,7 @@ public class ExploreViewPagerFragment extends BaseViewPagerFragment<BaseFragment
 		String[] title = getResources().getStringArray(R.array.explore_title_array);
 		for (String t : title) {
 			titleList.add(t);
-			fragmentList.add(new MySelfListProjectFragment());
+			fragmentList.add(new ExploreListLatestProjectFragment());
 		}
 	}
 }
