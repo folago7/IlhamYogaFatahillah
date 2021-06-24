@@ -30,6 +30,7 @@ public class URLs implements Serializable {
 	public static String NAMESPACE = URL_API_HOST + URL_SPLITTER + "groups";
 	public static String NOTE = URL_API_HOST + URL_SPLITTER + "notes";
 	public static String PROJECT = URL_API_HOST + URL_SPLITTER + "projects";
+	public static String EXPLORELATESTPROJECT = URL_API_HOST + URL_SPLITTER + "projects" +URL_SPLITTER +  "latest";
 	public static String PROJECTHOOK = URL_API_HOST + URL_SPLITTER + "hooks";
 	public static String PROJECTMEMBER = URL_API_HOST + URL_SPLITTER + "members";
 	public static String SESSION = URL_API_HOST + URL_SPLITTER + "session";

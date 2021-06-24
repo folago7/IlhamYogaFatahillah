@@ -2,7 +2,7 @@ package net.oschina.gitapp.bean;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class GitlabMergeRequest {
+public class MergeRequest {
     public static final String URL = "/merge_requests";
 
     private Integer _id;
@@ -11,8 +11,8 @@ public class GitlabMergeRequest {
     private String _state;
     private boolean _closed;
     private boolean _merged;
-    private GitlabUser _author;
-    private GitlabUser _assignee;
+    private User _author;
+    private User _assignee;
 
     @JsonProperty("target_branch")
     private String _targetBranch;
@@ -98,19 +98,19 @@ public class GitlabMergeRequest {
         _merged = merged;
     }
 
-    public GitlabUser getAuthor() {
+    public User getAuthor() {
         return _author;
     }
 
-    public void setAuthor(GitlabUser author) {
+    public void setAuthor(User author) {
         _author = author;
     }
 
-    public GitlabUser getAssignee() {
+    public User getAssignee() {
         return _assignee;
     }
 
-    public void setAssignee(GitlabUser assignee) {
+    public void setAssignee(User assignee) {
         _assignee = assignee;
     }
 

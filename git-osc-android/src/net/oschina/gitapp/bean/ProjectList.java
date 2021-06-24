@@ -11,14 +11,14 @@ import java.util.List;
  * 最后更新
  * 更新者
  */
-public class ProjectList extends Entity implements PageList<GitlabProject> {
+public class ProjectList extends Entity implements PageList<Project> {
 
 	private static final long serialVersionUID = -2634938988973534994L;
 	private int catalog;
 	private int pageSize;
 	private int count;
 	
-	private List<GitlabProject> list = new ArrayList<GitlabProject>();
+	private List<Project> list = new ArrayList<Project>();
 	
 	public void setCatalog(int catalog) {
 		this.catalog = catalog;
@@ -46,11 +46,11 @@ public class ProjectList extends Entity implements PageList<GitlabProject> {
 	}
 
 	@Override
-	public List<GitlabProject> getList() {
+	public List<Project> getList() {
 		return list;
 	}
 
-	public void setList(List<GitlabProject> list) {
+	public void setList(List<Project> list) {
 		this.list = list;
 	}
 }

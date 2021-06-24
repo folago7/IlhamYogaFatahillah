@@ -7,7 +7,7 @@ import android.widget.BaseAdapter;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.MySelfListProjectAdapter;
-import net.oschina.gitapp.bean.GitlabProject;
+import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.MessageData;
 import net.oschina.gitapp.bean.ProjectList;
 import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
@@ -20,14 +20,14 @@ import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
  * 最后更新
  * 更新者
  */
-public class MySelfListProjectFragment extends BaseSwipeRefreshFragment<GitlabProject, ProjectList> {
+public class MySelfListProjectFragment extends BaseSwipeRefreshFragment<Project, ProjectList> {
 	
 	public static MySelfListProjectFragment newInstance() {
 		return new MySelfListProjectFragment();
 	}
 	
 	@Override
-	public BaseAdapter getAdapter(List<GitlabProject> list) {
+	public BaseAdapter getAdapter(List<Project> list) {
 		return new MySelfListProjectAdapter(getActivity(), list, R.layout.myselfproject_listitem);
 	}
 

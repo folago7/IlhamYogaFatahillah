@@ -4,7 +4,7 @@ import java.util.Date;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class GitlabUser {
+public class User {
 	public static final String URL = "/users";
 	
     @JsonProperty("id")

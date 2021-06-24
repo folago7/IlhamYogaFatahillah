@@ -1,6 +1,6 @@
 package net.oschina.gitapp.bean;
 
-public class GitlabProjectMember extends GitlabUser {
+public class ProjectMember extends User {
 
 	public static final String URL = "/members";
 	

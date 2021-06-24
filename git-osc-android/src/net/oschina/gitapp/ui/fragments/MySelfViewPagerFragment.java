@@ -21,8 +21,8 @@ public class MySelfViewPagerFragment extends BaseViewPagerFragment<BaseFragment>
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//titleList.add("项目");
-		//fragmentList.add(new MySelfListProjectFragment());
+		titleList.add("项目");
+		fragmentList.add(new MySelfListProjectFragment());
 		String[] title = getResources().getStringArray(R.array.myself_title_array);
 		for (String t : title) {
 			titleList.add(t);

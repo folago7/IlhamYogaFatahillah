@@ -2,7 +2,7 @@ package net.oschina.gitapp.bean;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class GitlabBranch {
+public class Branch {
 	public final static String URL = "/repository/branches/";
 	
 	@JsonProperty("name")

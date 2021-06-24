@@ -3,7 +3,7 @@ package net.oschina.gitapp.bean;
 import java.util.Date;
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class GitlabNamespace {
+public class Namespace {
 	public static final String URL = "/groups";
 	
     private Integer _id;

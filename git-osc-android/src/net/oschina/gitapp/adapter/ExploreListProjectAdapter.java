@@ -1,8 +1,10 @@
 package net.oschina.gitapp.adapter;
 
 import java.util.List;
+
 import net.oschina.gitapp.R;
-import net.oschina.gitapp.bean.GitlabProject;
+import net.oschina.gitapp.bean.Project;
+import net.oschina.gitapp.common.StringUtils;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +19,7 @@ import android.widget.TextView;
  * 最后更新：
  * 更新者：
  */
-public class ExploreListProjectAdapter extends MyBaseAdapter<GitlabProject> {
+public class ExploreListProjectAdapter extends MyBaseAdapter<Project> {
 	
 	static class ListItemView {
 		public ImageView face;//用户头像
@@ -29,7 +31,7 @@ public class ExploreListProjectAdapter extends MyBaseAdapter<GitlabProject> {
 		public TextView language;//类型
 	}
 	
-	public ExploreListProjectAdapter(Context context, List<GitlabProject> data, int resource) {
+	public ExploreListProjectAdapter(Context context, List<Project> data, int resource) {
 		super(context, data, resource);
 	}
 
@@ -73,7 +75,7 @@ public class ExploreListProjectAdapter extends MyBaseAdapter<GitlabProject> {
 			listItemView = (ListItemView)convertView.getTag();
 		}
 		
-		GitlabProject project = (GitlabProject) listData.get(position);
+		Project project = (Project) listData.get(position);
 		
 		listItemView.project_name.setText(project.getOwner().getName() + " / " + project.getName());
 		
@@ -84,9 +86,10 @@ public class ExploreListProjectAdapter extends MyBaseAdapter<GitlabProject> {
 		listItemView.description.setText(project.getDescription());
 		listItemView.owner_name.setText(project.getOwner().getName());
 		// 显示项目的star、fork、language信息
-//		listItemView.star.setText(project.getStar());
-//		listItemView.fork.setText(project.getFork());
-//		listItemView.language.setText(project.getLanguage());
+		listItemView.star.setText(project.getStars_count().toString());
+		listItemView.fork.setText(project.getForks_count().toString());
+		String language = project.getLanguage() != null ? project.getLanguage() : "UnKown";
+		listItemView.language.setText(language);
 		
 		return convertView;
 	}

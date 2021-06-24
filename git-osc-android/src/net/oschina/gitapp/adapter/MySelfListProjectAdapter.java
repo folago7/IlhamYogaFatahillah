@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.logging.SimpleFormatter;
 
 import net.oschina.gitapp.R;
-import net.oschina.gitapp.bean.GitlabProject;
+import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.common.StringUtils;
 import android.content.Context;
 import android.view.View;
@@ -22,7 +22,7 @@ import android.widget.TextView;
  * 最后更新：
  * 更新者：
  */
-public class MySelfListProjectAdapter extends MyBaseAdapter<GitlabProject> {
+public class MySelfListProjectAdapter extends MyBaseAdapter<Project> {
 	
 	static class ListItemView {
 		public ImageView flag;// 项目标识
@@ -30,7 +30,7 @@ public class MySelfListProjectAdapter extends MyBaseAdapter<GitlabProject> {
 		public TextView updateData;//日期
 	}
 	
-	public MySelfListProjectAdapter(Context context, List<GitlabProject> data, int resource) {
+	public MySelfListProjectAdapter(Context context, List<Project> data, int resource) {
 		super(context, data, resource);
 	}
 
@@ -69,7 +69,7 @@ public class MySelfListProjectAdapter extends MyBaseAdapter<GitlabProject> {
 			listItemView = (ListItemView)convertView.getTag();
 		}
 		
-		GitlabProject project = listData.get(position);
+		Project project = listData.get(position);
 		
 		listItemView.project_name.setText(project.getOwner().getName() + " / " + project.getName());
 		

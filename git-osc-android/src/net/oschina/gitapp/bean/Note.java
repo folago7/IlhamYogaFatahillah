@@ -3,14 +3,14 @@ package net.oschina.gitapp.bean;
 import java.util.Date;
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class GitlabNote {
+public class Note {
 
     public static final String URL = "/notes";
 
     private Integer _id;
     private String _body;
     private String _attachment;
-    private GitlabUser _author;
+    private User _author;
 
     @JsonProperty("created_at")
     private Date _createdAt;
@@ -31,11 +31,11 @@ public class GitlabNote {
         _body = body;
     }
 
-    public GitlabUser getAuthor() {
+    public User getAuthor() {
         return _author;
     }
 
-    public void setAuthor(GitlabUser author) {
+    public void setAuthor(User author) {
         _author = author;
     }
 

@@ -4,7 +4,7 @@ import java.util.Date;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class GitlabMilestone {
+public class Milestone {
 
 	public static final String URL = "/milestones";
 	

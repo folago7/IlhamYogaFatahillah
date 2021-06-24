@@ -4,9 +4,8 @@ import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Properties;
 import java.util.UUID;
-
 import net.oschina.gitapp.api.ApiClient;
-import net.oschina.gitapp.bean.GitlabUser;
+import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.bean.ProjectList;
 import net.oschina.gitapp.common.StringUtils;
 import android.app.Application;
@@ -80,7 +79,7 @@ public class AppContext extends Application {
 	 */
 	private void init() {
 		//初始化用记的登录信息
-		GitlabUser loginUser = getLoginInfo();
+		User loginUser = getLoginInfo();
 		if(null != loginUser && loginUser.getId() > 0 && StringUtils.isEmpty(getProperty(PROP_KEY_PRIVATE_TOKEN))){
 			// 记录用户的id和状态
 			this.loginUid = loginUser.getId();
@@ -226,8 +225,8 @@ public class AppContext extends Application {
 	 * @throws AppException
 	 * @throws IOException 
 	 */
-	public GitlabUser loginVerify(String account, String pwd) throws AppException {
-		GitlabUser user = ApiClient.login(this, account, pwd);
+	public User loginVerify(String account, String pwd) throws AppException {
+		User user = ApiClient.login(this, account, pwd);
 		if (null != user) {
 			// 保存登录用户的信息
 			saveLoginInfo(user);
@@ -239,8 +238,8 @@ public class AppContext extends Application {
 	 * 获取登录信息
 	 * @return
 	 */
-	public GitlabUser getLoginInfo() {		
-		GitlabUser user = new GitlabUser();		
+	public User getLoginInfo() {		
+		User user = new User();		
 		user.setId(StringUtils.toInt(getProperty(PROP_KEY_UID), 0));
 		user.setUsername(getProperty(PROP_KEY_USERNAME));
 		//user.setEmail(getProperty(PROP_KEY_EMAIL));
@@ -264,7 +263,7 @@ public class AppContext extends Application {
 	 * @param user
 	 */
 	@SuppressWarnings("serial")
-	private void saveLoginInfo(final GitlabUser user) {
+	private void saveLoginInfo(final User user) {
 		if (null == user) {
 			return;
 		}
@@ -347,7 +346,15 @@ public class AppContext extends Application {
 		return ApiClient.getMySelfProjectList(this, page);
 	}
 	
+	/**
+	 * 获得最近更新的项目
+	 * @param page
+	 * @return
+	 * @throws AppException
+	 */
 	public ProjectList getExploreLatestProject(int page) throws AppException {
 		return ApiClient.getExploreLatestProject(this, page);
 	}
+	
+	
 }

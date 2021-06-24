@@ -3,7 +3,7 @@ package net.oschina.gitapp.bean;
 import java.util.Date;
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class GitlabProject extends Entity {
+public class Project extends Entity {
 
     public static final String URL = "/projects";
 
@@ -14,7 +14,7 @@ public class GitlabProject extends Entity {
     @JsonProperty("default_branch")
     private String _defaultBranch;
 
-    private GitlabUser _owner;
+    private User _owner;
     private boolean _public;
     private String _path;
 
@@ -42,12 +42,56 @@ public class GitlabProject extends Entity {
     @JsonProperty("http_url_to_repo")
     private String _httpUrl;
     
-    private GitlabNamespace _namespace;
+    private Namespace _namespace;
     
     @JsonProperty("last_push_at")
     private Date _last_push_at;
     
-    public Date getLast_push_at() {
+    // 项目的父id，不为null则为是fork的项目
+    private Integer _parent_id;
+    
+    //项目的fork数量
+    private Integer _forks_count;
+    
+    //项目的star数量
+    private Integer _stars_count;
+    
+    //项目的语言类型
+    private String _language;
+    
+    public Integer getParent_id() {
+		return _parent_id;
+	}
+
+	public void setParent_id(Integer parent_id) {
+		this._parent_id = parent_id;
+	}
+
+	public Integer getForks_count() {
+		return _forks_count;
+	}
+
+	public void setForks_count(Integer forks_count) {
+		this._forks_count = forks_count;
+	}
+
+	public Integer getStars_count() {
+		return _stars_count;
+	}
+
+	public void setStars_count(Integer stars_count) {
+		this._stars_count = stars_count;
+	}
+
+	public String getLanguage() {
+		return _language;
+	}
+
+	public void setLanguage(String language) {
+		this._language = language;
+	}
+
+	public Date getLast_push_at() {
 		return _last_push_at;
 	}
 
@@ -87,11 +131,11 @@ public class GitlabProject extends Entity {
         _defaultBranch = defaultBranch;
     }
 
-    public GitlabUser getOwner() {
+    public User getOwner() {
         return _owner;
     }
 
-    public void setOwner(GitlabUser owner) {
+    public void setOwner(User owner) {
         _owner = owner;
     }
 
@@ -167,11 +211,11 @@ public class GitlabProject extends Entity {
         _httpUrl = httpUrl;
     }
 
-    public GitlabNamespace getNamespace() {
+    public Namespace getNamespace() {
         return _namespace;
     }
 
-    public void setNamespace(GitlabNamespace namespace) {
+    public void setNamespace(Namespace namespace) {
         _namespace = namespace;
     }
 

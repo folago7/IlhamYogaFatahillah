@@ -23,7 +23,7 @@ import android.widget.Toast;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
-import net.oschina.gitapp.bean.GitlabUser;
+import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
@@ -136,7 +136,8 @@ public class LoginActivity extends BaseActionBarActivity
 	private void login(final String account, final String passwd) {
 		if(mLoginProgressDialog == null) {
     		mLoginProgressDialog = new ProgressDialog(this);
-    		mLoginProgressDialog.setCancelable(false);
+    		mLoginProgressDialog.setCancelable(true);
+    		mLoginProgressDialog.setCanceledOnTouchOutside(false);
     		mLoginProgressDialog.setMessage(getString(R.string.login_tips));
     	}
 		//异步登录
@@ -146,12 +147,15 @@ public class LoginActivity extends BaseActionBarActivity
 				Message msg =new Message();
 				try {
 					AppContext ac = getGitApplication();
-	                GitlabUser user = ac.loginVerify(account, passwd);
+	                User user = ac.loginVerify(account, passwd);
 	                msg.what = 1;
 	                msg.obj = user;
 	            } catch (Exception e) {
 			    	msg.what = -1;
 			    	msg.obj = e;
+			    	if(mLoginProgressDialog != null) {
+						mLoginProgressDialog.dismiss();
+					}
 	            }
 				return msg;
 			}
@@ -174,7 +178,7 @@ public class LoginActivity extends BaseActionBarActivity
 				}
 				Context context = LoginActivity.this;
 				if(msg.what == 1){
-					GitlabUser user = (GitlabUser)msg.obj;
+					User user = (User)msg.obj;
 					if(user != null){
 						//提示登陆成功
 						UIHelper.ToastMessage(context, R.string.msg_login_success);

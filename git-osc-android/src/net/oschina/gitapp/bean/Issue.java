@@ -4,7 +4,7 @@ import java.util.Date;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class GitlabIssue {
+public class Issue {
 	public enum Action {
 		LEAVE, CLOSE, REOPEN
 	}
@@ -23,10 +23,10 @@ public class GitlabIssue {
 	private String _title;
 	private String _description;
 	private String[] _labels;
-	private GitlabMilestone _milestone;
+	private Milestone _milestone;
 	
-	private GitlabUser _assignee;
-	private GitlabUser _author;
+	private User _assignee;
+	private User _author;
 	
 	private String _state;
 	
@@ -84,27 +84,27 @@ public class GitlabIssue {
 		_labels = labels;
 	}
 
-	public GitlabMilestone getMilestone() {
+	public Milestone getMilestone() {
 		return _milestone;
 	}
 
-	public void setMilestone(GitlabMilestone milestone) {
+	public void setMilestone(Milestone milestone) {
 		_milestone = milestone;
 	}
 
-	public GitlabUser getAssignee() {
+	public User getAssignee() {
 		return _assignee;
 	}
 
-	public void setAssignee(GitlabUser assignee) {
+	public void setAssignee(User assignee) {
 		_assignee = assignee;
 	}
 
-	public GitlabUser getAuthor() {
+	public User getAuthor() {
 		return _author;
 	}
 
-	public void setAuthor(GitlabUser author) {
+	public void setAuthor(User author) {
 		_author = author;
 	}
 

@@ -2,8 +2,7 @@ package net.oschina.gitapp.bean;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class GitlabSession extends GitlabUser {
-	public static final String URL = "/session";
+public class Session extends User {
 	
 	@JsonProperty("private_token")
 	private String _privateToken;

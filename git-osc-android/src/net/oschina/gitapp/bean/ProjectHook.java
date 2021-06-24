@@ -4,7 +4,7 @@ import java.util.Date;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class GitlabProjectHook {
+public class ProjectHook {
 
 	public final static String URL = "/hooks";
 	

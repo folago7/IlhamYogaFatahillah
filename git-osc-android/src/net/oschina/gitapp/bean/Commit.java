@@ -3,7 +3,7 @@ package net.oschina.gitapp.bean;
 import java.util.Date;
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class GitlabCommit {
+public class Commit {
 
     public final static String URL = "/commits";
 
