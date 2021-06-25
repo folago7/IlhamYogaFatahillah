@@ -4,7 +4,13 @@ import java.util.Date;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class Issue {
+/**
+ * issue实体类
+ * @author 火蚁（http://my.oschina.net/LittleDY）
+ *
+ */
+@SuppressWarnings("serial")
+public class Issue extends Entity {
 	public enum Action {
 		LEAVE, CLOSE, REOPEN
 	}
@@ -14,7 +20,6 @@ public class Issue {
 
 	public static final String URL = "/issues";
 	
-	private int _id;
 	private int _iid;
 	
 	@JsonProperty("project_id")
@@ -35,22 +40,6 @@ public class Issue {
 	
 	@JsonProperty("created_at")
 	private Date _createdAt;
-
-	public int getId() {
-		return _id;
-	}
-
-	public void setId(int id) {
-		_id = id;
-	}
-
-	public int getIid() {
-		return _iid;
-	}
-
-	public void setIid(int iid) {
-		_iid = iid;
-	}
 
 	public int getProjectId() {
 		return _projectId;

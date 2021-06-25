@@ -8,14 +8,20 @@ import java.io.Serializable;
  * @version 1.0
  * @created 2012-3-21
  */
+@SuppressWarnings("serial")
 public abstract class Entity implements Serializable {
 
-	protected int e_id;
+	protected int _id;
 
-	public int getEId() {
-		return e_id;
-	}
+	public int getId() {
+        return _id;
+    }
 
+    public void setId(int id) {
+        _id = id;
+    }
+	
+	// 缓存的key
 	protected String cacheKey;
 
 	public String getCacheKey() {

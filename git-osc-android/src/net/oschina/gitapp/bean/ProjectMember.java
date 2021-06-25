@@ -1,5 +1,6 @@
 package net.oschina.gitapp.bean;
 
+@SuppressWarnings("serial")
 public class ProjectMember extends User {
 
 	public static final String URL = "/members";

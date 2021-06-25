@@ -2,10 +2,10 @@ package net.oschina.gitapp.bean;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class MergeRequest {
+@SuppressWarnings("serial")
+public class MergeRequest extends Entity  {
     public static final String URL = "/merge_requests";
 
-    private Integer _id;
     private Integer _iid;
     private String _title;
     private String _state;
@@ -25,14 +25,6 @@ public class MergeRequest {
 
     @JsonProperty("source_project_id")
     private Integer _sourceProjectId;
-
-    public Integer getId() {
-        return _id;
-    }
-
-    public void setId(Integer id) {
-        _id = id;
-    }
 
     public Integer getIid() {
         return _iid;

@@ -2,6 +2,7 @@ package net.oschina.gitapp.bean;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
+@SuppressWarnings("serial")
 public class Session extends User {
 	
 	@JsonProperty("private_token")

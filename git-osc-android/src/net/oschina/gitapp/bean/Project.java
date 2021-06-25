@@ -1,13 +1,14 @@
 package net.oschina.gitapp.bean;
 
 import java.util.Date;
+
 import org.codehaus.jackson.annotate.JsonProperty;
 
+@SuppressWarnings("serial")
 public class Project extends Entity {
 
     public static final String URL = "/projects";
 
-    private Integer _id;
     private String _name;
     private String _description;
 
@@ -98,14 +99,6 @@ public class Project extends Entity {
 	public void setLast_push_at(Date last_push_at) {
 		this._last_push_at = last_push_at;
 	}
-
-	public Integer getId() {
-        return _id;
-    }
-
-    public void setId(Integer id) {
-        _id = id;
-    }
 
     public String getName() {
         return _name;

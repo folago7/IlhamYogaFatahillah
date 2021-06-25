@@ -4,7 +4,6 @@ import net.oschina.gitapp.R;
 import net.oschina.gitapp.ui.basefragment.BaseFragment;
 import net.oschina.gitapp.ui.basefragment.BaseViewPagerFragment;
 import android.os.Bundle;
-import android.util.Log;
 
 /**
  * 发现页面
@@ -24,7 +23,9 @@ public class ExploreViewPagerFragment extends BaseViewPagerFragment<BaseFragment
 		String[] title = getResources().getStringArray(R.array.explore_title_array);
 		for (String t : title) {
 			titleList.add(t);
-			fragmentList.add(new MySelfListProjectFragment());
 		}
+		fragmentList.add(new ExploreFeaturedListProjectFragment());
+		fragmentList.add(new ExplorePopularListProjectFragment());
+		fragmentList.add(new ExploreLatestListProjectFragment());
 	}
 }

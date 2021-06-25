@@ -4,24 +4,15 @@ import java.util.Date;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class ProjectHook {
+@SuppressWarnings("serial")
+public class ProjectHook extends Entity {
 
 	public final static String URL = "/hooks";
 	
-	private String _id;
 	private String _url;
 	
 	@JsonProperty("created_at")
     private Date _createdAt;
-	
-	
-	public String getId() {
-        return _id;
-    }
-
-    public void setId(String id) {
-        _id = id;
-    }
 
 	public String getUrl() {
 		return _url;

@@ -115,6 +115,7 @@ public class HTTPRequestor {
         _httpClient = getHttpClient();
         
         _method = getMethod(methodType, url, getUserAgent(appContext));
+        Log.i("dibu", url);
         return this;
     }
     

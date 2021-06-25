@@ -1,6 +1,14 @@
 package net.oschina.gitapp;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InvalidClassException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Hashtable;
 import java.util.Properties;
 import java.util.UUID;
@@ -218,6 +226,105 @@ public class AppContext extends Application {
 	}
 	
 	/**
+	 * 判断缓存数据是否可读
+	 * @param cachefile
+	 * @return
+	 */
+	private boolean isReadDataCache(String cachefile) {
+		return readObject(cachefile) != null;
+	}
+	
+	/**
+	 * 保存对象
+	 * @param ser
+	 * @param file
+	 * @throws IOException
+	 */
+	public boolean saveObject(Serializable ser, String file) {
+		FileOutputStream fos = null;
+		ObjectOutputStream oos = null;
+		try{
+			fos = openFileOutput(file, MODE_PRIVATE);
+			oos = new ObjectOutputStream(fos);
+			oos.writeObject(ser);
+			oos.flush();
+			return true;
+		}catch(Exception e){
+			e.printStackTrace();
+			return false;
+		}finally{
+			try {
+				oos.close();
+			} catch (Exception e) {}
+			try {
+				fos.close();
+			} catch (Exception e) {}
+		}
+	}
+	
+	/**
+	 * 读取对象
+	 * @param file
+	 * @return
+	 * @throws IOException
+	 */
+	public Serializable readObject(String file){
+		if(!isExistDataCache(file))
+			return null;
+		FileInputStream fis = null;
+		ObjectInputStream ois = null;
+		try{
+			fis = openFileInput(file);
+			ois = new ObjectInputStream(fis);
+			return (Serializable)ois.readObject();
+		}catch(FileNotFoundException e){
+		}catch(Exception e){
+			e.printStackTrace();
+			//反序列化失败 - 删除缓存文件
+			if(e instanceof InvalidClassException){
+				File data = getFileStreamPath(file);
+				data.delete();
+			}
+		}finally{
+			try {
+				ois.close();
+			} catch (Exception e) {}
+			try {
+				fis.close();
+			} catch (Exception e) {}
+		}
+		return null;
+	}
+	
+	/**
+	 * 判断缓存是否存在
+	 * @param cachefile
+	 * @return
+	 */
+	private boolean isExistDataCache(String cachefile) {
+		boolean exist = false;
+		File data = getFileStreamPath(cachefile);
+		if(data.exists())
+			exist = true;
+		return exist;
+	}
+	
+	/**
+	 * 判断缓存是否失效
+	 * @param cachefile
+	 * @return
+	 */
+	public boolean isCacheDataFailure(String cachefile) {
+		boolean failure = false;
+		File data = getFileStreamPath(cachefile);
+		if(data.exists() && (System.currentTimeMillis() - data.lastModified()) > CACHE_TIME)
+			failure = true;
+		else if(!data.exists())
+			failure = true;
+		return failure;
+	}
+	
+	/**
 	 * 用户登录
 	 * @param account
 	 * @param pwd
@@ -342,8 +449,29 @@ public class AppContext extends Application {
 	 * @return
 	 * @throws AppException
 	 */
-	public ProjectList getMySelfProjectList(int page) throws AppException {
-		return ApiClient.getMySelfProjectList(this, page);
+	public ProjectList getMySelfProjectList(int pageIndex, boolean isRefresh) throws AppException {
+		ProjectList list = null;
+		String cacheKey = "myselfProjectList_" + pageIndex + "_" + PAGE_SIZE;
+		if(!isReadDataCache(cacheKey) || isRefresh) {
+			try{
+				list = ApiClient.getMySelfProjectList(this, pageIndex);
+				if(list != null && pageIndex == 0){
+					list.setCacheKey(cacheKey);
+					saveObject(list, cacheKey);
+				}
+			}catch(AppException e){
+				e.printStackTrace();
+				list = (ProjectList)readObject(cacheKey);
+				if(list == null)
+					throw e;
+			}		
+		} else {
+			// 从缓存中读取
+			list = (ProjectList)readObject(cacheKey);
+			if(list == null)
+				list = new ProjectList();
+		}
+		return list;
 	}
 	
 	/**
@@ -352,9 +480,90 @@ public class AppContext extends Application {
 	 * @return
 	 * @throws AppException
 	 */
-	public ProjectList getExploreLatestProject(int page) throws AppException {
-		return ApiClient.getExploreLatestProject(this, page);
+	public ProjectList getExploreLatestProject(int pageIndex, boolean isRefresh) throws AppException {
+		ProjectList list = null;
+		String cacheKey = "latestProjectList_" + pageIndex + "_" + PAGE_SIZE;
+		if(!isReadDataCache(cacheKey) || isRefresh) {
+			try{
+				list = ApiClient.getExploreLatestProject(this, pageIndex);
+				if(list != null && pageIndex == 0){
+					list.setCacheKey(cacheKey);
+					saveObject(list, cacheKey);
+				}
+			}catch(AppException e){
+				e.printStackTrace();
+				list = (ProjectList)readObject(cacheKey);
+				if(list == null)
+					throw e;
+			}		
+		} else {
+			// 从缓存中读取
+			list = (ProjectList)readObject(cacheKey);
+			if(list == null)
+				list = new ProjectList();
+		}
+		return list;
 	}
 	
+	/**
+	 * 获取热门项目
+	 * @param page
+	 * @return
+	 * @throws AppException
+	 */
+	public ProjectList getExplorePopularProject(int pageIndex, boolean isRefresh) throws AppException {
+		ProjectList list = null;
+		String cacheKey = "popularProjectList_" + pageIndex + "_" + PAGE_SIZE;
+		if(!isReadDataCache(cacheKey) || isRefresh) {
+			try{
+				list = ApiClient.getExplorePopularProject(this, pageIndex);
+				if(list != null && pageIndex == 0){
+					list.setCacheKey(cacheKey);
+					saveObject(list, cacheKey);
+				}
+			}catch(AppException e){
+				e.printStackTrace();
+				list = (ProjectList)readObject(cacheKey);
+				if(list == null)
+					throw e;
+			}		
+		} else {
+			// 从缓存中读取
+			list = (ProjectList)readObject(cacheKey);
+			if(list == null)
+				list = new ProjectList();
+		}
+		return list;
+	}
 	
+	/**
+	 * 获取推荐项目
+	 * @param page
+	 * @return
+	 * @throws AppException
+	 */
+	public ProjectList getExploreFeaturedProject(int pageIndex, boolean isRefresh) throws AppException {
+		ProjectList list = null;
+		String cacheKey = "faturedProjectList_" + pageIndex + "_" + PAGE_SIZE;
+		if(!isReadDataCache(cacheKey) || isRefresh) {
+			try{
+				list = ApiClient.getExploreFeaturedProject(this, pageIndex);
+				if(list != null && pageIndex == 0){
+					list.setCacheKey(cacheKey);
+					saveObject(list, cacheKey);
+				}
+			}catch(AppException e){
+				e.printStackTrace();
+				list = (ProjectList)readObject(cacheKey);
+				if(list == null)
+					throw e;
+			}		
+		} else {
+			// 从缓存中读取
+			list = (ProjectList)readObject(cacheKey);
+			if(list == null)
+				list = new ProjectList();
+		}
+		return list;
+	}
 }

@@ -2,7 +2,13 @@ package net.oschina.gitapp.bean;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class Branch {
+/**
+ * 分支实体类
+ * @author 火蚁(http://my.oschina.net/LittleDY)
+ * 
+ */
+@SuppressWarnings("serial")
+public class Branch extends Entity {
 	public final static String URL = "/repository/branches/";
 	
 	@JsonProperty("name")

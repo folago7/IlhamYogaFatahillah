@@ -2,33 +2,32 @@ package net.oschina.gitapp.ui.fragments;
 
 import java.util.List;
 
-import android.util.Log;
 import android.widget.BaseAdapter;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
-import net.oschina.gitapp.adapter.MySelfListProjectAdapter;
+import net.oschina.gitapp.adapter.ExploreListProjectAdapter;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.MessageData;
 import net.oschina.gitapp.bean.ProjectList;
 import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
 
 /**
- * 个人项目列表Fragment
- * @created 2014-05-12 下午14：24
+ * 发现页面最新项目列表Fragment
+ * @created 2014-05-14 下午16:57
  * @author 火蚁（http://my.oschina.net/LittleDY）
  * 
  * 最后更新
  * 更新者
  */
-public class MySelfListProjectFragment extends BaseSwipeRefreshFragment<Project, ProjectList> {
-	
-	public static MySelfListProjectFragment newInstance() {
-		return new MySelfListProjectFragment();
+public class ExploreLatestListProjectFragment extends BaseSwipeRefreshFragment<Project, ProjectList> {
+		
+	public static ExploreLatestListProjectFragment newInstance() {
+		return new ExploreLatestListProjectFragment();
 	}
 	
 	@Override
 	public BaseAdapter getAdapter(List<Project> list) {
-		return new MySelfListProjectAdapter(getActivity(), list, R.layout.myselfproject_listitem);
+		return new ExploreListProjectAdapter(getActivity(), list, R.layout.exploreproject_listitem);
 	}
 
 	@Override
@@ -36,7 +35,7 @@ public class MySelfListProjectFragment extends BaseSwipeRefreshFragment<Project,
 			boolean reflash) {
 		MessageData<ProjectList> msg = null;
 		try {
-			ProjectList list = mApplication.getMySelfProjectList(page, reflash);
+			ProjectList list = mApplication.getExploreLatestProject(page, reflash);
 			msg = new MessageData<ProjectList>(list);
 		} catch (AppException e) {
 			e.makeToast(mApplication);

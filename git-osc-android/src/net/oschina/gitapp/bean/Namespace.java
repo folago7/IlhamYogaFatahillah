@@ -1,12 +1,13 @@
 package net.oschina.gitapp.bean;
 
 import java.util.Date;
+
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class Namespace {
+@SuppressWarnings("serial")
+public class Namespace extends Entity {
 	public static final String URL = "/groups";
 	
-    private Integer _id;
     private String _name;
     private String _path;
     private String _description;
@@ -19,14 +20,6 @@ public class Namespace {
 
     @JsonProperty("owner_id")
     private Integer _ownerId;
-
-    public Integer getId() {
-        return _id;
-    }
-
-    public void setId(Integer id) {
-        _id = id;
-    }
 
     public Date getCreatedAt() {
         return _createdAt;

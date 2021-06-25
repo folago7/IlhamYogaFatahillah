@@ -4,11 +4,11 @@ import java.util.Date;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class Milestone {
+@SuppressWarnings("serial")
+public class Milestone extends Entity  {
 
 	public static final String URL = "/milestones";
 	
-	private int _id;
 	private int _iid;
 	private int _projectId;
 	private String _title;
@@ -24,14 +24,6 @@ public class Milestone {
 	
 	@JsonProperty("created_date")
 	private Date _createdDate;
-
-	public int getId() {
-		return _id;
-	}
-
-	public void setId(int id) {
-		_id = id;
-	}
 
 	public int getIid() {
 		return _iid;

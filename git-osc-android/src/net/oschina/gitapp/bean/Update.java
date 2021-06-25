@@ -18,6 +18,7 @@ import android.util.Xml;
  * @version 1.0
  * @created 2012-3-21
  */
+@SuppressWarnings("serial")
 public class Update implements Serializable{
 	
 	public final static String UTF8 = "UTF-8";

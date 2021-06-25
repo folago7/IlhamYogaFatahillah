@@ -1,13 +1,19 @@
 package net.oschina.gitapp.bean;
 
 import java.util.Date;
+
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class Commit {
+/**
+ * commit实体类
+ * @author 火蚁（http://my.oschina.net/LittleDY）
+ *
+ */
+@SuppressWarnings("serial")
+public class Commit extends Entity {
 
     public final static String URL = "/commits";
-
-    private String _id;
+    
     private String _title;
 
     @JsonProperty("short_id")
@@ -21,14 +27,6 @@ public class Commit {
 
     @JsonProperty("created_at")
     private Date _createdAt;
-
-    public String getId() {
-        return _id;
-    }
-
-    public void setId(String id) {
-        _id = id;
-    }
 
     public String getShortId() {
         return _shortId;

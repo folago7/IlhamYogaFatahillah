@@ -29,9 +29,9 @@
         <item>@drawable/ic_menu_profile</item>
     </string-array>
     <string-array name="explore_title_array">
-        <item>最近更新</item>
-        <item>热门项目</item>
         <item>推荐项目</item>
+        <item>热门项目</item>
+        <item>最近更新</item>
     </string-array>
     <string-array name="myself_title_array">
         <item>最新动态</item>

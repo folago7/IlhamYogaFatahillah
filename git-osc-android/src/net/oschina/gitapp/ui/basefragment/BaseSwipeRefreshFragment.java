@@ -91,7 +91,7 @@ public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result exte
 		mAdapter = getAdapter(mDataList);
 		//初始化数据,只有首发创建时调用，如果因viewpager里划动而销毁，
 		//再次创建只会调用onActivityCreated-->onCreateView-->onViewCreated
-		loadList(0, LISTVIEW_ACTION_INIT);
+		loadList(1, LISTVIEW_ACTION_INIT);
 	}
 	
 	@Override
@@ -177,12 +177,12 @@ public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result exte
 
 	@Override
 	public void onRefresh() {
-		loadList(0, LISTVIEW_ACTION_REFRESH);
+		loadList(1, LISTVIEW_ACTION_REFRESH);
 	}
 	
 	/** 更新数据，不显示toast*/
 	public void update() {
-		loadList(0, LISTVIEW_ACTION_UPDATE);
+		loadList(1, LISTVIEW_ACTION_UPDATE);
 	}
 	
 	/** 返回是否正在加载*/
@@ -193,7 +193,7 @@ public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result exte
 	/** 加载下一页*/
 	protected void onLoadNextPage() {
 		// 当前pageIndex
-		int pageIndex = mSumData / AppContext.PAGE_SIZE;
+		int pageIndex = mSumData / AppContext.PAGE_SIZE + 1;
 		if(L.Debug) {
 			L.d("加载下一页:" + pageIndex);
 		}
@@ -415,7 +415,7 @@ public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result exte
 				L.d("PageSize:" + result.getPageSize());
 				L.d("ListSize:" + result.getList().size());
 			}
-			if(mPage == 0) {
+			if(mPage == 1) {
 				int newdata = 0;
 				mSumData = result.getPageSize();
 				if (mAction == LISTVIEW_ACTION_REFRESH
@@ -425,7 +425,7 @@ public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result exte
 						for (Data data1 : result.getList()) {
 							boolean b = false;
 							for (Data data2 : mDataList) {
-								if (data1.getEId() == data2.getEId()) {
+								if (data1.getId() == data2.getId()) {
 									b = true;
 									break;
 								}
@@ -462,7 +462,7 @@ public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result exte
 					for (Data data1 : result.getList()) {
 						boolean b = false;
 						for (Data data2 : mDataList) {
-							if (data1.getEId() == data2.getEId()) {
+							if (data1.getId() == data2.getId()) {
 								b = true;
 								break;
 							}

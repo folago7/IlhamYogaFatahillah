@@ -11,19 +11,14 @@ import java.util.List;
  * 最后更新
  * 更新者
  */
+@SuppressWarnings("serial")
 public class ProjectList extends Entity implements PageList<Project> {
-
-	private static final long serialVersionUID = -2634938988973534994L;
-	private int catalog;
+	
 	private int pageSize;
 	private int count;
 	
 	private List<Project> list = new ArrayList<Project>();
 	
-	public void setCatalog(int catalog) {
-		this.catalog = catalog;
-	}
-
 	public void setPageSize(int pageSize) {
 		this.pageSize = pageSize;
 	}
@@ -35,10 +30,6 @@ public class ProjectList extends Entity implements PageList<Project> {
 	@Override
 	public int getCount() {
 		return count;
-	}
-
-	public int getCatalog() {
-		return catalog;
 	}
 
 	public int getPageSize() {

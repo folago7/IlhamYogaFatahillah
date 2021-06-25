@@ -9,6 +9,7 @@ import java.util.Map;
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
 
+import android.util.Log;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.bean.Project;
@@ -126,11 +127,53 @@ public class ApiClient {
 	 * @return
 	 * @throws AppException
 	 */
-	public static ProjectList getExploreLatestProject(AppContext appContext, int page) throws AppException {
+	public static ProjectList getExploreLatestProject(AppContext appContext, final int page) throws AppException {
 		ProjectList projects = new ProjectList();
-		String url = URLs.EXPLORELATESTPROJECT;
+		String url = makeURL(URLs.EXPLORELATESTPROJECT, new HashMap<String, Object>(){{
+			put("page", page);
+		}});
 		List<Project> list = getHttpRequestor().init(appContext, HTTPRequestor.GET_METHOD, url)
 				.with("page", page)
+				.getList(Project[].class);
+		projects.setList(list);
+		projects.setCount(list.size());
+		projects.setPageSize(list.size());
+		return projects;
+	}
+	
+	/**
+	 * 获得发现页面热门项目列表
+	 * @param appContext
+	 * @param page
+	 * @return
+	 * @throws AppException
+	 */
+	public static ProjectList getExplorePopularProject(AppContext appContext, final int page) throws AppException {
+		ProjectList projects = new ProjectList();
+		String url = makeURL(URLs.EXPLOREPOPULARPROJECT, new HashMap<String, Object>(){{
+			put("page", page);
+		}});
+		List<Project> list = getHttpRequestor().init(appContext, HTTPRequestor.GET_METHOD, url)
+				.getList(Project[].class);
+		projects.setList(list);
+		projects.setCount(list.size());
+		projects.setPageSize(list.size());
+		return projects;
+	}
+	
+	/**
+	 * 获得发现页面推荐项目列表
+	 * @param appContext
+	 * @param page
+	 * @return
+	 * @throws AppException
+	 */
+	public static ProjectList getExploreFeaturedProject(AppContext appContext, final int page) throws AppException {
+		ProjectList projects = new ProjectList();
+		String url = makeURL(URLs.EXPLOREFEATUREDPROJECT, new HashMap<String, Object>(){{
+			put("page", page);
+		}});
+		List<Project> list = getHttpRequestor().init(appContext, HTTPRequestor.GET_METHOD, url)
 				.getList(Project[].class);
 		projects.setList(list);
 		projects.setCount(list.size());

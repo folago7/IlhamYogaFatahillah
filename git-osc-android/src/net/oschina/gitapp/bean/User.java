@@ -1,15 +1,16 @@
 package net.oschina.gitapp.bean;
 
-import java.util.Date;
-
 import org.codehaus.jackson.annotate.JsonProperty;
 
-public class User {
+/**
+ * 用户实体类
+ * @author 火蚁(http://my.oschina.net/LittleDY)
+ *
+ */
+@SuppressWarnings("serial")
+public class User extends Entity  {
 	public static final String URL = "/users";
 	
-    @JsonProperty("id")
-    private Integer _id;
-    
     @JsonProperty("username")
     private String _username;
     
@@ -48,14 +49,6 @@ public class User {
 
     @JsonProperty("can_create_team")
     private boolean _canCreateTeam;
-
-	public Integer getId() {
-		return _id;
-	}
-
-	public void setId(Integer _id) {
-		this._id = _id;
-	}
 
 	public String getUsername() {
 		return _username;
