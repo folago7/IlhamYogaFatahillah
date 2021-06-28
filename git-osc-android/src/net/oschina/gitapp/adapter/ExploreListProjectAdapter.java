@@ -4,8 +4,12 @@ import java.util.List;
 
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.Project;
+import net.oschina.gitapp.bean.URLs;
+import net.oschina.gitapp.common.BitmapManager;
 import net.oschina.gitapp.common.StringUtils;
 import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -21,6 +25,8 @@ import android.widget.TextView;
  */
 public class ExploreListProjectAdapter extends MyBaseAdapter<Project> {
 	
+	private BitmapManager bmpManager;
+	
 	static class ListItemView {
 		public ImageView face;//用户头像
 		public TextView project_name;
@@ -33,6 +39,8 @@ public class ExploreListProjectAdapter extends MyBaseAdapter<Project> {
 	
 	public ExploreListProjectAdapter(Context context, List<Project> data, int resource) {
 		super(context, data, resource);
+		this.bmpManager = new BitmapManager(BitmapFactory.decodeResource(
+				context.getResources(), R.drawable.image_loading));
 	}
 
 	@Override
@@ -80,6 +88,16 @@ public class ExploreListProjectAdapter extends MyBaseAdapter<Project> {
 		listItemView.project_name.setText(project.getOwner().getName() + " / " + project.getName());
 		
 		// 1.加载项目作者头像
+		String portrait = project.getOwner().getPortrait() == null ? "" : project.getOwner().getPortrait();
+		if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
+			listItemView.face.setImageResource(R.drawable.mini_avatar);
+		} else {
+			String portraitURL = URLs.HTTP + URLs.HOST + URLs.URL_SPLITTER + project.getOwner().getPortrait();
+			bmpManager.loadBitmap(portraitURL, listItemView.face);
+		}
+		/*if (faceClickEnable) {
+			listItemView.face.setOnClickListener(faceClickListener);
+		}*/
 		
 		// 2.显示相关信息
 		listItemView.project_name.setText(project.getName());

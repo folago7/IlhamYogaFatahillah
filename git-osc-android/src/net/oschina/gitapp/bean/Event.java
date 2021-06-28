@@ -9,7 +9,7 @@ import java.util.Date;
  * 
  */
 @SuppressWarnings("serial")
-public class Events extends Entity {
+public class Event extends Entity {
 	  
 	/** 动态的类型*/
 	public final static byte EVENT_TYPE_CREATED   = 0x1;// 创建了issue
@@ -26,7 +26,7 @@ public class Events extends Entity {
 	private int _action;
 	private int _author_id;
 	private Date _created_at;
-	private Data _data;
+	private Data _data;// 数据
 	private int _project_id;
 	private boolean _public;
 	private int _target_id;

@@ -36,6 +36,8 @@ import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.io.IOUtils;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
@@ -114,8 +116,8 @@ public class HTTPRequestor {
     	_methodType = methodType;
         _httpClient = getHttpClient();
         
-        _method = getMethod(methodType, url, getUserAgent(appContext));
-        Log.i("dibu", url);
+        String urser_agent = appContext != null ? getUserAgent(appContext) : "";
+        _method = getMethod(methodType, url, urser_agent);
         return this;
     }
     
@@ -197,6 +199,47 @@ public class HTTPRequestor {
 		httpMethod.setRequestHeader("Connection","Keep-Alive");
 		httpMethod.setRequestHeader("User-Agent", userAgent);
 		return httpMethod;
+	}
+	
+	/**
+	 * 获取网络图片
+	 * @param url
+	 * @return
+	 */
+	public static Bitmap getNetBitmap(String url) throws AppException {
+		HttpClient httpClient = null;
+		GetMethod httpGet = null;
+		Bitmap bitmap = null;
+		
+		try 
+		{
+			httpClient = getHttpClient();
+			httpGet = (GetMethod)getMethod(GET_METHOD, url, "");
+			int statusCode = httpClient.executeMethod(httpGet);
+			if (statusCode != HttpStatus.SC_OK) {
+				throw AppException.http(statusCode);
+			}
+			
+	        InputStream inStream = new ByteArrayInputStream(httpGet.getResponseBody());
+	        bitmap = BitmapFactory.decodeStream(inStream);
+	        inStream.close();
+	        
+		} catch (HttpException e) {
+			
+			// 发生致命的异常，可能是协议不对或者返回的内容有问题
+			e.printStackTrace();
+			throw AppException.http(e);
+		} catch (IOException e) {
+			
+			// 发生网络异常
+			e.printStackTrace();
+			throw AppException.network(e);
+		} finally {
+			// 释放连接
+			httpGet.releaseConnection();
+			httpClient = null;
+		}
+		return bitmap;
 	}
 
     /**

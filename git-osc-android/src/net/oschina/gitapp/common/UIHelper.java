@@ -5,13 +5,20 @@ import java.util.regex.Pattern;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppManager;
 import net.oschina.gitapp.R;
+import net.oschina.gitapp.bean.Event;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.Toast;
 
@@ -132,5 +139,85 @@ public class UIHelper {
 
 	public static void ToastMessage(Context cont, String msg, int time) {
 		Toast.makeText(cont, msg, time).show();
+	}
+	
+	/**
+	 * 分析并组合动态的标题
+	 * @param author_name 动态作者的名称
+	 * @param pAuthor_And_pName 项目的作者和项目名
+	 * @param eventTitle 事件的title（Issue或者pr或分支）
+	 * @return
+	 */
+	public static SpannableString parseEventTitle(String author_name, 
+			String pAuthor_And_pName, String eventTitle,Event event) {
+		String title = "";
+		int action = event.getAction();
+		
+		switch (action) {
+		case Event.EVENT_TYPE_CREATED:// 创建了issue
+			title = "在项目" + pAuthor_And_pName + "创建了" + eventTitle + event.getTarget_id();
+			break;
+		case Event.EVENT_TYPE_UPDATED:// 更新项目
+			title = "更新了项目" + pAuthor_And_pName;
+			break;
+		case Event.EVENT_TYPE_CLOSED:// 关闭项目
+			title = "关闭了项目" + pAuthor_And_pName;
+			break;
+		case Event.EVENT_TYPE_REOPENED:// 重新打开了项目
+			title = "重新打开了项目" + pAuthor_And_pName;
+			break;
+		case Event.EVENT_TYPE_PUSHED:// push
+			title = "推送到了项目" + pAuthor_And_pName + "的" + event.getData().getRef();
+			break;
+		case Event.EVENT_TYPE_COMMENTED:// 评论
+			title = "评论了项目" + pAuthor_And_pName + "的" + eventTitle;
+			break;
+		case Event.EVENT_TYPE_MERGED:// 合并
+			title = "接受了项目" + pAuthor_And_pName + "的" + eventTitle + event.getTarget_id();
+			break;
+		case Event.EVENT_TYPE_JOINED://# User joined project
+			title = "加入了项目" + pAuthor_And_pName;
+			break;
+		case Event.EVENT_TYPE_LEFT://# User left project
+			title = "离开了项目" + pAuthor_And_pName;
+			break;
+		case Event.EVENT_TYPE_FORKED:// fork了项目
+			title = "Fork了项目" + pAuthor_And_pName;
+			break;
+		default:
+			title = "更新了动态：";
+			break;
+		}
+		title = author_name + " " + title;
+		SpannableString sps = new SpannableString(title);
+		
+		// 设置用户名字体大小、加粗、高亮
+		sps.setSpan(new AbsoluteSizeSpan(14, true), 0, author_name.length(),
+				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		sps.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0,
+				author_name.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		sps.setSpan(new ForegroundColorSpan(Color.parseColor("#0e5986")), 0,
+				author_name.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		
+		// 设置项目名字体大小和高亮
+		int start = title.indexOf(pAuthor_And_pName);
+		int end = start + pAuthor_And_pName.length();
+		sps.setSpan(new AbsoluteSizeSpan(14, true), start, end,
+				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		sps.setSpan(
+				new ForegroundColorSpan(Color.parseColor("#0e5986")),
+				start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		
+		// 设置动态的title字体大小和高亮
+		if (!StringUtils.isEmpty(eventTitle)) {
+			start = title.indexOf(eventTitle);
+			end = start + eventTitle.length();
+			sps.setSpan(new AbsoluteSizeSpan(14, true), start, end,
+					Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			sps.setSpan(
+					new ForegroundColorSpan(Color.parseColor("#0e5986")),
+					start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		}
+		return sps;
 	}
 }

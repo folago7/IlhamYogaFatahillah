@@ -16,10 +16,10 @@ public class URLs implements Serializable {
 	public final static String HTTP = "http://";
 	public final static String HTTPS = "https://";
 	
-	private final static String URL_SPLITTER = "/";
+	public final static String URL_SPLITTER = "/";
 	
 	// 拼接的api根地址
-	private final static String URL_API_HOST = HTTP + HOST + API_VERSION + URL_SPLITTER;
+	public final static String URL_API_HOST = HTTP + HOST + API_VERSION + URL_SPLITTER;
 	
 	// api URL地址
 	public static String BRANCH = URL_API_HOST + "repository/branches";

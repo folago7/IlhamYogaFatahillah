@@ -12,7 +12,9 @@ import java.io.Serializable;
 import java.util.Hashtable;
 import java.util.Properties;
 import java.util.UUID;
+
 import net.oschina.gitapp.api.ApiClient;
+import net.oschina.gitapp.bean.EventList;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.bean.ProjectList;
 import net.oschina.gitapp.common.StringUtils;
@@ -444,37 +446,6 @@ public class AppContext extends Application {
 	}
 	
 	/**
-	 * 获得个人的所有项目
-	 * @param page
-	 * @return
-	 * @throws AppException
-	 */
-	public ProjectList getMySelfProjectList(int pageIndex, boolean isRefresh) throws AppException {
-		ProjectList list = null;
-		String cacheKey = "myselfProjectList_" + pageIndex + "_" + PAGE_SIZE;
-		if(!isReadDataCache(cacheKey) || isRefresh) {
-			try{
-				list = ApiClient.getMySelfProjectList(this, pageIndex);
-				if(list != null && pageIndex == 0){
-					list.setCacheKey(cacheKey);
-					saveObject(list, cacheKey);
-				}
-			}catch(AppException e){
-				e.printStackTrace();
-				list = (ProjectList)readObject(cacheKey);
-				if(list == null)
-					throw e;
-			}		
-		} else {
-			// 从缓存中读取
-			list = (ProjectList)readObject(cacheKey);
-			if(list == null)
-				list = new ProjectList();
-		}
-		return list;
-	}
-	
-	/**
 	 * 获得最近更新的项目
 	 * @param page
 	 * @return
@@ -548,6 +519,69 @@ public class AppContext extends Application {
 		if(!isReadDataCache(cacheKey) || isRefresh) {
 			try{
 				list = ApiClient.getExploreFeaturedProject(this, pageIndex);
+				if(list != null && pageIndex == 0){
+					list.setCacheKey(cacheKey);
+					saveObject(list, cacheKey);
+				}
+			}catch(AppException e){
+				e.printStackTrace();
+				list = (ProjectList)readObject(cacheKey);
+				if(list == null)
+					throw e;
+			}		
+		} else {
+			// 从缓存中读取
+			list = (ProjectList)readObject(cacheKey);
+			if(list == null)
+				list = new ProjectList();
+		}
+		return list;
+	}
+	
+	/**
+	 * 获得个人动态列表
+	 * @param pageIndex
+	 * @param isRefresh
+	 * @return
+	 * @throws AppException
+	 */
+	public EventList getMySelfEvents(int pageIndex, boolean isRefresh) throws AppException {
+		EventList list = null;
+		String cacheKey = "myselfEventsList_" + + pageIndex + "_" + PAGE_SIZE;
+		if(!isReadDataCache(cacheKey) || isRefresh) {
+			try{
+				list = ApiClient.getMySelfEvents(this, pageIndex);
+				if(list != null && pageIndex == 0){
+					list.setCacheKey(cacheKey);
+					saveObject(list, cacheKey);
+				}
+			}catch(AppException e){
+				e.printStackTrace();
+				list = (EventList)readObject(cacheKey);
+				if(list == null)
+					throw e;
+			}		
+		} else {
+			// 从缓存中读取
+			list = (EventList)readObject(cacheKey);
+			if(list == null)
+				list = new EventList();
+		}
+		return list;
+	}
+	
+	/**
+	 * 获得个人的所有项目
+	 * @param page
+	 * @return
+	 * @throws AppException
+	 */
+	public ProjectList getMySelfProjectList(int pageIndex, boolean isRefresh) throws AppException {
+		ProjectList list = null;
+		String cacheKey = "myselfProjectList_" + pageIndex + "_" + PAGE_SIZE;
+		if(!isReadDataCache(cacheKey) || isRefresh) {
+			try{
+				list = ApiClient.getMySelfProjectList(this, pageIndex);
 				if(list != null && pageIndex == 0){
 					list.setCacheKey(cacheKey);
 					saveObject(list, cacheKey);
