@@ -1,8 +1,11 @@
 package net.oschina.gitapp.bean;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import org.codehaus.jackson.annotate.JsonProperty;
+
+import android.widget.AbsListView.SelectionBoundsAdjuster;
 
 /**
  * commit实体类
@@ -10,11 +13,13 @@ import org.codehaus.jackson.annotate.JsonProperty;
  *
  */
 @SuppressWarnings("serial")
-public class Commit extends Entity {
+public class Commit implements Serializable {
 
     public final static String URL = "/commits";
     
-    private String _title;
+    private String _id;
+
+	private String _title;
 
     @JsonProperty("short_id")
     private String _shortId;
@@ -27,7 +32,15 @@ public class Commit extends Entity {
 
     @JsonProperty("created_at")
     private Date _createdAt;
+    
+    public String getId() {
+		return _id;
+	}
 
+	public void setId(String id) {
+		this._id = id;
+	}
+    
     public String getShortId() {
         return _shortId;
     }

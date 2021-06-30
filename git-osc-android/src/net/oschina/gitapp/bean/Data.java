@@ -16,8 +16,8 @@ public class Data extends Entity {
 	private String _user_name;
 	// 仓库
 	private Repository _repository;
-	// 提交
-	private Commit _commit;
+	// 提交，可能有多个commits
+	private Commit[] _commits;
 	// 提交的数量
 	private int _total_commits_count;
 	
@@ -27,11 +27,11 @@ public class Data extends Entity {
 	public void setTotal_commits_count(int total_commits_count) {
 		this._total_commits_count = total_commits_count;
 	}
-	public Commit getCommit() {
-		return _commit;
+	public Commit[] getCommits() {
+		return _commits;
 	}
-	public void setCommit(Commit commit) {
-		this._commit = commit;
+	public void setCommits(Commit[] commits) {
+		this._commits = commits;
 	}
 	public Repository getRepository() {
 		return _repository;

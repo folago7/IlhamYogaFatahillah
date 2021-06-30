@@ -112,30 +112,16 @@ public class ApiClient {
 		return session;
 	}
 	
-	private static HttpClient getHttpClient() {        
-        HttpClient httpClient = new HttpClient();
-		// 设置 HttpClient 接收 Cookie,用与浏览器一样的策略
-		httpClient.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
-        // 设置 默认的超时重试处理策略
-		httpClient.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler());
-		// 设置 连接超时时间
-		httpClient.getHttpConnectionManager().getParams().setConnectionTimeout(2000);
-		// 设置 读数据超时时间 
-		httpClient.getHttpConnectionManager().getParams().setSoTimeout(2000);
-		// 设置 字符集
-		httpClient.getParams().setContentCharset("UTF-8");
-		return httpClient;
-	}	
-	
-	private static GetMethod getHttpGet(String url, String cookie, String userAgent) {
-		GetMethod httpGet = new GetMethod(url);
-		// 设置 请求超时时间
-		httpGet.getParams().setSoTimeout(2000);
-		httpGet.setRequestHeader("Host", URLs.HOST);
-		httpGet.setRequestHeader("Connection","Keep-Alive");
-		httpGet.setRequestHeader("Cookie", cookie);
-		httpGet.setRequestHeader("User-Agent", userAgent);
-		return httpGet;
+	/**
+	 * 获得一个用户的信息
+	 * @param appContext
+	 * @param userId
+	 * @return
+	 * @throws AppException
+	 */
+	public static User getUser(AppContext appContext, int userId)  throws AppException {
+		String url = URLs.USER + URLs.URL_SPLITTER + userId;
+		return getHttpRequestor().init(appContext, HTTPRequestor.GET_METHOD, url).to(User.class);
 	}
 	
 	/**
@@ -145,6 +131,19 @@ public class ApiClient {
 	 */
 	public static Bitmap getNetBitmap(String url) throws AppException {
 		return HTTPRequestor.getNetBitmap(url);
+	}
+	
+	/**
+	 * 获得一个项目的信息
+	 * @param appContext
+	 * @param projectId
+	 * @return
+	 * @throws AppException
+	 */
+	public static Project getProject(AppContext appContext, int projectId) throws AppException {
+		String url = URLs.PROJECT + URLs.URL_SPLITTER + projectId;
+		Log.i("MySelfViewPagerFragment", url);
+		return getHttpRequestor().init(appContext, HTTPRequestor.GET_METHOD, url).to(Project.class);
 	}
 	
 	/**
@@ -221,8 +220,7 @@ public class ApiClient {
 			put("page", page);
 			put(PRIVATE_TOKEN, getToken(appContext));
 		}});
-		Log.i("MySelfViewPagerFragment", url);
-		List<Event> list = getHttpRequestor().init(appContext, HTTPRequestor.GET_METHOD, url)
+		final List<Event> list = getHttpRequestor().init(appContext, HTTPRequestor.GET_METHOD, url)
 				.getList(Event[].class);
 		events.setList(list);
 		events.setCount(list.size());
@@ -250,6 +248,7 @@ public class ApiClient {
 		msProject.setPageSize(list.size());
 		return msProject;
 	}
+	
 }
 
 

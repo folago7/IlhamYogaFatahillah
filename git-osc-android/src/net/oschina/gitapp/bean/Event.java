@@ -21,7 +21,7 @@ public class Event extends Entity {
   	public final static byte EVENT_TYPE_MERGED    = 0x7;// 合并
   	public final static byte EVENT_TYPE_JOINED    = 0x8; //# User joined project
   	public final static byte EVENT_TYPE_LEFT      = 0x9; //# User left project
-  	public final static byte EVENT_TYPE_FORKED    = 0x11;// fork了项目
+  	public final static byte EVENT_TYPE_FORKED    = 0xb;// fork了项目
 	
 	private int _action;
 	private int _author_id;
@@ -34,6 +34,21 @@ public class Event extends Entity {
 	private String _title;
 	private Date _updated_at;
 	
+	private User _user;
+	private Project _project;
+	
+	public User getUser() {
+		return _user;
+	}
+	public void setUser(User user) {
+		this._user = user;
+	}
+	public Project getProject() {
+		return _project;
+	}
+	public void setProject(Project project) {
+		this._project = project;
+	}
 	public int getAction() {
 		return _action;
 	}

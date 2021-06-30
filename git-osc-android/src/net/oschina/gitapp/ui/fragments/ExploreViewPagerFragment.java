@@ -21,14 +21,14 @@ public class ExploreViewPagerFragment extends BaseViewPagerFragment<BaseFragment
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		String[] title = getResources().getStringArray(R.array.explore_title_array);
+		/*String[] title = getResources().getStringArray(R.array.explore_title_array);
 		for (String t : title) {
 			titleList.add(t);
 		}
 		fragmentList.add(new ExploreFeaturedListProjectFragment());
 		fragmentList.add(new ExplorePopularListProjectFragment());
-		fragmentList.add(new ExploreLatestListProjectFragment());
-		/*String[] title = getResources().getStringArray(R.array.myself_title_array);
+		fragmentList.add(new ExploreLatestListProjectFragment());*/
+		String[] title = getResources().getStringArray(R.array.myself_title_array);
 		for (String t : title) {
 			titleList.add(t);
 			Log.i("MySelfViewPagerFragment", t);
@@ -36,6 +36,6 @@ public class ExploreViewPagerFragment extends BaseViewPagerFragment<BaseFragment
 		fragmentList.add(new MySelfListEventFragment());
 		fragmentList.add(new MySelfListProjectFragment());
 		fragmentList.add(new MySelfListEventFragment());
-		fragmentList.add(new MySelfListProjectFragment());*/
+		fragmentList.add(new MySelfListProjectFragment());
 	}
 }

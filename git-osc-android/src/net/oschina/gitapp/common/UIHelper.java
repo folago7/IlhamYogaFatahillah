@@ -19,6 +19,7 @@ import android.text.SpannableString;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -152,7 +153,6 @@ public class UIHelper {
 			String pAuthor_And_pName, String eventTitle,Event event) {
 		String title = "";
 		int action = event.getAction();
-		
 		switch (action) {
 		case Event.EVENT_TYPE_CREATED:// 创建了issue
 			title = "在项目" + pAuthor_And_pName + "创建了" + eventTitle + event.getTarget_id();
@@ -167,7 +167,7 @@ public class UIHelper {
 			title = "重新打开了项目" + pAuthor_And_pName;
 			break;
 		case Event.EVENT_TYPE_PUSHED:// push
-			title = "推送到了项目" + pAuthor_And_pName + "的" + event.getData().getRef();
+			title = "推送到了项目" + pAuthor_And_pName + "的" + event.getData().getRef() + "分支";
 			break;
 		case Event.EVENT_TYPE_COMMENTED:// 评论
 			title = "评论了项目" + pAuthor_And_pName + "的" + eventTitle;
@@ -202,21 +202,25 @@ public class UIHelper {
 		// 设置项目名字体大小和高亮
 		int start = title.indexOf(pAuthor_And_pName);
 		int end = start + pAuthor_And_pName.length();
-		sps.setSpan(new AbsoluteSizeSpan(14, true), start, end,
+		if (!StringUtils.isEmpty(pAuthor_And_pName) && start > 0) {
+			
+			sps.setSpan(new AbsoluteSizeSpan(14, true), start, end,
 				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		sps.setSpan(
-				new ForegroundColorSpan(Color.parseColor("#0e5986")),
+			sps.setSpan(new ForegroundColorSpan(Color.parseColor("#0e5986")),
 				start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		}
 		
 		// 设置动态的title字体大小和高亮
-		if (!StringUtils.isEmpty(eventTitle)) {
+		if (!StringUtils.isEmpty(eventTitle) && eventTitle != null) {
 			start = title.indexOf(eventTitle);
 			end = start + eventTitle.length();
-			sps.setSpan(new AbsoluteSizeSpan(14, true), start, end,
-					Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-			sps.setSpan(
-					new ForegroundColorSpan(Color.parseColor("#0e5986")),
-					start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			if (start > 0) {
+				sps.setSpan(new AbsoluteSizeSpan(14, true), start, end,
+						Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				sps.setSpan(
+						new ForegroundColorSpan(Color.parseColor("#0e5986")),
+						start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			}
 		}
 		return sps;
 	}
