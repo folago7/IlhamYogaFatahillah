@@ -35,6 +35,9 @@
             android:label="@string/login_title" >
             
         </activity>
+        <activity
+            android:name=".ui.fragments.ProjectViewPageFragment"/>
+            
     </application>
 
 </manifest>

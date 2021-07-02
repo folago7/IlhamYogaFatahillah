@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
-	<!-- 数组资源 -->
+
+    <!-- 数组资源 -->
     <!-- share items -->
     <string-array name="app_share_items">
         <item>新浪微博</item>
@@ -9,7 +10,7 @@
         <item>截图分享</item>
         <item>更多</item>
     </string-array>
-    
+
     <!-- 导航菜单文字 -->
     <string-array name="navigation_drawer_strings">
         <item>发现</item>
@@ -19,6 +20,7 @@
         <item>建议</item>
         <item>退出</item>
     </string-array>
+    
     <!-- 导航菜单图标 -->
     <string-array name="navigation_drawer_icons">
         <item>@drawable/ic_menu_dashboard</item>
@@ -28,15 +30,27 @@
         <item>@drawable/ic_menu_snippets</item>
         <item>@drawable/ic_menu_profile</item>
     </string-array>
+    
+    <!-- 发现页面 -->
     <string-array name="explore_title_array">
         <item>推荐项目</item>
         <item>热门项目</item>
         <item>最近更新</item>
     </string-array>
+    
+    <!-- 个人页面 -->
     <string-array name="myself_title_array">
         <item>最新动态</item>
         <item>项目</item>
         <item>提交</item>
+        <item>问题</item>
+    </string-array>
+	
+    <!-- 查看项目页面 -->
+    <string-array name="project_title_array">
+        <item>提交</item>
+        <item>代码</item>
+        <item>Pull Requests</item>
         <item>问题</item>
     </string-array>
 </resources>

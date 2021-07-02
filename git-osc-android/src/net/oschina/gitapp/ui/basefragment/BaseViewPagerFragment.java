@@ -49,7 +49,7 @@ public class BaseViewPagerFragment<T extends BaseFragment> extends Fragment impl
 	}
 	
 	// pager适配器
-	private static class ListFragmentPagerAdapter<T extends BaseFragment> extends FragmentPagerAdapter {
+	private class ListFragmentPagerAdapter<T extends BaseFragment> extends FragmentPagerAdapter {
 		private List<T> fragmentList;
 		private List<String> titleList;
 

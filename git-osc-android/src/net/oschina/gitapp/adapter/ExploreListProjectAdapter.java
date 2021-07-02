@@ -44,21 +44,6 @@ public class ExploreListProjectAdapter extends MyBaseAdapter<Project> {
 	}
 
 	@Override
-	public int getCount() {
-		return listData.size();
-	}
-
-	@Override
-	public Object getItem(int position) {
-		return listData.get(position);
-	}
-
-	@Override
-	public long getItemId(int position) {
-		return position;
-	}
-
-	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		
 		ListItemView  listItemView = null;
@@ -83,7 +68,7 @@ public class ExploreListProjectAdapter extends MyBaseAdapter<Project> {
 			listItemView = (ListItemView)convertView.getTag();
 		}
 		
-		Project project = (Project) listData.get(position);
+		Project project = getItem(position);
 		
 		listItemView.project_name.setText(project.getOwner().getName() + " / " + project.getName());
 		
@@ -118,5 +103,4 @@ public class ExploreListProjectAdapter extends MyBaseAdapter<Project> {
 		
 		return convertView;
 	}
-
 }

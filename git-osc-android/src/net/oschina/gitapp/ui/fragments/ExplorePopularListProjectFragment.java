@@ -10,6 +10,7 @@ import net.oschina.gitapp.adapter.ExploreListProjectAdapter;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.MessageData;
 import net.oschina.gitapp.bean.ProjectList;
+import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
 
 /**
@@ -44,5 +45,10 @@ public class ExplorePopularListProjectFragment extends BaseSwipeRefreshFragment<
 			msg = new MessageData<ProjectList>(e);
 		}
 		return msg;
+	}
+	
+	@Override
+	public void onItemClick(int position, Project project) {
+		UIHelper.showProjectDetail(getActivity(), project);
 	}
 }

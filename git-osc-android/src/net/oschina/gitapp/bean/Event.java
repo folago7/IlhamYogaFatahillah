@@ -2,6 +2,8 @@ package net.oschina.gitapp.bean;
 
 import java.util.Date;
 
+import org.codehaus.jackson.annotate.JsonProperty;
+
 /**
  * 用户最新动态实体类
  * @created 2014-05-19 下午18：00
@@ -23,26 +25,39 @@ public class Event extends Entity {
   	public final static byte EVENT_TYPE_LEFT      = 0x9; //# User left project
   	public final static byte EVENT_TYPE_FORKED    = 0xb;// fork了项目
 	
+  	@JsonProperty("action")
 	private int _action;
-	private int _author_id;
-	private Date _created_at;
-	private Data _data;// 数据
-	private int _project_id;
-	private boolean _public;
-	private int _target_id;
-	private String _target_type;
-	private String _title;
-	private Date _updated_at;
+  	
+	@JsonProperty("author")
+	private User _author;
 	
-	private User _user;
+	@JsonProperty("created_at")
+	private Date _created_at;
+	
+	@JsonProperty("data")
+	private Data _data;// 数据
+	
+	@JsonProperty("project")
 	private Project _project;
 	
-	public User getUser() {
-		return _user;
-	}
-	public void setUser(User user) {
-		this._user = user;
-	}
+	@JsonProperty("project_id")
+	private int _project_id;
+	
+	@JsonProperty("public")
+	private boolean _public;
+	
+	@JsonProperty("target_id")
+	private int _target_id;
+	
+	@JsonProperty("target_type")
+	private String _target_type;
+	
+	@JsonProperty("title")
+	private String _title;
+	
+	@JsonProperty("update_at")
+	private Date _updated_at;
+	
 	public Project getProject() {
 		return _project;
 	}
@@ -55,11 +70,11 @@ public class Event extends Entity {
 	public void setAction(int action) {
 		this._action = action;
 	}
-	public int getAuthor_id() {
-		return _author_id;
+	public User getAuthor() {
+		return _author;
 	}
-	public void setAuthor_id(int author_id) {
-		this._author_id = author_id;
+	public void setAuthor(User author) {
+		this._author = author;
 	}
 	public Date getCreated_at() {
 		return _created_at;

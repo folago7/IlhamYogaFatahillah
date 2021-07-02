@@ -40,11 +40,6 @@ public class MySelfListProjectAdapter extends MyBaseAdapter<Project> {
 	}
 
 	@Override
-	public Object getItem(int position) {
-		return listData.get(position);
-	}
-
-	@Override
 	public long getItemId(int position) {
 		return position;
 	}
@@ -69,7 +64,7 @@ public class MySelfListProjectAdapter extends MyBaseAdapter<Project> {
 			listItemView = (ListItemView)convertView.getTag();
 		}
 		
-		Project project = listData.get(position);
+		Project project = getItem(position);
 		
 		listItemView.project_name.setText(project.getOwner().getName() + " / " + project.getName());
 		

@@ -20,15 +20,15 @@ public class Commit implements Serializable {
     private String _id;
 
 	private String _title;
+	
+	@JsonProperty("message")
+	private String _message;
 
-    @JsonProperty("short_id")
+	@JsonProperty("short_id")
     private String _shortId;
-
-    @JsonProperty("author_name")
-    private String _authorName;
-
-    @JsonProperty("author_email")
-    private String _authorEmail;
+	
+	@JsonProperty("author")
+	private User _author;
 
     @JsonProperty("created_at")
     private Date _createdAt;
@@ -56,22 +56,22 @@ public class Commit implements Serializable {
     public void setTitle(String title) {
         _title = title;
     }
+    
+    public User getAuthor() {
+		return _author;
+	}
 
-    public String getAuthorName() {
-        return _authorName;
-    }
+	public void setAuthor(User author) {
+		this._author = author;
+	}
 
-    public void setAuthorName(String authorName) {
-        _authorName = authorName;
-    }
+	public String getMessage() {
+		return _message;
+	}
 
-    public String getAuthorEmail() {
-        return _authorEmail;
-    }
-
-    public void setAuthorEmail(String authorEmail) {
-        _authorEmail = authorEmail;
-    }
+	public void setMessage(String message) {
+		this._message = message;
+	}
 
     public Date getCreatedAt() {
         return _createdAt;

@@ -6,12 +6,16 @@ import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppManager;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.Event;
+import net.oschina.gitapp.bean.Project;
+import net.oschina.gitapp.ui.fragments.ProjectViewPageFragment;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Spannable;
@@ -150,39 +154,44 @@ public class UIHelper {
 	 * @return
 	 */
 	public static SpannableString parseEventTitle(String author_name, 
-			String pAuthor_And_pName, String eventTitle,Event event) {
+			String pAuthor_And_pName, Event event) {
 		String title = "";
+		String eventTitle = "";
 		int action = event.getAction();
 		switch (action) {
 		case Event.EVENT_TYPE_CREATED:// 创建了issue
-			title = "在项目" + pAuthor_And_pName + "创建了" + eventTitle + event.getTarget_id();
+			eventTitle = event.getTarget_type();
+			title = "在项目 " + pAuthor_And_pName + " 创建了 " + eventTitle;
 			break;
 		case Event.EVENT_TYPE_UPDATED:// 更新项目
-			title = "更新了项目" + pAuthor_And_pName;
+			title = "更新了项目 " + pAuthor_And_pName;
 			break;
 		case Event.EVENT_TYPE_CLOSED:// 关闭项目
-			title = "关闭了项目" + pAuthor_And_pName;
+			title = "关闭了项目 " + pAuthor_And_pName;
 			break;
 		case Event.EVENT_TYPE_REOPENED:// 重新打开了项目
-			title = "重新打开了项目" + pAuthor_And_pName;
+			title = "重新打开了项目 " + pAuthor_And_pName;
 			break;
 		case Event.EVENT_TYPE_PUSHED:// push
-			title = "推送到了项目" + pAuthor_And_pName + "的" + event.getData().getRef() + "分支";
+			eventTitle = event.getData().getRef().substring(event.getData().getRef().lastIndexOf("/") + 1);
+			title = "推送到了项目 " + pAuthor_And_pName + " 的 " + eventTitle + " 分支";
 			break;
 		case Event.EVENT_TYPE_COMMENTED:// 评论
-			title = "评论了项目" + pAuthor_And_pName + "的" + eventTitle;
+			eventTitle = event.getTarget_type();
+			title = "评论了项目 " + pAuthor_And_pName + " 的" + eventTitle;
 			break;
 		case Event.EVENT_TYPE_MERGED:// 合并
-			title = "接受了项目" + pAuthor_And_pName + "的" + eventTitle + event.getTarget_id();
+			eventTitle = event.getTarget_type();
+			title = "接受了项目 " + pAuthor_And_pName + " 的 " + eventTitle;
 			break;
 		case Event.EVENT_TYPE_JOINED://# User joined project
-			title = "加入了项目" + pAuthor_And_pName;
+			title = "加入了项目 " + pAuthor_And_pName;
 			break;
 		case Event.EVENT_TYPE_LEFT://# User left project
-			title = "离开了项目" + pAuthor_And_pName;
+			title = "离开了项目 " + pAuthor_And_pName;
 			break;
 		case Event.EVENT_TYPE_FORKED:// fork了项目
-			title = "Fork了项目" + pAuthor_And_pName;
+			title = "Fork了项目 " + pAuthor_And_pName;
 			break;
 		default:
 			title = "更新了动态：";
@@ -202,13 +211,11 @@ public class UIHelper {
 		// 设置项目名字体大小和高亮
 		int start = title.indexOf(pAuthor_And_pName);
 		int end = start + pAuthor_And_pName.length();
-		if (!StringUtils.isEmpty(pAuthor_And_pName) && start > 0) {
-			
-			sps.setSpan(new AbsoluteSizeSpan(14, true), start, end,
-				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-			sps.setSpan(new ForegroundColorSpan(Color.parseColor("#0e5986")),
-				start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		}
+		sps.setSpan(new AbsoluteSizeSpan(14, true), start, end,
+			Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		sps.setSpan(new ForegroundColorSpan(Color.parseColor("#0e5986")),
+			start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		
 		
 		// 设置动态的title字体大小和高亮
 		if (!StringUtils.isEmpty(eventTitle) && eventTitle != null) {
@@ -223,5 +230,18 @@ public class UIHelper {
 			}
 		}
 		return sps;
+	}
+	
+	/**
+	 * 显示项目的详情
+	 * @param fragment
+	 * @param project
+	 */
+	public static void showProjectDetail(Context context, Project project) {
+		Intent intent = new Intent(context, ProjectViewPageFragment.class);
+		Bundle bundle = new Bundle();
+		bundle.putSerializable("project", project);
+		intent.putExtras(bundle);
+		context.startActivity(intent);
 	}
 }

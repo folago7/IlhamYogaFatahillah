@@ -8,15 +8,23 @@ import org.codehaus.jackson.annotate.JsonProperty;
 public class Project extends Entity {
 
     public static final String URL = "/projects";
-
+    
+    @JsonProperty("name")
     private String _name;
+    
+    @JsonProperty("description")
     private String _description;
 
     @JsonProperty("default_branch")
     private String _defaultBranch;
-
+    
+    @JsonProperty("owner")
     private User _owner;
+    
+    @JsonProperty("public")
     private boolean _public;
+    
+    @JsonProperty("path")
     private String _path;
 
     @JsonProperty("path_with_namespace")
@@ -43,6 +51,7 @@ public class Project extends Entity {
     @JsonProperty("http_url_to_repo")
     private String _httpUrl;
     
+    @JsonProperty("namespace")
     private Namespace _namespace;
     
     @JsonProperty("last_push_at")

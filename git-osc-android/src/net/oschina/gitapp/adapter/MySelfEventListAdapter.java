@@ -1,6 +1,8 @@
 package net.oschina.gitapp.adapter;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -8,6 +10,7 @@ import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.ApiClient;
+import net.oschina.gitapp.bean.Commit;
 import net.oschina.gitapp.bean.Event;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.URLs;
@@ -25,6 +28,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 /**
@@ -44,6 +48,7 @@ public class MySelfEventListAdapter extends MyBaseAdapter<Event> {
 		public ImageView face;//用户头像
 		public TextView user_name;
 		public TextView content;//更新内容
+		public ListView commitLists;// commits的列表
 		public TextView date;//更新时间
 	}
 	
@@ -51,21 +56,6 @@ public class MySelfEventListAdapter extends MyBaseAdapter<Event> {
 		super(context, data, resource);
 		this.bmpManager = new BitmapManager(BitmapFactory.decodeResource(
 				context.getResources(), R.drawable.image_loading));
-	}
-
-	@Override
-	public int getCount() {
-		return listData.size();
-	}
-
-	@Override
-	public Object getItem(int position) {
-		return listData.get(position);
-	}
-
-	@Override
-	public long getItemId(int position) {
-		return position;
 	}
 
 	@Override
@@ -83,87 +73,75 @@ public class MySelfEventListAdapter extends MyBaseAdapter<Event> {
 			listItemView.user_name = (TextView) convertView.findViewById(R.id.event_listitem_username);
 			listItemView.content = (TextView) convertView.findViewById(R.id.event_listitem_content);
 			listItemView.date = (TextView) convertView.findViewById(R.id.event_listitem_date);
-			
+			listItemView.commitLists = (ListView) convertView.findViewById(R.id.enent_listitem_commits_list);
 			//设置控件集到convertView
 			convertView.setTag(listItemView);
 		}else {
 			listItemView = (ListItemView)convertView.getTag();
 		}
 		
-		Event event = (Event) listData.get(position);
+		Event event = getItem(position);
 		
-		/*//异步登录
-    	new AsyncTask<Void, Void, Message>() {
-			@Override
-			protected Message doInBackground(Void... params) {
-				Message msg =new Message();
-				try {
-					event.setUser(ApiClient.getUser(null, event.getAuthor_id()));
-					event.setProject(ApiClient.getProject(null, event.getProject_id()));
-	                msg.what = 1;
-	                msg.obj = event;
-	            } catch (Exception e) {
-			    	msg.what = -1;
-			    	msg.obj = e;
-	            }
-				return msg;
-			}
-			
-			@Override
-			protected void onPreExecute() {
-				
-			}
-			
-			@Override
-			protected void onPostExecute(Message msg) {
-				if(msg.what == 1){
-					user_name.setText(UIHelper.parseEventTitle(event.getUser().getName(), 
-							event.getProject().getOwner().getName() + "/" + event.getProject().getName(), event.getTarget_type(), event));
-					
-					if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
-						user_face.setImageResource(R.drawable.mini_avatar);
-					} else {
-						String portraitURL = URLs.HTTP + URLs.HOST + URLs.URL_SPLITTER + portrait;
-						bmpManager.loadBitmap(portraitURL, user_face);
-					}
-				} else if(msg.what == 0){
-					
-				} else if(msg.what == -1){
-					((AppException)msg.obj).makeToast(context);
-				}
-			}
-		}.execute();*/
 		// 1.加载项目作者头像
-		/*String portrait = event.getUser().getPortrait() == null ? "" : event.getUser().getPortrait();
+		String portrait = event.getAuthor().getPortrait() == null ? "" : event.getAuthor().getPortrait();
 		if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
 			listItemView.face.setImageResource(R.drawable.mini_avatar);
 		} else {
 			String portraitURL = URLs.HTTP + URLs.HOST + URLs.URL_SPLITTER + portrait;
 			bmpManager.loadBitmap(portraitURL, listItemView.face);
-		}*/
+		}
 		
-		/*try {
-			User u = ApiClient.getUser((AppContext) this.context, e.getAuthor_id());
-		} catch (AppException e1) {
-			e1.printStackTrace();
-		}*/
-		/*String portrait = project.getOwner().getPortrait() == null ? "" : project.getOwner().getPortrait();
-		if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
-			listItemView.face.setImageResource(R.drawable.mini_avatar);
-		} else {
-			String portraitURL = URLs.HTTP + URLs.HOST + URLs.URL_SPLITTER + project.getOwner().getPortrait();
-			bmpManager.loadBitmap(portraitURL, listItemView.face);
-		}*/
+		listItemView.face.setOnClickListener(null);
 		/*if (faceClickEnable) {
 			listItemView.face.setOnClickListener(faceClickListener);
 		}*/
 		
 		// 2.显示相关信息
+		listItemView.user_name.setText(UIHelper.parseEventTitle(event.getAuthor().getName(), 
+				event.getProject().getOwner().getName() + " / " + event.getProject().getName(), event));
+		
+		displayContent(listItemView, event);
 		SimpleDateFormat f = new  SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date update_time = event.getUpdated_at();
 		listItemView.date.setText(StringUtils.friendly_time(f.format(update_time)));
 		
 		return convertView;
 	}
-
+	
+	private void displayContent(ListItemView listItemView, Event event) {
+		
+		switch (event.getAction()) {
+		case Event.EVENT_TYPE_CREATED:// 创建了issue
+			
+			break;
+		case Event.EVENT_TYPE_UPDATED:
+		case Event.EVENT_TYPE_CLOSED:
+		case Event.EVENT_TYPE_REOPENED:
+		case Event.EVENT_TYPE_JOINED://# User joined project
+		case Event.EVENT_TYPE_LEFT://# User left project
+		case Event.EVENT_TYPE_FORKED:// fork了项目
+			listItemView.content.setTag(null);
+			listItemView.commitLists.setTag(null);
+			break;
+		case Event.EVENT_TYPE_PUSHED:// push
+			listItemView.content.setTag(null);
+			listItemView.commitLists.setAdapter(new EventCommitsListAdapter(context, event.getData().getCommits(), R.layout.event_commits_listitem));
+			break;
+		case Event.EVENT_TYPE_COMMENTED:// 评论
+			
+			break;
+		case Event.EVENT_TYPE_MERGED:// 合并
+			break;
+		default:
+			break;
+		}
+		checkIsShow(listItemView);
+	}
+	
+	private void checkIsShow(ListItemView listItemView) {
+		if (listItemView.content.getTag() == null) 
+			listItemView.content.setVisibility(View.GONE);
+		if (listItemView.commitLists.getTag() == null) 
+			listItemView.commitLists.setVisibility(View.GONE);
+	}
 }
