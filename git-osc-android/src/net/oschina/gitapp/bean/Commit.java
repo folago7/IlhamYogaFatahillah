@@ -13,12 +13,9 @@ import android.widget.AbsListView.SelectionBoundsAdjuster;
  *
  */
 @SuppressWarnings("serial")
-public class Commit implements Serializable {
+public class Commit extends Entity {
 
-    public final static String URL = "/commits";
-    
-    private String _id;
-
+    @JsonProperty("title")
 	private String _title;
 	
 	@JsonProperty("message")
@@ -32,14 +29,6 @@ public class Commit implements Serializable {
 
     @JsonProperty("created_at")
     private Date _createdAt;
-    
-    public String getId() {
-		return _id;
-	}
-
-	public void setId(String id) {
-		this._id = id;
-	}
     
     public String getShortId() {
         return _shortId;

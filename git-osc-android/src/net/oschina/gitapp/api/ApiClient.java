@@ -1,34 +1,23 @@
 package net.oschina.gitapp.api;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.cookie.CookiePolicy;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.Log;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
+import net.oschina.gitapp.bean.Commit;
+import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.Event;
-import net.oschina.gitapp.bean.EventList;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.Session;
 import net.oschina.gitapp.bean.User;
-import net.oschina.gitapp.bean.ProjectList;
 import net.oschina.gitapp.bean.URLs;
 
 /**
@@ -153,8 +142,8 @@ public class ApiClient {
 	 * @return
 	 * @throws AppException
 	 */
-	public static ProjectList getExploreLatestProject(AppContext appContext, final int page) throws AppException {
-		ProjectList projects = new ProjectList();
+	public static CommonList<Project> getExploreLatestProject(AppContext appContext, final int page) throws AppException {
+		CommonList<Project> projects = new CommonList<Project>();
 		String url = makeURL(URLs.EXPLORELATESTPROJECT, new HashMap<String, Object>(){{
 			put("page", page);
 		}});
@@ -174,8 +163,8 @@ public class ApiClient {
 	 * @return
 	 * @throws AppException
 	 */
-	public static ProjectList getExplorePopularProject(AppContext appContext, final int page) throws AppException {
-		ProjectList projects = new ProjectList();
+	public static CommonList<Project> getExplorePopularProject(AppContext appContext, final int page) throws AppException {
+		CommonList<Project> projects = new CommonList<Project>();
 		String url = makeURL(URLs.EXPLOREPOPULARPROJECT, new HashMap<String, Object>(){{
 			put("page", page);
 		}});
@@ -194,8 +183,8 @@ public class ApiClient {
 	 * @return
 	 * @throws AppException
 	 */
-	public static ProjectList getExploreFeaturedProject(AppContext appContext, final int page) throws AppException {
-		ProjectList projects = new ProjectList();
+	public static CommonList<Project> getExploreFeaturedProject(AppContext appContext, final int page) throws AppException {
+		CommonList<Project> projects = new CommonList<Project>();
 		String url = makeURL(URLs.EXPLOREFEATUREDPROJECT, new HashMap<String, Object>(){{
 			put("page", page);
 		}});
@@ -214,8 +203,8 @@ public class ApiClient {
 	 * @return
 	 * @throws AppException
 	 */
-	public static EventList getMySelfEvents(final AppContext appContext, final int page) throws AppException {
-		EventList events = new EventList();
+	public static CommonList<Event> getMySelfEvents(final AppContext appContext, final int page) throws AppException {
+		CommonList<Event> events = new CommonList<Event>();
 		String url = makeURL(URLs.EVENTS, new HashMap<String, Object>(){{
 			put("page", page);
 			put(PRIVATE_TOKEN, getToken(appContext));
@@ -235,20 +224,42 @@ public class ApiClient {
 	 * @return
 	 * @throws AppException
 	 */
-	public static ProjectList getMySelfProjectList(AppContext appContext, int page) throws AppException {
-		ProjectList msProject = new ProjectList();
+	public static CommonList<Project> getMySelfProjectList(AppContext appContext, int page) throws AppException {
+		CommonList<Project> msProjects = new CommonList<Project>();
 		Map<String,Object> params = new HashMap<String,Object>();
 		params.put(PRIVATE_TOKEN, getToken(appContext));
 		params.put("page", page);
 		String url = makeURL(URLs.PROJECT, params);
 		List<Project> list = getHttpRequestor().init(appContext, HTTPRequestor.GET_METHOD, url)
 				.getList(Project[].class);
-		msProject.setList(list);
-		msProject.setCount(list.size());
-		msProject.setPageSize(list.size());
-		return msProject;
+		msProjects.setList(list);
+		msProjects.setCount(list.size());
+		msProjects.setPageSize(list.size());
+		return msProjects;
 	}
 	
+	/**
+	 * 获得一个项目的commit列表
+	 * @param appContext
+	 * @param projectId 指定项目的id
+	 * @param page 页码
+	 * @return
+	 * @throws AppException
+	 */
+	public static CommonList<Commit> getProjectCommitList(AppContext appContext, int projectId, int page) throws AppException {
+		CommonList<Commit> commits = new CommonList<Commit>();
+		Map<String,Object> params = new HashMap<String,Object>();
+		params.put(PRIVATE_TOKEN, getToken(appContext));
+		params.put("page", page);
+		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + projectId + URLs.URL_SPLITTER + "repository/commits", params);
+		Log.i("Test", url);
+		List<Commit> list = getHttpRequestor().init(appContext, HTTPRequestor.GET_METHOD, url)
+				.getList(Commit[].class);
+		commits.setList(list);
+		commits.setCount(list.size());
+		commits.setPageSize(list.size());
+		return commits;
+	}
 }
 
 

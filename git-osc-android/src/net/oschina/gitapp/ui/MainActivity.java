@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -26,7 +27,7 @@ import net.oschina.gitapp.ui.fragments.ExploreViewPagerFragment;
  * @author 火蚁（http://my.oschina.net/LittleDY）
  * 
  */
-public class MainActivity extends BaseActionBarActivity {
+public class MainActivity extends ActionBarActivity {
 	
     protected static ToggleListener sToggleListener;
     private DrawerLayout mDrawerLayout;
@@ -38,8 +39,6 @@ public class MainActivity extends BaseActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
-        requestActionBarMenu();
         initView(savedInstanceState);
     }
     
@@ -75,7 +74,7 @@ public class MainActivity extends BaseActionBarActivity {
         if (null == savedInstanceState) {
         	FragmentTransaction ft = mFragmentManager.beginTransaction();
         	ft.replace(R.id.main_slidingmenu_frame, new DrawerNavigation())
-        		.replace(R.id.main_content, new ExploreViewPagerFragment())
+        		.replace(R.id.main_content, ExploreViewPagerFragment.newInstance())
             	.commit();
         }
     }

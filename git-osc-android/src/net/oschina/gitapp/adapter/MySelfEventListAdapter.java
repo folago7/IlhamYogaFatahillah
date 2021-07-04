@@ -1,30 +1,18 @@
 package net.oschina.gitapp.adapter;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import net.oschina.gitapp.AppContext;
-import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
-import net.oschina.gitapp.api.ApiClient;
-import net.oschina.gitapp.bean.Commit;
 import net.oschina.gitapp.bean.Event;
-import net.oschina.gitapp.bean.Project;
+import net.oschina.gitapp.bean.Note;
 import net.oschina.gitapp.bean.URLs;
-import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.BitmapManager;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
-import net.oschina.gitapp.ui.LoginActivity;
 import android.content.Context;
 import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -55,7 +43,7 @@ public class MySelfEventListAdapter extends MyBaseAdapter<Event> {
 	public MySelfEventListAdapter(Context context, List<Event> data, int resource) {
 		super(context, data, resource);
 		this.bmpManager = new BitmapManager(BitmapFactory.decodeResource(
-				context.getResources(), R.drawable.image_loading));
+				context.getResources(), R.drawable.mini_avatar));
 	}
 
 	@Override
@@ -114,6 +102,7 @@ public class MySelfEventListAdapter extends MyBaseAdapter<Event> {
 		case Event.EVENT_TYPE_CREATED:// 创建了issue
 			
 			break;
+			
 		case Event.EVENT_TYPE_UPDATED:
 		case Event.EVENT_TYPE_CLOSED:
 		case Event.EVENT_TYPE_REOPENED:
@@ -123,13 +112,20 @@ public class MySelfEventListAdapter extends MyBaseAdapter<Event> {
 			listItemView.content.setTag(null);
 			listItemView.commitLists.setTag(null);
 			break;
+			
 		case Event.EVENT_TYPE_PUSHED:// push
 			listItemView.content.setTag(null);
 			listItemView.commitLists.setAdapter(new EventCommitsListAdapter(context, event.getData().getCommits(), R.layout.event_commits_listitem));
 			break;
-		case Event.EVENT_TYPE_COMMENTED:// 评论
 			
+		case Event.EVENT_TYPE_COMMENTED:// 评论
+			Note note = event.getNote();
+			if (note != null && note.getNote() != null) {
+				listItemView.content.setText(note.getNote());
+			}
+			listItemView.commitLists.setTag(null);
 			break;
+			
 		case Event.EVENT_TYPE_MERGED:// 合并
 			break;
 		default:

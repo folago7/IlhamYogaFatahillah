@@ -14,9 +14,11 @@ import java.util.Properties;
 import java.util.UUID;
 
 import net.oschina.gitapp.api.ApiClient;
-import net.oschina.gitapp.bean.EventList;
+import net.oschina.gitapp.bean.Commit;
+import net.oschina.gitapp.bean.CommonList;
+import net.oschina.gitapp.bean.Event;
+import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.User;
-import net.oschina.gitapp.bean.ProjectList;
 import net.oschina.gitapp.common.StringUtils;
 import android.app.Application;
 import android.content.Context;
@@ -90,9 +92,9 @@ public class AppContext extends Application {
 	private void init() {
 		//初始化用记的登录信息
 		User loginUser = getLoginInfo();
-		if(null != loginUser && loginUser.getId() > 0 && StringUtils.isEmpty(getProperty(PROP_KEY_PRIVATE_TOKEN))){
+		if(null != loginUser && StringUtils.toInt(loginUser.getId()) > 0 && StringUtils.isEmpty(getProperty(PROP_KEY_PRIVATE_TOKEN))){
 			// 记录用户的id和状态
-			this.loginUid = loginUser.getId();
+			this.loginUid = StringUtils.toInt(loginUser.getId());
 			this.login = true;
 		}
 	}
@@ -349,7 +351,7 @@ public class AppContext extends Application {
 	 */
 	public User getLoginInfo() {		
 		User user = new User();		
-		user.setId(StringUtils.toInt(getProperty(PROP_KEY_UID), 0));
+		user.setId(getProperty(PROP_KEY_UID));
 		user.setUsername(getProperty(PROP_KEY_USERNAME));
 		//user.setEmail(getProperty(PROP_KEY_EMAIL));
 		user.setName(getProperty(PROP_KEY_NAME));
@@ -377,7 +379,7 @@ public class AppContext extends Application {
 			return;
 		}
 		// 保存用户的信息
-		this.loginUid = user.getId();
+		this.loginUid = StringUtils.toInt(user.getId());
 		this.login = true;
 		setProperties(new Properties(){{
 			setProperty(PROP_KEY_UID, String.valueOf(user.getId()));
@@ -451,8 +453,9 @@ public class AppContext extends Application {
 	 * @return
 	 * @throws AppException
 	 */
-	public ProjectList getExploreLatestProject(int pageIndex, boolean isRefresh) throws AppException {
-		ProjectList list = null;
+	@SuppressWarnings("unchecked")
+	public CommonList<Project> getExploreLatestProject(int pageIndex, boolean isRefresh) throws AppException {
+		CommonList<Project> list = null;
 		String cacheKey = "latestProjectList_" + pageIndex + "_" + PAGE_SIZE;
 		if(!isReadDataCache(cacheKey) || isRefresh) {
 			try{
@@ -463,15 +466,15 @@ public class AppContext extends Application {
 				}
 			}catch(AppException e){
 				e.printStackTrace();
-				list = (ProjectList)readObject(cacheKey);
+				list = (CommonList<Project>)readObject(cacheKey);
 				if(list == null)
 					throw e;
 			}		
 		} else {
 			// 从缓存中读取
-			list = (ProjectList)readObject(cacheKey);
+			list = (CommonList<Project>)readObject(cacheKey);
 			if(list == null)
-				list = new ProjectList();
+				list = new CommonList<Project>();
 		}
 		return list;
 	}
@@ -482,8 +485,9 @@ public class AppContext extends Application {
 	 * @return
 	 * @throws AppException
 	 */
-	public ProjectList getExplorePopularProject(int pageIndex, boolean isRefresh) throws AppException {
-		ProjectList list = null;
+	@SuppressWarnings("unchecked")
+	public CommonList<Project> getExplorePopularProject(int pageIndex, boolean isRefresh) throws AppException {
+		CommonList<Project> list = null;
 		String cacheKey = "popularProjectList_" + pageIndex + "_" + PAGE_SIZE;
 		if(!isReadDataCache(cacheKey) || isRefresh) {
 			try{
@@ -494,15 +498,15 @@ public class AppContext extends Application {
 				}
 			}catch(AppException e){
 				e.printStackTrace();
-				list = (ProjectList)readObject(cacheKey);
+				list = (CommonList<Project>)readObject(cacheKey);
 				if(list == null)
 					throw e;
 			}		
 		} else {
 			// 从缓存中读取
-			list = (ProjectList)readObject(cacheKey);
+			list = (CommonList<Project>)readObject(cacheKey);
 			if(list == null)
-				list = new ProjectList();
+				list = new CommonList<Project>();
 		}
 		return list;
 	}
@@ -513,8 +517,9 @@ public class AppContext extends Application {
 	 * @return
 	 * @throws AppException
 	 */
-	public ProjectList getExploreFeaturedProject(int pageIndex, boolean isRefresh) throws AppException {
-		ProjectList list = null;
+	@SuppressWarnings("unchecked")
+	public CommonList<Project> getExploreFeaturedProject(int pageIndex, boolean isRefresh) throws AppException {
+		CommonList<Project> list = null;
 		String cacheKey = "faturedProjectList_" + pageIndex + "_" + PAGE_SIZE;
 		if(!isReadDataCache(cacheKey) || isRefresh) {
 			try{
@@ -525,15 +530,15 @@ public class AppContext extends Application {
 				}
 			}catch(AppException e){
 				e.printStackTrace();
-				list = (ProjectList)readObject(cacheKey);
+				list = (CommonList<Project>)readObject(cacheKey);
 				if(list == null)
 					throw e;
 			}		
 		} else {
 			// 从缓存中读取
-			list = (ProjectList)readObject(cacheKey);
+			list = (CommonList<Project>)readObject(cacheKey);
 			if(list == null)
-				list = new ProjectList();
+				list = new CommonList<Project>();
 		}
 		return list;
 	}
@@ -545,8 +550,9 @@ public class AppContext extends Application {
 	 * @return
 	 * @throws AppException
 	 */
-	public EventList getMySelfEvents(int pageIndex, boolean isRefresh) throws AppException {
-		EventList list = null;
+	@SuppressWarnings("unchecked")
+	public CommonList<Event> getMySelfEvents(int pageIndex, boolean isRefresh) throws AppException {
+		CommonList<Event> list = null;
 		String cacheKey = "myselfEventsList_" + + pageIndex + "_" + PAGE_SIZE;
 		if(!isReadDataCache(cacheKey) || isRefresh) {
 			try{
@@ -557,15 +563,15 @@ public class AppContext extends Application {
 				}
 			}catch(AppException e){
 				e.printStackTrace();
-				list = (EventList)readObject(cacheKey);
+				list = (CommonList<Event>)readObject(cacheKey);
 				if(list == null)
 					throw e;
 			}		
 		} else {
 			// 从缓存中读取
-			list = (EventList)readObject(cacheKey);
+			list = (CommonList<Event>)readObject(cacheKey);
 			if(list == null)
-				list = new EventList();
+				list = new CommonList<Event>();
 		}
 		return list;
 	}
@@ -576,8 +582,9 @@ public class AppContext extends Application {
 	 * @return
 	 * @throws AppException
 	 */
-	public ProjectList getMySelfProjectList(int pageIndex, boolean isRefresh) throws AppException {
-		ProjectList list = null;
+	@SuppressWarnings("unchecked")
+	public CommonList<Project> getMySelfProjectList(int pageIndex, boolean isRefresh) throws AppException {
+		CommonList<Project> list = null;
 		String cacheKey = "myselfProjectList_" + pageIndex + "_" + PAGE_SIZE;
 		if(!isReadDataCache(cacheKey) || isRefresh) {
 			try{
@@ -588,15 +595,49 @@ public class AppContext extends Application {
 				}
 			}catch(AppException e){
 				e.printStackTrace();
-				list = (ProjectList)readObject(cacheKey);
+				list = (CommonList<Project>)readObject(cacheKey);
 				if(list == null)
 					throw e;
 			}		
 		} else {
 			// 从缓存中读取
-			list = (ProjectList)readObject(cacheKey);
+			list = (CommonList<Project>)readObject(cacheKey);
 			if(list == null)
-				list = new ProjectList();
+				list = new CommonList<Project>();
+		}
+		return list;
+	}
+	
+	/**
+	 * 获得一个项目的commit列表
+	 * @param projectId
+	 * @param pageIndex
+	 * @param isRefresh
+	 * @return
+	 * @throws AppException
+	 */
+	@SuppressWarnings("unchecked")
+	public CommonList<Commit> getProjectCommitList(int projectId, int pageIndex, boolean isRefresh) throws AppException {
+		CommonList<Commit> list = null;
+		String cacheKey = "projectCommitList_" + projectId + "_" + pageIndex + "_" + PAGE_SIZE;
+		if(!isReadDataCache(cacheKey) || isRefresh) {
+			try{
+				list = ApiClient.getProjectCommitList(this, projectId, pageIndex);
+				if(list != null && pageIndex == 0){
+					list.setCacheKey(cacheKey);
+					saveObject(list, cacheKey);
+				}
+			}catch(AppException e){
+				e.printStackTrace();
+				list = (CommonList<Commit>)readObject(cacheKey);
+				if(list == null)
+					throw e;
+			}		
+		} else {
+			// 从缓存中读取
+			list = (CommonList<Commit>)readObject(cacheKey);
+			if(list == null)
+				list = new CommonList<Commit>();
 		}
 		return list;
 	}

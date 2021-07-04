@@ -7,9 +7,9 @@ import android.widget.BaseAdapter;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.ExploreListProjectAdapter;
+import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.MessageData;
-import net.oschina.gitapp.bean.ProjectList;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
 
@@ -21,9 +21,9 @@ import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
  * 最后更新
  * 更新者
  */
-public class ExplorePopularListProjectFragment extends BaseSwipeRefreshFragment<Project, ProjectList> {
+public class ExplorePopularListProjectFragment extends BaseSwipeRefreshFragment<Project, CommonList<Project>> {
 		
-	public static ExplorePopularListProjectFragment newInstance() {
+	public ExplorePopularListProjectFragment newInstance() {
 		return new ExplorePopularListProjectFragment();
 	}
 	
@@ -33,16 +33,16 @@ public class ExplorePopularListProjectFragment extends BaseSwipeRefreshFragment<
 	}
 
 	@Override
-	public MessageData<ProjectList> asyncLoadList(int page,
+	public MessageData<CommonList<Project>> asyncLoadList(int page,
 			boolean reflash) {
-		MessageData<ProjectList> msg = null;
+		MessageData<CommonList<Project>> msg = null;
 		try {
-			ProjectList list = mApplication.getExplorePopularProject(page, reflash);
-			msg = new MessageData<ProjectList>(list);
+			CommonList<Project> list = mApplication.getExplorePopularProject(page, reflash);
+			msg = new MessageData<CommonList<Project>>(list);
 		} catch (AppException e) {
 			e.makeToast(mApplication);
 			e.printStackTrace();
-			msg = new MessageData<ProjectList>(e);
+			msg = new MessageData<CommonList<Project>>(e);
 		}
 		return msg;
 	}

@@ -425,7 +425,7 @@ public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result exte
 						for (Data data1 : result.getList()) {
 							boolean b = false;
 							for (Data data2 : mDataList) {
-								if (data1.getId() == data2.getId()) {
+								if (data1.getId().equalsIgnoreCase(data2.getId())) {
 									b = true;
 									break;
 								}
@@ -462,7 +462,7 @@ public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result exte
 					for (Data data1 : result.getList()) {
 						boolean b = false;
 						for (Data data2 : mDataList) {
-							if (data1.getId() == data2.getId()) {
+							if (data1.getId().equalsIgnoreCase(data2.getId())) {
 								b = true;
 								break;
 							}

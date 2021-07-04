@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="horizontal"
+    android:paddingBottom="7dip"
+    android:paddingLeft="6dip"
+    android:paddingRight="6dip"
+    android:paddingTop="8dip" >
+
+    <ImageView
+        android:id="@+id/projectcodetree_listitem_tag"
+        android:layout_width="10dip"
+		android:layout_height="10dip"
+		android:layout_gravity="center"
+		android:padding="1.0dip"
+		android:layout_marginLeft="10dip"
+		android:clickable="true"
+		android:background="@drawable/folder" />
+
+    <TextView
+        android:id="@+id/projectcodetree_listitem_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:includeFontPadding="false"
+        android:layout_marginLeft="8dip"
+        android:text="libs"
+        android:textSize="@dimen/text_size_14" />
+
+</LinearLayout>

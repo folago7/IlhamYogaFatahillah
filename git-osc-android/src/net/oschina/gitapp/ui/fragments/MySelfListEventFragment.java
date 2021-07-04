@@ -8,11 +8,10 @@ import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.MySelfEventListAdapter;
 import net.oschina.gitapp.adapter.MySelfListProjectAdapter;
+import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.Event;
-import net.oschina.gitapp.bean.EventList;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.MessageData;
-import net.oschina.gitapp.bean.ProjectList;
 import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
 
 /**
@@ -23,9 +22,9 @@ import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
  * 最后更新
  * 更新者
  */
-public class MySelfListEventFragment extends BaseSwipeRefreshFragment<Event, EventList> {
+public class MySelfListEventFragment extends BaseSwipeRefreshFragment<Event, CommonList<Event>> {
 	
-	public static MySelfListEventFragment newInstance() {
+	public MySelfListEventFragment newInstance() {
 		return new MySelfListEventFragment();
 	}
 	
@@ -35,16 +34,16 @@ public class MySelfListEventFragment extends BaseSwipeRefreshFragment<Event, Eve
 	}
 
 	@Override
-	public MessageData<EventList> asyncLoadList(int page,
+	public MessageData<CommonList<Event>> asyncLoadList(int page,
 			boolean reflash) {
-		MessageData<EventList> msg = null;
+		MessageData<CommonList<Event>> msg = null;
 		try {
-			EventList list = mApplication.getMySelfEvents(page, reflash);
-			msg = new MessageData<EventList>(list);
+			CommonList<Event> list = mApplication.getMySelfEvents(page, reflash);
+			msg = new MessageData<CommonList<Event>>(list);
 		} catch (AppException e) {
 			e.makeToast(mApplication);
 			e.printStackTrace();
-			msg = new MessageData<EventList>(e);
+			msg = new MessageData<CommonList<Event>>(e);
 		}
 		return msg;
 	}

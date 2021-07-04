@@ -7,6 +7,7 @@ import net.oschina.gitapp.AppManager;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.Event;
 import net.oschina.gitapp.bean.Project;
+import net.oschina.gitapp.ui.ProjectActivity;
 import net.oschina.gitapp.ui.fragments.ProjectViewPageFragment;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -238,7 +239,7 @@ public class UIHelper {
 	 * @param project
 	 */
 	public static void showProjectDetail(Context context, Project project) {
-		Intent intent = new Intent(context, ProjectViewPageFragment.class);
+		Intent intent = new Intent(context, ProjectActivity.class);
 		Bundle bundle = new Bundle();
 		bundle.putSerializable("project", project);
 		intent.putExtras(bundle);

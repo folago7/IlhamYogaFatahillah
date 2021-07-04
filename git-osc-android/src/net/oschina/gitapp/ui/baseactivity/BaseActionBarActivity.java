@@ -10,6 +10,7 @@ import com.umeng.analytics.MobclickAgent;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.ViewConfiguration;
 
@@ -27,11 +28,22 @@ public class BaseActionBarActivity extends ActionBarActivity
 	implements ActivityHelperInterface{
 
 	ActivityHelper mHelper = new ActivityHelper(this);
+	// 是否可以返回
+	protected static boolean isCanBack;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mHelper.onCreate(savedInstanceState);
+		initActionBar();
+		
+	}
+	
+	// 关闭该Activity
+	@Override
+	public boolean onSupportNavigateUp() {
+		finish();
+		return super.onSupportNavigateUp();
 	}
 	
 	@Override
@@ -56,6 +68,14 @@ public class BaseActionBarActivity extends ActionBarActivity
 	public void onDetachedFromWindow() {
 		super.onDetachedFromWindow();
 		mHelper.onDetachedFromWindow();
+	}
+	
+	// 初始化ActionBar
+	private void initActionBar() {
+		ActionBar bar = getSupportActionBar();
+		int flags = ActionBar.DISPLAY_HOME_AS_UP;
+		int change = bar.getDisplayOptions() ^ flags;
+        bar.setDisplayOptions(change, flags);
 	}
 
 	@Override

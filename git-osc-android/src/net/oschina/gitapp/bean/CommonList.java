@@ -4,20 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 项目列表
+ * 公用列表实体类
  * @created 2014-05-13
  * @author 火蚁（http://my.oschina.net/LittleDY）
  * 
- * 最后更新
- * 更新者
+ * 最后更新 2014-05-26
+ * 更新者 火蚁
  */
 @SuppressWarnings("serial")
-public class ProjectList extends Entity implements PageList<Project> {
+public class CommonList<T> extends Entity implements PageList<T> {
 	
 	private int pageSize;
 	private int count;
 	
-	private List<Project> list = new ArrayList<Project>();
+	private List<T> list = new ArrayList<T>();
 	
 	public void setPageSize(int pageSize) {
 		this.pageSize = pageSize;
@@ -37,11 +37,11 @@ public class ProjectList extends Entity implements PageList<Project> {
 	}
 
 	@Override
-	public List<Project> getList() {
+	public List<T> getList() {
 		return list;
 	}
 
-	public void setList(List<Project> list) {
+	public void setList(List<T> list) {
 		this.list = list;
 	}
 }

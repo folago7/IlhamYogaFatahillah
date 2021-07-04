@@ -29,9 +29,8 @@ public class ExploreListProjectAdapter extends MyBaseAdapter<Project> {
 	
 	static class ListItemView {
 		public ImageView face;//用户头像
-		public TextView project_name;
+		public TextView title;
 		public TextView description;//项目描述
-		public TextView owner_name;//作者昵称
 		public TextView star;//加星数
 		public TextView fork;//fork数
 		public TextView language;//类型
@@ -40,7 +39,7 @@ public class ExploreListProjectAdapter extends MyBaseAdapter<Project> {
 	public ExploreListProjectAdapter(Context context, List<Project> data, int resource) {
 		super(context, data, resource);
 		this.bmpManager = new BitmapManager(BitmapFactory.decodeResource(
-				context.getResources(), R.drawable.image_loading));
+				context.getResources(), R.drawable.mini_avatar));
 	}
 
 	@Override
@@ -55,9 +54,8 @@ public class ExploreListProjectAdapter extends MyBaseAdapter<Project> {
 			
 			//获取控件对象
 			listItemView.face = (ImageView) convertView.findViewById(R.id.exploreproject_listitem_userface);
-			listItemView.project_name = (TextView) convertView.findViewById(R.id.exploreproject_listitem_pname);
+			listItemView.title = (TextView) convertView.findViewById(R.id.exploreproject_listitem_title);
 			listItemView.description = (TextView) convertView.findViewById(R.id.exploreproject_listitem_description);
-			listItemView.owner_name = (TextView) convertView.findViewById(R.id.exploreproject_listitem_owner_name);
 			listItemView.star = (TextView) convertView.findViewById(R.id.exploreproject_listitem_star);
 			listItemView.fork = (TextView) convertView.findViewById(R.id.exploreproject_listitem_fork);
 			listItemView.language = (TextView) convertView.findViewById(R.id.exploreproject_listitem_language);
@@ -69,8 +67,6 @@ public class ExploreListProjectAdapter extends MyBaseAdapter<Project> {
 		}
 		
 		Project project = getItem(position);
-		
-		listItemView.project_name.setText(project.getOwner().getName() + " / " + project.getName());
 		
 		// 1.加载项目作者头像
 		String portrait = project.getOwner().getPortrait() == null ? "" : project.getOwner().getPortrait();
@@ -85,7 +81,7 @@ public class ExploreListProjectAdapter extends MyBaseAdapter<Project> {
 		}*/
 		
 		// 2.显示相关信息
-		listItemView.project_name.setText(project.getName());
+		listItemView.title.setText(project.getOwner().getName() + " / " + project.getName());
 		// 判断是否有项目的介绍
 		String descriptionStr = project.getDescription();
 		if (StringUtils.isEmpty(descriptionStr)) {
@@ -94,7 +90,6 @@ public class ExploreListProjectAdapter extends MyBaseAdapter<Project> {
 			listItemView.description.setText(descriptionStr);
 		}
 			
-		listItemView.owner_name.setText(project.getOwner().getName());
 		// 显示项目的star、fork、language信息
 		listItemView.star.setText(project.getStars_count().toString());
 		listItemView.fork.setText(project.getForks_count().toString());

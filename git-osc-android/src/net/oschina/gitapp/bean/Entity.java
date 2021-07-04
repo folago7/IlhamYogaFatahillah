@@ -2,6 +2,8 @@ package net.oschina.gitapp.bean;
 
 import java.io.Serializable;
 
+import org.codehaus.jackson.annotate.JsonProperty;
+
 /**
  * 实体类
  * @author liux (http://my.oschina.net/liux)
@@ -10,14 +12,15 @@ import java.io.Serializable;
  */
 @SuppressWarnings("serial")
 public abstract class Entity implements Serializable {
+	
+	@JsonProperty("id")
+	protected String _id;
 
-	protected int _id;
-
-	public int getId() {
+	public String getId() {
         return _id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         _id = id;
     }
 	

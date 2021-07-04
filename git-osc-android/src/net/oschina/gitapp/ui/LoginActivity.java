@@ -1,14 +1,10 @@
 package net.oschina.gitapp.ui;
 
-import java.io.IOException;
-import java.util.regex.Pattern;
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
-import android.support.v7.app.ActionBar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -19,7 +15,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
-import android.widget.Toast;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
@@ -45,25 +40,9 @@ public class LoginActivity extends BaseActionBarActivity
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		initActionBar();
 		init();
 	}
 	
-	// 初始化ActionBar
-	private void initActionBar() {
-		ActionBar bar = getSupportActionBar();
-		int flags = ActionBar.DISPLAY_HOME_AS_UP;
-		int change = bar.getDisplayOptions() ^ flags;
-        bar.setDisplayOptions(change, flags);
-	}
-	
-	// 关闭该Activity
-	@Override
-	public boolean onSupportNavigateUp() {
-		finish();
-		return super.onSupportNavigateUp();
-	}
-
 	private void init() {
 		mAccountEditText = (EditTextWithDel) findViewById(R.id.login_account);
 		mPasswordEditText = (EditTextWithDel) findViewById(R.id.login_password);
