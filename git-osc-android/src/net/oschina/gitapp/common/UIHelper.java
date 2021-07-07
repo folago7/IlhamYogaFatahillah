@@ -1,10 +1,14 @@
 package net.oschina.gitapp.common;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.regex.Pattern;
 
 import net.oschina.gitapp.AppContext;
+import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.AppManager;
 import net.oschina.gitapp.R;
+import net.oschina.gitapp.api.ApiClient;
 import net.oschina.gitapp.bean.Event;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.ui.LoginActivity;
@@ -16,6 +20,8 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,6 +33,7 @@ import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 /**
@@ -232,6 +239,86 @@ public class UIHelper {
 			}
 		}
 		return sps;
+	}
+	
+	/**
+	 * 加载显示用户头像
+	 * 
+	 * @param imgFace
+	 * @param faceURL
+	 */
+	public static void showUserFace(final ImageView imgFace,
+			final String faceURL) {
+		showLoadImage(imgFace, faceURL,
+				imgFace.getContext().getString(R.string.msg_load_userface_fail));
+	}
+
+	/**
+	 * 加载显示图片
+	 * 
+	 * @param imgFace
+	 * @param faceURL
+	 * @param errMsg
+	 */
+	public static void showLoadImage(final ImageView imgView,
+			final String imgURL, final String errMsg) {
+		// 读取本地图片
+		if (StringUtils.isEmpty(imgURL) || imgURL.endsWith("portrait.gif")) {
+			Bitmap bmp = BitmapFactory.decodeResource(imgView.getResources(),
+					R.drawable.mini_avatar);
+			imgView.setImageBitmap(bmp);
+			return;
+		}
+
+		// 是否有缓存图片
+		final String filename = FileUtils.getFileName(imgURL);
+		// Environment.getExternalStorageDirectory();返回/sdcard
+		String filepath = imgView.getContext().getFilesDir() + File.separator
+				+ filename;
+		File file = new File(filepath);
+		if (file.exists()) {
+			Bitmap bmp = ImageUtils.getBitmap(imgView.getContext(), filename);
+			imgView.setImageBitmap(bmp);
+			return;
+		}
+
+		// 从网络获取&写入图片缓存
+		String _errMsg = imgView.getContext().getString(
+				R.string.msg_load_image_fail);
+		if (!StringUtils.isEmpty(errMsg))
+			_errMsg = errMsg;
+		final String ErrMsg = _errMsg;
+		final Handler handler = new Handler() {
+			public void handleMessage(Message msg) {
+				if (msg.what == 1 && msg.obj != null) {
+					imgView.setImageBitmap((Bitmap) msg.obj);
+					try {
+						// 写图片缓存
+						ImageUtils.saveImage(imgView.getContext(), filename,
+								(Bitmap) msg.obj);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				} else {
+					ToastMessage(imgView.getContext(), ErrMsg);
+				}
+			}
+		};
+		new Thread() {
+			public void run() {
+				Message msg = new Message();
+				try {
+					Bitmap bmp = ApiClient.getNetBitmap(imgURL);
+					msg.what = 1;
+					msg.obj = bmp;
+				} catch (AppException e) {
+					e.printStackTrace();
+					msg.what = -1;
+					msg.obj = e;
+				}
+				handler.sendMessage(msg);
+			}
+		}.start();
 	}
 	
 	/**

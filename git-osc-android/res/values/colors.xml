@@ -33,6 +33,9 @@
     <color name="listitem_greenyellow">#ff87b869</color>
     <color name="listitem_yellow">#fffaffbf</color> 
     
+    <color name="full_transparent">#00000000</color>
+	<color name="layout_item_pressed_color">#60000000</color>
+    
     <!-- Holo Light Colors -->
     <color name="background_holo_light">#fff3f3f3</color>
     <color name="holo_light_seperator_color">#ffb2b2b2</color>

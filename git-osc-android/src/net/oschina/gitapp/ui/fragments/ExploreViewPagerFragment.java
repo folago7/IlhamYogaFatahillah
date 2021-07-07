@@ -13,7 +13,7 @@ import android.util.Log;
  * @created 2014-04-29
  */
 public class ExploreViewPagerFragment extends BaseViewPagerFragment<BaseFragment> {
-
+	
     public static ExploreViewPagerFragment newInstance() {
         return new ExploreViewPagerFragment();
     }

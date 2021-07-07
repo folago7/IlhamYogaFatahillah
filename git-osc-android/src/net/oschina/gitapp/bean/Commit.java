@@ -26,6 +26,12 @@ public class Commit extends Entity {
 	
 	@JsonProperty("author")
 	private User _author;
+	
+	@JsonProperty("author_name")
+	private String _author_name;
+	
+	@JsonProperty("author_email")
+	private String _author_email;
 
     @JsonProperty("created_at")
     private Date _createdAt;
@@ -52,6 +58,22 @@ public class Commit extends Entity {
 
 	public void setAuthor(User author) {
 		this._author = author;
+	}
+	
+	public String getAuthor_name() {
+		return _author_name;
+	}
+
+	public void setAuthor_name(String author_name) {
+		this._author_name = author_name;
+	}
+
+	public String getAuthor_email() {
+		return _author_email;
+	}
+
+	public void setAuthor_email(String author_email) {
+		this._author_email = author_email;
 	}
 
 	public String getMessage() {

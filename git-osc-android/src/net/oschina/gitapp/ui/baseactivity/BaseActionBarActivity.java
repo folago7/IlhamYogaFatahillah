@@ -6,8 +6,6 @@ import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.interfaces.ActivityHelperInterface;
 import net.oschina.gitapp.ui.ActivityHelper;
 
-import com.umeng.analytics.MobclickAgent;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -49,13 +47,11 @@ public class BaseActionBarActivity extends ActionBarActivity
 	@Override
 	public void onResume() {
 		super.onResume();
-	    MobclickAgent.onResume(this);   
 	}
 	
 	@Override
 	public void onPause() {
 		super.onPause();
-		MobclickAgent.onPause(this);
 	}
 	
 	@Override

@@ -1,9 +1,6 @@
 package net.oschina.gitapp.ui.basefragment;
 
 import net.oschina.gitapp.AppContext;
-
-import com.umeng.analytics.MobclickAgent;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
@@ -28,13 +25,11 @@ public class BaseFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		MobclickAgent.onPageStart(getClass().getSimpleName());
 	}
 	
 	@Override
 	public void onPause() {
 		super.onPause();
-		MobclickAgent.onPageEnd(getClass().getSimpleName());
 	}
 	
 	@Override

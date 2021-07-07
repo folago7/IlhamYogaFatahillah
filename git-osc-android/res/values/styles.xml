@@ -1,27 +1,47 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<style name="detail_head_title">
+    <style name="detail_head_title">
         <item name="android:layout_width">wrap_content</item>
-		<item name="android:layout_height">wrap_content</item>
-		<item name="android:layout_gravity">center</item>
-		<item name="android:gravity">center</item>
-		<item name="android:textSize">@dimen/text_size_20</item>
-		<item name="android:textColor">@color/white</item>
-		<item name="android:textStyle">bold</item>
-		<item name="android:shadowColor">#ffffffff</item>
-		<item name="android:shadowDx">1</item>
-		<item name="android:shadowDy">1</item>
-		<item name="android:shadowRadius">1</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">@dimen/text_size_20</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:shadowColor">#ffffffff</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">1</item>
     </style>
-    
-	<!-- 用户列表头像的样式 -->
+
+    <!-- 菜单layout的样式 -->
+    <style name="MenuItemLayoutStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">55dip</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:paddingLeft">20dip</item>
+        <item name="android:paddingRight">20dip</item>
+        <item name="android:background">@drawable/layout_item_selector</item>
+    </style>
+
+    <!-- 菜单TextView的样式 -->
+    <style name="MenuItemTextViewStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/text_size_20</item>
+    </style>
+
+    <!-- 用户列表头像的样式 -->
     <style name="UserFaceImageStyle">
-		<item name="android:layout_width">40.0dip</item>
-		<item name="android:layout_height">40.0dip</item>
-		<item name="android:scaleType">fitCenter</item>
-		<item name="android:padding">1.0dip</item>
-		<item name="android:clickable">true</item>
-		<item name="android:background">@drawable/mini_avatar</item>
+        <item name="android:layout_width">40.0dip</item>
+        <item name="android:layout_height">40.0dip</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:padding">1.0dip</item>
+        <item name="android:clickable">true</item>
+        <item name="android:background">@drawable/mini_avatar</item>
     </style>
 
 </resources>

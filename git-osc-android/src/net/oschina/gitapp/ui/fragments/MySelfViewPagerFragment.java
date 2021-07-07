@@ -26,7 +26,6 @@ public class MySelfViewPagerFragment extends BaseViewPagerFragment<BaseFragment>
 		String[] title = getResources().getStringArray(R.array.myself_title_array);
 		for (String t : title) {
 			titleList.add(t);
-			Log.i("MySelfViewPagerFragment", t);
 		}
 		fragmentList.add(new MySelfListEventFragment());
 		fragmentList.add(new MySelfListProjectFragment());

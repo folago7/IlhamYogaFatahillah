@@ -13,7 +13,10 @@
     <!-- 菜单 -->
     <FrameLayout
         android:id="@+id/main_slidingmenu_frame"
-        android:layout_width="240dp"
+        android:layout_width="280dp"
         android:layout_height="match_parent"
-        android:layout_gravity="start" />
+        android:layout_gravity="start"
+        android:background="@color/gray"
+        android:orientation="vertical" />
+
 </android.support.v4.widget.DrawerLayout>

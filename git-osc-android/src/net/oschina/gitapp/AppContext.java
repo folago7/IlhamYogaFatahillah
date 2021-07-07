@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
 
+import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.api.ApiClient;
 import net.oschina.gitapp.bean.CodeTree;
 import net.oschina.gitapp.bean.Commit;
@@ -32,6 +33,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 /**
  * 全局应用程序类：用于保存和调用全局应用配置及访问网络数据
@@ -95,7 +97,7 @@ public class AppContext extends Application {
 	private void init() {
 		//初始化用记的登录信息
 		User loginUser = getLoginInfo();
-		if(null != loginUser && StringUtils.toInt(loginUser.getId()) > 0 && StringUtils.isEmpty(getProperty(PROP_KEY_PRIVATE_TOKEN))){
+		if(null != loginUser && StringUtils.toInt(loginUser.getId()) > 0 && !StringUtils.isEmpty(getProperty(PROP_KEY_PRIVATE_TOKEN))){
 			// 记录用户的id和状态
 			this.loginUid = StringUtils.toInt(loginUser.getId());
 			this.login = true;
@@ -364,7 +366,7 @@ public class AppContext extends Application {
 		user.setTheme_id(StringUtils.toInt(getProperty(PROP_KEY_THEME_ID), 1));
 		user.setState(getProperty(PROP_KEY_STATE));
 		user.setCreated_at(getProperty(PROP_KEY_STATE));
-		user.setPortrait(getProperty(PROP_KEY_STATE));
+		user.setPortrait(getProperty(PROP_KEY_PORTRAIT));
 		user.setIsAdmin(StringUtils.toBool(getProperty(PROP_KEY_IS_ADMIN)));
 		user.setCanCreateGroup(StringUtils.toBool(getProperty(PROP_KEY_CAN_CREATE_GROUP)));
 		user.setCanCreateProject(StringUtils.toBool(getProperty(PROP_KEY_CAN_CREATE_PROJECT)));

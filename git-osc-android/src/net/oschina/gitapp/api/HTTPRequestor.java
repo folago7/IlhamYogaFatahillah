@@ -116,6 +116,7 @@ public class HTTPRequestor {
     	_methodType = methodType;
         _httpClient = getHttpClient();
         
+        Log.i("Test", url);
         String urser_agent = appContext != null ? getUserAgent(appContext) : "";
         _method = getMethod(methodType, url, urser_agent);
         return this;
@@ -278,7 +279,6 @@ public class HTTPRequestor {
 			throw AppException.http(e);
 		} catch (IOException e) {
 			// 发生网络异常
-			e.printStackTrace();
 			throw AppException.network(e);
 		} finally {
 			// 释放连接

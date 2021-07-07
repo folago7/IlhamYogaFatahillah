@@ -76,7 +76,7 @@ public class ApiClient {
 
 		for(String name : params.keySet()){
 			String value = String.valueOf(params.get(name));
-			if (value != null || !StringUtils.isEmpty(value)) {
+			if (value != null && !StringUtils.isEmpty(value) && !value.equalsIgnoreCase("null")) {
 				url.append('&');
 				url.append(name);
 				url.append('=');

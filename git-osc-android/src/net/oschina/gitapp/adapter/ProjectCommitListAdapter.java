@@ -81,7 +81,7 @@ public class ProjectCommitListAdapter extends MyBaseAdapter<Commit> {
 		}*/
 		
 		// 2.显示相关信息
-		listItemView.username.setText(commit.getAuthor() == null ? "" : commit.getAuthor().getName());
+		listItemView.username.setText(commit.getAuthor() == null ? commit.getAuthor_name() : commit.getAuthor().getName());
 		listItemView.content.setText(commit.getTitle());
 		SimpleDateFormat f = new  SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date time = commit.getCreatedAt();

@@ -19,6 +19,7 @@ import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.User;
+import net.oschina.gitapp.common.BroadcastController;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
@@ -163,6 +164,8 @@ public class LoginActivity extends BaseActionBarActivity
 						UIHelper.ToastMessage(context, R.string.msg_login_success);
 						//返回标识，成功登录
 						setResult(RESULT_OK);
+						// 发送用户登录成功的广播
+						BroadcastController.sendUserChangeBroadcase(getActivity());
 						finish();
 					}
 				} else if(msg.what == 0){

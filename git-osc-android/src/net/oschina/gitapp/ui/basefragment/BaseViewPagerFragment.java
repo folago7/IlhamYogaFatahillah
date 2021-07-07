@@ -34,20 +34,9 @@ public class BaseViewPagerFragment<T extends BaseFragment> extends Fragment impl
 	protected boolean hasBaseListFragmentResumed;
 	
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		Log.i("Test", "父类的created");
-		//fragmentList = new ArrayList<T>();
-		Log.i("Test", fragmentList.size() + "前");
-		//titleList = new ArrayList<String>();
-		Log.i("Test", fragmentList.size() + "后");
-		super.onCreate(savedInstanceState);
-	}
-
-	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		super.onCreateView(inflater, container, savedInstanceState);
-		Log.i("Test", "父类的onCreateView");
 		View view = inflater.inflate(R.layout.base_viewpage_fragment, container, false);
 		pager = (ViewPager) view.findViewById(R.id.pager);
 		mPagerTabStrip = (PagerTabStrip) view.findViewById(R.id.pager_tabstrip);
@@ -57,7 +46,6 @@ public class BaseViewPagerFragment<T extends BaseFragment> extends Fragment impl
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		Log.i("Test", "父类的onActivityCreated");
 		adapter = new ListFragmentPagerAdapter<T>(
 				getActivity().getSupportFragmentManager(), titleList,
 				fragmentList);

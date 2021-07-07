@@ -1,237 +1,262 @@
 package net.oschina.gitapp.ui;
 
+import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
-import net.oschina.gitapp.ui.fragments.ExploreViewPagerFragment;
-import net.oschina.gitapp.ui.fragments.NoticeViewPagerFragment;
-import net.oschina.gitapp.ui.fragments.SettingViewPagerFragment;
-import net.oschina.gitapp.ui.fragments.MySelfViewPagerFragment;
-import net.oschina.gitapp.ui.fragments.SuggestViewPagerFragment;
+import net.oschina.gitapp.ui.basefragment.BaseFragment;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.res.TypedArray;
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
 import android.support.v4.view.ViewCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
-import android.widget.ListView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import net.oschina.gitapp.bean.URLs;
+import net.oschina.gitapp.bean.User;
+import net.oschina.gitapp.common.BroadcastController;
+import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.interfaces.*;
 
 /**
  * 导航菜单栏
- * @author 火蚁（http://my.oschina.net/LittleDY）
  * @created 2014-04-29
+ * @author 火蚁（http://my.oschina.net/LittleDY）
+ * 
  */
-public class DrawerNavigation extends ListFragment {
+public class DrawerNavigation extends BaseFragment implements OnClickListener {
 
-    private Context mContext;
-    private View mSavedView;
+	public static DrawerNavigation newInstance() {
+		return new DrawerNavigation();
+	}
+	
+	private View mSavedView;
 
-    private Integer mScheduledPosition;
-    private View mScheduledView;
+	private RelativeLayout mMenu_user_layout;
+	private LinearLayout mMenu_user_info_layout;
+	private LinearLayout mMenu_user_login_tips;
+	private ImageView mUser_info_userface;
+	private TextView mUser_info_username;
 
-    protected static NavigationTransactionListener sNavigationTransactionListener;
+	private LinearLayout mMenu_item_explore;
+	private LinearLayout mMenu_item_myself;
+	private LinearLayout mMenu_item_notice;
+	private LinearLayout mMenu_item_setting;
+	private LinearLayout mMenu_item_exit;
 
-    // Menu Entries for the Navigation Drawer.
-    private static final int MENU_EXPLORE = 0;// 发现
-    private static final int MENU_MYSELF = 1;// 我的
-    private static final int MENU_NOTICE = 2;// 通知
-    private static final int MENU_SETTING = 3;// 设置
-    private static final int MENU_SUGGEST = 4;// 建议
-    private static final int MENU_EXIT = 5;// 退出
+	private DrawerMenuCallBack mCallBack;
+	private AppContext mApplication;
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.slidingmenu_list, null);
-    }
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		mApplication = getGitApplication();
+	}
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		if (activity instanceof DrawerMenuCallBack) {
+			mCallBack = (DrawerMenuCallBack) activity;
+		}
+		// 注册一个用户发生变化的广播
+		BroadcastController.registerUserChangeReceiver(activity, mUserChangeReceiver);
+	}
+	
+	private BroadcastReceiver mUserChangeReceiver = new BroadcastReceiver() {
+		
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			//接收到变化后，更新用户资料
+			setupUserView(true);
+		}
+	};
 
-        mContext = getActivity();
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		initView(view);
+		setupUserView(mApplication.isLogin());
+	}
+	
+	private void setupUserView(final boolean reflash) {
+		//判断是否已经登录，如果已登录则显示用户的头像与信息
+		if(!mApplication.isLogin()) {
+			mUser_info_userface.setImageResource(R.drawable.mini_avatar);
+			mUser_info_username.setText("");
+			mMenu_user_info_layout.setVisibility(View.GONE);
+			mMenu_user_login_tips.setVisibility(View.VISIBLE);
+			return;
+		}
+		
+		mMenu_user_info_layout.setVisibility(View.VISIBLE);
+		mMenu_user_login_tips.setVisibility(View.GONE);
+		mUser_info_username.setText("");
+		
+		new AsyncTask<Void, Void, User>() {
+			
+			@Override
+			protected User doInBackground(Void... params) {
+				User user = mApplication.getLoginInfo();
+				return user;
+			}
+			
+			@Override
+			protected void onPostExecute(User user) {
+				if(user == null || isDetached()) {
+					return;
+				}
+				// 加载用户头像
+				String faceUrl = URLs.HTTP + URLs.HOST + URLs.URL_SPLITTER + user.getPortrait();
+				UIHelper.showUserFace(mUser_info_userface, faceUrl);
 
-        // Get Menu icons and Menu strings for the Navigation Drawer.
-        TypedArray menuIcons = getResources().obtainTypedArray(R.array.navigation_drawer_icons);
-        String[] menuItems = getResources().getStringArray(R.array.navigation_drawer_strings);
+				// 其他资料
+				mUser_info_username.setText(user.getName());
+			}
+			
+		}.execute();
+	}
 
-        // Populate the ListView with a custom Adapter to include icons.
-        CustomListAdapter mAdapter = new CustomListAdapter(getActivity(), R.layout.row_slidingmenu, R.id.slidingmenu_text, menuItems, menuIcons);
-        // 注意给listview设置头部需要在设置适配器之前
-        setListAdapter(mAdapter);
-        
-        sNavigationTransactionListener = new NavigationTransactionListener();
-    }
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.fragment_drawer_menu, null);
+	}
 
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+	}
 
-    @Override
-    public void onListItemClick(ListView listview, View v, int position, long id) {
-        mScheduledPosition = position;
-        mScheduledView = v;
+	// 初始化界面控件
+	private void initView(View view) {
+		mMenu_user_layout = (RelativeLayout) view.findViewById(R.id.menu_user_layout);
+		mMenu_user_info_layout = (LinearLayout) view.findViewById(R.id.menu_user_info_layout);
+		mUser_info_userface = (ImageView) view.findViewById(R.id.menu_user_info_userface);
+		mUser_info_username = (TextView) view.findViewById(R.id.menu_user_info_username);
+		mMenu_user_login_tips = (LinearLayout) view.findViewById(R.id.menu_user_info_login_tips_layout);
 
-        if (MainActivity.sToggleListener != null) {
-            MainActivity.sToggleListener.onShowAbove();
-        }
-    }
+		mMenu_item_explore = (LinearLayout) view.findViewById(R.id.menu_item_explore);
+		mMenu_item_myself = (LinearLayout) view.findViewById(R.id.menu_item_myself);
+		mMenu_item_notice = (LinearLayout) view.findViewById(R.id.menu_item_notice);
+		mMenu_item_setting = (LinearLayout) view.findViewById(R.id.menu_item_setting);
+		mMenu_item_exit = (LinearLayout) view.findViewById(R.id.menu_item_exit);
 
-    private void switchFragments(Fragment fragment) {
-        getActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.main_content, fragment)
-                .commit();
-    }
+		// 绑定点击事件
+		mMenu_user_layout.setOnClickListener(this);
+		mMenu_item_explore.setOnClickListener(this);
+		mMenu_item_myself.setOnClickListener(this);
+		mMenu_item_notice.setOnClickListener(this);
+		mMenu_item_setting.setOnClickListener(this);
+		mMenu_item_exit.setOnClickListener(this);
 
-    private void highlightSelectedItem(View v) {
-        setSelected(null, false);
-        setSelected(v, true);
-    }
+		// 高亮发现菜单栏
+		highlightSelectedItem(mMenu_item_explore);
+	}
 
-    private void setSelected(View v, boolean selected) {
-        View view;
+	private void highlightSelectedItem(View v) {
+		setSelected(null, false);
+		setSelected(v, true);
+	}
 
-        // If both are null, cancel the method call.
-        if (v == null && mSavedView == null) {
-            return;
-        }
+	private void setSelected(View v, boolean selected) {
+		View view;
 
-        if (v != null) {
-            mSavedView = v;
-            view = mSavedView;
+		if (v == null && mSavedView == null) {
+			return;
+		}
 
-        } else {
-            view = mSavedView;
-        }
+		if (v != null) {
+			mSavedView = v;
+			view = mSavedView;
 
-        if (selected) {
-            ViewCompat.setHasTransientState(view, true);
-            view.setBackgroundColor(getResources().getColor(R.color.accent_color));
+		} else {
+			view = mSavedView;
+		}
 
-        } else {
-            ViewCompat.setHasTransientState(view, false);
-            view.setBackgroundColor(getResources().getColor(R.color.transparent));
-        }
-    }
+		if (selected) {
+			ViewCompat.setHasTransientState(view, true);
+			view.setBackgroundColor(getResources().getColor(
+					R.color.accent_color));
 
-    private void navigate(int scheduledPosition, View scheduledView) {
-        switch (scheduledPosition) {
-            case MENU_EXPLORE:// 发现
-                switchFragments(ExploreViewPagerFragment.newInstance());
-                highlightSelectedItem(scheduledView);
-                break;
+		} else {
+			ViewCompat.setHasTransientState(view, false);
+			view.setBackgroundColor(getResources()
+					.getColor(R.color.transparent));
+		}
+	}
 
-            case MENU_MYSELF:// 我的
-                switchFragments(MySelfViewPagerFragment.newInstance());
-                highlightSelectedItem(scheduledView);
-                break;
+	@Override
+	public void onClick(View v) {
+		int id = v.getId();
+		switch (id) {
+		case R.id.menu_user_layout:
+			showLoginActivity();
+			break;
+		case R.id.menu_item_explore:
+			onClickExplore();
+			highlightSelectedItem(v);
+			break;
+		case R.id.menu_item_myself:
+			onClickMySelf();
+			highlightSelectedItem(v);
+			break;
+		case R.id.menu_item_notice:
+			onClickNotice();
+			highlightSelectedItem(v);
+			break;
+		case R.id.menu_item_setting:
+			onClickSetting();
+			break;
+		case R.id.menu_item_exit:
+			onClickExit();
+			break;
+		}
+	}
 
-            case MENU_NOTICE:// 通知
-                switchFragments(NoticeViewPagerFragment.newInstance());
-                highlightSelectedItem(scheduledView);
-                break;
+	private void showLoginActivity() {
+		if (!mApplication.isLogin()) {
+			Intent intent = new Intent(getActivity(), LoginActivity.class);
+			getActivity().startActivity(intent);
+		} else {
 
-            case MENU_SETTING:// 设置
-                switchFragments(SettingViewPagerFragment.newInstance());
-                highlightSelectedItem(scheduledView);
-                break;
+		}
+	}
 
-            case MENU_SUGGEST:// 建议
-                switchFragments(SuggestViewPagerFragment.newInstance());
-                highlightSelectedItem(scheduledView);
-                break;
+	private void onClickExplore() {
+		if (mCallBack != null) {
+			mCallBack.onClickExplore();
+		}
+	}
 
-            case MENU_EXIT:// 退出程序
-                switchFragments(SuggestViewPagerFragment.newInstance());
-                highlightSelectedItem(scheduledView);
-                break;
+	private void onClickMySelf() {
+		if (mCallBack != null) {
+			mCallBack.onClickMySelf();
+		}
+	}
 
-            default:
-                switchFragments(ExploreViewPagerFragment.newInstance());
-                highlightSelectedItem(scheduledView);
-                break;
-        }
-    }
+	private void onClickNotice() {
+		if (mCallBack != null) {
+			mCallBack.onClickNotice();
+		}
+	}
 
-    public final class NavigationTransactionListener implements NavigationInterfaces.NavigationDrawerListener {
+	private void onClickSetting() {
+		if (mCallBack != null) {
+			mCallBack.onClickSetting();
+		}
+	}
 
-        @Override
-        public void onDrawerClosed() {
-            if (mScheduledPosition != null && mScheduledView != null) {
-                navigate(mScheduledPosition, mScheduledView);
-
-                mScheduledPosition = null;
-                mScheduledView = null;
-            }
-        }
-
-        @Override
-        public void onDrawerOpened() {
-
-        }
-    }
-
-    private final class CustomListAdapter extends ArrayAdapter<String> {
-        private Activity mActivity;
-        private TypedArray iconArray;
-        private String[] textArray;
-
-        /**
-         * The Constructor for the CustomListAdapter.
-         *
-         * @param activity           The corresponding Activity.
-         * @param resource           The layout for the {@link android.widget.ListView}.
-         * @param textViewResourceId The {@link android.widget.TextView} Resource ID for the displayed Text.
-         * @param text               The Text which shall be displayed.
-         * @param icons              The Icons which shall be displayed.
-         */
-        public CustomListAdapter(Activity activity, int resource, int textViewResourceId, String[] text, TypedArray icons) {
-            super(activity, resource, textViewResourceId, text);
-
-            // Declare local class Variables.
-            this.mActivity = activity;
-            this.iconArray = icons;
-            this.textArray = text;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater mLayoutInflater = mActivity.getLayoutInflater();
-            ViewHolder mViewHolder;
-
-            if (convertView == null) {
-                convertView = mLayoutInflater.inflate(R.layout.row_slidingmenu, null);
-
-                mViewHolder = new ViewHolder();
-                mViewHolder.icon = (ImageView) convertView.findViewById(R.id.slidingmenu_icon);
-                mViewHolder.text = (TextView) convertView.findViewById(R.id.slidingmenu_text);
-
-                convertView.setTag(mViewHolder);
-
-            } else {
-                mViewHolder = (ViewHolder) convertView.getTag();
-            }
-
-            mViewHolder.icon.setImageDrawable(iconArray.getDrawable(position));
-            mViewHolder.text.setText(textArray[position]);
-
-            if (position == 0) {
-                setSelected(convertView, true);
-            }
-
-            return convertView;
-        }
-
-    }
-
-    /**
-     * Simple ViewHolder.
-     */
-    private static class ViewHolder {
-        TextView text;
-        ImageView icon;
-    }
+	private void onClickExit() {
+		if (mCallBack != null) {
+			mCallBack.onClickExit();
+		}
+	}
 }
