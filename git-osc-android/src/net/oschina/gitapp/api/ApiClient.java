@@ -1,6 +1,7 @@
 package net.oschina.gitapp.api;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,7 @@ import android.graphics.Bitmap;
 import android.util.Log;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
+import net.oschina.gitapp.bean.CodeTree;
 import net.oschina.gitapp.bean.Commit;
 import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.Event;
@@ -19,6 +21,7 @@ import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.Session;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.bean.URLs;
+import net.oschina.gitapp.common.StringUtils;
 
 /**
  * API客户端接口：用于访问网络数据
@@ -71,10 +74,13 @@ public class ApiClient {
 			url.append('?');
 
 		for(String name : params.keySet()){
-			url.append('&');
-			url.append(name);
-			url.append('=');
-			url.append(String.valueOf(params.get(name)));
+			String value = String.valueOf(params.get(name));
+			if (value != null || !StringUtils.isEmpty(value)) {
+				url.append('&');
+				url.append(name);
+				url.append('=');
+				url.append(value);
+			}
 		}
 
 		return url.toString().replace("?&", "?");
@@ -131,7 +137,6 @@ public class ApiClient {
 	 */
 	public static Project getProject(AppContext appContext, int projectId) throws AppException {
 		String url = URLs.PROJECT + URLs.URL_SPLITTER + projectId;
-		Log.i("MySelfViewPagerFragment", url);
 		return getHttpRequestor().init(appContext, HTTPRequestor.GET_METHOD, url).to(Project.class);
 	}
 	
@@ -251,14 +256,35 @@ public class ApiClient {
 		Map<String,Object> params = new HashMap<String,Object>();
 		params.put(PRIVATE_TOKEN, getToken(appContext));
 		params.put("page", page);
+		// 拼接url地址
 		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + projectId + URLs.URL_SPLITTER + "repository/commits", params);
-		Log.i("Test", url);
 		List<Commit> list = getHttpRequestor().init(appContext, HTTPRequestor.GET_METHOD, url)
 				.getList(Commit[].class);
 		commits.setList(list);
 		commits.setCount(list.size());
 		commits.setPageSize(list.size());
 		return commits;
+	}
+	
+	/**
+	 * 获得项目的代码树列表
+	 * @param appContext
+	 * @param projectId 项目的id
+	 * @param path(optional) 路径
+	 * @param ref_name(optional) 分支或者标签，空则为默认的master分支
+	 * @return
+	 * @throws AppException
+	 */
+	public static List<CodeTree> getProjectCodeTree (AppContext appContext, int projectId, String path, String ref_name) throws AppException {
+		List<CodeTree> codeTree = new ArrayList<CodeTree>();
+		Map<String,Object> params = new HashMap<String,Object>();
+		params.put(PRIVATE_TOKEN, getToken(appContext));
+		params.put("paht", path);
+		params.put("ref_name", ref_name);
+		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + projectId + URLs.URL_SPLITTER + "repository/tree", params);
+		codeTree = getHttpRequestor().init(appContext, HTTPRequestor.GET_METHOD, url)
+				.getList(CodeTree[].class);
+		return codeTree;
 	}
 }
 

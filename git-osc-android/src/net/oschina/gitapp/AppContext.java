@@ -10,10 +10,12 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Properties;
 import java.util.UUID;
 
 import net.oschina.gitapp.api.ApiClient;
+import net.oschina.gitapp.bean.CodeTree;
 import net.oschina.gitapp.bean.Commit;
 import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.Event;
@@ -639,6 +641,27 @@ public class AppContext extends Application {
 			if(list == null)
 				list = new CommonList<Commit>();
 		}
+		return list;
+	}
+	
+	/**
+	 * 获得项目的代码树列表
+	 * @param appContext
+	 * @param projectId 项目的id
+	 * @param path(optional) 路径
+	 * @param ref_name(optional) 分支或者标签，空则为默认的master分支
+	 * @return
+	 * @throws AppException
+	 */
+	public List<CodeTree> getProjectCodeTree(AppContext appContext, int projectId, String path, String ref_name) throws AppException {
+		List<CodeTree> list = null;
+		try{
+			list = ApiClient.getProjectCodeTree(this, projectId, path, ref_name);
+		}catch(AppException e){
+			e.printStackTrace();
+			if(list == null)
+				throw e;
+		}		
 		return list;
 	}
 }

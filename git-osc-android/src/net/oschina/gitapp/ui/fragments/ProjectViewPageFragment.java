@@ -24,7 +24,7 @@ public class ProjectViewPageFragment extends BaseViewPagerFragment<BaseFragment>
 			titleList.add(t);
 		}
 		fragmentList.add(new ProjectCommitListFragment(_project));
-		fragmentList.add(new ProjectCommitListFragment(_project));
+		fragmentList.add(new ProjectCodeTreeFragment(_project));
 		fragmentList.add(new ProjectCommitListFragment(_project));
 		fragmentList.add(new ProjectCommitListFragment(_project));
 	}
