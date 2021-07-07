@@ -17,6 +17,7 @@ import net.oschina.gitapp.bean.CodeTree;
 import net.oschina.gitapp.bean.Commit;
 import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.Event;
+import net.oschina.gitapp.bean.Issue;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.Session;
 import net.oschina.gitapp.bean.User;
@@ -285,6 +286,29 @@ public class ApiClient {
 		codeTree = getHttpRequestor().init(appContext, HTTPRequestor.GET_METHOD, url)
 				.getList(CodeTree[].class);
 		return codeTree;
+	}
+	
+	/**
+	 * 获得一个项目issues列表
+	 * @param appContext
+	 * @param projectId
+	 * @param page
+	 * @return
+	 * @throws AppException
+	 */
+	public static CommonList<Issue> getProjectIssuesList(AppContext appContext, int projectId, int page) throws AppException {
+		CommonList<Issue> commits = new CommonList<Issue>();
+		Map<String,Object> params = new HashMap<String,Object>();
+		params.put(PRIVATE_TOKEN, getToken(appContext));
+		params.put("page", page);
+		// 拼接url地址
+		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + projectId + URLs.URL_SPLITTER + "issues", params);
+		List<Issue> list = getHttpRequestor().init(appContext, HTTPRequestor.GET_METHOD, url)
+				.getList(Issue[].class);
+		commits.setList(list);
+		commits.setCount(list.size());
+		commits.setPageSize(list.size());
+		return commits;
 	}
 }
 

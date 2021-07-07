@@ -33,8 +33,8 @@ public class Project extends Entity {
     @JsonProperty("issues_enabled")
     private boolean _issuesEnabled;
 
-    @JsonProperty("merge_requests_enabled")
-    private boolean _mergeRequestsEnabled;
+    @JsonProperty("pull_requests_enabled")
+    private boolean _pullrequestsEnabled;
 
     @JsonProperty("wall_enabled")
     private boolean _wallEnabled;
@@ -58,15 +58,19 @@ public class Project extends Entity {
     private Date _last_push_at;
     
     // 项目的父id，不为null则为是fork的项目
+    @JsonProperty("parent_id")
     private Integer _parent_id;
     
     //项目的fork数量
+    @JsonProperty("forks_count")
     private Integer _forks_count;
     
     //项目的star数量
+    @JsonProperty("stars_count")
     private Integer _stars_count;
     
     //项目的语言类型
+    @JsonProperty("language")
     private String _language;
     
     public Integer getParent_id() {
@@ -165,12 +169,12 @@ public class Project extends Entity {
         _issuesEnabled = issuesEnabled;
     }
 
-    public boolean isMergeRequestsEnabled() {
-        return _mergeRequestsEnabled;
+    public boolean isPullRequestsEnabled() {
+        return _pullrequestsEnabled;
     }
 
-    public void setMergeRequestsEnabled(boolean mergeRequestsEnabled) {
-        _mergeRequestsEnabled = mergeRequestsEnabled;
+    public void setPullRequestsEnabled(boolean pullRequestsEnabled) {
+    	_pullrequestsEnabled = pullRequestsEnabled;
     }
 
     public boolean isWallEnabled() {

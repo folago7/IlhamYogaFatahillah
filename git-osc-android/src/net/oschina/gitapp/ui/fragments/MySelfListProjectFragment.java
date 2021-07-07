@@ -9,6 +9,7 @@ import net.oschina.gitapp.adapter.MySelfListProjectAdapter;
 import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.MessageData;
+import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
 
 /**
@@ -21,7 +22,7 @@ import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
  */
 public class MySelfListProjectFragment extends BaseSwipeRefreshFragment<Project, CommonList<Project>> {
 	
-	public MySelfListProjectFragment newInstance() {
+	public static MySelfListProjectFragment newInstance() {
 		return new MySelfListProjectFragment();
 	}
 	
@@ -43,5 +44,10 @@ public class MySelfListProjectFragment extends BaseSwipeRefreshFragment<Project,
 			msg = new MessageData<CommonList<Project>>(e);
 		}
 		return msg;
+	}
+	
+	@Override
+	public void onItemClick(int position, Project project) {
+		UIHelper.showProjectDetail(getActivity(), project);
 	}
 }

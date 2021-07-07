@@ -1,5 +1,7 @@
 package net.oschina.gitapp.ui.fragments;
 
+import java.util.ArrayList;
+
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.ui.basefragment.BaseFragment;
 import net.oschina.gitapp.ui.basefragment.BaseViewPagerFragment;

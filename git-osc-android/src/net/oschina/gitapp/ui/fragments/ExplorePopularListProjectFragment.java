@@ -23,7 +23,7 @@ import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
  */
 public class ExplorePopularListProjectFragment extends BaseSwipeRefreshFragment<Project, CommonList<Project>> {
 		
-	public ExplorePopularListProjectFragment newInstance() {
+	public static ExplorePopularListProjectFragment newInstance() {
 		return new ExplorePopularListProjectFragment();
 	}
 	

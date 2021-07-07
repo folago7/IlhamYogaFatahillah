@@ -19,6 +19,7 @@ import net.oschina.gitapp.bean.CodeTree;
 import net.oschina.gitapp.bean.Commit;
 import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.Event;
+import net.oschina.gitapp.bean.Issue;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.StringUtils;
@@ -653,7 +654,7 @@ public class AppContext extends Application {
 	 * @return
 	 * @throws AppException
 	 */
-	public List<CodeTree> getProjectCodeTree(AppContext appContext, int projectId, String path, String ref_name) throws AppException {
+	public List<CodeTree> getProjectCodeTree(int projectId, String path, String ref_name) throws AppException {
 		List<CodeTree> list = null;
 		try{
 			list = ApiClient.getProjectCodeTree(this, projectId, path, ref_name);
@@ -662,6 +663,41 @@ public class AppContext extends Application {
 			if(list == null)
 				throw e;
 		}		
+		return list;
+	}
+	
+	/**
+	 * 获得一个项目issues列表
+	 * @param appContext
+	 * @param projectId
+	 * @param pageIndex
+	 * @param isRefresh
+	 * @return
+	 * @throws AppException
+	 */
+	@SuppressWarnings("unchecked")
+	public CommonList<Issue> getProjectIssuesList(int projectId, int pageIndex, boolean isRefresh) throws AppException {
+		CommonList<Issue> list = null;
+		String cacheKey = "projectIssuesList_" + projectId + "_" + pageIndex + "_" + PAGE_SIZE;
+		if(!isReadDataCache(cacheKey) || isRefresh) {
+			try{
+				list = ApiClient.getProjectIssuesList(this, projectId, pageIndex);
+				if(list != null && pageIndex == 0){
+					list.setCacheKey(cacheKey);
+					saveObject(list, cacheKey);
+				}
+			}catch(AppException e){
+				e.printStackTrace();
+				list = (CommonList<Issue>)readObject(cacheKey);
+				if(list == null)
+					throw e;
+			}		
+		} else {
+			// 从缓存中读取
+			list = (CommonList<Issue>)readObject(cacheKey);
+			if(list == null)
+				list = new CommonList<Issue>();
+		}
 		return list;
 	}
 }

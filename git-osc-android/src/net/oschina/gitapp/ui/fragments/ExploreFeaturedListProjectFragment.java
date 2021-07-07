@@ -22,7 +22,7 @@ import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
  */
 public class ExploreFeaturedListProjectFragment extends BaseSwipeRefreshFragment<Project, CommonList<Project>> {
 		
-	public ExploreFeaturedListProjectFragment newInstance() {
+	public static ExploreFeaturedListProjectFragment newInstance() {
 		return new ExploreFeaturedListProjectFragment();
 	}
 	

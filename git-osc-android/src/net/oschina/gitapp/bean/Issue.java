@@ -18,21 +18,28 @@ public class Issue extends Entity {
 	public static final String StateClosed = "closed";
 	public static final String StateOpened = "opened";
 
-	public static final String URL = "/issues";
-	
-	private int _iid;
-	
 	@JsonProperty("project_id")
 	private int _projectId;
 	
+	@JsonProperty("title")
 	private String _title;
+	
+	@JsonProperty("description")
 	private String _description;
+	
+	@JsonProperty("description")
 	private String[] _labels;
+	
+	@JsonProperty("milestone")
 	private Milestone _milestone;
 	
+	@JsonProperty("assignee")
 	private User _assignee;
+	
+	@JsonProperty("author")
 	private User _author;
 	
+	@JsonProperty("stae")
 	private String _state;
 	
 	@JsonProperty("updated_at")

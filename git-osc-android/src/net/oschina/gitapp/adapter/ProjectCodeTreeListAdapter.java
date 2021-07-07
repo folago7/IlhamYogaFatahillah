@@ -64,6 +64,8 @@ public class ProjectCodeTreeListAdapter extends MyBaseAdapter<CodeTree> {
 		String type = code.getType();
 		if (type.equalsIgnoreCase(CodeTree.blob)) {
 			listItemView.tag.setBackgroundResource(R.drawable.file);
+		} else {
+			listItemView.tag.setBackgroundResource(R.drawable.folder);
 		}
 		listItemView.name.setText(code.getName());
 		

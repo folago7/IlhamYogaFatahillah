@@ -7,6 +7,7 @@ import net.oschina.gitapp.AppManager;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.Event;
 import net.oschina.gitapp.bean.Project;
+import net.oschina.gitapp.ui.LoginActivity;
 import net.oschina.gitapp.ui.ProjectActivity;
 import net.oschina.gitapp.ui.fragments.ProjectViewPageFragment;
 import android.app.Activity;
@@ -231,6 +232,15 @@ public class UIHelper {
 			}
 		}
 		return sps;
+	}
+	
+	/**
+	 * 显示登录的界面
+	 * @param context
+	 */
+	public static void showLoginActivity(Context context) {
+		Intent intent = new Intent(context, LoginActivity.class);
+		context.startActivity(intent);
 	}
 	
 	/**

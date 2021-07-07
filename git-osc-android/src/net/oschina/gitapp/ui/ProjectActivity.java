@@ -32,10 +32,10 @@ public class ProjectActivity extends BaseActionBarActivity {
 		mFragmentManager = getSupportFragmentManager();
 		// 拿到传过来的project
 		Intent intent = getIntent();
-		Project p = (Project) intent.getSerializableExtra("project");
+		Project project = (Project) intent.getSerializableExtra("project");
         if (null == savedInstanceState) {
         	FragmentTransaction ft = mFragmentManager.beginTransaction();
-        	ft.replace(R.id.project_content, new ProjectViewPageFragment(p)).commit();
+        	ft.replace(R.id.project_content, ProjectViewPageFragment.newInstance(project)).commit();
         }
 	}
 }

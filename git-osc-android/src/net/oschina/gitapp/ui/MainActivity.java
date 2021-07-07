@@ -55,8 +55,8 @@ public class MainActivity extends ActionBarActivity {
         mDrawerToggle = new ActionBarDrawerToggle(this,
                 mDrawerLayout,
                 R.drawable.ic_navigation_drawer,
-                R.string.drawer_open,
-                R.string.drawer_close) {
+                0,
+                0) {
 
             public void onDrawerClosed(View view) {
                 invalidateOptionsMenu();

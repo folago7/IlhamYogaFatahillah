@@ -28,9 +28,5 @@ public class ExploreViewPagerFragment extends BaseViewPagerFragment<BaseFragment
 		fragmentList.add(new ExploreFeaturedListProjectFragment());
 		fragmentList.add(new ExplorePopularListProjectFragment());
 		fragmentList.add(new ExploreLatestListProjectFragment());
-		
-		/*fragmentList.add(new MySelfListEventFragment());
-		fragmentList.add(new MySelfListEventFragment());
-		fragmentList.add(new MySelfListEventFragment());*/
 	}
 }

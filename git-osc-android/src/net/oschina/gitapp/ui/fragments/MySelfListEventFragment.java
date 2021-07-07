@@ -24,7 +24,7 @@ import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
  */
 public class MySelfListEventFragment extends BaseSwipeRefreshFragment<Event, CommonList<Event>> {
 	
-	public MySelfListEventFragment newInstance() {
+	public static MySelfListEventFragment newInstance() {
 		return new MySelfListEventFragment();
 	}
 	

@@ -9,6 +9,7 @@ import net.oschina.gitapp.adapter.ExploreListProjectAdapter;
 import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.MessageData;
+import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
 
 /**
@@ -21,7 +22,7 @@ import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
  */
 public class ExploreLatestListProjectFragment extends BaseSwipeRefreshFragment<Project, CommonList<Project>> {
 		
-	public ExploreLatestListProjectFragment newInstance() {
+	public static ExploreLatestListProjectFragment newInstance() {
 		return new ExploreLatestListProjectFragment();
 	}
 	
@@ -43,5 +44,10 @@ public class ExploreLatestListProjectFragment extends BaseSwipeRefreshFragment<P
 			msg = new MessageData<CommonList<Project>>(e);
 		}
 		return msg;
+	}
+	
+	@Override
+	public void onItemClick(int position, Project project) {
+		UIHelper.showProjectDetail(getActivity(), project);
 	}
 }

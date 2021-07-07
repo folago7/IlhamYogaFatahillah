@@ -5,7 +5,6 @@ import java.util.List;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +17,8 @@ import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.ProjectCodeTreeListAdapter;
 import net.oschina.gitapp.bean.CodeTree;
-import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.Project;
+import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.ui.basefragment.BaseFragment;
 
@@ -43,23 +42,29 @@ public class ProjectCodeTreeFragment extends BaseFragment {
 	private ProjectCodeTreeListAdapter mAdapter;
 	private List<CodeTree> mTrees;
 	
-	public ProjectCodeTreeFragment(Project project) {
-		this._project = project;
+	public static ProjectCodeTreeFragment newInstance(Project project) {
+		ProjectCodeTreeFragment fragment = new ProjectCodeTreeFragment();
+		Bundle args = new Bundle();
+		args.putSerializable(Contanst.PROJECT, project);
+		fragment.setArguments(args);
+		return fragment;
 	}
-
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		Log.i("Test", "view");
+		Bundle args = getArguments();
+		if (args != null) {
+			_project = (Project) args.getSerializable(Contanst.PROJECT);
+		}
 		mView = inflater.inflate(R.layout.projectcode_fragment, null);
 		initView();
-		loadDatas(null, "master");
+		loadDatas("", "master");
 		return mView;
 	}
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		Log.i("Test", "create");
 		super.onCreate(savedInstanceState);
 	}
 
@@ -85,7 +90,7 @@ public class ProjectCodeTreeFragment extends BaseFragment {
 				Message msg =new Message();
 				try {
 					AppContext ac = getGitApplication();
-	                List<CodeTree> tree = ac.getProjectCodeTree(ac, StringUtils.toInt(_project.getId()), path, ref_name);
+	                List<CodeTree> tree = ac.getProjectCodeTree(StringUtils.toInt(_project.getId()), path, ref_name);
 	                msg.what = 1;
 	                msg.obj = tree;
 	            } catch (Exception e) {

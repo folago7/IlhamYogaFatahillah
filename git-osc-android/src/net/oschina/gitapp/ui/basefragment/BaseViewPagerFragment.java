@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.oschina.gitapp.R;
+import net.oschina.gitapp.adapter.ListFragmentPagerAdapter;
 import net.oschina.gitapp.interfaces.OnBaseListFragmentResumeListener;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,13 +28,26 @@ public class BaseViewPagerFragment<T extends BaseFragment> extends Fragment impl
 		OnPageChangeListener{
 	protected List<T> fragmentList = new ArrayList<T>();
 	protected List<String> titleList = new ArrayList<String>();
+	protected ListFragmentPagerAdapter<T> adapter;
 	protected ViewPager pager;
 	protected PagerTabStrip mPagerTabStrip;
 	protected boolean hasBaseListFragmentResumed;
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		Log.i("Test", "父类的created");
+		//fragmentList = new ArrayList<T>();
+		Log.i("Test", fragmentList.size() + "前");
+		//titleList = new ArrayList<String>();
+		Log.i("Test", fragmentList.size() + "后");
+		super.onCreate(savedInstanceState);
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		super.onCreateView(inflater, container, savedInstanceState);
+		Log.i("Test", "父类的onCreateView");
 		View view = inflater.inflate(R.layout.base_viewpage_fragment, container, false);
 		pager = (ViewPager) view.findViewById(R.id.pager);
 		mPagerTabStrip = (PagerTabStrip) view.findViewById(R.id.pager_tabstrip);
@@ -42,39 +57,11 @@ public class BaseViewPagerFragment<T extends BaseFragment> extends Fragment impl
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		ListFragmentPagerAdapter<T> adapter = new ListFragmentPagerAdapter<T>(
+		Log.i("Test", "父类的onActivityCreated");
+		adapter = new ListFragmentPagerAdapter<T>(
 				getActivity().getSupportFragmentManager(), titleList,
 				fragmentList);
 		pager.setAdapter(adapter);
-	}
-	
-	// pager适配器
-	private class ListFragmentPagerAdapter<T extends BaseFragment> extends FragmentPagerAdapter {
-		private List<T> fragmentList;
-		private List<String> titleList;
-
-		public ListFragmentPagerAdapter(FragmentManager fm,
-				List<String> titleList, List<T> fragmentList) {
-			super(fm);
-			this.titleList = titleList;
-			this.fragmentList = fragmentList;
-		}
-
-		@Override
-		public Fragment getItem(int position) {
-			return (fragmentList == null || fragmentList.size() == 0) ? null : fragmentList.get(position);
-		}
-
-		@Override
-		public CharSequence getPageTitle(int position) {
-			return (titleList.size() > position) ? titleList.get(position) : "";
-
-		}
-
-		@Override
-		public int getCount() {
-			return fragmentList == null ? 0 : fragmentList.size();
-		}
 	}
 
 	@Override
