@@ -68,7 +68,7 @@ public class ProjectIssuesListAdapter extends MyBaseAdapter<Issue> {
 			listItemView = (ListItemView)convertView.getTag();
 		}
 		
-		Issue issue = getItem(position);
+		Issue issue = listData.get(position);
 		
 		// 1.加载项目作者头像
 		String portrait = issue.getAuthor() == null || issue.getAuthor().getPortrait() == null ? "" : issue.getAuthor().getPortrait();

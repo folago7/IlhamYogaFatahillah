@@ -52,7 +52,7 @@ public class EventCommitsListAdapter extends MyBaseAdapter<Commit> {
 		}
 		
 		// 显示相关信息
-		Commit commit = getItem(position);
+		Commit commit = listData.get(position);
 		listItemView.commitId.setText(commit.getId());
 		listItemView.user_name.setText(commit.getAuthor().getName());
 		listItemView.message.setText(commit.getMessage() == null ? "" : commit.getMessage());

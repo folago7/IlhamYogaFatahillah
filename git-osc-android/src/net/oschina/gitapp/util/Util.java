@@ -245,6 +245,7 @@ public class Util {
 	/**
 	 * 获取SD卡的信息 {@link SDCardInfo}
 	 * */
+	@SuppressWarnings("deprecation")
 	public static SDCardInfo getSDCardInfo() {
 		if (isSDCardReady()) {
 			StatFs statfs = new StatFs(getSdDirectory());

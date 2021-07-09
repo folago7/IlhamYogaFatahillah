@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;

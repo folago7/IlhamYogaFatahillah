@@ -3,10 +3,10 @@ package net.oschina.gitapp.ui.fragments;
 import java.util.List;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.BaseAdapter;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
-import net.oschina.gitapp.adapter.ExploreListProjectAdapter;
 import net.oschina.gitapp.adapter.ProjectCommitListAdapter;
 import net.oschina.gitapp.bean.Commit;
 import net.oschina.gitapp.bean.CommonList;
@@ -14,7 +14,6 @@ import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.MessageData;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.StringUtils;
-import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
 
 /**
@@ -34,6 +33,7 @@ public class ProjectCommitListFragment extends BaseSwipeRefreshFragment<Commit, 
 		Bundle args = new Bundle();
 		args.putSerializable(Contanst.PROJECT, project);
 		fragment.setArguments(args);
+		
 		return fragment;
 	}
 	
@@ -56,7 +56,7 @@ public class ProjectCommitListFragment extends BaseSwipeRefreshFragment<Commit, 
 			boolean reflash) {
 		MessageData<CommonList<Commit>> msg = null;
 		try {
-			CommonList<Commit> list = mApplication.getProjectCommitList(StringUtils.toInt(mProject.getId()), page, reflash);
+			CommonList<Commit> list = mApplication.getProjectCommitList(StringUtils.toInt(mProject.getId()), page, reflash, "master");
 			msg = new MessageData<CommonList<Commit>>(list);
 		} catch (AppException e) {
 			e.makeToast(mApplication);

@@ -58,7 +58,7 @@ public class ProjectCodeTreeListAdapter extends MyBaseAdapter<CodeTree> {
 			listItemView = (ListItemView)convertView.getTag();
 		}
 		
-		CodeTree code = getItem(position);
+		CodeTree code = listData.get(position);
 		
 		// 1.显示相关的信息
 		String type = code.getType();

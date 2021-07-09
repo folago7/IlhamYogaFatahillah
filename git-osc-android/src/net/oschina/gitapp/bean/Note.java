@@ -13,8 +13,6 @@ import org.codehaus.jackson.annotate.JsonProperty;
 @SuppressWarnings("serial")
 public class Note extends Entity {
 
-    public static final String URL = "/notes";
-    
     @JsonProperty("author_id")
     private int _author_id;
     

@@ -66,7 +66,7 @@ public class ExploreListProjectAdapter extends MyBaseAdapter<Project> {
 			listItemView = (ListItemView)convertView.getTag();
 		}
 		
-		Project project = getItem(position);
+		Project project = listData.get(position);
 		
 		// 1.加载项目作者头像
 		String portrait = project.getOwner().getPortrait() == null ? "" : project.getOwner().getPortrait();

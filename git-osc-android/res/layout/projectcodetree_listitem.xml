@@ -4,10 +4,7 @@
     android:layout_height="wrap_content"
     android:descendantFocusability="blocksDescendants"
     android:orientation="horizontal"
-    android:paddingBottom="7dip"
-    android:paddingLeft="6dip"
-    android:paddingRight="6dip"
-    android:paddingTop="8dip" >
+    android:padding="10dip" >
 
     <ImageView
         android:id="@+id/projectcodetree_listitem_tag"

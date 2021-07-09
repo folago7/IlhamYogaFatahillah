@@ -2,15 +2,14 @@ package net.oschina.gitapp.ui;
 
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
-import net.oschina.gitapp.ui.basefragment.BaseFragment;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,14 +30,13 @@ import net.oschina.gitapp.interfaces.*;
  * @author 火蚁（http://my.oschina.net/LittleDY）
  * 
  */
-public class DrawerNavigation extends BaseFragment implements OnClickListener {
+public class DrawerNavigation extends Fragment implements OnClickListener {
 
 	public static DrawerNavigation newInstance() {
 		return new DrawerNavigation();
 	}
 	
-	private View mSavedView;
-
+	private View mSavedView;// 当前操作的菜单项
 	private RelativeLayout mMenu_user_layout;
 	private LinearLayout mMenu_user_info_layout;
 	private LinearLayout mMenu_user_login_tips;
@@ -57,7 +55,7 @@ public class DrawerNavigation extends BaseFragment implements OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mApplication = getGitApplication();
+		mApplication = (AppContext) getActivity().getApplication();
 	}
 
 	@Override
@@ -68,6 +66,14 @@ public class DrawerNavigation extends BaseFragment implements OnClickListener {
 		}
 		// 注册一个用户发生变化的广播
 		BroadcastController.registerUserChangeReceiver(activity, mUserChangeReceiver);
+	}
+	
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		mCallBack = null;
+		// 注销接收用户信息变更的广播
+		BroadcastController.unregisterReceiver(getActivity(), mUserChangeReceiver);
 	}
 	
 	private BroadcastReceiver mUserChangeReceiver = new BroadcastReceiver() {

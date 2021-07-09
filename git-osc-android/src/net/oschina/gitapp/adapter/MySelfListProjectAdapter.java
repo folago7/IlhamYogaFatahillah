@@ -64,7 +64,7 @@ public class MySelfListProjectAdapter extends MyBaseAdapter<Project> {
 			listItemView = (ListItemView)convertView.getTag();
 		}
 		
-		Project project = getItem(position);
+		Project project = listData.get(position);
 		
 		listItemView.project_name.setText(project.getOwner().getName() + " / " + project.getName());
 		

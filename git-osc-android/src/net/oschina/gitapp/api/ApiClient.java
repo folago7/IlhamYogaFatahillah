@@ -249,14 +249,16 @@ public class ApiClient {
 	 * @param appContext
 	 * @param projectId 指定项目的id
 	 * @param page 页码
+	 * @param ref_name 分支（optional）
 	 * @return
 	 * @throws AppException
 	 */
-	public static CommonList<Commit> getProjectCommitList(AppContext appContext, int projectId, int page) throws AppException {
+	public static CommonList<Commit> getProjectCommitList(AppContext appContext, int projectId, int page, String ref_name) throws AppException {
 		CommonList<Commit> commits = new CommonList<Commit>();
 		Map<String,Object> params = new HashMap<String,Object>();
 		params.put(PRIVATE_TOKEN, getToken(appContext));
 		params.put("page", page);
+		params.put("ref_name", ref_name);
 		// 拼接url地址
 		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + projectId + URLs.URL_SPLITTER + "repository/commits", params);
 		List<Commit> list = getHttpRequestor().init(appContext, HTTPRequestor.GET_METHOD, url)

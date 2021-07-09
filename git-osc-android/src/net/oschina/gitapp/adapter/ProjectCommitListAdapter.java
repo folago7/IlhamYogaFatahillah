@@ -65,7 +65,7 @@ public class ProjectCommitListAdapter extends MyBaseAdapter<Commit> {
 			listItemView = (ListItemView)convertView.getTag();
 		}
 		
-		Commit commit = getItem(position);
+		Commit commit = listData.get(position);
 		
 		// 1.加载项目作者头像
 		String portrait = commit.getAuthor() == null || commit.getAuthor().getPortrait() == null ? "" : commit.getAuthor().getPortrait();

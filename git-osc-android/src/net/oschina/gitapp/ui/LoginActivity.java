@@ -28,8 +28,6 @@ import net.oschina.gitapp.widget.EditTextWithDel;
 public class LoginActivity extends BaseActionBarActivity 
 	implements OnClickListener, OnEditorActionListener {
 	
-	private final String TAG = LoginActivity.class.getName();
-	
 	private EditTextWithDel mAccountEditText;
 	private EditTextWithDel mPasswordEditText;
 	private ProgressDialog mLoginProgressDialog;

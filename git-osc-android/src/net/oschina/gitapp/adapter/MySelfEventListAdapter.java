@@ -13,6 +13,7 @@ import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import android.content.Context;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -48,7 +49,6 @@ public class MySelfEventListAdapter extends MyBaseAdapter<Event> {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		
 		ListItemView  listItemView = null;
 		if (convertView == null) {
 			//获取list_item布局文件的视图
@@ -68,7 +68,7 @@ public class MySelfEventListAdapter extends MyBaseAdapter<Event> {
 			listItemView = (ListItemView)convertView.getTag();
 		}
 		
-		Event event = getItem(position);
+		Event event = listData.get(position);
 		
 		// 1.加载项目作者头像
 		String portrait = event.getAuthor().getPortrait() == null ? "" : event.getAuthor().getPortrait();
@@ -79,7 +79,6 @@ public class MySelfEventListAdapter extends MyBaseAdapter<Event> {
 			bmpManager.loadBitmap(portraitURL, listItemView.face);
 		}
 		
-		listItemView.face.setOnClickListener(null);
 		/*if (faceClickEnable) {
 			listItemView.face.setOnClickListener(faceClickListener);
 		}*/
@@ -88,7 +87,7 @@ public class MySelfEventListAdapter extends MyBaseAdapter<Event> {
 		listItemView.user_name.setText(UIHelper.parseEventTitle(event.getAuthor().getName(), 
 				event.getProject().getOwner().getName() + " / " + event.getProject().getName(), event));
 		
-		displayContent(listItemView, event);
+		//displayContent(listItemView, event);
 		SimpleDateFormat f = new  SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date update_time = event.getUpdated_at();
 		listItemView.date.setText(StringUtils.friendly_time(f.format(update_time)));
@@ -114,8 +113,8 @@ public class MySelfEventListAdapter extends MyBaseAdapter<Event> {
 			break;
 			
 		case Event.EVENT_TYPE_PUSHED:// push
-			listItemView.content.setTag(null);
-			listItemView.commitLists.setAdapter(new EventCommitsListAdapter(context, event.getData().getCommits(), R.layout.event_commits_listitem));
+			//listItemView.content.setTag(null);
+			//listItemView.commitLists.setAdapter(new EventCommitsListAdapter(context, event.getData().getCommits(), R.layout.event_commits_listitem));
 			break;
 			
 		case Event.EVENT_TYPE_COMMENTED:// 评论

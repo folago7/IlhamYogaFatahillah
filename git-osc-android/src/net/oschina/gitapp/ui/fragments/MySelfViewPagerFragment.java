@@ -1,12 +1,11 @@
 package net.oschina.gitapp.ui.fragments;
 
-import java.util.ArrayList;
-
 import net.oschina.gitapp.R;
+import net.oschina.gitapp.adapter.ViewPageFragmentAdapter;
 import net.oschina.gitapp.ui.basefragment.BaseFragment;
 import net.oschina.gitapp.ui.basefragment.BaseViewPagerFragment;
+import net.oschina.gitapp.ui.basefragment.BaseViewPagerFragment;
 import android.os.Bundle;
-import android.util.Log;
 
 /**
  * 用户主界面
@@ -14,22 +13,18 @@ import android.util.Log;
  * @author 火蚁（http://my.oschina.net/LittleDY）
  * @created 2014-04-29
  */
-public class MySelfViewPagerFragment extends BaseViewPagerFragment<BaseFragment> {
+public class MySelfViewPagerFragment extends BaseViewPagerFragment {
 
     public static MySelfViewPagerFragment newInstance() {
         return new MySelfViewPagerFragment();
     }
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	protected void onSetupTabAdapter(ViewPageFragmentAdapter adapter) {
 		String[] title = getResources().getStringArray(R.array.myself_title_array);
-		for (String t : title) {
-			titleList.add(t);
-		}
-		fragmentList.add(new MySelfListEventFragment());
-		fragmentList.add(new MySelfListProjectFragment());
-		fragmentList.add(new MySelfListEventFragment());
-		fragmentList.add(new MySelfListProjectFragment());
+		adapter.addTab(title[0], "event", MySelfListEventFragment.class, null);
+		adapter.addTab(title[1], "project", MySelfListProjectFragment.class, null);
+		adapter.addTab(title[2], "pull request", MySelfListEventFragment.class, null);
+		adapter.addTab(title[3], "issues", MySelfListProjectFragment.class, null);
 	}
 }

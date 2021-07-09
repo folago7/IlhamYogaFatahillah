@@ -31,6 +31,9 @@ public class Event extends Entity {
 	@JsonProperty("author")
 	private User _author;
 	
+	@JsonProperty("author_id")
+	private int _author_id;
+	
 	@JsonProperty("created_at")
 	private Date _created_at;
 	
@@ -84,6 +87,12 @@ public class Event extends Entity {
 	}
 	public void setAuthor(User author) {
 		this._author = author;
+	}
+	public int getAuthor_id() {
+		return _author_id;
+	}
+	public void setAuthor_id(int author_id) {
+		this._author_id = author_id;
 	}
 	public Date getCreated_at() {
 		return _created_at;

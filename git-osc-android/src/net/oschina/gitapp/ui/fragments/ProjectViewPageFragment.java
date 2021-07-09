@@ -1,15 +1,14 @@
 package net.oschina.gitapp.ui.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import net.oschina.gitapp.R;
+import net.oschina.gitapp.adapter.ViewPageFragmentAdapter;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.common.Contanst;
-import net.oschina.gitapp.ui.BaseFragmentActivity;
-import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
-import net.oschina.gitapp.ui.basefragment.BaseFragment;
 import net.oschina.gitapp.ui.basefragment.BaseViewPagerFragment;
 
-public class ProjectViewPageFragment extends BaseViewPagerFragment<BaseFragment> {
+public class ProjectViewPageFragment extends BaseViewPagerFragment {
 	
 	private Project mProject;
 	
@@ -20,33 +19,27 @@ public class ProjectViewPageFragment extends BaseViewPagerFragment<BaseFragment>
 		fragment.setArguments(args);
 		return fragment;
 	}
-	
+
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	protected void onSetupTabAdapter(ViewPageFragmentAdapter adapter) {
 		Bundle args = getArguments();
 		if (args != null) {
 			mProject = (Project) args.getSerializable(Contanst.PROJECT);
 		}
+		Log.i("Test", mProject.getName());
 		String[] title = getResources().getStringArray(R.array.project_title_array);
-		for (String t : title) {
-			titleList.add(t);
-		}
 		
-		fragmentList.add(ProjectCommitListFragment.newInstance(mProject));
-		fragmentList.add(ProjectCodeTreeFragment.newInstance(mProject));
+		adapter.addTab(title[0], "project_commitlist", ProjectCommitListFragment.class, args);
+		adapter.addTab(title[1], "project_codetree", ProjectCodeTreeFragment.class, args);
+		
 		// 是否可以pr
 		if (mProject.isPullRequestsEnabled()) {
-			fragmentList.add(ProjectCommitListFragment.newInstance(mProject));
-		} else {
-			titleList.remove(2);
+			//adapter.addTab(title[2], "project_pullrequest", ProjectCodeTreeFragment.class, args);
 		}
 		
 		// 是否可以接受issue
 		if (mProject.isIssuesEnabled()) {
-			fragmentList.add(ProjectIssuesListFragment.newInstance(mProject));
-		} else {
-			titleList.remove(3);
+			adapter.addTab(title[3], "project_issuelist", ProjectIssuesListFragment.class, args);
 		}
 	}
 }

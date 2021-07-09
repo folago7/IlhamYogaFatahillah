@@ -33,7 +33,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
 /**
  * 全局应用程序类：用于保存和调用全局应用配置及访问网络数据
@@ -465,7 +464,7 @@ public class AppContext extends Application {
 		if(!isReadDataCache(cacheKey) || isRefresh) {
 			try{
 				list = ApiClient.getExploreLatestProject(this, pageIndex);
-				if(list != null && pageIndex == 0){
+				if(list != null && pageIndex == 1){
 					list.setCacheKey(cacheKey);
 					saveObject(list, cacheKey);
 				}
@@ -497,7 +496,7 @@ public class AppContext extends Application {
 		if(!isReadDataCache(cacheKey) || isRefresh) {
 			try{
 				list = ApiClient.getExplorePopularProject(this, pageIndex);
-				if(list != null && pageIndex == 0){
+				if(list != null && pageIndex == 1){
 					list.setCacheKey(cacheKey);
 					saveObject(list, cacheKey);
 				}
@@ -529,7 +528,7 @@ public class AppContext extends Application {
 		if(!isReadDataCache(cacheKey) || isRefresh) {
 			try{
 				list = ApiClient.getExploreFeaturedProject(this, pageIndex);
-				if(list != null && pageIndex == 0){
+				if(list != null && pageIndex == 1){
 					list.setCacheKey(cacheKey);
 					saveObject(list, cacheKey);
 				}
@@ -562,7 +561,7 @@ public class AppContext extends Application {
 		if(!isReadDataCache(cacheKey) || isRefresh) {
 			try{
 				list = ApiClient.getMySelfEvents(this, pageIndex);
-				if(list != null && pageIndex == 0){
+				if(list != null && pageIndex == 1){
 					list.setCacheKey(cacheKey);
 					saveObject(list, cacheKey);
 				}
@@ -594,7 +593,7 @@ public class AppContext extends Application {
 		if(!isReadDataCache(cacheKey) || isRefresh) {
 			try{
 				list = ApiClient.getMySelfProjectList(this, pageIndex);
-				if(list != null && pageIndex == 0){
+				if(list != null && pageIndex == 1){
 					list.setCacheKey(cacheKey);
 					saveObject(list, cacheKey);
 				}
@@ -618,17 +617,18 @@ public class AppContext extends Application {
 	 * @param projectId
 	 * @param pageIndex
 	 * @param isRefresh
+	 * @param ref_name 分支（optional）
 	 * @return
 	 * @throws AppException
 	 */
 	@SuppressWarnings("unchecked")
-	public CommonList<Commit> getProjectCommitList(int projectId, int pageIndex, boolean isRefresh) throws AppException {
+	public CommonList<Commit> getProjectCommitList(int projectId, int pageIndex, boolean isRefresh, String ref_name) throws AppException {
 		CommonList<Commit> list = null;
 		String cacheKey = "projectCommitList_" + projectId + "_" + pageIndex + "_" + PAGE_SIZE;
 		if(!isReadDataCache(cacheKey) || isRefresh) {
 			try{
-				list = ApiClient.getProjectCommitList(this, projectId, pageIndex);
-				if(list != null && pageIndex == 0){
+				list = ApiClient.getProjectCommitList(this, projectId, pageIndex, ref_name);
+				if(list != null && pageIndex == 1){
 					list.setCacheKey(cacheKey);
 					saveObject(list, cacheKey);
 				}

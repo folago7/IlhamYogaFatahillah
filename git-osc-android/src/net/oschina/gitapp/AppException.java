@@ -47,11 +47,11 @@ public class AppException extends Exception implements UncaughtExceptionHandler{
 	
 	/** 系统默认的UncaughtException处理类 */
 	private Thread.UncaughtExceptionHandler mDefaultHandler;
-	private Context mContext;
+	private AppContext mContext;
 	
 	private AppException(Context context){
 		this.mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();
-		this.mContext = context;
+		this.mContext = (AppContext) context;
 	}
 	
 	private AppException(byte type, int code, Exception excp) {

@@ -1,77 +1,61 @@
 package net.oschina.gitapp.ui.basefragment;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.oschina.gitapp.R;
-import net.oschina.gitapp.adapter.ListFragmentPagerAdapter;
-import net.oschina.gitapp.interfaces.OnBaseListFragmentResumeListener;
+import net.oschina.gitapp.adapter.ViewPageFragmentAdapter;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.util.Log;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 /**
- * ViewPagerFragment基类
- * @author 火蚁（http://my.oschina.net/LittleDY）
- * @created 2014-04-30 11:47
- * @param <T>
+ * 类名 BaseMainFragment.java</br>
+ * 创建日期 2014年4月27日</br>
+ * @author LeonLee (http://my.oschina.net/lendylongli)</br>
+ * Email lendylongli@gmail.com</br>
+ * 更新时间 2014年4月27日 下午4:29:16</br>
+ * 最后更新者 LeonLee</br>
+ * 
+ * 说明 各类主界面的基类
  */
-public class BaseViewPagerFragment<T extends BaseFragment> extends Fragment implements
-		OnPageChangeListener{
-	protected List<T> fragmentList = new ArrayList<T>();
-	protected List<String> titleList = new ArrayList<String>();
-	protected ListFragmentPagerAdapter<T> adapter;
-	protected ViewPager pager;
-	protected PagerTabStrip mPagerTabStrip;
-	protected boolean hasBaseListFragmentResumed;
+public abstract class BaseViewPagerFragment extends BaseFragment{
+
+	protected PagerTabStrip mTabStrip;
+	protected ViewPager  mViewPager;
+	protected ViewPageFragmentAdapter mTabsAdapter;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		super.onCreateView(inflater, container, savedInstanceState);
-		View view = inflater.inflate(R.layout.base_viewpage_fragment, container, false);
-		pager = (ViewPager) view.findViewById(R.id.pager);
-		mPagerTabStrip = (PagerTabStrip) view.findViewById(R.id.pager_tabstrip);
-		return view;
-	}
-
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		adapter = new ListFragmentPagerAdapter<T>(
-				getActivity().getSupportFragmentManager(), titleList,
-				fragmentList);
-		pager.setAdapter(adapter);
-	}
-
-	@Override
-	public void onPageScrollStateChanged(int arg0) {
-
-	}
-
-	@Override
-	public void onPageScrolled(int arg0, float arg1, int arg2) {
-
-	}
-
-	@Override
-	public void onPageSelected(int arg0) {
-		//fragmentList.get(arg0).showList();
+		return inflater.inflate(R.layout.base_viewpage_fragment, null);
 	}
 	
-	public boolean isHasBaseListFragmentResumed() {
-		return hasBaseListFragmentResumed;
-	}
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		DisplayMetrics dm = getResources().getDisplayMetrics();
+        mTabStrip = (PagerTabStrip) view.findViewById(R.id.pager_tabstrip);
+        
+        mViewPager = (ViewPager)view.findViewById(R.id.pager);
 
-	public void setHasBaseListFragmentResumed(boolean hasBaseListFragmentResumed) {
-		this.hasBaseListFragmentResumed = hasBaseListFragmentResumed;
+        mTabsAdapter = new ViewPageFragmentAdapter(
+        		getChildFragmentManager(), mTabStrip, mViewPager);
+
+        onSetupTabAdapter(mTabsAdapter);
+        mTabsAdapter.notifyDataSetChanged();
+
+        if (savedInstanceState != null) {
+        	int pos = savedInstanceState.getInt("position");
+        	mViewPager.setCurrentItem(pos, false);
+        }
 	}
+	
+	@Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("position", mViewPager.getCurrentItem());
+    }
+	
+	protected abstract void onSetupTabAdapter(ViewPageFragmentAdapter adapter);
 }

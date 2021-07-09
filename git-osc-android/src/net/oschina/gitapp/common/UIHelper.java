@@ -186,7 +186,11 @@ public class UIHelper {
 			title = "推送到了项目 " + pAuthor_And_pName + " 的 " + eventTitle + " 分支";
 			break;
 		case Event.EVENT_TYPE_COMMENTED:// 评论
-			eventTitle = event.getTarget_type();
+			if (event.getNote().getNoteable_type() != null) {
+				eventTitle = event.getNote().getNoteable_type();
+			} else {
+				eventTitle = "Issues";
+			}
 			title = "评论了项目 " + pAuthor_And_pName + " 的" + eventTitle;
 			break;
 		case Event.EVENT_TYPE_MERGED:// 合并

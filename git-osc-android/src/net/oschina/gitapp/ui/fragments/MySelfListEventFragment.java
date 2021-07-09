@@ -1,16 +1,12 @@
 package net.oschina.gitapp.ui.fragments;
 
 import java.util.List;
-
-import android.util.Log;
 import android.widget.BaseAdapter;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.MySelfEventListAdapter;
-import net.oschina.gitapp.adapter.MySelfListProjectAdapter;
 import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.Event;
-import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.MessageData;
 import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
 

@@ -6,17 +6,13 @@ import android.os.Bundle;
 import android.widget.BaseAdapter;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
-import net.oschina.gitapp.adapter.ExploreListProjectAdapter;
-import net.oschina.gitapp.adapter.ProjectCommitListAdapter;
 import net.oschina.gitapp.adapter.ProjectIssuesListAdapter;
-import net.oschina.gitapp.bean.Commit;
 import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.Issue;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.MessageData;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.StringUtils;
-import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
 
 /**

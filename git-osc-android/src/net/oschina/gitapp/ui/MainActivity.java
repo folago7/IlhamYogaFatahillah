@@ -1,5 +1,6 @@
 package net.oschina.gitapp.ui;
 
+import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -7,7 +8,6 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -17,9 +17,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import net.oschina.gitapp.common.DoubleClickExitHelper;
+import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.interfaces.*;
 import net.oschina.gitapp.ui.fragments.ExploreViewPagerFragment;
 import net.oschina.gitapp.ui.fragments.MySelfViewPagerFragment;
+import net.oschina.gitapp.ui.fragments.NoticeViewPagerFragment;
+import net.oschina.gitapp.ui.fragments.SettingViewPagerFragment;
 
 /**
  * 程序主界面
@@ -52,8 +55,8 @@ public class MainActivity extends ActionBarActivity implements
 	static final String FRAGMENTS[] = {
 		ExploreViewPagerFragment.class.getName(),
 		MySelfViewPagerFragment.class.getName(),
-		ExploreViewPagerFragment.class.getName(),
-		ExploreViewPagerFragment.class.getName()
+		NoticeViewPagerFragment.class.getName(),
+		SettingViewPagerFragment.class.getName()
 	};
 	
 	static final int TITLES[] = { 
@@ -72,12 +75,14 @@ public class MainActivity extends ActionBarActivity implements
 	// 当前显示的界面标识
 	private String mCurrentContentTag;
 	private ActionBar mActionBar;
+	private AppContext mContext;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		initView(savedInstanceState);
+		mContext = (AppContext) getApplicationContext();
 	}
 
 	private void initView(Bundle savedInstanceState) {
@@ -149,15 +154,11 @@ public class MainActivity extends ActionBarActivity implements
 		return super.onKeyDown(keyCode, event);
 	}
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-	}
-	
 	/** 显示内容*/
 	private void showMainContent(int pos) {
 		mDrawerLayout.closeDrawers();
 		String tag = CONTENTS[pos];
+		if (tag.equalsIgnoreCase(mCurrentContentTag)) return;
 		
 		FragmentTransaction ft = mFragmentManager.beginTransaction();
 		if(mCurrentContentTag != null) {
@@ -180,11 +181,19 @@ public class MainActivity extends ActionBarActivity implements
 
 	@Override
 	public void onClickMySelf() {
+		if (!mContext.isLogin()) {
+			UIHelper.showLoginActivity(this);
+			return;
+		}
 		showMainContent(1);
 	}
 
 	@Override
 	public void onClickNotice() {
+		if (!mContext.isLogin()) {
+			UIHelper.showLoginActivity(this);
+			return;
+		}
 		showMainContent(2);
 	}
 
