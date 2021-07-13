@@ -38,11 +38,11 @@
             android:textColorLink="@color/listitem_blue"
             android:textSize="@dimen/text_size_15" />
 
-        <ListView
+        <LinearLayout
             android:id="@+id/enent_listitem_commits_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:scrollbars="none"
+            android:orientation="vertical"
             android:tag="1"
             android:textColor="@color/listitem_black"
             android:textSize="@dimen/text_size_15" />
@@ -54,6 +54,7 @@
             android:orientation="horizontal" >
 
             <!-- 来自哪里（android/iphone/windows phone） -->
+
             <TextView
                 android:id="@+id/event_listitem_client"
                 android:layout_width="wrap_content"

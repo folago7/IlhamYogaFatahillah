@@ -29,6 +29,8 @@ public class BaseActionBarActivity extends ActionBarActivity
 	// 是否可以返回
 	protected static boolean isCanBack;
 	
+	protected ActionBar mActionBar;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -68,10 +70,10 @@ public class BaseActionBarActivity extends ActionBarActivity
 	
 	// 初始化ActionBar
 	private void initActionBar() {
-		ActionBar bar = getSupportActionBar();
+		mActionBar = getSupportActionBar();
 		int flags = ActionBar.DISPLAY_HOME_AS_UP;
-		int change = bar.getDisplayOptions() ^ flags;
-        bar.setDisplayOptions(change, flags);
+		int change = mActionBar.getDisplayOptions() ^ flags;
+		mActionBar.setDisplayOptions(change, flags);
 	}
 
 	@Override

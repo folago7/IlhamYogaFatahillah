@@ -282,9 +282,10 @@ public class ApiClient {
 		List<CodeTree> codeTree = new ArrayList<CodeTree>();
 		Map<String,Object> params = new HashMap<String,Object>();
 		params.put(PRIVATE_TOKEN, getToken(appContext));
-		params.put("paht", path);
+		params.put("path", path);
 		params.put("ref_name", ref_name);
 		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + projectId + URLs.URL_SPLITTER + "repository/tree", params);
+		Log.i("Test", url);
 		codeTree = getHttpRequestor().init(appContext, HTTPRequestor.GET_METHOD, url)
 				.getList(CodeTree[].class);
 		return codeTree;

@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import net.oschina.gitapp.R;
+import net.oschina.gitapp.bean.Commit;
 import net.oschina.gitapp.bean.Event;
 import net.oschina.gitapp.bean.Note;
 import net.oschina.gitapp.bean.URLs;
@@ -14,9 +15,11 @@ import net.oschina.gitapp.common.UIHelper;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -32,25 +35,29 @@ public class MySelfEventListAdapter extends MyBaseAdapter<Event> {
 	
 	// 图像管理线程类
 	private BitmapManager bmpManager;
+	private static LayoutInflater inflater;
 	
 	static class ListItemView {
 		public ImageView face;//用户头像
 		public TextView user_name;
 		public TextView content;//更新内容
-		public ListView commitLists;// commits的列表
+		public LinearLayout commitLists;// commits的列表
 		public TextView date;//更新时间
+		public int flag;
 	}
 	
 	public MySelfEventListAdapter(Context context, List<Event> data, int resource) {
 		super(context, data, resource);
 		this.bmpManager = new BitmapManager(BitmapFactory.decodeResource(
 				context.getResources(), R.drawable.mini_avatar));
+		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ListItemView  listItemView = null;
-		if (convertView == null) {
+		Event event = listData.get(position);
+		if (convertView == null || ((ListItemView)convertView.getTag()).flag != position) {
 			//获取list_item布局文件的视图
 			convertView = listContainer.inflate(this.itemViewResource, null);
 			
@@ -61,14 +68,16 @@ public class MySelfEventListAdapter extends MyBaseAdapter<Event> {
 			listItemView.user_name = (TextView) convertView.findViewById(R.id.event_listitem_username);
 			listItemView.content = (TextView) convertView.findViewById(R.id.event_listitem_content);
 			listItemView.date = (TextView) convertView.findViewById(R.id.event_listitem_date);
-			listItemView.commitLists = (ListView) convertView.findViewById(R.id.enent_listitem_commits_list);
+			listItemView.commitLists = (LinearLayout) convertView.findViewById(R.id.enent_listitem_commits_list);
+			
+			displayContent(listItemView, event);
+			
 			//设置控件集到convertView
+			listItemView.flag = position;
 			convertView.setTag(listItemView);
 		}else {
 			listItemView = (ListItemView)convertView.getTag();
 		}
-		
-		Event event = listData.get(position);
 		
 		// 1.加载项目作者头像
 		String portrait = event.getAuthor().getPortrait() == null ? "" : event.getAuthor().getPortrait();
@@ -79,15 +88,10 @@ public class MySelfEventListAdapter extends MyBaseAdapter<Event> {
 			bmpManager.loadBitmap(portraitURL, listItemView.face);
 		}
 		
-		/*if (faceClickEnable) {
-			listItemView.face.setOnClickListener(faceClickListener);
-		}*/
-		
 		// 2.显示相关信息
 		listItemView.user_name.setText(UIHelper.parseEventTitle(event.getAuthor().getName(), 
 				event.getProject().getOwner().getName() + " / " + event.getProject().getName(), event));
 		
-		//displayContent(listItemView, event);
 		SimpleDateFormat f = new  SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date update_time = event.getUpdated_at();
 		listItemView.date.setText(StringUtils.friendly_time(f.format(update_time)));
@@ -99,7 +103,6 @@ public class MySelfEventListAdapter extends MyBaseAdapter<Event> {
 		
 		switch (event.getAction()) {
 		case Event.EVENT_TYPE_CREATED:// 创建了issue
-			
 			break;
 			
 		case Event.EVENT_TYPE_UPDATED:
@@ -113,8 +116,13 @@ public class MySelfEventListAdapter extends MyBaseAdapter<Event> {
 			break;
 			
 		case Event.EVENT_TYPE_PUSHED:// push
-			//listItemView.content.setTag(null);
-			//listItemView.commitLists.setAdapter(new EventCommitsListAdapter(context, event.getData().getCommits(), R.layout.event_commits_listitem));
+			listItemView.content.setTag(null);
+			List<Commit> commits = event.getData().getCommits();
+			listItemView.commitLists.removeAllViews();
+			Log.i("Test", commits.size() + "commits的大小");
+			for (Commit commit : commits) {
+				addCommitItem(listItemView.commitLists, commit);
+			}
 			break;
 			
 		case Event.EVENT_TYPE_COMMENTED:// 评论
@@ -127,13 +135,24 @@ public class MySelfEventListAdapter extends MyBaseAdapter<Event> {
 			
 		case Event.EVENT_TYPE_MERGED:// 合并
 			break;
-		default:
-			break;
 		}
 		checkIsShow(listItemView);
 	}
 	
-	private void checkIsShow(ListItemView listItemView) {
+	/**
+	 * 添加commit项
+	 * @param layout
+	 * @param commit
+	 */
+	private void addCommitItem(LinearLayout layout, Commit commit) {
+		View v = inflater.inflate(R.layout.event_commits_listitem, null);
+		((TextView)v.findViewById(R.id.event_commits_listitem_commitid)).setText(commit.getId());
+		((TextView)v.findViewById(R.id.event_commits_listitem_username)).setText(commit.getAuthor().getName());
+		((TextView)v.findViewById(R.id.event_commits_listitem_message)).setText(commit.getMessage());
+		layout.addView(v);
+	}
+	
+	private static void checkIsShow(ListItemView listItemView) {
 		if (listItemView.content.getTag() == null) 
 			listItemView.content.setVisibility(View.GONE);
 		if (listItemView.commitLists.getTag() == null) 

@@ -651,7 +651,7 @@ public class AppContext extends Application {
 	 * 获得项目的代码树列表
 	 * @param appContext
 	 * @param projectId 项目的id
-	 * @param path(optional) 路径
+	 * @param path(optional) 路径(可以拿到项目文件夹下的文件树)
 	 * @param ref_name(optional) 分支或者标签，空则为默认的master分支
 	 * @return
 	 * @throws AppException
