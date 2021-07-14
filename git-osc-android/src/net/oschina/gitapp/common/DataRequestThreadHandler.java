@@ -21,7 +21,7 @@ public class DataRequestThreadHandler extends HandlerThread
 	private Handler mThreadHandler;
 	
 	public DataRequestThreadHandler() {
-		super("codeboy_datarequest_handler");
+		super("datarequest_handler");
 	}
 	
 	/**
@@ -44,6 +44,7 @@ public class DataRequestThreadHandler extends HandlerThread
 		mThreadHandler.obtainMessage(what, datahandler).sendToTarget();
 	}
 	
+	@SuppressWarnings("rawtypes")
 	@Override
 	public boolean handleMessage(Message msg) {
 		final AsyncDataHandler dataHandler = (AsyncDataHandler) msg.obj;
@@ -54,6 +55,7 @@ public class DataRequestThreadHandler extends HandlerThread
 		//通过主线程，将数据回调
 		mMainHandler.post(new Runnable() {
 			
+			@SuppressWarnings("unchecked")
 			@Override
 			public void run() {
 				dataHandler.onPostExecute(result);

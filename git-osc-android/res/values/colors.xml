@@ -45,5 +45,9 @@
     <color name="swiperefresh_color2">#ffffbb33</color>
     <color name="swiperefresh_color3">#ffff4444</color>
     <color name="swiperefresh_color4">#ffaa66cc</color>
+    
+    <color name="actionbar_background_end">#282828</color>
+    <color name="actionbar_background_start">#515252</color>
+    <color name="actionbar_text">#F4F2F1</color>
 
 </resources>

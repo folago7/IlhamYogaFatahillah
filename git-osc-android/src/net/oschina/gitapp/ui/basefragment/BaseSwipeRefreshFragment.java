@@ -336,6 +336,7 @@ public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result exte
 		
 	}
 	
+	// 加载数据
 	private class AsyncDataHandler implements DataRequestThreadHandler.AsyncDataHandler<MessageData<Result>> {
 
 		private int mPage;
@@ -359,9 +360,6 @@ public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result exte
 		
 		@Override
 		public MessageData<Result> execute() {
-			if(L.Debug) {
-				L.d("正在加载:" + mPage);
-			}
 			boolean reflash = true;
 			if(mAction == LISTVIEW_ACTION_INIT) {
 				reflash = false;

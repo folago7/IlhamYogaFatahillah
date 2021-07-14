@@ -342,7 +342,7 @@ public class UIHelper {
 	public static void showProjectDetail(Context context, Project project) {
 		Intent intent = new Intent(context, ProjectActivity.class);
 		Bundle bundle = new Bundle();
-		bundle.putSerializable("project", project);
+		bundle.putSerializable(Contanst.PROJECT, project);
 		intent.putExtras(bundle);
 		context.startActivity(intent);
 	}

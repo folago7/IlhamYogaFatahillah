@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_width="fill_parent"
+    android:layout_height="?attr/actionBarSize"
     android:layout_alignParentBottom="true"
     android:layout_alignParentLeft="true"
-    android:paddingBottom="8dp"
-    android:paddingTop="8dp"
     android:gravity="center_vertical"
-    android:background="@color/gray" >
+    android:background="@drawable/footer_selector" >
 
     <ImageView
         android:id="@+id/projectcode_branch_icon"
@@ -26,6 +24,7 @@
         android:layout_toRightOf="@id/projectcode_branch_icon"
         android:text="master"
         android:layout_gravity="center"
+        android:textColor="@color/actionbar_text"
         android:textSize="15sp" />
 
 </LinearLayout>

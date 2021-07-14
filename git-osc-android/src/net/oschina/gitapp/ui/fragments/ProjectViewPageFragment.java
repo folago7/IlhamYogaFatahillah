@@ -1,7 +1,6 @@
 package net.oschina.gitapp.ui.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.ViewPageFragmentAdapter;
 import net.oschina.gitapp.bean.Project;
@@ -26,7 +25,6 @@ public class ProjectViewPageFragment extends BaseViewPagerFragment {
 		if (args != null) {
 			mProject = (Project) args.getSerializable(Contanst.PROJECT);
 		}
-		Log.i("Test", mProject.getName());
 		String[] title = getResources().getStringArray(R.array.project_title_array);
 		
 		adapter.addTab(title[0], "project_commitlist", ProjectCommitListFragment.class, args);

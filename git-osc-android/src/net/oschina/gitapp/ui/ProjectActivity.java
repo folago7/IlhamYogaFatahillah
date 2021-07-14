@@ -4,9 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
+import android.view.Menu;
+import android.view.MenuItem;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.Project;
+import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
 import net.oschina.gitapp.ui.fragments.ProjectViewPageFragment;
 
@@ -21,6 +25,8 @@ import net.oschina.gitapp.ui.fragments.ProjectViewPageFragment;
  */
 public class ProjectActivity extends BaseActionBarActivity {
 	
+	private final int MENU_MORE_ID = 0;
+	
 	private FragmentManager mFragmentManager;
 	
 	@Override
@@ -34,7 +40,7 @@ public class ProjectActivity extends BaseActionBarActivity {
 		mFragmentManager = getSupportFragmentManager();
 		// 拿到传过来的project对象
 		Intent intent = getIntent();
-		Project project = (Project) intent.getSerializableExtra("project");
+		Project project = (Project) intent.getSerializableExtra(Contanst.PROJECT);
 		mActionBar.setTitle(project.getName());
 		mActionBar.setSubtitle(project.getOwner().getName());
 		
@@ -42,5 +48,14 @@ public class ProjectActivity extends BaseActionBarActivity {
         	FragmentTransaction ft = mFragmentManager.beginTransaction();
         	ft.replace(R.id.project_content, ProjectViewPageFragment.newInstance(project)).commit();
         }
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuItem moreOption = menu.add(0, MENU_MORE_ID, MENU_MORE_ID, "更多");
+		moreOption.setIcon(R.drawable.abc_ic_menu_moreoverflow_normal_holo_dark);
+		MenuItemCompat.setShowAsAction(moreOption,
+				MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
+		return true;
 	}
 }

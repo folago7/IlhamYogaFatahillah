@@ -13,6 +13,8 @@ import android.graphics.Bitmap;
 import android.util.Log;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
+import net.oschina.gitapp.bean.Branch;
+import net.oschina.gitapp.bean.CodeFile;
 import net.oschina.gitapp.bean.CodeTree;
 import net.oschina.gitapp.bean.Commit;
 import net.oschina.gitapp.bean.CommonList;
@@ -285,7 +287,6 @@ public class ApiClient {
 		params.put("path", path);
 		params.put("ref_name", ref_name);
 		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + projectId + URLs.URL_SPLITTER + "repository/tree", params);
-		Log.i("Test", url);
 		codeTree = getHttpRequestor().init(appContext, HTTPRequestor.GET_METHOD, url)
 				.getList(CodeTree[].class);
 		return codeTree;
@@ -312,6 +313,51 @@ public class ApiClient {
 		commits.setCount(list.size());
 		commits.setPageSize(list.size());
 		return commits;
+	}
+	
+	/**
+	 * 获得一个项目的Branchs或者Tags列表
+	 * @param appContext
+	 * @param projectId
+	 * @param page
+	 * @param branchOrTag
+	 * @return
+	 * @throws AppException
+	 */
+	public static CommonList<Branch> getProjectBranchsOrTagsLsit(AppContext appContext, int projectId, int page, String branchOrTag) throws AppException {
+		CommonList<Branch> commits = new CommonList<Branch>();
+		Map<String,Object> params = new HashMap<String,Object>();
+		params.put(PRIVATE_TOKEN, getToken(appContext));
+		params.put("page", page);
+		// 拼接url地址
+		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + projectId + URLs.URL_SPLITTER + "repository" + URLs.URL_SPLITTER + branchOrTag, params);
+		List<Branch> list = getHttpRequestor().init(appContext, HTTPRequestor.GET_METHOD, url)
+				.getList(Branch[].class);
+		commits.setList(list);
+		commits.setCount(list.size());
+		commits.setPageSize(list.size());
+		return commits;
+	}
+	
+	/**
+	 * 获得代码文件详情
+	 * @param appContext
+	 * @param projectId
+	 * @param file_path
+	 * @param ref
+	 * @return
+	 * @throws AppException
+	 */
+	public static CodeFile getCodeFile(AppContext appContext, String projectId, String file_path, String ref) throws AppException {
+		CodeFile codeFile = null;
+		Map<String,Object> params = new HashMap<String,Object>();
+		params.put(PRIVATE_TOKEN, getToken(appContext));
+		params.put("file_path", file_path);
+		params.put("ref", ref);
+		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + projectId + URLs.URL_SPLITTER + "repository/files", params);
+		codeFile = getHttpRequestor().init(appContext, HTTPRequestor.GET_METHOD, url)
+				.to(CodeFile.class);
+		return codeFile;
 	}
 }
 

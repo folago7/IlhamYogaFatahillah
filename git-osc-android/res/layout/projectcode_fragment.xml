@@ -3,24 +3,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <ProgressBar
-        android:id="@+id/projectcode_loading"
-        android:layout_width="64dip"
-        android:layout_height="64dip"
-        android:layout_centerInParent="true"
-        android:visibility="gone" />
-
     <include
         android:id="@+id/projectcode_switch_branch"
-        android:background="@color/gray"
         layout="@layout/projectcode_fragment_footer" />
 
-    <ListView
-        android:id="@+id/projectcode_tree"
-        android:layout_width="match_parent"
+    <net.oschina.gitapp.widget.CBSwipeRefreshLayout
+        android:id="@+id/projectcode_swiperefreshlayout"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/projectcode_switch_branch"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" />
+        android:layout_above="@id/projectcode_switch_branch" >
+
+        <ListView
+            android:id="@+id/projectcode_tree"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true" />
+    </net.oschina.gitapp.widget.CBSwipeRefreshLayout>
 
 </RelativeLayout>

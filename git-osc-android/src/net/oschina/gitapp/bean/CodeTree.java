@@ -5,8 +5,8 @@ import org.codehaus.jackson.annotate.JsonProperty;
 @SuppressWarnings("serial")
 public class CodeTree extends Entity {
 	
-	public static String tree = "tree";
-	public static String blob = "blob";
+	public final static String TYPE_TREE = "tree";
+	public final static String TYPE_BLOB = "blob";
 	
 	@JsonProperty("name")
 	private String _name;
@@ -17,6 +17,14 @@ public class CodeTree extends Entity {
 	@JsonProperty("mode")
 	private String _mode;
 	
+	private String _path;
+	
+	public String getPath() {
+		return _path;
+	}
+	public void setPath(String path) {
+		this._path = path;
+	}
 	public String getName() {
 		return _name;
 	}

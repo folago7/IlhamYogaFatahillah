@@ -16,6 +16,8 @@ import java.util.UUID;
 
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.api.ApiClient;
+import net.oschina.gitapp.bean.Branch;
+import net.oschina.gitapp.bean.CodeFile;
 import net.oschina.gitapp.bean.CodeTree;
 import net.oschina.gitapp.bean.Commit;
 import net.oschina.gitapp.bean.CommonList;
@@ -458,13 +460,13 @@ public class AppContext extends Application {
 	 * @throws AppException
 	 */
 	@SuppressWarnings("unchecked")
-	public CommonList<Project> getExploreLatestProject(int pageIndex, boolean isRefresh) throws AppException {
+	public CommonList<Project> getExploreLatestProject(int page, boolean isRefresh) throws AppException {
 		CommonList<Project> list = null;
-		String cacheKey = "latestProjectList_" + pageIndex + "_" + PAGE_SIZE;
+		String cacheKey = "latestProjectList_" + page + "_" + PAGE_SIZE;
 		if(!isReadDataCache(cacheKey) || isRefresh) {
 			try{
-				list = ApiClient.getExploreLatestProject(this, pageIndex);
-				if(list != null && pageIndex == 1){
+				list = ApiClient.getExploreLatestProject(this, page);
+				if(list != null && page == 1){
 					list.setCacheKey(cacheKey);
 					saveObject(list, cacheKey);
 				}
@@ -490,13 +492,13 @@ public class AppContext extends Application {
 	 * @throws AppException
 	 */
 	@SuppressWarnings("unchecked")
-	public CommonList<Project> getExplorePopularProject(int pageIndex, boolean isRefresh) throws AppException {
+	public CommonList<Project> getExplorePopularProject(int page, boolean isRefresh) throws AppException {
 		CommonList<Project> list = null;
-		String cacheKey = "popularProjectList_" + pageIndex + "_" + PAGE_SIZE;
+		String cacheKey = "popularProjectList_" + page + "_" + PAGE_SIZE;
 		if(!isReadDataCache(cacheKey) || isRefresh) {
 			try{
-				list = ApiClient.getExplorePopularProject(this, pageIndex);
-				if(list != null && pageIndex == 1){
+				list = ApiClient.getExplorePopularProject(this, page);
+				if(list != null && page == 1){
 					list.setCacheKey(cacheKey);
 					saveObject(list, cacheKey);
 				}
@@ -522,13 +524,13 @@ public class AppContext extends Application {
 	 * @throws AppException
 	 */
 	@SuppressWarnings("unchecked")
-	public CommonList<Project> getExploreFeaturedProject(int pageIndex, boolean isRefresh) throws AppException {
+	public CommonList<Project> getExploreFeaturedProject(int page, boolean isRefresh) throws AppException {
 		CommonList<Project> list = null;
-		String cacheKey = "faturedProjectList_" + pageIndex + "_" + PAGE_SIZE;
+		String cacheKey = "faturedProjectList_" + page + "_" + PAGE_SIZE;
 		if(!isReadDataCache(cacheKey) || isRefresh) {
 			try{
-				list = ApiClient.getExploreFeaturedProject(this, pageIndex);
-				if(list != null && pageIndex == 1){
+				list = ApiClient.getExploreFeaturedProject(this, page);
+				if(list != null && page == 1){
 					list.setCacheKey(cacheKey);
 					saveObject(list, cacheKey);
 				}
@@ -555,13 +557,13 @@ public class AppContext extends Application {
 	 * @throws AppException
 	 */
 	@SuppressWarnings("unchecked")
-	public CommonList<Event> getMySelfEvents(int pageIndex, boolean isRefresh) throws AppException {
+	public CommonList<Event> getMySelfEvents(int page, boolean isRefresh) throws AppException {
 		CommonList<Event> list = null;
-		String cacheKey = "myselfEventsList_" + + pageIndex + "_" + PAGE_SIZE;
+		String cacheKey = "myselfEventsList_" + + page + "_" + PAGE_SIZE;
 		if(!isReadDataCache(cacheKey) || isRefresh) {
 			try{
-				list = ApiClient.getMySelfEvents(this, pageIndex);
-				if(list != null && pageIndex == 1){
+				list = ApiClient.getMySelfEvents(this, page);
+				if(list != null && page == 1){
 					list.setCacheKey(cacheKey);
 					saveObject(list, cacheKey);
 				}
@@ -587,13 +589,13 @@ public class AppContext extends Application {
 	 * @throws AppException
 	 */
 	@SuppressWarnings("unchecked")
-	public CommonList<Project> getMySelfProjectList(int pageIndex, boolean isRefresh) throws AppException {
+	public CommonList<Project> getMySelfProjectList(int page, boolean isRefresh) throws AppException {
 		CommonList<Project> list = null;
-		String cacheKey = "myselfProjectList_" + pageIndex + "_" + PAGE_SIZE;
+		String cacheKey = "myselfProjectList_" + page + "_" + PAGE_SIZE;
 		if(!isReadDataCache(cacheKey) || isRefresh) {
 			try{
-				list = ApiClient.getMySelfProjectList(this, pageIndex);
-				if(list != null && pageIndex == 1){
+				list = ApiClient.getMySelfProjectList(this, page);
+				if(list != null && page == 1){
 					list.setCacheKey(cacheKey);
 					saveObject(list, cacheKey);
 				}
@@ -622,13 +624,13 @@ public class AppContext extends Application {
 	 * @throws AppException
 	 */
 	@SuppressWarnings("unchecked")
-	public CommonList<Commit> getProjectCommitList(int projectId, int pageIndex, boolean isRefresh, String ref_name) throws AppException {
+	public CommonList<Commit> getProjectCommitList(int projectId, int page, boolean isRefresh, String ref_name) throws AppException {
 		CommonList<Commit> list = null;
-		String cacheKey = "projectCommitList_" + projectId + "_" + pageIndex + "_" + PAGE_SIZE;
+		String cacheKey = "projectCommitList_" + projectId + "_" + page + "_" + PAGE_SIZE;
 		if(!isReadDataCache(cacheKey) || isRefresh) {
 			try{
-				list = ApiClient.getProjectCommitList(this, projectId, pageIndex, ref_name);
-				if(list != null && pageIndex == 1){
+				list = ApiClient.getProjectCommitList(this, projectId, page, ref_name);
+				if(list != null && page == 1){
 					list.setCacheKey(cacheKey);
 					saveObject(list, cacheKey);
 				}
@@ -678,13 +680,13 @@ public class AppContext extends Application {
 	 * @throws AppException
 	 */
 	@SuppressWarnings("unchecked")
-	public CommonList<Issue> getProjectIssuesList(int projectId, int pageIndex, boolean isRefresh) throws AppException {
+	public CommonList<Issue> getProjectIssuesList(int projectId, int page, boolean isRefresh) throws AppException {
 		CommonList<Issue> list = null;
-		String cacheKey = "projectIssuesList_" + projectId + "_" + pageIndex + "_" + PAGE_SIZE;
+		String cacheKey = "projectIssuesList_" + projectId + "_" + page + "_" + PAGE_SIZE;
 		if(!isReadDataCache(cacheKey) || isRefresh) {
 			try{
-				list = ApiClient.getProjectIssuesList(this, projectId, pageIndex);
-				if(list != null && pageIndex == 0){
+				list = ApiClient.getProjectIssuesList(this, projectId, page);
+				if(list != null && page == 1){
 					list.setCacheKey(cacheKey);
 					saveObject(list, cacheKey);
 				}
@@ -701,5 +703,53 @@ public class AppContext extends Application {
 				list = new CommonList<Issue>();
 		}
 		return list;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public CommonList<Branch> getProjectBranchsOrTagsLsit(int projectId, int page, String branchOrTag) throws AppException {
+		CommonList<Branch> list = null;
+		String cacheKey = "projectBranchsOrTagsLsit_" + projectId + "_" + page + "_" + branchOrTag;
+		if(!isReadDataCache(cacheKey)) {
+			try{
+				list = ApiClient.getProjectBranchsOrTagsLsit(this, projectId, page, branchOrTag);
+				if(list != null && page == 1){
+					list.setCacheKey(cacheKey);
+					saveObject(list, cacheKey);
+				}
+			}catch(AppException e){
+				e.printStackTrace();
+				list = (CommonList<Branch>)readObject(cacheKey);
+				if(list == null)
+					throw e;
+			}		
+		} else {
+			// 从缓存中读取
+			list = (CommonList<Branch>)readObject(cacheKey);
+			if(list == null)
+				list = new CommonList<Branch>();
+		}
+		return list;
+	}
+	
+	/**
+	 * 获得代码文件详情
+	 * @param projectId 项目的id
+	 * @param file_path 文件的路径
+	 * @param ref 分支或者标签
+	 * @return
+	 * @throws Exception 
+	 */
+	public CodeFile getCodeFile(String projectId, String file_path, String ref) throws Exception {
+		CodeFile codeFile = null;
+		try{
+			codeFile = ApiClient.getCodeFile(this, projectId, file_path, ref);
+		}catch(AppException e){
+			e.printStackTrace();
+			if(codeFile == null)
+				throw e;
+		}catch(Exception e) {
+			throw e;
+		}		
+		return codeFile;
 	}
 }

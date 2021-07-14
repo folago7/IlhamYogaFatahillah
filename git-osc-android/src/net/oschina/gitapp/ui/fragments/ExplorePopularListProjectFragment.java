@@ -21,7 +21,7 @@ import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
  * 更新者
  */
 public class ExplorePopularListProjectFragment extends BaseSwipeRefreshFragment<Project, CommonList<Project>> {
-		
+	
 	public static ExplorePopularListProjectFragment newInstance() {
 		return new ExplorePopularListProjectFragment();
 	}

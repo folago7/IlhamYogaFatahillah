@@ -70,14 +70,18 @@ public class MySelfEventListAdapter extends MyBaseAdapter<Event> {
 			listItemView.date = (TextView) convertView.findViewById(R.id.event_listitem_date);
 			listItemView.commitLists = (LinearLayout) convertView.findViewById(R.id.enent_listitem_commits_list);
 			
-			displayContent(listItemView, event);
-			
 			//设置控件集到convertView
 			listItemView.flag = position;
 			convertView.setTag(listItemView);
 		}else {
 			listItemView = (ListItemView)convertView.getTag();
 		}
+		
+		displayContent(listItemView, event);
+		return convertView;
+	}
+	
+	private void displayContent(ListItemView listItemView, Event event) {
 		
 		// 1.加载项目作者头像
 		String portrait = event.getAuthor().getPortrait() == null ? "" : event.getAuthor().getPortrait();
@@ -95,11 +99,6 @@ public class MySelfEventListAdapter extends MyBaseAdapter<Event> {
 		SimpleDateFormat f = new  SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date update_time = event.getUpdated_at();
 		listItemView.date.setText(StringUtils.friendly_time(f.format(update_time)));
-		
-		return convertView;
-	}
-	
-	private void displayContent(ListItemView listItemView, Event event) {
 		
 		switch (event.getAction()) {
 		case Event.EVENT_TYPE_CREATED:// 创建了issue
