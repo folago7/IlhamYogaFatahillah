@@ -7,7 +7,7 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="19" />
-    
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -19,9 +19,9 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/GitAppTheme" >
-        <activity 
+        <activity
             android:name=".ui.MainActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,13 +31,11 @@
         <activity
             android:name=".ui.LoginActivity"
             android:label="@string/login_title" >
-            
         </activity>
-        <activity
-            android:name=".ui.ProjectActivity"/>
-        <activity
-            android:name=".ui.CodeFileDetailActivity"/>
-            
+        <activity android:name=".ui.ProjectActivity" />
+        <activity android:name=".ui.CodeFileDetailActivity" />
+        <activity android:name=".ui.CommitDetailActivity" />
+        <activity android:name=".ui.CommitFileDetailActivity" />
     </application>
 
 </manifest>

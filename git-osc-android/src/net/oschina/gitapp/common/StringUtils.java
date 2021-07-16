@@ -108,6 +108,16 @@ public class StringUtils {
 		} 
 		return ftime;
 	}
+	
+	/**
+	 * 以友好的方式显示时间
+	 * @param date
+	 * @return
+	 */
+	public static String friendly_time(Date date) {
+		SimpleDateFormat f = new  SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return friendly_time(f.format(date));
+	}
 
 	/**
 	 * 判断给定字符串时间是否为今日

@@ -31,10 +31,10 @@ public class MySelfListEventFragment extends BaseSwipeRefreshFragment<Event, Com
 
 	@Override
 	public MessageData<CommonList<Event>> asyncLoadList(int page,
-			boolean reflash) {
+			boolean refresh) {
 		MessageData<CommonList<Event>> msg = null;
 		try {
-			CommonList<Event> list = mApplication.getMySelfEvents(page, reflash);
+			CommonList<Event> list = mApplication.getMySelfEvents(page, refresh);
 			msg = new MessageData<CommonList<Event>>(list);
 		} catch (AppException e) {
 			e.makeToast(mApplication);

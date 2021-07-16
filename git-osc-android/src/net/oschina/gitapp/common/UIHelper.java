@@ -9,8 +9,13 @@ import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.AppManager;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.ApiClient;
+import net.oschina.gitapp.bean.Commit;
+import net.oschina.gitapp.bean.CommitDiff;
 import net.oschina.gitapp.bean.Event;
 import net.oschina.gitapp.bean.Project;
+import net.oschina.gitapp.ui.CodeFileDetailActivity;
+import net.oschina.gitapp.ui.CommitDetailActivity;
+import net.oschina.gitapp.ui.CommitFileDetailActivity;
 import net.oschina.gitapp.ui.LoginActivity;
 import net.oschina.gitapp.ui.ProjectActivity;
 import net.oschina.gitapp.ui.fragments.ProjectViewPageFragment;
@@ -345,5 +350,32 @@ public class UIHelper {
 		bundle.putSerializable(Contanst.PROJECT, project);
 		intent.putExtras(bundle);
 		context.startActivity(intent);
+	}
+	
+	/**
+	 * 显示commit详情
+	 * @param context
+	 * @param project
+	 * @param commit
+	 */
+	public static void showCommitDetail(Context context, Project project, Commit commit) {
+		Intent intent = new Intent(context, CommitDetailActivity.class);
+		Bundle bundle = new Bundle();
+		bundle.putSerializable(Contanst.PROJECT, project);
+		bundle.putSerializable(Contanst.COMMIT, commit);
+		intent.putExtras(bundle);
+		context.startActivity(intent);
+	}
+	
+	public static void showCommitDiffFileDetail(Context context, Project project, Commit commit, CommitDiff commitDiff) {
+		Intent intent = new Intent(context, CommitFileDetailActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
+		Bundle bundle = new Bundle();
+		bundle.putSerializable(Contanst.PROJECT, project);
+		bundle.putSerializable(Contanst.COMMIT, commit);
+		bundle.putSerializable(Contanst.COMMITDIFF, commitDiff);
+		intent.putExtras(bundle);
+		context.startActivity(intent);
+		
 	}
 }

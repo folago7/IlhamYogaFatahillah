@@ -20,6 +20,7 @@ import net.oschina.gitapp.bean.Branch;
 import net.oschina.gitapp.bean.CodeFile;
 import net.oschina.gitapp.bean.CodeTree;
 import net.oschina.gitapp.bean.Commit;
+import net.oschina.gitapp.bean.CommitDiff;
 import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.Event;
 import net.oschina.gitapp.bean.Issue;
@@ -658,15 +659,31 @@ public class AppContext extends Application {
 	 * @return
 	 * @throws AppException
 	 */
-	public List<CodeTree> getProjectCodeTree(int projectId, String path, String ref_name) throws AppException {
-		List<CodeTree> list = null;
-		try{
-			list = ApiClient.getProjectCodeTree(this, projectId, path, ref_name);
-		}catch(AppException e){
-			e.printStackTrace();
-			if(list == null)
+	@SuppressWarnings("unchecked")
+	public CommonList<CodeTree> getProjectCodeTree(int projectId, String path, String ref_name, boolean isRefresh) throws Exception {
+		CommonList<CodeTree> list = null;
+		String cacheKey = "projectCodeLsit_" + projectId + "_" + path.replace("/", "_") + "_" + ref_name;
+		if (!isReadDataCache(cacheKey) || isRefresh) {
+			try{
+				list = ApiClient.getProjectCodeTree(this, projectId, path, ref_name);
+				if(list != null){
+					list.setCacheKey(cacheKey);
+					saveObject(list, cacheKey);
+				}
+			}catch(AppException e){
+				e.printStackTrace();
+				list = (CommonList<CodeTree>)readObject(cacheKey);
+				if(list == null)
+					throw e;
+			} catch(Exception e) {
 				throw e;
-		}		
+			}
+		} else {
+			// 从缓存中读取
+			list = (CommonList<CodeTree>)readObject(cacheKey);
+			if(list == null)
+				list = new CommonList<CodeTree>();
+		}
 		return list;
 	}
 	
@@ -706,10 +723,10 @@ public class AppContext extends Application {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public CommonList<Branch> getProjectBranchsOrTagsLsit(String projectId, int page, String branchOrTag) throws Exception {
+	public CommonList<Branch> getProjectBranchsOrTagsLsit(String projectId, int page, String branchOrTag, boolean isRefresh) throws Exception {
 		CommonList<Branch> list = null;
 		String cacheKey = "projectBranchsOrTagsLsit_" + projectId + "_" + page + "_" + branchOrTag;
-		if(!isReadDataCache(cacheKey)) {
+		if(!isReadDataCache(cacheKey) || isRefresh) {
 			try{
 				list = ApiClient.getProjectBranchsOrTagsLsit(this, projectId, page, branchOrTag);
 				if(list != null && page == 1){
@@ -751,5 +768,52 @@ public class AppContext extends Application {
 			throw e;
 		}		
 		return codeFile;
+	}
+	
+	/**
+	 * 获得commit文件的diff
+	 * @param projectId
+	 * @param commitId
+	 * @param isRefresh
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public CommonList<CommitDiff> getCommitDiffList(String projectId, String commitId, boolean isRefresh) throws Exception {
+		CommonList<CommitDiff> list = null;
+		String cacheKey = "CommitDiffLsit_" + projectId + "_" + commitId;
+		if(!isReadDataCache(cacheKey) || isRefresh) {
+			try{
+				list = ApiClient.getCommitDiffList(this, projectId, commitId);
+				if(list != null){
+					list.setCacheKey(cacheKey);
+					saveObject(list, cacheKey);
+				}
+			}catch(Exception e){
+				e.printStackTrace();
+				list = (CommonList<CommitDiff>)readObject(cacheKey);
+				if(list == null)
+					throw e;
+			}		
+		} else {
+			// 从缓存中读取
+			list = (CommonList<CommitDiff>)readObject(cacheKey);
+			if(list == null)
+				list = new CommonList<CommitDiff>();
+		}
+		return list;
+	}
+	
+	/**
+	 * 通过commits获取代码文件的内容
+	 * @param appContext
+	 * @param projectId
+	 * @param commitId
+	 * @param filePath
+	 * @return
+	 * @throws Exception
+	 */
+	public String getCommitFileDetail(String projectId, String commitId, String filePath) throws Exception {
+		return ApiClient.getCommitFileDetail(this, projectId, commitId, filePath);
 	}
 }

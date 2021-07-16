@@ -360,11 +360,11 @@ public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result exte
 		
 		@Override
 		public MessageData<Result> execute() {
-			boolean reflash = true;
+			boolean refresh = true;
 			if(mAction == LISTVIEW_ACTION_INIT) {
-				reflash = false;
+				refresh = false;
 			}
-			return asyncLoadList(mPage, reflash);
+			return asyncLoadList(mPage, refresh);
 		}
 
 		@Override

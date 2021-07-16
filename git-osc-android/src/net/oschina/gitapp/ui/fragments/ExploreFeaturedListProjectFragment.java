@@ -33,10 +33,10 @@ public class ExploreFeaturedListProjectFragment extends BaseSwipeRefreshFragment
 
 	@Override
 	public MessageData<CommonList<Project>> asyncLoadList(int page,
-			boolean reflash) {
+			boolean refresh) {
 		MessageData<CommonList<Project>> msg = null;
 		try {
-			CommonList<Project> list = mApplication.getExploreFeaturedProject(page, reflash);
+			CommonList<Project> list = mApplication.getExploreFeaturedProject(page, refresh);
 			msg = new MessageData<CommonList<Project>>(list);
 		} catch (AppException e) {
 			e.makeToast(mApplication);

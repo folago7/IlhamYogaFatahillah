@@ -1,41 +1,24 @@
 package net.oschina.gitapp.ui.fragments;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AbsListView;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
@@ -45,17 +28,13 @@ import net.oschina.gitapp.bean.Branch;
 import net.oschina.gitapp.bean.CodeTree;
 import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.FullTree;
-import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.bean.FullTree.Folder;
 import net.oschina.gitapp.bean.Project;
-import net.oschina.gitapp.common.BroadcastController;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.DataRequestThreadHandler;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
-import net.oschina.gitapp.interfaces.OnStatusListener;
 import net.oschina.gitapp.ui.CodeFileDetailActivity;
-import net.oschina.gitapp.ui.LoginActivity;
 import net.oschina.gitapp.ui.basefragment.BaseFragment;
 
 /**
@@ -175,13 +154,11 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 	}
 
 	private void loadDatas(final String path, final String ref_name, int action) {
-		mRequestThreadHandler.request(0, new AsyncDataHandler(path, ref_name,
-				action));
+		mRequestThreadHandler.request(0, new AsyncDataHandler(path, ref_name, action));
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position,
-			long id) {
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
 		if (view == mHeadView) {
 			loadDatas(getPrePath(), mBranch, ACTION_PRE_TREE);
@@ -246,10 +223,10 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 		if (mProject == null) {
 			return;
 		}
-		if (dialog != null && !mBranchList.isEmpty()) {
-			dialog.show();
+		if (dialog == null || mBranchList.isEmpty()) {
+			loadBranchAndTags(true);
 		} else {
-			loadBranchAndTags();
+			loadBranchAndTags(false);
 		}
 	}
 
@@ -278,10 +255,12 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 		public Message execute() {
 			Message msg = new Message();
 			try {
-				List<CodeTree> tree = mAppContext
-						.getProjectCodeTree(
-								StringUtils.toInt(mProject.getId()), _mPath,
-								_mRef_name);
+				boolean refresh = true;
+				if (_mAction == ACTION_INIT && _mAction == ACTION_PRE_TREE) {
+					refresh = false;
+				}
+				CommonList<CodeTree> list = mAppContext.getProjectCodeTree(StringUtils.toInt(mProject.getId()), _mPath, _mRef_name, refresh);
+				List<CodeTree> tree = list.getList();
 				msg.what = 1;
 				msg.obj = tree;
 			} catch (Exception e) {
@@ -300,15 +279,18 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 				mTrees.clear();
 				mTrees.addAll((List<CodeTree>) result.obj);
 				// 加载成功，记录相关信息
-				if (_mAction == ACTION_LOADING_TREE
-						|| _mAction == ACTION_PRE_TREE) {
+				if (_mAction == ACTION_LOADING_TREE || _mAction == ACTION_PRE_TREE) {
 					mPath = _mPath;
 					mBranch = _mRef_name;
 				}
 				setCodeTreeListHeadView();
 				mAdapter.notifyDataSetChanged();
 			} else {
-				((AppException) result.obj).makeToast(mAppContext);
+				if (result.obj instanceof AppException) {
+					((AppException) result.obj).makeToast(mAppContext);
+				} else {
+					UIHelper.ToastMessage(getActivity(), ((Exception)result.obj).getMessage());
+				}
 			}
 		}
 	}
@@ -319,6 +301,7 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 			mSwipeRefreshLayout.setRefreshing(true);
 			// 防止多次重复刷新
 			mSwipeRefreshLayout.setEnabled(false);
+			mSwitch_branch.setVisibility(View.GONE);
 		}
 	}
 
@@ -327,6 +310,7 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 		if (mSwipeRefreshLayout != null) {
 			mSwipeRefreshLayout.setRefreshing(false);
 			mSwipeRefreshLayout.setEnabled(true);
+			mSwitch_branch.setVisibility(View.VISIBLE);
 		}
 	}
 
@@ -356,7 +340,7 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 	}
 	
 	// 加载分支和标签数据
-	private void loadBranchAndTags() {
+	private void loadBranchAndTags(final boolean isRefalsh) {
 		
 		//异步
     	new AsyncTask<Void, Void, Message>() {
@@ -364,18 +348,25 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 			protected Message doInBackground(Void... params) {
 				Message msg =new Message();
 				try {
-					CommonList<Branch> branchs = mAppContext.getProjectBranchsOrTagsLsit(mProject.getId(), 1, Branch.TYPE_BRANCH);
+					msg.what = 1;
+					if (!isRefalsh) {
+						return msg;
+					}
+					// 1.加载分支
+					CommonList<Branch> branchs = mAppContext.getProjectBranchsOrTagsLsit(mProject.getId(), 1, Branch.TYPE_BRANCH, isRefalsh);
 					for (Branch branch : branchs.getList()) {
+						// 设置为分支类型
 						branch.setType(Branch.TYPE_BRANCH);
 						mBranchList.add(branch);
 					}
 					
-					CommonList<Branch> tags = mAppContext.getProjectBranchsOrTagsLsit(mProject.getId(), 1, Branch.TYPE_TAG);
+					// 2.加载标签
+					CommonList<Branch> tags = mAppContext.getProjectBranchsOrTagsLsit(mProject.getId(), 1, Branch.TYPE_TAG, isRefalsh);
 					for (Branch branch : tags.getList()) {
+						// 设置为标签类型
 						branch.setType(Branch.TYPE_TAG);
 						mBranchList.add(branch);
 					}
-	                msg.what = 1;
 	                
 	            } catch (Exception e) {
 			    	msg.what = -1;
@@ -392,6 +383,9 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 					mLoad.setCanceledOnTouchOutside(false);
 					mLoad.setMessage("加载分支和标签...");
 				}
+				if (dialog == null) {
+					dialog = new AlertDialog.Builder(getActivity()).setTitle("选择分支或标签");
+				}
 				mLoad.show();
 			}
 			
@@ -403,18 +397,16 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 					for (int i = 0; i < mBranchList.size(); i++) {
 						baArrays[i] = mBranchList.get(i).getName();
 					}
-					dialog = new AlertDialog.Builder(getActivity()).setTitle("选择分支")
-							.setSingleChoiceItems(baArrays, mBranchIndex, new DialogInterface.OnClickListener() {
+					dialog.setSingleChoiceItems(baArrays, mBranchIndex, new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog, int which) {
+									dialog.dismiss();
+									if (which == mBranchIndex) return;
 									mBranchIndex = which;
 									mBranch = baArrays[which];
-								}
-							}).setNegativeButton("确定", new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog, int which) {
 									loadDatas(mPath, mBranch, ACTION_REFRESH);
 									mBranchName.setText(mBranch);
 								}
-							});
+							}).setNegativeButton("取消", null);
 					dialog.show();
 				} else {
 					if (msg.obj instanceof AppException) {

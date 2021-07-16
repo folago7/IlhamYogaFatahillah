@@ -96,44 +96,42 @@ public class MySelfEventListAdapter extends MyBaseAdapter<Event> {
 		listItemView.user_name.setText(UIHelper.parseEventTitle(event.getAuthor().getName(), 
 				event.getProject().getOwner().getName() + " / " + event.getProject().getName(), event));
 		
-		SimpleDateFormat f = new  SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date update_time = event.getUpdated_at();
-		listItemView.date.setText(StringUtils.friendly_time(f.format(update_time)));
+		listItemView.date.setText(StringUtils.friendly_time(event.getUpdated_at()));
 		
 		switch (event.getAction()) {
-		case Event.EVENT_TYPE_CREATED:// 创建了issue
-			break;
-			
-		case Event.EVENT_TYPE_UPDATED:
-		case Event.EVENT_TYPE_CLOSED:
-		case Event.EVENT_TYPE_REOPENED:
-		case Event.EVENT_TYPE_JOINED://# User joined project
-		case Event.EVENT_TYPE_LEFT://# User left project
-		case Event.EVENT_TYPE_FORKED:// fork了项目
-			listItemView.content.setTag(null);
-			listItemView.commitLists.setTag(null);
-			break;
-			
-		case Event.EVENT_TYPE_PUSHED:// push
-			listItemView.content.setTag(null);
-			List<Commit> commits = event.getData().getCommits();
-			listItemView.commitLists.removeAllViews();
-			Log.i("Test", commits.size() + "commits的大小");
-			for (Commit commit : commits) {
-				addCommitItem(listItemView.commitLists, commit);
-			}
-			break;
-			
-		case Event.EVENT_TYPE_COMMENTED:// 评论
-			Note note = event.getNote();
-			if (note != null && note.getNote() != null) {
-				listItemView.content.setText(note.getNote());
-			}
-			listItemView.commitLists.setTag(null);
-			break;
-			
-		case Event.EVENT_TYPE_MERGED:// 合并
-			break;
+			case Event.EVENT_TYPE_CREATED:// 创建了issue
+				break;
+				
+			case Event.EVENT_TYPE_UPDATED:
+			case Event.EVENT_TYPE_CLOSED:
+			case Event.EVENT_TYPE_REOPENED:
+			case Event.EVENT_TYPE_JOINED://# User joined project
+			case Event.EVENT_TYPE_LEFT://# User left project
+			case Event.EVENT_TYPE_FORKED:// fork了项目
+				listItemView.content.setTag(null);
+				listItemView.commitLists.setTag(null);
+				break;
+				
+			case Event.EVENT_TYPE_PUSHED:// push
+				listItemView.content.setTag(null);
+				List<Commit> commits = event.getData().getCommits();
+				listItemView.commitLists.removeAllViews();
+				Log.i("Test", commits.size() + "commits的大小");
+				for (Commit commit : commits) {
+					addCommitItem(listItemView.commitLists, commit);
+				}
+				break;
+				
+			case Event.EVENT_TYPE_COMMENTED:// 评论
+				Note note = event.getNote();
+				if (note != null && note.getNote() != null) {
+					listItemView.content.setText(note.getNote());
+				}
+				listItemView.commitLists.setTag(null);
+				break;
+				
+			case Event.EVENT_TYPE_MERGED:// 合并
+				break;
 		}
 		checkIsShow(listItemView);
 	}

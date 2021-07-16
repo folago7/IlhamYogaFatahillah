@@ -68,9 +68,8 @@ public class MySelfListProjectAdapter extends MyBaseAdapter<Project> {
 		
 		listItemView.project_name.setText(project.getOwner().getName() + " / " + project.getName());
 		
-		SimpleDateFormat f = new  SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date last_push_at = project.getLast_push_at() != null ? project.getLast_push_at() : project.getCreatedAt();
-		listItemView.updateData.setText(StringUtils.friendly_time(f.format(last_push_at)));
+		listItemView.updateData.setText(StringUtils.friendly_time(last_push_at));
 		
 		// 判断项目的类型，显示不同的图标（私有项目、公有项目、fork项目）
 		

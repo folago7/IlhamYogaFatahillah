@@ -33,10 +33,10 @@ public class MySelfListProjectFragment extends BaseSwipeRefreshFragment<Project,
 
 	@Override
 	public MessageData<CommonList<Project>> asyncLoadList(int page,
-			boolean reflash) {
+			boolean refresh) {
 		MessageData<CommonList<Project>> msg = null;
 		try {
-			CommonList<Project> list = mApplication.getMySelfProjectList(page, reflash);
+			CommonList<Project> list = mApplication.getMySelfProjectList(page, refresh);
 			msg = new MessageData<CommonList<Project>>(list);
 		} catch (AppException e) {
 			e.makeToast(mApplication);

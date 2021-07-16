@@ -86,9 +86,7 @@ public class ProjectIssuesListAdapter extends MyBaseAdapter<Issue> {
 		// 2.显示相关信息
 		listItemView.title.setText(issue.getTitle());
 		listItemView.username.setText(issue.getAuthor() == null ? "" : issue.getAuthor().getName());
-		SimpleDateFormat f = new  SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		Date time = issue.getCreatedAt();
-		listItemView.date.setText(StringUtils.friendly_time(f.format(time)));
+		listItemView.date.setText(StringUtils.friendly_time(issue.getCreatedAt()));
 		
 		return convertView;
 	}

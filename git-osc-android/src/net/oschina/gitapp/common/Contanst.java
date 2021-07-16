@@ -9,4 +9,10 @@ package net.oschina.gitapp.common;
 public class Contanst {
 	
 	public static final String PROJECT = "project";
+	
+	public static final String COMMIT = "commit";
+	
+	public static final String COMMITID = "commitID";
+	
+	public static final String COMMITDIFF = "commitDiff";
 }

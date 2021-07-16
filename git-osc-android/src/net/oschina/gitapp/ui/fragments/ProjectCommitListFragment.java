@@ -14,6 +14,7 @@ import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.MessageData;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.StringUtils;
+import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
 
 /**
@@ -68,6 +69,6 @@ public class ProjectCommitListFragment extends BaseSwipeRefreshFragment<Commit, 
 	
 	@Override
 	public void onItemClick(int position, Commit commit) {
-		//UIHelper.showProjectDetail(getActivity(), project);
+		UIHelper.showCommitDetail(getActivity(), mProject, commit);
 	}
 }

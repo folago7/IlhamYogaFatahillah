@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -314,6 +315,26 @@ public class HTTPRequestor {
     }
     
     /**
+     * 获得一个String Body
+     * @return
+     * @throws AppException
+     */
+    public String getStringBody() throws AppException {
+    	InputStream inputStream = getResponseBodyStream();
+    	InputStreamReader reader;
+		try {
+			reader = new InputStreamReader(inputStream, UTF_8);
+			return IOUtils.toString(reader);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+        
+    	return "";
+    }
+    
+    /**
      * 获取一个列表数据
      * @param type
      * @return
@@ -374,7 +395,7 @@ public class HTTPRequestor {
     private <T> T parse(InputStream inputStream, Class<T> type, T instance) throws IOException {
         InputStreamReader reader = null;
         try {
-            reader = new InputStreamReader(inputStream, "UTF-8");
+            reader = new InputStreamReader(inputStream, UTF_8);
             String data = IOUtils.toString(reader);
 
             if (type != null) {
