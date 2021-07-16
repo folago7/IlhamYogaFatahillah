@@ -706,7 +706,7 @@ public class AppContext extends Application {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public CommonList<Branch> getProjectBranchsOrTagsLsit(int projectId, int page, String branchOrTag) throws AppException {
+	public CommonList<Branch> getProjectBranchsOrTagsLsit(String projectId, int page, String branchOrTag) throws Exception {
 		CommonList<Branch> list = null;
 		String cacheKey = "projectBranchsOrTagsLsit_" + projectId + "_" + page + "_" + branchOrTag;
 		if(!isReadDataCache(cacheKey)) {
@@ -716,7 +716,7 @@ public class AppContext extends Application {
 					list.setCacheKey(cacheKey);
 					saveObject(list, cacheKey);
 				}
-			}catch(AppException e){
+			}catch(Exception e){
 				e.printStackTrace();
 				list = (CommonList<Branch>)readObject(cacheKey);
 				if(list == null)

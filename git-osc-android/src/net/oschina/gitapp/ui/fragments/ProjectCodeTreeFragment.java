@@ -1,6 +1,7 @@
 package net.oschina.gitapp.ui.fragments;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -106,7 +107,9 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 	
 	private ProgressDialog mLoad;
 	
-	private List<Branch> mBranchList;// 标签和分支列表
+	private List<Branch> mBranchList = new ArrayList<Branch>();// 标签和分支列表
+	
+	private int mBranchIndex = 0;
 	
 	private AlertDialog.Builder dialog;
 
@@ -123,6 +126,7 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		mAppContext = getGitApplication();
 		Bundle args = getArguments();
 		if (args != null) {
 			mProject = (Project) args.getSerializable(Contanst.PROJECT);
@@ -133,12 +137,6 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 		setupListView();
 		loadDatas("", "master", ACTION_INIT);
 		return mView;
-	}
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		mAppContext = getGitApplication();
 	}
 
 	@Override
@@ -236,15 +234,22 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 		int id = v.getId();
 		switch (id) {
 		case R.id.projectcode_switch_branch:
-			if (dialog == null) {
-				loadBranchAndTags();
-			} else {
-				dialog.show();
-			}
+			switchBranch();
 			break;
 
 		default:
 			break;
+		}
+	}
+	
+	private void switchBranch() {
+		if (mProject == null) {
+			return;
+		}
+		if (dialog != null && !mBranchList.isEmpty()) {
+			dialog.show();
+		} else {
+			loadBranchAndTags();
 		}
 	}
 
@@ -350,33 +355,26 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 		super.onActivityResult(requestCode, resultCode, data);
 	}
 	
+	// 加载分支和标签数据
 	private void loadBranchAndTags() {
 		
-		if (mLoad == null) {
-			mLoad = new ProgressDialog(getActivity());
-			mLoad.setCancelable(true);
-			mLoad.setCanceledOnTouchOutside(false);
-			mLoad.setMessage("加载分支和标签...");
-			mLoad.show();
-		}
-		
-		//异步登录
+		//异步
     	new AsyncTask<Void, Void, Message>() {
 			@Override
 			protected Message doInBackground(Void... params) {
 				Message msg =new Message();
 				try {
-					CommonList<Branch> branchs = mAppContext.getProjectBranchsOrTagsLsit(mProject.getParent_id(), 1, "branch");
+					CommonList<Branch> branchs = mAppContext.getProjectBranchsOrTagsLsit(mProject.getId(), 1, Branch.TYPE_BRANCH);
 					for (Branch branch : branchs.getList()) {
 						branch.setType(Branch.TYPE_BRANCH);
+						mBranchList.add(branch);
 					}
-					mBranchList.addAll(branchs.getList());
 					
-					CommonList<Branch> tags = mAppContext.getProjectBranchsOrTagsLsit(mProject.getParent_id(), 1, "tags");
+					CommonList<Branch> tags = mAppContext.getProjectBranchsOrTagsLsit(mProject.getId(), 1, Branch.TYPE_TAG);
 					for (Branch branch : tags.getList()) {
 						branch.setType(Branch.TYPE_TAG);
+						mBranchList.add(branch);
 					}
-					mBranchList.addAll(tags.getList());
 	                msg.what = 1;
 	                
 	            } catch (Exception e) {
@@ -388,27 +386,42 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 			
 			@Override
 			protected void onPreExecute() {
-				
+				if (mLoad == null) {
+					mLoad = new ProgressDialog(getActivity());
+					mLoad.setCancelable(true);
+					mLoad.setCanceledOnTouchOutside(false);
+					mLoad.setMessage("加载分支和标签...");
+				}
+				mLoad.show();
 			}
 			
 			@Override
 			protected void onPostExecute(Message msg) {
 				if (mLoad != null) mLoad.dismiss();
 				if (msg.what == 1) {
-					dialog = new AlertDialog.Builder(mAppContext).setTitle("选择分支")
-							.setSingleChoiceItems(new String[]{"1", "2"}, 0, new DialogInterface.OnClickListener() {
-								
+					final String baArrays[] = new String[mBranchList.size()];
+					for (int i = 0; i < mBranchList.size(); i++) {
+						baArrays[i] = mBranchList.get(i).getName();
+					}
+					dialog = new AlertDialog.Builder(getActivity()).setTitle("选择分支")
+							.setSingleChoiceItems(baArrays, mBranchIndex, new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog, int which) {
-									dialog.dismiss();
+									mBranchIndex = which;
+									mBranch = baArrays[which];
 								}
-							}).setNegativeButton("确定", null);
+							}).setNegativeButton("确定", new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog, int which) {
+									loadDatas(mPath, mBranch, ACTION_REFRESH);
+									mBranchName.setText(mBranch);
+								}
+							});
 					dialog.show();
 				} else {
-					/*if (msg.obj instanceof AppException) {
+					if (msg.obj instanceof AppException) {
 						((AppException)msg.obj).makeToast(getActivity());
 					} else {
-						Log.i("Test", ((Exception)msg.obj).getMessage());
-					}*/
+						UIHelper.ToastMessage(mAppContext, "加载分支和标签失败");
+					}
 				}
 			}
 		}.execute();

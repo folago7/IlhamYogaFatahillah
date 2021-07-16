@@ -324,13 +324,14 @@ public class ApiClient {
 	 * @return
 	 * @throws AppException
 	 */
-	public static CommonList<Branch> getProjectBranchsOrTagsLsit(AppContext appContext, int projectId, int page, String branchOrTag) throws AppException {
+	public static CommonList<Branch> getProjectBranchsOrTagsLsit(AppContext appContext, String projectId, int page, String branchOrTag) throws AppException {
 		CommonList<Branch> commits = new CommonList<Branch>();
 		Map<String,Object> params = new HashMap<String,Object>();
 		params.put(PRIVATE_TOKEN, getToken(appContext));
 		params.put("page", page);
 		// 拼接url地址
 		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + projectId + URLs.URL_SPLITTER + "repository" + URLs.URL_SPLITTER + branchOrTag, params);
+		Log.i("Test", url);
 		List<Branch> list = getHttpRequestor().init(appContext, HTTPRequestor.GET_METHOD, url)
 				.getList(Branch[].class);
 		commits.setList(list);
