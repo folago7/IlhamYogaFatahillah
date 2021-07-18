@@ -1,7 +1,8 @@
 package net.oschina.gitapp.api;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,7 +89,11 @@ public class ApiClient {
 				url.append('&');
 				url.append(name);
 				url.append('=');
-				url.append(value);
+				try {
+					url.append(URLEncoder.encode(String.valueOf(params.get(name)), "UTF-8"));
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 
@@ -167,6 +172,7 @@ public class ApiClient {
 	 * @return
 	 * @throws AppException
 	 */
+	@SuppressWarnings("serial")
 	public static CommonList<Project> getExploreLatestProject(
 			AppContext appContext, final int page) throws AppException {
 		CommonList<Project> projects = new CommonList<Project>();
@@ -193,6 +199,7 @@ public class ApiClient {
 	 * @return
 	 * @throws AppException
 	 */
+	@SuppressWarnings("serial")
 	public static CommonList<Project> getExplorePopularProject(
 			AppContext appContext, final int page) throws AppException {
 		CommonList<Project> projects = new CommonList<Project>();
@@ -218,6 +225,7 @@ public class ApiClient {
 	 * @return
 	 * @throws AppException
 	 */
+	@SuppressWarnings("serial")
 	public static CommonList<Project> getExploreFeaturedProject(
 			AppContext appContext, final int page) throws AppException {
 		CommonList<Project> projects = new CommonList<Project>();
@@ -243,6 +251,7 @@ public class ApiClient {
 	 * @return
 	 * @throws AppException
 	 */
+	@SuppressWarnings("serial")
 	public static CommonList<Event> getMySelfEvents(
 			final AppContext appContext, final int page) throws AppException {
 		CommonList<Event> events = new CommonList<Event>();
@@ -468,7 +477,8 @@ public class ApiClient {
 		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + projectId
 				+ URLs.URL_SPLITTER + "repository/commits" + URLs.URL_SPLITTER
 				+ commitId + URLs.URL_SPLITTER + "blob", params);
+		Log.i("Test", url);
 		return getHttpRequestor().init(appContext,
-				HTTPRequestor.GET_METHOD, url).getStringBody();
+				HTTPRequestor.GET_METHOD, url).getResponseBodyString();
 	}
 }

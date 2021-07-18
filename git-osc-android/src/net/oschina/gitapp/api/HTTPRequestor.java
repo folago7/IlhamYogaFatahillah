@@ -4,8 +4,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.net.HttpURLConnection;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -20,11 +20,11 @@ import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
+import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.HeadMethod;
@@ -44,7 +44,6 @@ import android.util.Log;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.bean.URLs;
-import net.oschina.gitapp.common.StringUtils;
 
 /**
  * gitlabApi网络请求类
@@ -148,7 +147,7 @@ public class HTTPRequestor {
 	private static HttpClient getHttpClient() {
         HttpClient httpClient = new HttpClient();
 		// 设置 HttpClient 接收 Cookie,用与浏览器一样的策略
-		httpClient.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
+		//httpClient.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
         // 设置 默认的超时重试处理策略
 		httpClient.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler());
 		// 设置 连接超时时间
@@ -161,6 +160,7 @@ public class HTTPRequestor {
 	}
 	
 	private static HttpMethod getMethod(byte methodType, String url, String userAgent) {
+		
 		HttpMethod httpMethod = null;
 		switch (methodType) {
 		case GET_METHOD:
@@ -266,15 +266,19 @@ public class HTTPRequestor {
         }
     	
     	InputStream responseBodyStream = null;
-		
 		try 
 		{
 			int statusCode = _httpClient.executeMethod(_method);
 			if (statusCode != HttpStatus.SC_OK && !String.valueOf(statusCode).startsWith("2")) {
 				throw AppException.http(statusCode);
 			}
+			Header header = _method.getResponseHeader("Content-Encoding");
+			if (header != null && header.getValue().equalsIgnoreCase("gzip")) {
+				responseBodyStream = new GZIPInputStream(_method.getResponseBodyAsStream());
+			} else {
+				responseBodyStream = new ByteArrayInputStream(_method.getResponseBody());
+			}
 			
-			responseBodyStream = new ByteArrayInputStream(_method.getResponseBodyAsString().getBytes());
 		} catch (HttpException e) {
 			// 发生致命的异常，可能是协议不对或者返回的内容有问题
 			throw AppException.http(e);
@@ -287,6 +291,55 @@ public class HTTPRequestor {
 			_httpClient = null;
 		}
 		return responseBodyStream;
+    }
+    
+    public String getResponseBodyString() throws AppException {
+    	
+    	// 设置请求参数
+    	if (hasOutput()) {
+            submitData();
+        }
+    	
+    	String responseBodyString = null;
+    	GZIPInputStream gis = null;
+		try 
+		{
+			int statusCode = _httpClient.executeMethod(_method);
+			if (statusCode != HttpStatus.SC_OK && !String.valueOf(statusCode).startsWith("2")) {
+				throw AppException.http(statusCode);
+			}
+			Header header = _method.getResponseHeader("Content-Encoding");
+			if (header != null && header.getValue().equalsIgnoreCase("gzip")) {
+				try {
+					gis = new GZIPInputStream(_method.getResponseBodyAsStream());
+					responseBodyString = IOUtils.toString(gis);
+				} catch (IOException e) {
+					e.printStackTrace();
+				} finally {
+					if (gis != null) {
+						try {
+							gis.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+			} else {
+				responseBodyString = _method.getResponseBodyAsString();
+			}
+		} catch (HttpException e) {
+			// 发生致命的异常，可能是协议不对或者返回的内容有问题
+			throw AppException.http(e);
+		} catch (IOException e) {
+			// 发生网络异常
+			throw AppException.network(e);
+		} finally {
+			// 释放连接
+			_method.releaseConnection();
+			_httpClient = null;
+			
+		}
+		return responseBodyString;
     }
 
     public <T> T to(T instance) throws AppException {
@@ -312,26 +365,6 @@ public class HTTPRequestor {
 		} catch (IOException e) {
 			throw AppException.io(e);
 		}
-    }
-    
-    /**
-     * 获得一个String Body
-     * @return
-     * @throws AppException
-     */
-    public String getStringBody() throws AppException {
-    	InputStream inputStream = getResponseBodyStream();
-    	InputStreamReader reader;
-		try {
-			reader = new InputStreamReader(inputStream, UTF_8);
-			return IOUtils.toString(reader);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-        
-    	return "";
     }
     
     /**
@@ -395,7 +428,7 @@ public class HTTPRequestor {
     private <T> T parse(InputStream inputStream, Class<T> type, T instance) throws IOException {
         InputStreamReader reader = null;
         try {
-            reader = new InputStreamReader(inputStream, UTF_8);
+            reader = new InputStreamReader(inputStream);
             String data = IOUtils.toString(reader);
 
             if (type != null) {

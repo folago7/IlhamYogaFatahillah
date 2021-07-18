@@ -49,7 +49,7 @@ public class MySelfEventListAdapter extends MyBaseAdapter<Event> {
 	public MySelfEventListAdapter(Context context, List<Event> data, int resource) {
 		super(context, data, resource);
 		this.bmpManager = new BitmapManager(BitmapFactory.decodeResource(
-				context.getResources(), R.drawable.mini_avatar));
+				context.getResources(), R.drawable.widget_dface_loading));
 		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 
@@ -86,7 +86,7 @@ public class MySelfEventListAdapter extends MyBaseAdapter<Event> {
 		// 1.加载项目作者头像
 		String portrait = event.getAuthor().getPortrait() == null ? "" : event.getAuthor().getPortrait();
 		if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
-			listItemView.face.setImageResource(R.drawable.mini_avatar);
+			listItemView.face.setImageResource(R.drawable.widget_dface);
 		} else {
 			String portraitURL = URLs.HTTP + URLs.HOST + URLs.URL_SPLITTER + portrait;
 			bmpManager.loadBitmap(portraitURL, listItemView.face);
@@ -116,7 +116,6 @@ public class MySelfEventListAdapter extends MyBaseAdapter<Event> {
 				listItemView.content.setTag(null);
 				List<Commit> commits = event.getData().getCommits();
 				listItemView.commitLists.removeAllViews();
-				Log.i("Test", commits.size() + "commits的大小");
 				for (Commit commit : commits) {
 					addCommitItem(listItemView.commitLists, commit);
 				}

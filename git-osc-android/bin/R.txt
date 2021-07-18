@@ -388,7 +388,7 @@ int id always 0x7f06000b
 int id app_start_view 0x7f060049
 int id beginning 0x7f060011
 int id checkbox 0x7f06002d
-int id code_file_loading 0x7f06003d
+int id code_file_textview 0x7f06003d
 int id code_file_webview 0x7f06003c
 int id collapseActionView 0x7f06000d
 int id commit_author_face 0x7f060053

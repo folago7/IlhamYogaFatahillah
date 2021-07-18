@@ -36,6 +36,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 /**
  * 全局应用程序类：用于保存和调用全局应用配置及访问网络数据
@@ -662,7 +663,12 @@ public class AppContext extends Application {
 	@SuppressWarnings("unchecked")
 	public CommonList<CodeTree> getProjectCodeTree(int projectId, String path, String ref_name, boolean isRefresh) throws Exception {
 		CommonList<CodeTree> list = null;
-		String cacheKey = "projectCodeLsit_" + projectId + "_" + path.replace("/", "_") + "_" + ref_name;
+		String pathKey = path;
+		if (pathKey.contains("/")) {
+			pathKey = pathKey.replaceAll("/", ".");
+			Log.i("Test", pathKey);
+		}
+		String cacheKey = "projectCodeLsit_" + projectId + "_" + pathKey + "_" + ref_name;
 		if (!isReadDataCache(cacheKey) || isRefresh) {
 			try{
 				list = ApiClient.getProjectCodeTree(this, projectId, path, ref_name);

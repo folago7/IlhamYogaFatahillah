@@ -1,28 +1,23 @@
 package net.oschina.gitapp.ui;
 
-import java.io.UnsupportedEncodingException;
-
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.view.MenuItemCompat;
-import android.util.Base64;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.webkit.WebView;
-import android.widget.ProgressBar;
+import android.widget.TextView;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
-import net.oschina.gitapp.bean.CodeFile;
+import net.oschina.gitapp.api.HTTPRequestor;
 import net.oschina.gitapp.bean.Commit;
 import net.oschina.gitapp.bean.CommitDiff;
 import net.oschina.gitapp.bean.Project;
-import net.oschina.gitapp.common.Base64Util;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.interfaces.OnStatusListener;
@@ -35,6 +30,7 @@ import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
  * @author 火蚁
  *
  */
+@SuppressLint("SetJavaScriptEnabled")
 public class CommitFileDetailActivity extends BaseActionBarActivity implements
 		OnStatusListener {
 
@@ -42,7 +38,6 @@ public class CommitFileDetailActivity extends BaseActionBarActivity implements
 	private final int MENU_MORE_ID = 1;
 
 	private int mStatus;// 状态
-	private ProgressBar mProgress;
 	private Menu optionsMenu;
 	private WebView mWebView;
 	private Project mProject;
@@ -64,12 +59,15 @@ public class CommitFileDetailActivity extends BaseActionBarActivity implements
 	}
 
 	private void init() {
-		mActionBar.setTitle(mCommitDiff.getNew_path());
+		String path = mCommitDiff.getNew_path();
+		int index = path.lastIndexOf("/");
+		if (index == -1) {
+			mActionBar.setTitle(path);
+		} else {
+			mActionBar.setTitle(path.substring(index + 1));
+		}
 		mActionBar.setSubtitle("提交" + mCommit.getShortId());
-		mProgress = (ProgressBar) findViewById(R.id.code_file_loading);
 		mWebView = (WebView) findViewById(R.id.code_file_webview);
-		mWebView.getSettings().setSupportZoom(true);
-		mWebView.getSettings().setJavaScriptEnabled(true);
 	}
 
 	@Override
@@ -127,6 +125,7 @@ public class CommitFileDetailActivity extends BaseActionBarActivity implements
 	}
 
 	private void loadDatasCode(final String projectId, final String commitId, final String filePath) {
+		
 		onStatus(STATUS_LOADING);
 		new AsyncTask<Void, Void, Message>() {
 			@Override
@@ -154,12 +153,22 @@ public class CommitFileDetailActivity extends BaseActionBarActivity implements
 				if (msg.what == 1 && msg.obj != null) {
 					onStatus(STATUS_LOADED);
 					String body = (String) msg.obj;
-					Log.i("Test", body);
-					mWebView.loadData(body, "text/html", null);
+					if (body != null) {
+						mWebView.loadDataWithBaseURL(null, body, "text/html", HTTPRequestor.UTF_8, null);
+						mWebView.setVisibility(View.VISIBLE);
+						TextView v = (TextView) findViewById(R.id.code_file_textview);
+						v.setText(body);
+					}
 				} else {
 					onStatus(STATUS_NONE);
 					if (msg.obj instanceof AppException) {
-						((AppException)msg.obj).makeToast(appContext);
+						AppException e = ((AppException)msg.obj);
+						if (e.getCode() == 404) {
+							UIHelper.ToastMessage(appContext, "读取失败，文件已被删除");
+						} else {
+							((AppException)msg.obj).makeToast(appContext);
+						}
+						
 					}else {
 						UIHelper.ToastMessage(appContext, ((Exception)msg.obj).getMessage());
 					} 

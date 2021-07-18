@@ -95,7 +95,7 @@ public class CommitDiffListAdapter {
 	}
 
 	public void notifyDataSetChanged() {
-		int sum = listData.size() >= 30 ? 30 : listData.size();
+		int sum = listData.size() >= 25 ? 25 : listData.size();
 		for (int i = 0; i < sum; i++) {
 			add(i);
 		}
@@ -133,6 +133,7 @@ public class CommitDiffListAdapter {
 		elementFilter.add(".mp3");
 		elementFilter.add(".mp4");
 		elementFilter.add(".ogg");
+		elementFilter.add(".suo");
 		if (elementFilter
 				.contains(fileName.substring(fileName.lastIndexOf(".")))) {
 			return "";

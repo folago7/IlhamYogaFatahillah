@@ -40,7 +40,7 @@ public class ProjectCommitListAdapter extends MyBaseAdapter<Commit> {
 	public ProjectCommitListAdapter(Context context, List<Commit> data, int resource) {
 		super(context, data, resource);
 		this.bmpManager = new BitmapManager(BitmapFactory.decodeResource(
-				context.getResources(), R.drawable.mini_avatar));
+				context.getResources(), R.drawable.widget_dface_loading));
 	}
 
 	@Override
@@ -70,7 +70,7 @@ public class ProjectCommitListAdapter extends MyBaseAdapter<Commit> {
 		// 1.加载项目作者头像
 		String portrait = commit.getAuthor() == null || commit.getAuthor().getPortrait() == null ? "" : commit.getAuthor().getPortrait();
 		if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
-			listItemView.face.setImageResource(R.drawable.mini_avatar);
+			listItemView.face.setImageResource(R.drawable.widget_dface);
 		} else {
 			String portraitURL = URLs.HTTP + URLs.HOST + URLs.URL_SPLITTER + commit.getAuthor().getPortrait();
 			bmpManager.loadBitmap(portraitURL, listItemView.face);
