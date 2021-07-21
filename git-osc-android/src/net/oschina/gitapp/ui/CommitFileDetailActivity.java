@@ -155,7 +155,6 @@ public class CommitFileDetailActivity extends BaseActionBarActivity implements
 					String body = (String) msg.obj;
 					if (body != null) {
 						mWebView.loadDataWithBaseURL(null, body, "text/html", HTTPRequestor.UTF_8, null);
-						mWebView.setVisibility(View.VISIBLE);
 						TextView v = (TextView) findViewById(R.id.code_file_textview);
 						v.setText(body);
 					}

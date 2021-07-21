@@ -47,6 +47,7 @@
 			
             <!-- language类型 -->
             <ImageView
+                android:id="@+id/exploreproject_listitem_language_image"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -56,6 +57,7 @@
                 android:id="@+id/exploreproject_listitem_language"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="10dip"
                 android:layout_marginLeft="3dip"
                 android:textColor="@color/listitem_gray"
                 android:textSize="@dimen/text_size_10" />
@@ -65,13 +67,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="10dip"
                 android:src="@drawable/star" />
 			
             <TextView
                 android:id="@+id/exploreproject_listitem_star"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="10dip"
+                android:layout_marginLeft="3dip"
                 android:textColor="@color/listitem_gray"
                 android:textSize="@dimen/text_size_10" />
 				
@@ -80,13 +83,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="10dip"
                 android:src="@drawable/fork" />
 
             <TextView
                 android:id="@+id/exploreproject_listitem_fork"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="10dip"
                 android:layout_marginLeft="3dip"
                 android:textColor="@color/listitem_gray"
                 android:textSize="@dimen/text_size_10" />

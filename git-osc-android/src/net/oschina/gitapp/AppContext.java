@@ -23,6 +23,7 @@ import net.oschina.gitapp.bean.Commit;
 import net.oschina.gitapp.bean.CommitDiff;
 import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.Event;
+import net.oschina.gitapp.bean.GitNote;
 import net.oschina.gitapp.bean.Issue;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.User;
@@ -728,6 +729,42 @@ public class AppContext extends Application {
 		return list;
 	}
 	
+	/**
+	 * 获得issue的评论列表
+	 * @param appContext
+	 * @param projectId
+	 * @param noteId
+	 * @param page
+	 * @param isRefresh
+	 * @return
+	 * @throws Exception
+	 */
+	@SuppressWarnings("unchecked")
+	public CommonList<GitNote> getIssueCommentList(String projectId, String issueId, int page, boolean isRefresh) throws Exception {
+		CommonList<GitNote> list = null;
+		String cacheKey = "issueCommentList" + projectId + "_" + issueId + "_" + page;
+		if(!isReadDataCache(cacheKey) || isRefresh) {
+			try{
+				list = ApiClient.getIssueCommentList(this, projectId, issueId ,page);
+				if(list != null && page == 1){
+					list.setCacheKey(cacheKey);
+					saveObject(list, cacheKey);
+				}
+			}catch(Exception e){
+				e.printStackTrace();
+				list = (CommonList<GitNote>)readObject(cacheKey);
+				if(list == null)
+					throw e;
+			}		
+		} else {
+			// 从缓存中读取
+			list = (CommonList<GitNote>)readObject(cacheKey);
+			if(list == null)
+				list = new CommonList<GitNote>();
+		}
+		return list;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public CommonList<Branch> getProjectBranchsOrTagsLsit(String projectId, int page, String branchOrTag, boolean isRefresh) throws Exception {
 		CommonList<Branch> list = null;
@@ -822,4 +859,5 @@ public class AppContext extends Application {
 	public String getCommitFileDetail(String projectId, String commitId, String filePath) throws Exception {
 		return ApiClient.getCommitFileDetail(this, projectId, commitId, filePath);
 	}
+	
 }

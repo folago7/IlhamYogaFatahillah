@@ -21,6 +21,7 @@ import net.oschina.gitapp.bean.Commit;
 import net.oschina.gitapp.bean.CommitDiff;
 import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.Event;
+import net.oschina.gitapp.bean.GitNote;
 import net.oschina.gitapp.bean.Issue;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.Session;
@@ -404,6 +405,32 @@ public class ApiClient {
 				+ branchOrTag, params);
 		List<Branch> list = getHttpRequestor().init(appContext,
 				HTTPRequestor.GET_METHOD, url).getList(Branch[].class);
+		commits.setList(list);
+		commits.setCount(list.size());
+		commits.setPageSize(list.size());
+		return commits;
+	}
+	
+	/**
+	 * 获得issue的评论列表
+	 * @param appContext
+	 * @param projectId
+	 * @param noteId
+	 * @param page
+	 * @param isRefresh
+	 * @return
+	 * @throws Exception
+	 */
+	public static CommonList<GitNote> getIssueCommentList(AppContext appContext, String projectId, String issueId, int page) throws Exception {
+		CommonList<GitNote> commits = new CommonList<GitNote>();
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(PRIVATE_TOKEN, getToken(appContext));
+		params.put("page", page);
+		// 拼接url地址
+		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + projectId
+				+ URLs.URL_SPLITTER + "issues" + URLs.URL_SPLITTER + issueId + URLs.URL_SPLITTER + "notes", params);
+		List<GitNote> list = getHttpRequestor().init(appContext,
+				HTTPRequestor.GET_METHOD, url).getList(GitNote[].class);
 		commits.setList(list);
 		commits.setCount(list.size());
 		commits.setPageSize(list.size());

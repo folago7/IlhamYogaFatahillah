@@ -13,6 +13,7 @@ import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.MessageData;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.StringUtils;
+import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
 
 /**
@@ -66,6 +67,6 @@ public class ProjectIssuesListFragment extends BaseSwipeRefreshFragment<Issue, C
 	
 	@Override
 	public void onItemClick(int position, Issue issue) {
-		//UIHelper.showProjectDetail(getActivity(), project);
+		UIHelper.showIssueDetail(mApplication, mProject, issue);
 	}
 }

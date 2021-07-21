@@ -33,6 +33,7 @@ public class ExploreListProjectAdapter extends MyBaseAdapter<Project> {
 		public TextView description;//项目描述
 		public TextView star;//加星数
 		public TextView fork;//fork数
+		public ImageView languageImage;
 		public TextView language;//类型
 	}
 	
@@ -58,6 +59,7 @@ public class ExploreListProjectAdapter extends MyBaseAdapter<Project> {
 			listItemView.description = (TextView) convertView.findViewById(R.id.exploreproject_listitem_description);
 			listItemView.star = (TextView) convertView.findViewById(R.id.exploreproject_listitem_star);
 			listItemView.fork = (TextView) convertView.findViewById(R.id.exploreproject_listitem_fork);
+			listItemView.languageImage = (ImageView) convertView.findViewById(R.id.exploreproject_listitem_language_image);
 			listItemView.language = (TextView) convertView.findViewById(R.id.exploreproject_listitem_language);
 			
 			//设置控件集到convertView
@@ -93,8 +95,13 @@ public class ExploreListProjectAdapter extends MyBaseAdapter<Project> {
 		// 显示项目的star、fork、language信息
 		listItemView.star.setText(project.getStars_count().toString());
 		listItemView.fork.setText(project.getForks_count().toString());
-		String language = project.getLanguage() != null ? project.getLanguage() : "UnKown";
-		listItemView.language.setText(language);
+		String language = project.getLanguage() != null ? project.getLanguage() : "";
+		if (project.getLanguage() != null) {
+			listItemView.language.setText(language);
+		} else {
+			listItemView.language.setVisibility(View.GONE);
+			listItemView.languageImage.setVisibility(View.GONE);
+		}
 		
 		return convertView;
 	}

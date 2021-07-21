@@ -36,7 +36,6 @@ public class BaseActionBarActivity extends ActionBarActivity
 		super.onCreate(savedInstanceState);
 		mHelper.onCreate(savedInstanceState);
 		initActionBar();
-		
 	}
 	
 	// 关闭该Activity

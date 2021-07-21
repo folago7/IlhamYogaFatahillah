@@ -12,10 +12,12 @@ import net.oschina.gitapp.api.ApiClient;
 import net.oschina.gitapp.bean.Commit;
 import net.oschina.gitapp.bean.CommitDiff;
 import net.oschina.gitapp.bean.Event;
+import net.oschina.gitapp.bean.Issue;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.ui.CodeFileDetailActivity;
 import net.oschina.gitapp.ui.CommitDetailActivity;
 import net.oschina.gitapp.ui.CommitFileDetailActivity;
+import net.oschina.gitapp.ui.IssueDetailActivity;
 import net.oschina.gitapp.ui.LoginActivity;
 import net.oschina.gitapp.ui.ProjectActivity;
 import net.oschina.gitapp.ui.fragments.ProjectViewPageFragment;
@@ -367,6 +369,13 @@ public class UIHelper {
 		context.startActivity(intent);
 	}
 	
+	/**
+	 * 显示commit的Diff详情
+	 * @param context
+	 * @param project
+	 * @param commit
+	 * @param commitDiff
+	 */
 	public static void showCommitDiffFileDetail(Context context, Project project, Commit commit, CommitDiff commitDiff) {
 		Intent intent = new Intent(context, CommitFileDetailActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
@@ -376,6 +385,21 @@ public class UIHelper {
 		bundle.putSerializable(Contanst.COMMITDIFF, commitDiff);
 		intent.putExtras(bundle);
 		context.startActivity(intent);
-		
+	}
+	
+	/**
+	 * 显示issue的详情
+	 * @param context
+	 * @param project
+	 * @param commit
+	 */
+	public static void showIssueDetail(Context context, Project project, Issue commit) {
+		Intent intent = new Intent(context, IssueDetailActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
+		Bundle bundle = new Bundle();
+		bundle.putSerializable(Contanst.PROJECT, project);
+		bundle.putSerializable(Contanst.ISSUE, commit);
+		intent.putExtras(bundle);
+		context.startActivity(intent);
 	}
 }

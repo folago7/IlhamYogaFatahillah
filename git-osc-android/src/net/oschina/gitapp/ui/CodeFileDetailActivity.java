@@ -173,7 +173,6 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 					mWebView.loadDataWithBaseURL(null,
 							getCodeContent(codeFile.getContent()), "text/html",
 							HTTPRequestor.UTF_8, null);
-					mWebView.setVisibility(View.VISIBLE);
 					TextView v = (TextView) findViewById(R.id.code_file_textview);
 					v.setText(getCodeContent(codeFile.getContent()));
 				} else {
