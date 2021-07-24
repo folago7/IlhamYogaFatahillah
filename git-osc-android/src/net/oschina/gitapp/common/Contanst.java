@@ -17,4 +17,6 @@ public class Contanst {
 	public static final String COMMITDIFF = "commitDiff";
 	
 	public static final String ISSUE = "issue";
+	
+	public static final String COMMENT = "comment";
 }

@@ -28,6 +28,6 @@ public class CommitDetailViewPagerFragment extends BaseViewPagerFragment {
 	protected void onSetupTabAdapter(ViewPageFragmentAdapter adapter) {
 		Bundle args = getArguments();
 		adapter.addTab("详情", "detail", CommitFileDetailFragment.class, args);
-		adapter.addTab("评论", "comments", CommitFileDetailFragment.class, args);
+		adapter.addTab("评论", "comments", CommitCommentFragment.class, args);
 	}
 }

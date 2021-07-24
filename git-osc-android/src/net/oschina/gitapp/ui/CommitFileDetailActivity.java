@@ -37,7 +37,6 @@ public class CommitFileDetailActivity extends BaseActionBarActivity implements
 	private final int MENU_REFRESH_ID = 0;
 	private final int MENU_MORE_ID = 1;
 
-	private int mStatus;// 状态
 	private Menu optionsMenu;
 	private WebView mWebView;
 	private Project mProject;

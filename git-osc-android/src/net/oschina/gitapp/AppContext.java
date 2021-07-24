@@ -19,6 +19,7 @@ import net.oschina.gitapp.api.ApiClient;
 import net.oschina.gitapp.bean.Branch;
 import net.oschina.gitapp.bean.CodeFile;
 import net.oschina.gitapp.bean.CodeTree;
+import net.oschina.gitapp.bean.Comment;
 import net.oschina.gitapp.bean.Commit;
 import net.oschina.gitapp.bean.CommitDiff;
 import net.oschina.gitapp.bean.CommonList;
@@ -765,6 +766,18 @@ public class AppContext extends Application {
 		return list;
 	}
 	
+	/**
+	 * 提交commit评论
+	 * @param projectId
+	 * @param issueId
+	 * @param body
+	 * @return
+	 * @throws AppException
+	 */
+	public String pubIssueComment(String projectId, String issueId, String body) throws AppException {
+		return ApiClient.pubIssueComment(this, projectId, issueId, body);
+	}
+	
 	@SuppressWarnings("unchecked")
 	public CommonList<Branch> getProjectBranchsOrTagsLsit(String projectId, int page, String branchOrTag, boolean isRefresh) throws Exception {
 		CommonList<Branch> list = null;
@@ -843,6 +856,30 @@ public class AppContext extends Application {
 			list = (CommonList<CommitDiff>)readObject(cacheKey);
 			if(list == null)
 				list = new CommonList<CommitDiff>();
+		}
+		return list;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public CommonList<Comment> getCommitCommentList(String projectId, String commitId, boolean isRefresh) throws AppException {
+		CommonList<Comment> list = null;
+		String cacheKey = "CommitCommentLsit_" + projectId + "_" + commitId;
+		if(!isReadDataCache(cacheKey) || isRefresh) {
+			try{
+				list = ApiClient.getCommitCommentList(this, projectId, commitId, isRefresh);
+				if(list != null){
+					list.setCacheKey(cacheKey);
+					saveObject(list, cacheKey);
+				}
+			}catch(Exception e){
+				e.printStackTrace();
+				list = (CommonList<Comment>)readObject(cacheKey);
+			}		
+		} else {
+			// 从缓存中读取
+			list = (CommonList<Comment>)readObject(cacheKey);
+			if(list == null)
+				list = new CommonList<Comment>();
 		}
 		return list;
 	}

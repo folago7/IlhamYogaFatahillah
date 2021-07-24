@@ -13,6 +13,10 @@ import org.codehaus.jackson.annotate.JsonProperty;
 @SuppressWarnings("serial")
 public class CommitDiff extends Entity {
 	
+	public final static String TYPE_TEXT = "text";//文本文件
+	public final static String TYPE_IMAGE = "image";//图片文件
+	public final static String TYPE_BINARY = "binary";//二进制文件
+	
 	@JsonProperty("diff")
 	private String _diff;
 	
@@ -36,6 +40,9 @@ public class CommitDiff extends Entity {
 	
 	@JsonProperty("deleted_file")
 	private boolean _deleted_file;
+	
+	@JsonProperty("type")
+	private String _type;
 
 	public String getDiff() {
 		return _diff;
@@ -100,4 +107,13 @@ public class CommitDiff extends Entity {
 	public void setDeleted_file(boolean deleted_file) {
 		this._deleted_file = deleted_file;
 	}
+
+	public String getType() {
+		return _type;
+	}
+
+	public void setType(String type) {
+		this._type = type;
+	}
+	
 }

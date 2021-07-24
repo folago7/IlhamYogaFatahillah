@@ -69,7 +69,7 @@ public class CommitDiffListAdapter {
 		ll.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				UIHelper.showCommitDiffFileDetail(context, project, commit, commitDiff);
+				showCommitDiffDetail(commitDiff);
 			}
 		});
 		
@@ -95,11 +95,10 @@ public class CommitDiffListAdapter {
 	}
 
 	public void notifyDataSetChanged() {
-		int sum = listData.size() >= 25 ? 25 : listData.size();
+		int sum = listData.size() >= 10 ? 10 : listData.size();
 		for (int i = 0; i < sum; i++) {
 			add(i);
 		}
-		commitGroupView.invalidate();
 	}
 
 	private String getFileName(CommitDiff commitDiff) {
@@ -119,42 +118,25 @@ public class CommitDiffListAdapter {
 		}
 		return res;
 	}
-
+	
+	//文本文件才会显示文本出来
 	private String getCommitFileDiff(CommitDiff commitDiff) {
-		String fileName = getFileName(commitDiff);
-
-		List<String> elementFilter = new ArrayList<String>();
-		elementFilter.add(".png");
-		elementFilter.add(".jar");
-		elementFilter.add(".jpeg");
-		elementFilter.add(".gif");
-		elementFilter.add(".gif");
-		elementFilter.add(".wav");
-		elementFilter.add(".mp3");
-		elementFilter.add(".mp4");
-		elementFilter.add(".ogg");
-		elementFilter.add(".suo");
-		if (elementFilter
-				.contains(fileName.substring(fileName.lastIndexOf(".")))) {
+		if (commitDiff.getType().equalsIgnoreCase(CommitDiff.TYPE_TEXT)) {
+			return commitDiff.getDiff().substring(
+					commitDiff.getDiff().indexOf("@"));
+		} else {
 			return "";
 		}
-		String diff = commitDiff.getDiff().substring(
-				commitDiff.getDiff().indexOf("@"));
-		return diff;
 	}
-
-	// 判断是否是图片
-	private boolean isPicture(CommitDiff commitDiff) {
-		String fileName = getFileName(commitDiff);
-		List<String> elementFilter = new ArrayList<String>();
-		elementFilter.add(".png");
-		elementFilter.add(".jpg");
-		elementFilter.add(".jpeg");
-		elementFilter.add(".gif");
-		if (elementFilter
-				.contains(fileName.substring(fileName.lastIndexOf(".")))) {
-			return true;
+	
+	private void showCommitDiffDetail(CommitDiff commitDiff) {
+		
+		if (commitDiff.getType().equalsIgnoreCase(CommitDiff.TYPE_TEXT)) {
+			UIHelper.showCommitDiffFileDetail(context, project, commit, commitDiff);
+		} else if (commitDiff.getType().equalsIgnoreCase(CommitDiff.TYPE_IMAGE)) {
+			
+		} else {
+			
 		}
-		return false;
 	}
 }

@@ -17,6 +17,7 @@ import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.bean.Branch;
 import net.oschina.gitapp.bean.CodeFile;
 import net.oschina.gitapp.bean.CodeTree;
+import net.oschina.gitapp.bean.Comment;
 import net.oschina.gitapp.bean.Commit;
 import net.oschina.gitapp.bean.CommitDiff;
 import net.oschina.gitapp.bean.CommonList;
@@ -115,7 +116,8 @@ public class ApiClient {
 		String urlString = URLs.SESSION;
 		Session session = getHttpRequestor()
 				.init(appContext, HTTPRequestor.POST_METHOD, urlString)
-				.with("email", userEmail).with("password", password)
+				.with("email", userEmail)
+				.with("password", password)
 				.to(Session.class);
 		// 保存用户的私有token
 		if (session != null && null != session.get_privateToken()) {
@@ -436,6 +438,27 @@ public class ApiClient {
 		commits.setPageSize(list.size());
 		return commits;
 	}
+	
+	/**
+	 * 提交issue的一个评论
+	 * @param appContext
+	 * @param projectId
+	 * @param issueId
+	 * @param body
+	 * @return
+	 * @throws AppException
+	 */
+	public static String pubIssueComment(AppContext appContext, String projectId, String issueId, String body) throws AppException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(PRIVATE_TOKEN, getToken(appContext));
+		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + projectId
+				+ URLs.URL_SPLITTER + "issues" + URLs.URL_SPLITTER + issueId + URLs.URL_SPLITTER + "notes", params);
+		Log.i("Test", url);
+		return getHttpRequestor().init(appContext,
+				HTTPRequestor.POST_METHOD, url)
+				.with("body", body)
+				.getResponseBodyString();
+	} 
 
 	/**
 	 * 获得代码文件详情
@@ -482,6 +505,31 @@ public class ApiClient {
 				+ commitId + URLs.URL_SPLITTER + "diff", params);
 		List<CommitDiff> list = getHttpRequestor().init(appContext,
 				HTTPRequestor.GET_METHOD, url).getList(CommitDiff[].class);
+		commits.setList(list);
+		commits.setCount(list.size());
+		commits.setPageSize(list.size());
+		return commits;
+	}
+	
+	/**
+	 * 获得commit的评论列表
+	 * @param appContext
+	 * @param projectId
+	 * @param commitId
+	 * @param isRefresh
+	 * @return
+	 * @throws AppException
+	 */
+	public static CommonList<Comment> getCommitCommentList(AppContext appContext, String projectId, String commitId, boolean isRefresh) throws AppException {
+		CommonList<Comment> commits = new CommonList<Comment>();
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(PRIVATE_TOKEN, getToken(appContext));
+		// 拼接url地址
+		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + projectId
+				+ URLs.URL_SPLITTER + "repository/commits" + URLs.URL_SPLITTER
+				+ commitId + URLs.URL_SPLITTER + "comment", params);
+		List<Comment> list = getHttpRequestor().init(appContext,
+				HTTPRequestor.GET_METHOD, url).getList(Comment[].class);
 		commits.setList(list);
 		commits.setCount(list.size());
 		commits.setPageSize(list.size());
