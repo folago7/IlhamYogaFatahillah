@@ -2,8 +2,6 @@ package net.oschina.gitapp.bean;
 
 import java.io.Serializable;
 
-import net.oschina.gitapp.common.Base64Util;
-
 import org.codehaus.jackson.annotate.JsonProperty;
 
 /**

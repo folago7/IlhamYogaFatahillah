@@ -3,6 +3,13 @@ package net.oschina.gitapp.ui.fragments;
 import java.util.List;
 
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.BaseAdapter;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
@@ -26,7 +33,21 @@ import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
  */
 public class ProjectIssuesListFragment extends BaseSwipeRefreshFragment<Issue, CommonList<Issue>> {
 	
+	public final int MENU_CREATE_ID = 01;
+	
 	private Project mProject;
+	
+	private Menu mOptionMenu;
+	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		mOptionMenu = menu;
+		MenuItem createOption = mOptionMenu.add(1, MENU_CREATE_ID, MENU_CREATE_ID, "创建");
+		createOption.setIcon(R.drawable.action_create);
+		MenuItemCompat.setShowAsAction(createOption,
+				MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
+	}
 	
 	public static ProjectIssuesListFragment newInstance(Project project) {
 		ProjectIssuesListFragment fragment = new ProjectIssuesListFragment();
@@ -38,6 +59,7 @@ public class ProjectIssuesListFragment extends BaseSwipeRefreshFragment<Issue, C
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		setHasOptionsMenu(true);
 		Bundle args = getArguments();
 		if (args != null) {
 			mProject = (Project) args.getSerializable(Contanst.PROJECT);

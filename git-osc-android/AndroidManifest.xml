@@ -36,7 +36,11 @@
         <activity android:name=".ui.CodeFileDetailActivity" />
         <activity android:name=".ui.CommitDetailActivity" />
         <activity android:name=".ui.CommitFileDetailActivity" />
-        <activity android:name=".ui.IssueDetailActivity" />
+        <activity
+            android:name=".ui.IssueDetailActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
     </application>
 
 </manifest>

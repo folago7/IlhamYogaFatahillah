@@ -4,7 +4,9 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -251,7 +253,7 @@ public class HTTPRequestor {
      * @param   value
      * @return  this
      */
-    public HTTPRequestor with(String key, Object value) {
+	public HTTPRequestor with(String key, Object value) {
         if (value != null && key != null) {
             _data.put(key, value);
         }

@@ -23,7 +23,7 @@ public class Note extends Entity {
     private Date _created_at;
     
     @JsonProperty("line_code")
-    private int _line_code;
+    private String _line_code;
     
     @JsonProperty("note")
     private String _note;
@@ -58,10 +58,10 @@ public class Note extends Entity {
 	public void setCreated_at(Date created_at) {
 		this._created_at = created_at;
 	}
-	public int getLine_code() {
+	public String getLine_code() {
 		return _line_code;
 	}
-	public void setLine_code(int line_code) {
+	public void setLine_code(String line_code) {
 		this._line_code = line_code;
 	}
 	public String getNote() {

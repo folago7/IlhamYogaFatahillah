@@ -668,7 +668,6 @@ public class AppContext extends Application {
 		String pathKey = path;
 		if (pathKey.contains("/")) {
 			pathKey = pathKey.replaceAll("/", ".");
-			Log.i("Test", pathKey);
 		}
 		String cacheKey = "projectCodeLsit_" + projectId + "_" + pathKey + "_" + ref_name;
 		if (!isReadDataCache(cacheKey) || isRefresh) {
@@ -774,7 +773,7 @@ public class AppContext extends Application {
 	 * @return
 	 * @throws AppException
 	 */
-	public String pubIssueComment(String projectId, String issueId, String body) throws AppException {
+	public GitNote pubIssueComment(String projectId, String issueId, String body) throws AppException {
 		return ApiClient.pubIssueComment(this, projectId, issueId, body);
 	}
 	

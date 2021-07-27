@@ -3,54 +3,129 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:descendantFocusability="blocksDescendants"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:paddingBottom="7dip"
     android:paddingLeft="6dip"
     android:paddingRight="6dip"
     android:paddingTop="8dip" >
 
+    <!-- 项目作者头像 -->
+
+    <ImageView
+        android:id="@+id/myself_project_listitem_userface"
+        style="@style/UserFaceImageStyle" />
+
     <LinearLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:layout_marginLeft="6dip"
+        android:orientation="vertical" >
 
-        <!-- 项目标识 -->
-
-        <ImageView
-            android:id="@+id/myself_project_listitem_flag"
-            android:layout_width="14.0dip"
-            android:layout_height="14.0dip"
-            android:layout_gravity="center_vertical"
-            android:layout_marginRight="2dip"
-            android:visibility="gone" />
-
-        <TextView
-            android:id="@+id/myself_project_listitem_name"
+        <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:textSize="@dimen/text_size_15"
-            android:textStyle="bold" />
-    </LinearLayout>
+            android:orientation="horizontal" >
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dip"
-        android:orientation="horizontal" >
+            <!-- 项目标识 -->
+            <ImageView
+                android:id="@+id/myself_project_listitem_flag"
+                android:layout_width="14.0dip"
+                android:layout_height="14.0dip"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="2dip"
+                android:visibility="gone" />
 
+            <TextView
+                android:id="@+id/myself_project_listitem_name"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textColor="@color/listitem_blue"
+                android:textSize="@dimen/text_size_15"
+                android:textStyle="bold" />
+            
+        </LinearLayout>
+        
+        <!-- 项目描述 -->
         <TextView
+            android:id="@+id/myself_project_listitem_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="最近更新:"
-            android:textSize="@dimen/text_size_10" />
+            android:layout_marginTop="8dip"
+            android:textColor="@color/listitem_black"
+            android:textColorLink="@color/listitem_blue"
+            android:textSize="@dimen/text_size_14" />
 
-        <TextView
-            android:id="@+id/myself_project_listitem_date"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="2dip"
-            android:textSize="@dimen/text_size_10" />
+            android:layout_marginTop="8dip"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="更新于:"
+                android:textSize="@dimen/text_size_10" />
+
+            <TextView
+                android:id="@+id/myself_project_listitem_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dip"
+                android:layout_marginRight="10dip"
+                android:textSize="@dimen/text_size_10" />
+            
+            <!-- language类型 -->
+            <ImageView
+                android:id="@+id/myself_project_listitem_language_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/language" />
+
+            <TextView
+                android:id="@+id/myself_project_listitem_language"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dip"
+                android:layout_marginLeft="3dip"
+                android:textColor="@color/listitem_gray"
+                android:textSize="@dimen/text_size_10" />
+            
+            <!-- 项目加星数量 -->
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/star" />
+			
+            <TextView
+                android:id="@+id/myself_project_listitem_star"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dip"
+                android:layout_marginLeft="3dip"
+                android:textColor="@color/listitem_gray"
+                android:textSize="@dimen/text_size_10" />
+				
+            <!-- fork数量 -->
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/fork" />
+
+            <TextView
+                android:id="@+id/myself_project_listitem_fork"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dip"
+                android:layout_marginLeft="3dip"
+                android:textColor="@color/listitem_gray"
+                android:textSize="@dimen/text_size_10" />
+            
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

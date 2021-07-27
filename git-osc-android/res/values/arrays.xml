@@ -28,9 +28,9 @@
 	
     <!-- 查看项目页面 -->
     <string-array name="project_title_array">
+        <item>简介</item>
         <item>提交</item>
         <item>代码</item>
-        <item>Pull Requests</item>
         <item>问题</item>
     </string-array>
 </resources>

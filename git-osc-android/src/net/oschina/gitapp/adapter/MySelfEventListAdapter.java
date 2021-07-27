@@ -116,9 +116,7 @@ public class MySelfEventListAdapter extends MyBaseAdapter<Event> {
 				listItemView.content.setTag(null);
 				List<Commit> commits = event.getData().getCommits();
 				listItemView.commitLists.removeAllViews();
-				for (Commit commit : commits) {
-					addCommitItem(listItemView.commitLists, commit);
-				}
+				showCommitInfo(listItemView.commitLists, commits);
 				break;
 				
 			case Event.EVENT_TYPE_COMMENTED:// 评论
@@ -133,6 +131,17 @@ public class MySelfEventListAdapter extends MyBaseAdapter<Event> {
 				break;
 		}
 		checkIsShow(listItemView);
+	}
+	
+	private void showCommitInfo(LinearLayout layout, List<Commit> commits) {
+		if (commits.size() > 2) {
+			addCommitItem(layout, commits.get(0));
+			addCommitItem(layout, commits.get(1));
+		} else {
+			for (Commit commit : commits) {
+				addCommitItem(layout, commit);
+			}
+		}
 	}
 	
 	/**

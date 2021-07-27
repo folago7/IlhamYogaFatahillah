@@ -24,7 +24,5 @@ public class MySelfViewPagerFragment extends BaseViewPagerFragment {
 		String[] title = getResources().getStringArray(R.array.myself_title_array);
 		adapter.addTab(title[0], "event", MySelfListEventFragment.class, null);
 		adapter.addTab(title[1], "project", MySelfListProjectFragment.class, null);
-		adapter.addTab(title[2], "pull request", MySelfListEventFragment.class, null);
-		adapter.addTab(title[3], "issues", MySelfListProjectFragment.class, null);
 	}
 }

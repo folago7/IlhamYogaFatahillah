@@ -31,10 +31,10 @@ public class ExploreListProjectAdapter extends MyBaseAdapter<Project> {
 		public ImageView face;//用户头像
 		public TextView title;
 		public TextView description;//项目描述
-		public TextView star;//加星数
-		public TextView fork;//fork数
 		public ImageView languageImage;
 		public TextView language;//类型
+		public TextView star;//加星数
+		public TextView fork;//fork数
 	}
 	
 	public ExploreListProjectAdapter(Context context, List<Project> data, int resource) {

@@ -183,10 +183,12 @@ public class UIHelper {
 			title = "更新了项目 " + pAuthor_And_pName;
 			break;
 		case Event.EVENT_TYPE_CLOSED:// 关闭项目
-			title = "关闭了项目 " + pAuthor_And_pName;
+			eventTitle = event.getTarget_type();
+			title = "关闭了项目 " + pAuthor_And_pName + " 的" + eventTitle;
 			break;
 		case Event.EVENT_TYPE_REOPENED:// 重新打开了项目
-			title = "重新打开了项目 " + pAuthor_And_pName;
+			eventTitle = event.getTarget_type();
+			title = "重新打开了项目 " + pAuthor_And_pName + " 的" + eventTitle;
 			break;
 		case Event.EVENT_TYPE_PUSHED:// push
 			eventTitle = event.getData().getRef().substring(event.getData().getRef().lastIndexOf("/") + 1);

@@ -1,11 +1,8 @@
 package net.oschina.gitapp.bean;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import org.codehaus.jackson.annotate.JsonProperty;
-
-import android.widget.AbsListView.SelectionBoundsAdjuster;
 
 /**
  * commit实体类

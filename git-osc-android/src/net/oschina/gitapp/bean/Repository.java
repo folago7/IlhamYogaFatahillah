@@ -2,6 +2,8 @@ package net.oschina.gitapp.bean;
 
 import java.io.Serializable;
 
+import org.codehaus.jackson.annotate.JsonProperty;
+
 /**
  * 仓库实体类
  * @created 2014-05-19 下午18：12
@@ -11,10 +13,18 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 public class Repository implements Serializable {
 	
+	@JsonProperty("name")
 	private String _name;
+	
+	@JsonProperty("url")
 	private String _url;
+	
+	@JsonProperty("description")
 	private String _description;
+	
+	@JsonProperty("homePage")
 	private String _homePage;
+	
 	public String getName() {
 		return _name;
 	}

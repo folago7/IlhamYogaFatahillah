@@ -85,17 +85,19 @@ public class CommitDiffListAdapter {
 		file_name.setText(getFileName(commitDiff));
 		folder.setText(getFilePath(commitDiff));
 		String diff = getCommitFileDiff(commitDiff);
-		if (!TextUtils.isEmpty(diff)) {
+		
+		// 显示文件的内容
+		/*if (!TextUtils.isEmpty(diff)) {
 			file.setText(diff);
 		} else {
 			file.setVisibility(View.GONE);
-		}
+		}*/
 
 		commitGroupView.addView(convertView);
 	}
 
 	public void notifyDataSetChanged() {
-		int sum = listData.size() >= 10 ? 10 : listData.size();
+		int sum = listData.size() >= 20 ? 20 : listData.size();
 		for (int i = 0; i < sum; i++) {
 			add(i);
 		}

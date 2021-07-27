@@ -407,13 +407,6 @@ public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result exte
 			}
 			
 			Result result = msg.result;
-			if(L.Debug) {
-				L.d("Fragment:" + getClass().getSimpleName());
-				L.d("Load Page:" + mPage);
-				L.d("Count:" + result.getCount());
-				L.d("PageSize:" + result.getPageSize());
-				L.d("ListSize:" + result.getList().size());
-			}
 			if(mPage == 1) {
 				int newdata = 0;
 				mSumData = result.getPageSize();
@@ -435,9 +428,6 @@ public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result exte
 						}
 					} else {
 						newdata = result.getPageSize();
-					}
-					if(L.Debug) {
-						L.d("当前界面是否为 Pause 状态?" + isPauseLife);
 					}
 					if(mAction == LISTVIEW_ACTION_REFRESH && !isPauseLife) {
 						// 提示新添加的数据条数

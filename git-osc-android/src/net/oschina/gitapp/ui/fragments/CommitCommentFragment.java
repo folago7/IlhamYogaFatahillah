@@ -61,7 +61,7 @@ public class CommitCommentFragment extends BaseSwipeRefreshFragment<Comment, Com
 			boolean refresh) {
 		MessageData<CommonList<Comment>> msg = null;
 		try {
-			CommonList<Comment> list = mApplication.getCommitCommentList(mProject.getId(), mCommit.getId(), false);
+			CommonList<Comment> list = mApplication.getCommitCommentList(mProject.getId(), mCommit.getId(), refresh);
 			msg = new MessageData<CommonList<Comment>>(list);
 		} catch (AppException e) {
 			e.makeToast(mApplication);

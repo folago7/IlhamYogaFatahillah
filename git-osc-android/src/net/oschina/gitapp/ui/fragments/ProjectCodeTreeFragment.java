@@ -76,7 +76,7 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 
 	private View mHeadView;
 
-	private String mPath = null;
+	private String mPath = "";
 
 	private String mBranch;
 

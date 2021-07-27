@@ -50,12 +50,12 @@ public class ProjectActivity extends BaseActionBarActivity {
         }
 	}
 	
-	@Override
+	/*@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuItem moreOption = menu.add(0, MENU_MORE_ID, MENU_MORE_ID, "更多");
 		moreOption.setIcon(R.drawable.abc_ic_menu_moreoverflow_normal_holo_dark);
 		MenuItemCompat.setShowAsAction(moreOption,
 				MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
 		return true;
-	}
+	}*/
 }

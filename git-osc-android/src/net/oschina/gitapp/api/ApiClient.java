@@ -91,6 +91,7 @@ public class ApiClient {
 				url.append('&');
 				url.append(name);
 				url.append('=');
+				// 对参数进行编码
 				try {
 					url.append(URLEncoder.encode(String.valueOf(params.get(name)), "UTF-8"));
 				} catch (UnsupportedEncodingException e) {
@@ -98,7 +99,6 @@ public class ApiClient {
 				}
 			}
 		}
-
 		return url.toString().replace("?&", "?");
 	}
 
@@ -159,9 +159,15 @@ public class ApiClient {
 	 * @return
 	 * @throws AppException
 	 */
-	public static Project getProject(AppContext appContext, int projectId)
+	@SuppressWarnings("serial")
+	public static Project getProject(final AppContext appContext, int projectId)
 			throws AppException {
-		String url = URLs.PROJECT + URLs.URL_SPLITTER + projectId;
+		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + projectId,
+				new HashMap<String, Object>() {
+					{
+						put(PRIVATE_TOKEN, getToken(appContext));
+					}
+				});
 		return getHttpRequestor().init(appContext, HTTPRequestor.GET_METHOD,
 				url).to(Project.class);
 	}
@@ -177,17 +183,18 @@ public class ApiClient {
 	 */
 	@SuppressWarnings("serial")
 	public static CommonList<Project> getExploreLatestProject(
-			AppContext appContext, final int page) throws AppException {
+			final AppContext appContext, final int page) throws AppException {
 		CommonList<Project> projects = new CommonList<Project>();
 		String url = makeURL(URLs.EXPLORELATESTPROJECT,
 				new HashMap<String, Object>() {
 					{
 						put("page", page);
+						put(PRIVATE_TOKEN, getToken(appContext));
 					}
 				});
 		List<Project> list = getHttpRequestor()
 				.init(appContext, HTTPRequestor.GET_METHOD, url)
-				.with("page", page).getList(Project[].class);
+				.getList(Project[].class);
 		projects.setList(list);
 		projects.setCount(list.size());
 		projects.setPageSize(list.size());
@@ -204,12 +211,13 @@ public class ApiClient {
 	 */
 	@SuppressWarnings("serial")
 	public static CommonList<Project> getExplorePopularProject(
-			AppContext appContext, final int page) throws AppException {
+			final AppContext appContext, final int page) throws AppException {
 		CommonList<Project> projects = new CommonList<Project>();
 		String url = makeURL(URLs.EXPLOREPOPULARPROJECT,
 				new HashMap<String, Object>() {
 					{
 						put("page", page);
+						put(PRIVATE_TOKEN, getToken(appContext));
 					}
 				});
 		List<Project> list = getHttpRequestor().init(appContext,
@@ -230,12 +238,13 @@ public class ApiClient {
 	 */
 	@SuppressWarnings("serial")
 	public static CommonList<Project> getExploreFeaturedProject(
-			AppContext appContext, final int page) throws AppException {
+			final AppContext appContext, final int page) throws AppException {
 		CommonList<Project> projects = new CommonList<Project>();
 		String url = makeURL(URLs.EXPLOREFEATUREDPROJECT,
 				new HashMap<String, Object>() {
 					{
 						put("page", page);
+						put(PRIVATE_TOKEN, getToken(appContext));
 					}
 				});
 		List<Project> list = getHttpRequestor().init(appContext,
@@ -448,17 +457,17 @@ public class ApiClient {
 	 * @return
 	 * @throws AppException
 	 */
-	public static String pubIssueComment(AppContext appContext, String projectId, String issueId, String body) throws AppException {
+	public static GitNote pubIssueComment(AppContext appContext, String projectId, String issueId, String body) throws AppException {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put(PRIVATE_TOKEN, getToken(appContext));
 		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + projectId
 				+ URLs.URL_SPLITTER + "issues" + URLs.URL_SPLITTER + issueId + URLs.URL_SPLITTER + "notes", params);
-		Log.i("Test", url);
-		return getHttpRequestor().init(appContext,
-				HTTPRequestor.POST_METHOD, url)
+		return getHttpRequestor().init(appContext, HTTPRequestor.POST_METHOD, url)
 				.with("body", body)
-				.getResponseBodyString();
-	} 
+				.to(GitNote.class);
+	}
+	
+	
 
 	/**
 	 * 获得代码文件详情
@@ -552,7 +561,6 @@ public class ApiClient {
 		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + projectId
 				+ URLs.URL_SPLITTER + "repository/commits" + URLs.URL_SPLITTER
 				+ commitId + URLs.URL_SPLITTER + "blob", params);
-		Log.i("Test", url);
 		return getHttpRequestor().init(appContext,
 				HTTPRequestor.GET_METHOD, url).getResponseBodyString();
 	}

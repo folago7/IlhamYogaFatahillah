@@ -23,7 +23,6 @@ import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.HTTPRequestor;
 import net.oschina.gitapp.bean.CodeFile;
 import net.oschina.gitapp.bean.Project;
-import net.oschina.gitapp.common.Base64Util;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.interfaces.OnStatusListener;

@@ -15,7 +15,9 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
 import android.widget.AbsListView;
 import android.widget.Button;
@@ -97,11 +99,14 @@ public class IssueDetailActivity extends BaseActionBarActivity implements
 	private TextWatcher mCommtentWatcher;
 	
 	private ProgressDialog mProgressDialog;
+	
+	private InputMethodManager imm;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_issue_detail);
+		imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
 		init();
 		initHead();
 		mActionBar.setTitle("Issue");
@@ -288,6 +293,7 @@ public class IssueDetailActivity extends BaseActionBarActivity implements
 	
 	// 提交issue的评论
 	private void pubComment() {
+		imm.hideSoftInputFromWindow(mCommentContent.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 		if (StringUtils.isEmpty(mCommentContent.getText().toString())) {
 			return;
 		}
@@ -295,19 +301,19 @@ public class IssueDetailActivity extends BaseActionBarActivity implements
 			mProgressDialog = new ProgressDialog(this);
 			mProgressDialog.setCancelable(true);
 			mProgressDialog.setCanceledOnTouchOutside(false);
-			mProgressDialog.setMessage(getString(R.string.login_tips));
+			mProgressDialog.setMessage("正在提交...");
     	}
 		
-		//异步登录
+		//异步
     	new AsyncTask<Void, Void, Message>() {
 			@Override
 			protected Message doInBackground(Void... params) {
 				Message msg =new Message();
 				AppContext ac = getGitApplication();
 				try {
-					String res = ac.pubIssueComment(mProject.getId(), mIssue.getId(), mCommentContent.getText().toString());
+					GitNote note = ac.pubIssueComment(mProject.getId(), mIssue.getId(), mCommentContent.getText().toString());
 					msg.what = 1;
-					msg.obj = res;
+					msg.obj = note;
 				} catch (AppException e) {
 					e.printStackTrace();
 					msg.what = -1;
@@ -333,12 +339,21 @@ public class IssueDetailActivity extends BaseActionBarActivity implements
 					mProgressDialog.dismiss();
 				}
 				if (msg.what == 1) {
-					UIHelper.ToastMessage(getGitApplication(), (String)msg.obj);
+					UIHelper.ToastMessage(getGitApplication(), "评论成功");
+					success((GitNote) msg.obj);
 				} else {
 					((AppException)(msg.obj)).makeToast(getGitApplication());
 				}
 			}
 		}.execute();
+	}
+	
+	private void success(GitNote gitNote) {
+		mCommentContent.setText("");
+		if (gitNote != null) {
+			mListData.add(gitNote);
+			adapter.notifyDataSetChanged();
+		}
 	}
 
 	// 加载数据
