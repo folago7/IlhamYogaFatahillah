@@ -47,14 +47,14 @@ public abstract class MyBaseAdapter<T> extends BaseAdapter {
 	public int getCount() {
 		return listData.size();
 	}
-
+	
 	@Override
-	public T getItem(int position) {
-		return listData.get(position);
+	public Object getItem(int arg0) {
+		return null;
 	}
-
+	
 	@Override
-	public long getItemId(int position) {
-		return position;
+	public long getItemId(int arg0) {
+		return 0;
 	}
 }

@@ -71,7 +71,8 @@ public class ProjectViewPageFragment extends BaseViewPagerFragment {
 		int id = item.getItemId();
 		switch (id) {
 		case MENU_CREATE_ID:
-			UIHelper.ToastMessage(getGitApplication(), "新增issue");
+			// 新增issue
+			UIHelper.showIssueEditOrCreate(getGitApplication(), mProject, null);
 			break;
 		case MENU_MORE_ID:
 			UIHelper.ToastMessage(getGitApplication(), "更多");

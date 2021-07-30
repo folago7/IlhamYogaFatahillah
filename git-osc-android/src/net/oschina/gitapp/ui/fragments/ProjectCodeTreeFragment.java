@@ -367,7 +367,6 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 						branch.setType(Branch.TYPE_TAG);
 						mBranchList.add(branch);
 					}
-	                
 	            } catch (Exception e) {
 			    	msg.what = -1;
 			    	msg.obj = e;
@@ -403,6 +402,7 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 									if (which == mBranchIndex) return;
 									mBranchIndex = which;
 									mBranch = baArrays[which];
+									mPath = "";
 									loadDatas(mPath, mBranch, ACTION_REFRESH);
 									mBranchName.setText(mBranch);
 								}

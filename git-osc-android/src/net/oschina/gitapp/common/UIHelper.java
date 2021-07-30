@@ -18,6 +18,7 @@ import net.oschina.gitapp.ui.CodeFileDetailActivity;
 import net.oschina.gitapp.ui.CommitDetailActivity;
 import net.oschina.gitapp.ui.CommitFileDetailActivity;
 import net.oschina.gitapp.ui.IssueDetailActivity;
+import net.oschina.gitapp.ui.IssueEditActivity;
 import net.oschina.gitapp.ui.LoginActivity;
 import net.oschina.gitapp.ui.ProjectActivity;
 import net.oschina.gitapp.ui.fragments.ProjectViewPageFragment;
@@ -393,14 +394,30 @@ public class UIHelper {
 	 * 显示issue的详情
 	 * @param context
 	 * @param project
-	 * @param commit
+	 * @param issue
 	 */
-	public static void showIssueDetail(Context context, Project project, Issue commit) {
+	public static void showIssueDetail(Context context, Project project, Issue issue) {
 		Intent intent = new Intent(context, IssueDetailActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
 		Bundle bundle = new Bundle();
 		bundle.putSerializable(Contanst.PROJECT, project);
-		bundle.putSerializable(Contanst.ISSUE, commit);
+		bundle.putSerializable(Contanst.ISSUE, issue);
+		intent.putExtras(bundle);
+		context.startActivity(intent);
+	}
+	
+	/**
+	 * 显示issue的编辑或者新增issue的界面
+	 * @param context
+	 * @param project
+	 * @param issue
+	 */
+	public static void showIssueEditOrCreate(Context context, Project project, Issue issue) {
+		Intent intent = new Intent(context, IssueEditActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		Bundle bundle = new Bundle();
+		bundle.putSerializable(Contanst.PROJECT, project);
+		bundle.putSerializable(Contanst.ISSUE, issue);
 		intent.putExtras(bundle);
 		context.startActivity(intent);
 	}

@@ -9,6 +9,7 @@ import java.io.InvalidClassException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Properties;
@@ -26,6 +27,7 @@ import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.Event;
 import net.oschina.gitapp.bean.GitNote;
 import net.oschina.gitapp.bean.Issue;
+import net.oschina.gitapp.bean.Milestone;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.StringUtils;
@@ -896,4 +898,37 @@ public class AppContext extends Application {
 		return ApiClient.getCommitFileDetail(this, projectId, commitId, filePath);
 	}
 	
+	/**
+	 * 获得项目的参与成员
+	 * @param projectId
+	 * @return
+	 * @throws AppException
+	 */
+	public List<User> getProjectMembers(String projectId) throws AppException {
+		return ApiClient.getProjectMembers(this, projectId);
+	}
+	
+	/**
+	 * 获得项目的里程碑
+	 * @param projectId
+	 * @return
+	 * @throws AppException
+	 */
+	public List<Milestone> getProjectMilestone(String projectId) throws AppException {
+		return ApiClient.getProjectMilestone(this, projectId);
+	}
+	
+	/**
+	 * 创建一个issue
+	 * @param projectId 	项目ID
+	 * @param title			标题 	
+	 * @param description	描述
+	 * @param assignee_id	被指派人的ID
+	 * @param milestone_id	里程碑的ID
+	 * @return
+	 * @throws AppException
+	 */
+	public String pubCreateIssue(String projectId, String title, String description, String assignee_id, String milestone_id) throws AppException {
+		return ApiClient.pubCreateIssue(this, projectId, title, description, assignee_id, milestone_id);
+	}
 }

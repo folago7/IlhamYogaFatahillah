@@ -124,7 +124,7 @@ public class ProjectReadMeFragment extends BaseFragment {
 					if (msg.obj instanceof AppException) {
 						AppException e = (AppException)msg.obj;
 						if (e.getCode() == 404) {
-							UIHelper.ToastMessage(getGitApplication(), "该项目没有介绍信息");
+							getActivity().findViewById(R.id.project_readme_empty).setVisibility(View.VISIBLE);
 						} else {
 							((AppException)msg.obj).makeToast(getGitApplication());
 						}
@@ -142,6 +142,6 @@ public class ProjectReadMeFragment extends BaseFragment {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		return res;
+		return res.replace("/r|/t|/n", "");
 	}
 }

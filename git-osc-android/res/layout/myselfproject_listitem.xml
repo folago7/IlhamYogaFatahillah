@@ -54,6 +54,8 @@
             android:layout_marginTop="8dip"
             android:textColor="@color/listitem_black"
             android:textColorLink="@color/listitem_blue"
+            android:maxLines="3"
+            android:ellipsize="end"
             android:textSize="@dimen/text_size_14" />
 
         <LinearLayout

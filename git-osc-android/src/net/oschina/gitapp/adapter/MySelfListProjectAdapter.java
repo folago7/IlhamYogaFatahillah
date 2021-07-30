@@ -30,6 +30,7 @@ public class MySelfListProjectAdapter extends MyBaseAdapter<Project> {
 	private BitmapManager bmpManager;
 	
 	static class ListItemView {
+		public int index;
 		public ImageView face;
 		public ImageView flag;// 项目标识
 		public TextView project_name;
@@ -45,16 +46,6 @@ public class MySelfListProjectAdapter extends MyBaseAdapter<Project> {
 		super(context, data, resource);
 		this.bmpManager = new BitmapManager(BitmapFactory.decodeResource(
 				context.getResources(), R.drawable.widget_dface_loading));
-	}
-
-	@Override
-	public int getCount() {
-		return listData.size();
-	}
-
-	@Override
-	public long getItemId(int position) {
-		return position;
 	}
 
 	@Override
@@ -82,7 +73,11 @@ public class MySelfListProjectAdapter extends MyBaseAdapter<Project> {
 		}else {
 			listItemView = (ListItemView)convertView.getTag();
 		}
-		
+		initInfo(listItemView, position);
+		return convertView;
+	}
+	
+	private void initInfo(ListItemView listItemView, int position) {
 		Project project = listData.get(position);
 		
 		// 加载项目作者头像
@@ -102,8 +97,8 @@ public class MySelfListProjectAdapter extends MyBaseAdapter<Project> {
 		// 判断项目的类型，显示不同的图标（私有项目、公有项目、fork项目）
 		
 		// 判断是否有项目的介绍
-		String descriptionStr = project.getDescription();
-		if (StringUtils.isEmpty(descriptionStr)) {
+		String descriptionStr = project.getDescription() == null ? "" : project.getDescription();
+		if (descriptionStr == null) {
 			listItemView.description.setVisibility(View.GONE);
 		} else {
 			listItemView.description.setText(descriptionStr);
@@ -119,8 +114,5 @@ public class MySelfListProjectAdapter extends MyBaseAdapter<Project> {
 			listItemView.language.setVisibility(View.GONE);
 			listItemView.languageImage.setVisibility(View.GONE);
 		}
-		
-		return convertView;
 	}
-
 }

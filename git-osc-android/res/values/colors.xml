@@ -62,5 +62,17 @@
     <color name="section_start">#F9F9F9</color>
     <color name="section_end">#E0E0E0</color>
     <color name="section_subtitle">#555555</color>
+    <color name="edit_text_background">#F8F8F8</color>
+    <color name="edit_text_inner">#EDEDED</color>
+    <color name="edit_text_outer">#959595</color>
+    <color name="edit_text_cursor">#A6A6A6</color>
+    <color name="milestone_border">#ABABAB</color>
+    <color name="milestone_opened_start">#BEBEBE</color>
+    <color name="milestone_opened_end">#DCDCDC</color>
+    <color name="milestone_closed_start">#6AA811</color>
+    <color name="milestone_closed_end">#6EB807</color>
+    <color name="inset_background">#F8F8F8</color>
+    <color name="inset_outer">#C7C7C7</color>
+    <color name="inset_inner">#FFFFFF</color>
 
 </resources>

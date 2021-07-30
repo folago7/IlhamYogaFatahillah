@@ -23,6 +23,7 @@ import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.BroadcastController;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.interfaces.*;
+import net.oschina.gitapp.widget.CircleImageView;
 
 /**
  * 导航菜单栏
@@ -40,7 +41,7 @@ public class DrawerNavigation extends Fragment implements OnClickListener {
 	private RelativeLayout mMenu_user_layout;
 	private LinearLayout mMenu_user_info_layout;
 	private LinearLayout mMenu_user_login_tips;
-	private ImageView mUser_info_userface;
+	private CircleImageView mUser_info_userface;
 	private TextView mUser_info_username;
 
 	private LinearLayout mMenu_item_explore;
@@ -122,7 +123,8 @@ public class DrawerNavigation extends Fragment implements OnClickListener {
 				// 加载用户头像
 				String faceUrl = URLs.HTTP + URLs.HOST + URLs.URL_SPLITTER + user.getPortrait();
 				UIHelper.showUserFace(mUser_info_userface, faceUrl);
-
+				mUser_info_userface.setBorderWidth(2);
+				mUser_info_userface.setBorderColor(getResources().getColor(R.color.white));
 				// 其他资料
 				mUser_info_username.setText(user.getName());
 			}
@@ -145,7 +147,7 @@ public class DrawerNavigation extends Fragment implements OnClickListener {
 	private void initView(View view) {
 		mMenu_user_layout = (RelativeLayout) view.findViewById(R.id.menu_user_layout);
 		mMenu_user_info_layout = (LinearLayout) view.findViewById(R.id.menu_user_info_layout);
-		mUser_info_userface = (ImageView) view.findViewById(R.id.menu_user_info_userface);
+		mUser_info_userface = (CircleImageView) view.findViewById(R.id.menu_user_info_userface);
 		mUser_info_username = (TextView) view.findViewById(R.id.menu_user_info_username);
 		mMenu_user_login_tips = (LinearLayout) view.findViewById(R.id.menu_user_info_login_tips_layout);
 

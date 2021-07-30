@@ -17,11 +17,10 @@
             android:paddingBottom="20dip"
             android:background="@drawable/layout_item_selector" >
 
-            <ImageView
+            <net.oschina.gitapp.widget.CircleImageView
                 android:id="@+id/menu_user_info_userface"
                 android:layout_width="72dip"
                 android:layout_height="72dip"
-                android:scaleType="fitCenter"
                 android:src="@drawable/mini_avatar" />
 
             <LinearLayout

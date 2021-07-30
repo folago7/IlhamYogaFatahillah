@@ -1,8 +1,15 @@
 package net.oschina.gitapp.api;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +31,7 @@ import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.Event;
 import net.oschina.gitapp.bean.GitNote;
 import net.oschina.gitapp.bean.Issue;
+import net.oschina.gitapp.bean.Milestone;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.Session;
 import net.oschina.gitapp.bean.User;
@@ -93,7 +101,8 @@ public class ApiClient {
 				url.append('=');
 				// 对参数进行编码
 				try {
-					url.append(URLEncoder.encode(String.valueOf(params.get(name)), "UTF-8"));
+					url.append(URLEncoder.encode(
+							String.valueOf(params.get(name)), "UTF-8"));
 				} catch (UnsupportedEncodingException e) {
 					e.printStackTrace();
 				}
@@ -116,8 +125,7 @@ public class ApiClient {
 		String urlString = URLs.SESSION;
 		Session session = getHttpRequestor()
 				.init(appContext, HTTPRequestor.POST_METHOD, urlString)
-				.with("email", userEmail)
-				.with("password", password)
+				.with("email", userEmail).with("password", password)
 				.to(Session.class);
 		// 保存用户的私有token
 		if (session != null && null != session.get_privateToken()) {
@@ -192,9 +200,8 @@ public class ApiClient {
 						put(PRIVATE_TOKEN, getToken(appContext));
 					}
 				});
-		List<Project> list = getHttpRequestor()
-				.init(appContext, HTTPRequestor.GET_METHOD, url)
-				.getList(Project[].class);
+		List<Project> list = getHttpRequestor().init(appContext,
+				HTTPRequestor.GET_METHOD, url).getList(Project[].class);
 		projects.setList(list);
 		projects.setCount(list.size());
 		projects.setPageSize(list.size());
@@ -421,9 +428,10 @@ public class ApiClient {
 		commits.setPageSize(list.size());
 		return commits;
 	}
-	
+
 	/**
 	 * 获得issue的评论列表
+	 * 
 	 * @param appContext
 	 * @param projectId
 	 * @param noteId
@@ -432,14 +440,17 @@ public class ApiClient {
 	 * @return
 	 * @throws Exception
 	 */
-	public static CommonList<GitNote> getIssueCommentList(AppContext appContext, String projectId, String issueId, int page) throws Exception {
+	public static CommonList<GitNote> getIssueCommentList(
+			AppContext appContext, String projectId, String issueId, int page)
+			throws Exception {
 		CommonList<GitNote> commits = new CommonList<GitNote>();
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put(PRIVATE_TOKEN, getToken(appContext));
 		params.put("page", page);
 		// 拼接url地址
 		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + projectId
-				+ URLs.URL_SPLITTER + "issues" + URLs.URL_SPLITTER + issueId + URLs.URL_SPLITTER + "notes", params);
+				+ URLs.URL_SPLITTER + "issues" + URLs.URL_SPLITTER + issueId
+				+ URLs.URL_SPLITTER + "notes", params);
 		List<GitNote> list = getHttpRequestor().init(appContext,
 				HTTPRequestor.GET_METHOD, url).getList(GitNote[].class);
 		commits.setList(list);
@@ -447,9 +458,10 @@ public class ApiClient {
 		commits.setPageSize(list.size());
 		return commits;
 	}
-	
+
 	/**
 	 * 提交issue的一个评论
+	 * 
 	 * @param appContext
 	 * @param projectId
 	 * @param issueId
@@ -457,17 +469,17 @@ public class ApiClient {
 	 * @return
 	 * @throws AppException
 	 */
-	public static GitNote pubIssueComment(AppContext appContext, String projectId, String issueId, String body) throws AppException {
+	public static GitNote pubIssueComment(AppContext appContext,
+			String projectId, String issueId, String body) throws AppException {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put(PRIVATE_TOKEN, getToken(appContext));
 		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + projectId
-				+ URLs.URL_SPLITTER + "issues" + URLs.URL_SPLITTER + issueId + URLs.URL_SPLITTER + "notes", params);
-		return getHttpRequestor().init(appContext, HTTPRequestor.POST_METHOD, url)
-				.with("body", body)
-				.to(GitNote.class);
+				+ URLs.URL_SPLITTER + "issues" + URLs.URL_SPLITTER + issueId
+				+ URLs.URL_SPLITTER + "notes", params);
+		return getHttpRequestor()
+				.init(appContext, HTTPRequestor.POST_METHOD, url)
+				.with("body", body).to(GitNote.class);
 	}
-	
-	
 
 	/**
 	 * 获得代码文件详情
@@ -519,9 +531,10 @@ public class ApiClient {
 		commits.setPageSize(list.size());
 		return commits;
 	}
-	
+
 	/**
 	 * 获得commit的评论列表
+	 * 
 	 * @param appContext
 	 * @param projectId
 	 * @param commitId
@@ -529,7 +542,9 @@ public class ApiClient {
 	 * @return
 	 * @throws AppException
 	 */
-	public static CommonList<Comment> getCommitCommentList(AppContext appContext, String projectId, String commitId, boolean isRefresh) throws AppException {
+	public static CommonList<Comment> getCommitCommentList(
+			AppContext appContext, String projectId, String commitId,
+			boolean isRefresh) throws AppException {
 		CommonList<Comment> commits = new CommonList<Comment>();
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put(PRIVATE_TOKEN, getToken(appContext));
@@ -544,9 +559,10 @@ public class ApiClient {
 		commits.setPageSize(list.size());
 		return commits;
 	}
-	
+
 	/**
 	 * 通过commits获取代码文件的内容
+	 * 
 	 * @param appContext
 	 * @param projectId
 	 * @param commitId
@@ -554,14 +570,162 @@ public class ApiClient {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String getCommitFileDetail(AppContext appContext, String projectId, String commitId, String filePath) throws Exception {
+	public static String getCommitFileDetail(AppContext appContext,
+			String projectId, String commitId, String filePath)
+			throws Exception {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put(PRIVATE_TOKEN, getToken(appContext));
 		params.put("filepath", filePath);
 		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + projectId
 				+ URLs.URL_SPLITTER + "repository/commits" + URLs.URL_SPLITTER
 				+ commitId + URLs.URL_SPLITTER + "blob", params);
-		return getHttpRequestor().init(appContext,
-				HTTPRequestor.GET_METHOD, url).getResponseBodyString();
+		return getHttpRequestor().init(appContext, HTTPRequestor.GET_METHOD,
+				url).getResponseBodyString();
+	}
+
+	/**
+	 * 加载项目的参与成员
+	 * 
+	 * @param appContext
+	 * @param projectId
+	 * @return
+	 * @throws AppException
+	 */
+	public static List<User> getProjectMembers(AppContext appContext,
+			String projectId) throws AppException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(PRIVATE_TOKEN, getToken(appContext));
+		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + projectId
+				+ URLs.URL_SPLITTER + "members", params);
+		return getHttpRequestor().init(appContext, HTTPRequestor.GET_METHOD,
+				url).getList(User[].class);
+	}
+
+	/**
+	 * 加载项目的里程碑
+	 * 
+	 * @param appContext
+	 * @param projectId
+	 * @return
+	 * @throws AppException
+	 */
+	public static List<Milestone> getProjectMilestone(AppContext appContext,
+			String projectId) throws AppException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(PRIVATE_TOKEN, getToken(appContext));
+		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + projectId
+				+ URLs.URL_SPLITTER + "milestones", params);
+		return getHttpRequestor().init(appContext, HTTPRequestor.GET_METHOD,
+				url).getList(Milestone[].class);
+	}
+
+	/**
+	 * 创建一个issue
+	 * 
+	 * @param appContext
+	 * @param projectId
+	 * @param title
+	 * @param description
+	 * @param assignee_id
+	 * @param milestone_id
+	 * @return
+	 * @throws AppException
+	 */
+	public static String pubCreateIssue(AppContext appContext,
+			String projectId, String title, String description,
+			String assignee_id, String milestone_id) throws AppException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(PRIVATE_TOKEN, getToken(appContext));
+		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + projectId
+				+ URLs.URL_SPLITTER + "issues", params);
+		Log.i("Test", url);
+
+		return getHttpRequestor()
+				.init(appContext, HTTPRequestor.POST_METHOD, url)
+				.with("title", title)
+				.with("description", description)
+				.with("assignee_id", assignee_id)
+				.with("milestone_id", milestone_id).getResponseBodyString();
+
+	}
+
+	/*
+	 * Function : 发送Post请求到服务器 Param : params请求体内容，encode编码格式 Author : 博客园-依旧淡然
+	 */
+	public static String submitPostData(Map<String, String> params,
+			String encode, String url) {
+
+		byte[] data = getRequestData(params, encode).toString().getBytes();// 获得请求体
+
+		try {
+			URL urlstr = new URL(url);
+			HttpURLConnection httpURLConnection = (HttpURLConnection) urlstr
+					.openConnection();
+			httpURLConnection.setConnectTimeout(3000); // 设置连接超时时间
+			httpURLConnection.setDoInput(true); // 打开输入流，以便从服务器获取数据
+			httpURLConnection.setDoOutput(true); // 打开输出流，以便向服务器提交数据
+			httpURLConnection.setRequestMethod("POST"); // 设置以Post方式提交数据
+			httpURLConnection.setUseCaches(false); // 使用Post方式不能使用缓存
+			// 设置请求体的类型是文本类型
+			httpURLConnection.setRequestProperty("Content-Type",
+					"application/x-www-form-urlencoded;charset=utf-8");
+			// 设置请求体的长度
+			httpURLConnection.setRequestProperty("Content-Length",
+					String.valueOf(data.length));
+			// 获得输出流，向服务器写入数据
+			OutputStream outputStream = httpURLConnection.getOutputStream();
+			outputStream.write(data);
+
+			int response = httpURLConnection.getResponseCode(); // 获得服务器的响应码
+			// if(response == HttpURLConnection.HTTP_OK) {
+			InputStream inptStream = httpURLConnection.getInputStream();
+			Log.i("Test", response + "返回码");
+			return response + "";
+			// return dealResponseResult(inptStream); //处理服务器的响应结果
+			// }
+		} catch (IOException e) {
+			e.printStackTrace();
+			Log.i("Test", e.getMessage() + "异常");
+		}
+		return "";
+	}
+
+	/*
+	 * Function : 封装请求体信息 Param : params请求体内容，encode编码格式 Author : 博客园-依旧淡然
+	 */
+	public static StringBuffer getRequestData(Map<String, String> params,
+			String encode) {
+		StringBuffer stringBuffer = new StringBuffer(); // 存储封装好的请求体信息
+		try {
+			for (Map.Entry<String, String> entry : params.entrySet()) {
+				stringBuffer.append(entry.getKey()).append("=")
+						.append(URLEncoder.encode(entry.getValue(), encode))
+						.append("&");
+			}
+			stringBuffer.deleteCharAt(stringBuffer.length() - 1); // 删除最后的一个"&"
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return stringBuffer;
+	}
+
+	/*
+	 * Function : 处理服务器的响应结果（将输入流转化成字符串） Param : inputStream服务器的响应输入流 Author :
+	 * 博客园-依旧淡然
+	 */
+	public static String dealResponseResult(InputStream inputStream) {
+		String resultData = null; // 存储处理结果
+		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+		byte[] data = new byte[1024];
+		int len = 0;
+		try {
+			while ((len = inputStream.read(data)) != -1) {
+				byteArrayOutputStream.write(data, 0, len);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		resultData = new String(byteArrayOutputStream.toByteArray());
+		return resultData;
 	}
 }

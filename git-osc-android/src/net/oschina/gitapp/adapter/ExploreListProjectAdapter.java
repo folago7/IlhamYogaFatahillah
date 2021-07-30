@@ -7,6 +7,7 @@ import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.common.BitmapManager;
 import net.oschina.gitapp.common.StringUtils;
+import net.oschina.gitapp.widget.CircleImageView;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -28,7 +29,7 @@ public class ExploreListProjectAdapter extends MyBaseAdapter<Project> {
 	private BitmapManager bmpManager;
 	
 	static class ListItemView {
-		public ImageView face;//用户头像
+		public CircleImageView face;//用户头像
 		public TextView title;
 		public TextView description;//项目描述
 		public ImageView languageImage;
@@ -54,7 +55,7 @@ public class ExploreListProjectAdapter extends MyBaseAdapter<Project> {
 			listItemView = new ListItemView();
 			
 			//获取控件对象
-			listItemView.face = (ImageView) convertView.findViewById(R.id.exploreproject_listitem_userface);
+			listItemView.face = (CircleImageView) convertView.findViewById(R.id.exploreproject_listitem_userface);
 			listItemView.title = (TextView) convertView.findViewById(R.id.exploreproject_listitem_title);
 			listItemView.description = (TextView) convertView.findViewById(R.id.exploreproject_listitem_description);
 			listItemView.star = (TextView) convertView.findViewById(R.id.exploreproject_listitem_star);

@@ -27,6 +27,7 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.HeadMethod;
@@ -39,6 +40,9 @@ import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.protocol.HTTP;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -199,9 +203,12 @@ public class HTTPRequestor {
 		// 设置 请求超时时间
 		httpMethod.getParams().setSoTimeout(TIMEOUT_SOCKET);
 		httpMethod.setRequestHeader("Host", URLs.HOST);
-		httpMethod.setRequestHeader("Accept-Encoding", "gzip");
+		httpMethod.setRequestHeader("Accept-Encoding", "gzip,deflate,sdch");
+		httpMethod.setRequestHeader("Accept-Language", "zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4");
 		httpMethod.setRequestHeader("Connection","Keep-Alive");
-		httpMethod.setRequestHeader("User-Agent", userAgent);
+		httpMethod.setRequestHeader(HTTP.USER_AGENT, userAgent);
+		//URLEncodedUtils
+		//httpMethod.setRequestHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=utf-8");
 		return httpMethod;
 	}
 	
@@ -400,7 +407,12 @@ public class HTTPRequestor {
 		int i = 0;
         if(_data != null)
         for(String name : _data.keySet()){
-        	parts[i++] = new StringPart(name, String.valueOf(_data.get(name)), UTF_8);
+			try {
+				parts[i++] = new StringPart(name, new String(String.valueOf(_data.get(name)).getBytes(UTF_8), UTF_8), UTF_8);
+				Log.i("Test", "post_key==> "+name+"    value==>" + String.valueOf(_data.get(name)));
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
         }
     	if (_method instanceof PostMethod) {
     		((PostMethod)_method).setRequestEntity(new MultipartRequestEntity(parts,_method.getParams()));

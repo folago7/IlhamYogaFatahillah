@@ -4,14 +4,24 @@ import java.util.Date;
 
 import org.codehaus.jackson.annotate.JsonProperty;
 
+/**
+ * 里程碑实体类
+ * @author 火蚁
+ *
+ */
 @SuppressWarnings("serial")
-public class Milestone extends Entity  {
-
-	public static final String URL = "/milestones";
+public class Milestone extends Entity {
 	
+	@JsonProperty("iid")
 	private int _iid;
+	
+	@JsonProperty("projectId")
 	private int _projectId;
+	
+	@JsonProperty("title")
 	private String _title;
+	
+	@JsonProperty("description")
 	private String _description;
 	
 	@JsonProperty("due_date")
