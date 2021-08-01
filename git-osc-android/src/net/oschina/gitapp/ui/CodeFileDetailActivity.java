@@ -27,6 +27,7 @@ import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.interfaces.OnStatusListener;
 import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
+import net.oschina.gitapp.util.SourceEditor;
 
 /**
  * 代码文件详情
@@ -41,14 +42,22 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 	private final int MENU_REFRESH_ID = 0;
 	private final int MENU_MORE_ID = 1;
 
-	private int mStatus;// 状态
 	private Menu optionsMenu;
+	
 	private WebView mWebView;
+	
+	private SourceEditor editor;
+	
 	private CodeFile mCodeFile;
+	
 	private Project mProject;
+	
 	private String mFileName;
+	
 	private String mPath;
+	
 	private String mRef;
+	
 	private AppContext appContext;
 
 	@Override
@@ -63,21 +72,13 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 		mPath = intent.getStringExtra("path");
 		mRef = intent.getStringExtra("ref");
 		init();
-		setupWebView();
 	}
 
 	private void init() {
 		mActionBar.setTitle(mFileName);
 		mActionBar.setSubtitle(mRef);
 		mWebView = (WebView) findViewById(R.id.code_file_webview);
-	}
-
-	@SuppressLint("SetJavaScriptEnabled")
-	private void setupWebView() {
-		/*mWebView.getSettings().setSupportZoom(true);
-		mWebView.getSettings().setBuiltInZoomControls(true);
-		mWebView.getSettings().setJavaScriptEnabled(true);
-		mWebView.getSettings().setDefaultTextEncodingName(HTTPRequestor.UTF_8);*/
+		editor = new SourceEditor(mWebView);
 	}
 
 	@Override
@@ -162,18 +163,13 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 
 			}
 
-			@SuppressWarnings("unchecked")
 			@Override
 			protected void onPostExecute(Message msg) {
 				if (msg.what == 1 && msg.obj != null) {
 					onStatus(STATUS_LOADED);
-					CodeFile codeFile = (CodeFile) msg.obj;
+					mCodeFile = (CodeFile) msg.obj;
 
-					mWebView.loadDataWithBaseURL(null,
-							getCodeContent(codeFile.getContent()), "text/html",
-							HTTPRequestor.UTF_8, null);
-					TextView v = (TextView) findViewById(R.id.code_file_textview);
-					v.setText(getCodeContent(codeFile.getContent()));
+					editor.setSource(mPath, mCodeFile);
 				} else {
 					onStatus(STATUS_NONE);
 					if (msg.obj instanceof AppException) {
@@ -185,16 +181,5 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 				}
 			}
 		}.execute();
-	}
-
-	private String getCodeContent(String s) {
-		String res = null;
-		try {
-			byte[] buff = s.getBytes(HTTPRequestor.UTF_8);
-			res = new String(Base64.decode(buff, Base64.DEFAULT), HTTPRequestor.UTF_8);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		return res;
 	}
 }

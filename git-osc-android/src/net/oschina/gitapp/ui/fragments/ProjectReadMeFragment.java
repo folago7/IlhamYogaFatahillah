@@ -1,35 +1,24 @@
 package net.oschina.gitapp.ui.fragments;
 
 import java.io.UnsupportedEncodingException;
-import java.util.List;
-
+import static net.oschina.gitapp.common.Contanst.CHARSET_UTF8;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
-import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
-import net.oschina.gitapp.adapter.CommitDiffListAdapter;
-import net.oschina.gitapp.adapter.CommitListCommentdapter;
-import net.oschina.gitapp.adapter.ExploreListProjectAdapter;
 import net.oschina.gitapp.api.HTTPRequestor;
 import net.oschina.gitapp.bean.CodeFile;
-import net.oschina.gitapp.bean.Comment;
-import net.oschina.gitapp.bean.Commit;
-import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.Project;
-import net.oschina.gitapp.bean.MessageData;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.basefragment.BaseFragment;
-import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
+import net.oschina.gitapp.util.EncodingUtils;
 
 /**
  * 项目介绍readmeFragment
@@ -117,9 +106,7 @@ public class ProjectReadMeFragment extends BaseFragment {
 					CodeFile codeFile = (CodeFile) msg.obj;
 					mWebView.setVisibility(View.VISIBLE);
 					mWebView.loadDataWithBaseURL(null,
-							getCodeContent(codeFile), "text/html", HTTPRequestor.UTF_8, null);
-					/*mText.setText(getCodeContent(codeFile));
-					mText.setVisibility(View.VISIBLE);*/
+							UIHelper.WEB_STYLE + getCodeContent(codeFile), "text/html", HTTPRequestor.UTF_8, null);
 				} else {
 					if (msg.obj instanceof AppException) {
 						AppException e = (AppException)msg.obj;
@@ -136,12 +123,12 @@ public class ProjectReadMeFragment extends BaseFragment {
 	
 	private String getCodeContent(CodeFile codeFile) {
 		String res = null;
+		
 		try {
-			byte[] buff = codeFile.getContent().getBytes(HTTPRequestor.UTF_8);
-			res = new String(Base64.decode(buff, 0), HTTPRequestor.UTF_8);
+			res = new String(EncodingUtils.fromBase64(codeFile.getContent()), CHARSET_UTF8);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		return res.replace("/r|/t|/n", "");
+		return res;
 	}
 }

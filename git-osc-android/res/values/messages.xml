@@ -36,6 +36,6 @@
     <string name="msg_login_fail">登录失败</string>
     <string name="msg_login_error">用户未登录 或 密码错误</string>
     
-    <string name="msg_project_readme_empty">该项目暂时没有项目介绍信息</string>
+    <string name="msg_project_readme_empty">该项目暂时没有README.md文件</string>
    
 </resources>

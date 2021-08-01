@@ -1,23 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-    <LinearLayout
+    <WebView
+        android:id="@+id/code_file_webview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:orientation="vertical" >
+        android:visibility="visible" />
+    
+    <ProgressBar 
+        android:id="@+id/code_file_loading"
+        style="@style/ListSpinner"
+        android:layout_centerInParent="true"
+        android:visibility="gone"/>
 
-        <WebView
-            android:id="@+id/code_file_webview"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:visibility="gone" />
-        
-        <TextView 
-            android:id="@+id/code_file_textview"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
-
-</ScrollView>
+</RelativeLayout>

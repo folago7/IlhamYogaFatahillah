@@ -132,13 +132,10 @@ public class CommitDiffListAdapter {
 	}
 	
 	private void showCommitDiffDetail(CommitDiff commitDiff) {
-		
-		if (commitDiff.getType().equalsIgnoreCase(CommitDiff.TYPE_TEXT)) {
-			UIHelper.showCommitDiffFileDetail(context, project, commit, commitDiff);
-		} else if (commitDiff.getType().equalsIgnoreCase(CommitDiff.TYPE_IMAGE)) {
+		if (commitDiff.getType().equalsIgnoreCase(CommitDiff.TYPE_BINARY)) {
 			
 		} else {
-			
+			UIHelper.showCommitDiffFileDetail(context, project, commit, commitDiff);
 		}
 	}
 }

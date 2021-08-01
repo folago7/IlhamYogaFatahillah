@@ -10,7 +10,7 @@
     android:paddingRight="6dip"
     android:paddingTop="8dip" >
 
-    <ImageView
+    <net.oschina.gitapp.widget.CircleImageView
         android:id="@+id/event_listitem_userface"
         style="@style/UserFaceImageStyle" />
 

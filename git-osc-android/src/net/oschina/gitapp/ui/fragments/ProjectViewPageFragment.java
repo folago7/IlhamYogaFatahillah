@@ -37,7 +37,7 @@ public class ProjectViewPageFragment extends BaseViewPagerFragment {
 		String[] title = getResources().getStringArray(R.array.project_title_array);
 		
 		adapter.addTab(title[0], "project_readme", ProjectReadMeFragment.class, args);
-		//adapter.addTab(title[1], "project_commitlist", ProjectCommitListFragment.class, args);
+		adapter.addTab(title[1], "project_commitlist", ProjectCommitListFragment.class, args);
 		adapter.addTab(title[2], "project_codetree", ProjectCodeTreeFragment.class, args);
 		
 		// 是否可以pr

@@ -1,6 +1,7 @@
 package net.oschina.gitapp.ui.fragments;
 
 import java.util.List;
+
 import android.widget.BaseAdapter;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
@@ -8,6 +9,7 @@ import net.oschina.gitapp.adapter.MySelfEventListAdapter;
 import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.Event;
 import net.oschina.gitapp.bean.MessageData;
+import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
 
 /**
@@ -42,5 +44,23 @@ public class MySelfListEventFragment extends BaseSwipeRefreshFragment<Event, Com
 			msg = new MessageData<CommonList<Event>>(e);
 		}
 		return msg;
+	}
+
+	@Override
+	public void onItemClick(int position, Event event) {
+		showEventDetail(event);
+	}
+	
+	private void showEventDetail(Event event) {
+		int action = event.getAction();
+		switch (action) {
+		case Event.EVENT_TYPE_PUSHED:
+			if (!event.getData().getCommits().isEmpty()) {
+				UIHelper.showCommitDetail(getGitApplication(), event.getProject(), event.getData().getCommits().get(0));
+			}
+			break;
+		default:
+			break;
+		}
 	}
 }

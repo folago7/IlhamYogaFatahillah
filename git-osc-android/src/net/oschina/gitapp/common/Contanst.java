@@ -8,6 +8,8 @@ package net.oschina.gitapp.common;
  */
 public class Contanst {
 	
+	public static final String CHARSET_UTF8 = "UTF-8";
+	
 	public static final String PROJECT = "project";
 	
 	public static final String COMMIT = "commit";

@@ -125,7 +125,7 @@ public class CommitFileDetailFragment extends BaseFragment implements
 	private void loadAuthorFace() {
 		new Thread(){
 			public void run() {
-				UIHelper.showUserFace(mCommitAuthorFace, mCommit.getAuthor().getPortrait());
+				//UIHelper.showUserFace(mCommitAuthorFace, mCommit.getAuthor().getPortrait());
 			}
 		}.start();
 	}

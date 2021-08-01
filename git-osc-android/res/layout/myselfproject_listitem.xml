@@ -11,7 +11,7 @@
 
     <!-- 项目作者头像 -->
 
-    <ImageView
+    <net.oschina.gitapp.widget.CircleImageView
         android:id="@+id/myself_project_listitem_userface"
         style="@style/UserFaceImageStyle" />
 

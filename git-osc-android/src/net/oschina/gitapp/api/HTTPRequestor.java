@@ -208,7 +208,7 @@ public class HTTPRequestor {
 		httpMethod.setRequestHeader("Connection","Keep-Alive");
 		httpMethod.setRequestHeader(HTTP.USER_AGENT, userAgent);
 		//URLEncodedUtils
-		//httpMethod.setRequestHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded;charset=utf-8");
+		//httpMethod.setRequestHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded");
 		return httpMethod;
 	}
 	
@@ -407,12 +407,13 @@ public class HTTPRequestor {
 		int i = 0;
         if(_data != null)
         for(String name : _data.keySet()){
-			try {
-				parts[i++] = new StringPart(name, new String(String.valueOf(_data.get(name)).getBytes(UTF_8), UTF_8), UTF_8);
-				Log.i("Test", "post_key==> "+name+"    value==>" + String.valueOf(_data.get(name)));
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
+			
+			parts[i++] = new StringPart(name, String.valueOf(_data.get(name)), UTF_8);
+			((StringPart)parts[i-1]).setTransferEncoding("UTF-8");
+			((StringPart)parts[i-1]).setContentType("application/x-www-form-urlencoded;charset=UTF-8");
+			((StringPart)parts[i-1]).setCharSet("UTF-8");
+			Log.i("Test", "post_key==> "+name+"    value==>" + String.valueOf(_data.get(name)));
+			Log.i("Test", parts[i-1].getName() + "cotent==>" + parts[i-1].getContentType() + parts[i-1].getTransferEncoding());
         }
     	if (_method instanceof PostMethod) {
     		((PostMethod)_method).setRequestEntity(new MultipartRequestEntity(parts,_method.getParams()));

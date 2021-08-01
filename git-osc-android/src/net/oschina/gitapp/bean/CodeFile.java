@@ -13,6 +13,8 @@ import org.codehaus.jackson.annotate.JsonProperty;
 @SuppressWarnings("serial")
 public class CodeFile implements Serializable {
 	
+	public static final String  ENCODING_BASE64 = "base64";
+	
 	@JsonProperty("file_name")
 	private String _file_name;
 	

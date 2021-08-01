@@ -22,6 +22,7 @@ import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.interfaces.OnStatusListener;
 import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
+import net.oschina.gitapp.util.SourceEditor;
 
 /**
  * 代码文件详情
@@ -38,10 +39,17 @@ public class CommitFileDetailActivity extends BaseActionBarActivity implements
 	private final int MENU_MORE_ID = 1;
 
 	private Menu optionsMenu;
+	
 	private WebView mWebView;
+	
+	private SourceEditor mEditor;
+	
 	private Project mProject;
+	
 	private CommitDiff mCommitDiff;
+	
 	private Commit mCommit;
+	
 	private AppContext appContext;
 
 	@Override
@@ -67,6 +75,8 @@ public class CommitFileDetailActivity extends BaseActionBarActivity implements
 		}
 		mActionBar.setSubtitle("提交" + mCommit.getShortId());
 		mWebView = (WebView) findViewById(R.id.code_file_webview);
+
+		mEditor = new SourceEditor(mWebView);
 	}
 
 	@Override
@@ -153,9 +163,7 @@ public class CommitFileDetailActivity extends BaseActionBarActivity implements
 					onStatus(STATUS_LOADED);
 					String body = (String) msg.obj;
 					if (body != null) {
-						mWebView.loadDataWithBaseURL(null, body, "text/html", HTTPRequestor.UTF_8, null);
-						TextView v = (TextView) findViewById(R.id.code_file_textview);
-						v.setText(body);
+						mEditor.setSource(filePath, body, false);
 					}
 				} else {
 					onStatus(STATUS_NONE);

@@ -103,8 +103,13 @@
     <style name="Spinner">
         <item name="android:indeterminate">true</item>
         <item name="android:indeterminateDrawable">@drawable/spinner</item>
-        <item name="android:indeterminateDuration">1500</item>
+        <item name="android:indeterminateDuration">2000</item>
         <item name="android:indeterminateOnly">true</item>
+    </style>
+    
+    <style name="ListSpinner" parent="Spinner">
+        <item name="android:layout_width">60dp</item>
+        <item name="android:layout_height">60dp</item>
     </style>
     
     <style name="EditText" parent="Global">

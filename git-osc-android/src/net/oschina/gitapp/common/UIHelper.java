@@ -80,15 +80,8 @@ public class UIHelper {
 			.compile("\\[{1}([0-9]\\d*)\\]{1}");
 
 	/** 全局web样式 */
-	// 链接样式文件，代码块高亮的处理
-	public final static String linkCss = "<script type=\"text/javascript\" src=\"file:///android_asset/shCore.js\"></script>"
-			+ "<script type=\"text/javascript\" src=\"file:///android_asset/brush.js\"></script>"
-			+ "<link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/shThemeDefault.css\">"
-			+ "<link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/shCore.css\">"
-			+ "<script type=\"text/javascript\">SyntaxHighlighter.all();</script>";
-	public final static String WEB_STYLE = linkCss + "<style>* {font-size:14px;line-height:20px;} p {color:#333;} a {color:#3E62A6;} img {max-width:310px;} "
+	public final static String WEB_STYLE =  "<style>* {font-size:14px;line-height:20px;} p {color:#333;} a {color:#3E62A6;} img {max-width:310px;} "
 			+ "img.alignleft {float:left;max-width:120px;margin:0 10px 5px 0;border:1px solid #ccc;background:#fff;padding:2px;} "
-			+ "pre {font-size:9pt;line-height:12pt;font-family:Courier New,Arial;border:1px solid #ddd;border-left:5px solid #6CE26C;background:#f6f6f6;padding:5px;overflow: auto;} "
 			+ "a.tag {font-size:15px;text-decoration:none;background-color:#bbd6f3;border-bottom:2px solid #3E6D8E;border-right:2px solid #7F9FB6;color:#284a7b;margin:2px 2px 2px 0;padding:2px 4px;white-space:nowrap;}</style>";
 
 	/**
@@ -351,6 +344,7 @@ public class UIHelper {
 	 */
 	public static void showProjectDetail(Context context, Project project) {
 		Intent intent = new Intent(context, ProjectActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		Bundle bundle = new Bundle();
 		bundle.putSerializable(Contanst.PROJECT, project);
 		intent.putExtras(bundle);
@@ -365,6 +359,7 @@ public class UIHelper {
 	 */
 	public static void showCommitDetail(Context context, Project project, Commit commit) {
 		Intent intent = new Intent(context, CommitDetailActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		Bundle bundle = new Bundle();
 		bundle.putSerializable(Contanst.PROJECT, project);
 		bundle.putSerializable(Contanst.COMMIT, commit);
