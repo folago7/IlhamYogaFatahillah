@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
+import static net.oschina.gitapp.common.Contanst.*;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.AppManager;
@@ -14,17 +15,15 @@ import net.oschina.gitapp.bean.CommitDiff;
 import net.oschina.gitapp.bean.Event;
 import net.oschina.gitapp.bean.Issue;
 import net.oschina.gitapp.bean.Project;
-import net.oschina.gitapp.ui.CodeFileDetailActivity;
 import net.oschina.gitapp.ui.CommitDetailActivity;
 import net.oschina.gitapp.ui.CommitFileDetailActivity;
 import net.oschina.gitapp.ui.IssueDetailActivity;
 import net.oschina.gitapp.ui.IssueEditActivity;
 import net.oschina.gitapp.ui.LoginActivity;
 import net.oschina.gitapp.ui.ProjectActivity;
-import net.oschina.gitapp.ui.fragments.ProjectViewPageFragment;
+import net.oschina.gitapp.ui.UserInfoActivity;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -39,7 +38,6 @@ import android.text.SpannableString;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -329,12 +327,43 @@ public class UIHelper {
 	}
 	
 	/**
+	 * 清除app缓存
+	 * 
+	 * @param activity
+	 */
+	public static void clearAppCache(Activity activity) {
+		final AppContext ac = (AppContext) activity.getApplication();
+		final Handler handler = new Handler() {
+			public void handleMessage(Message msg) {
+				if (msg.what == 1) {
+					ToastMessage(ac, "缓存清除成功");
+				} else {
+					ToastMessage(ac, "缓存清除失败");
+				}
+			}
+		};
+		new Thread() {
+			public void run() {
+				Message msg = new Message();
+				try {
+					ac.clearAppCache();
+					msg.what = 1;
+				} catch (Exception e) {
+					e.printStackTrace();
+					msg.what = -1;
+				}
+				handler.sendMessage(msg);
+			}
+		}.start();
+	}
+	
+	/**
 	 * 显示登录的界面
 	 * @param context
 	 */
-	public static void showLoginActivity(Context context) {
+	public static void showLoginActivity(Activity context) {
 		Intent intent = new Intent(context, LoginActivity.class);
-		context.startActivity(intent);
+		context.startActivityForResult(intent, LOGIN_REQUESTCODE);
 	}
 	
 	/**
@@ -414,6 +443,16 @@ public class UIHelper {
 		bundle.putSerializable(Contanst.PROJECT, project);
 		bundle.putSerializable(Contanst.ISSUE, issue);
 		intent.putExtras(bundle);
+		context.startActivity(intent);
+	}
+	
+	/**
+	 * 显示用户信息详情
+	 * @param context
+	 */
+	public static void showUserInfoDetail(Context context) {
+		Intent intent = new Intent(context, UserInfoActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		context.startActivity(intent);
 	}
 }

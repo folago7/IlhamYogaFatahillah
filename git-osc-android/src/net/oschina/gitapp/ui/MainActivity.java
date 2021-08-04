@@ -55,8 +55,7 @@ public class MainActivity extends ActionBarActivity implements
 	static final String FRAGMENTS[] = {
 		ExploreViewPagerFragment.class.getName(),
 		MySelfViewPagerFragment.class.getName(),
-		NoticeViewPagerFragment.class.getName(),
-		SettingViewPagerFragment.class.getName()
+		NoticeViewPagerFragment.class.getName()
 	};
 	
 	static final int TITLES[] = { 
@@ -184,8 +183,9 @@ public class MainActivity extends ActionBarActivity implements
 		if (!mContext.isLogin()) {
 			UIHelper.showLoginActivity(this);
 			return;
+		} else {
+			showMainContent(1);
 		}
-		showMainContent(1);
 	}
 
 	@Override
@@ -195,11 +195,6 @@ public class MainActivity extends ActionBarActivity implements
 			return;
 		}
 		showMainContent(2);
-	}
-
-	@Override
-	public void onClickSetting() {
-		showMainContent(3);
 	}
 
 	@Override

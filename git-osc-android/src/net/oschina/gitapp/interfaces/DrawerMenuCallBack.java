@@ -10,6 +10,5 @@ public interface DrawerMenuCallBack {
 	public void onClickExplore();
 	public void onClickMySelf();
 	public void onClickNotice();
-	public void onClickSetting();
 	public void onClickExit();
 }

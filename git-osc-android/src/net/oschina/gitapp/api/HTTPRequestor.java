@@ -1,6 +1,8 @@
 package net.oschina.gitapp.api;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -35,6 +37,7 @@ import org.apache.commons.httpclient.methods.OptionsMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.PutMethod;
 import org.apache.commons.httpclient.methods.TraceMethod;
+import org.apache.commons.httpclient.methods.multipart.FilePart;
 import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
@@ -50,6 +53,7 @@ import android.util.Log;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.bean.URLs;
+import net.oschina.gitapp.common.UIHelper;
 
 /**
  * gitlabApi网络请求类
@@ -266,7 +270,7 @@ public class HTTPRequestor {
         }
         return this;
     }
-    
+	
     public InputStream getResponseBodyStream() throws AppException {
     	
     	// 设置请求参数
@@ -403,17 +407,24 @@ public class HTTPRequestor {
      * 表单参数处理
      */
     private void submitData(){
-		Part[] parts = new Part[_data.size()];
+    	int length = (_data == null ? 0 : _data.size());
+		Part[] parts = new Part[length];
 		int i = 0;
-        if(_data != null)
-        for(String name : _data.keySet()){
-			
-			parts[i++] = new StringPart(name, String.valueOf(_data.get(name)), UTF_8);
-			((StringPart)parts[i-1]).setTransferEncoding("UTF-8");
-			((StringPart)parts[i-1]).setContentType("application/x-www-form-urlencoded;charset=UTF-8");
-			((StringPart)parts[i-1]).setCharSet("UTF-8");
-			Log.i("Test", "post_key==> "+name+"    value==>" + String.valueOf(_data.get(name)));
-			Log.i("Test", parts[i-1].getName() + "cotent==>" + parts[i-1].getContentType() + parts[i-1].getTransferEncoding());
+        if(_data != null) {
+        	for(String name : _data.keySet()){
+            	Object value = _data.get(name);
+            	if (value instanceof File) {
+            		try {
+            			File file = (File)value;
+						parts[i++] = new FilePart(name, file.getName(), file);
+						Log.i("Test", name + ((File)value).getName() + ">>" + ((File)value).getAbsolutePath());
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					}
+            	} else {
+            		parts[i++] = new StringPart(name, String.valueOf(value), UTF_8);
+            	}
+            }
         }
     	if (_method instanceof PostMethod) {
     		((PostMethod)_method).setRequestEntity(new MultipartRequestEntity(parts,_method.getParams()));

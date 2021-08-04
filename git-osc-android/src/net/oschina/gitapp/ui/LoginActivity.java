@@ -2,6 +2,7 @@ package net.oschina.gitapp.ui;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
@@ -41,7 +42,7 @@ public class LoginActivity extends BaseActionBarActivity
 		setContentView(R.layout.activity_login);
 		init();
 	}
-	
+
 	private void init() {
 		mAccountEditText = (EditTextWithDel) findViewById(R.id.login_account);
 		mPasswordEditText = (EditTextWithDel) findViewById(R.id.login_password);

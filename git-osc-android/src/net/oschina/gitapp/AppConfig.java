@@ -22,28 +22,21 @@ public class AppConfig {
 
 	private final static String APP_CONFIG = "config";
 
-	public final static String TEMP_TWEET = "temp_tweet";
-	public final static String TEMP_TWEET_IMAGE = "temp_tweet_image";
-	public final static String TEMP_MESSAGE = "temp_message";
-	public final static String TEMP_COMMENT = "temp_comment";
-	public final static String TEMP_POST_TITLE = "temp_post_title";
-	public final static String TEMP_POST_CATALOG = "temp_post_catalog";
-	public final static String TEMP_POST_CONTENT = "temp_post_content";
-
 	public final static String CONF_APP_UNIQUEID = "APP_UNIQUEID";
 	public final static String CONF_PRIVATE_TOKEN = "private_token";
-	public final static String CONF_ACCESSTOKEN = "accessToken";
-	public final static String CONF_ACCESSSECRET = "accessSecret";
-	public final static String CONF_EXPIRESIN = "expiresIn";
 	public final static String CONF_LOAD_IMAGE = "perf_loadimage";
-	public final static String CONF_SCROLL = "perf_scroll";
 	public final static String CONF_HTTPS_LOGIN = "perf_httpslogin";
 	public final static String CONF_VOICE = "perf_voice";
 	public final static String CONF_CHECKUP = "perf_checkup";
 
-	public final static String SAVE_IMAGE_PATH = "save_image_path";
-	public final static String DEFAULT_SAVE_IMAGE_PATH = Environment.getExternalStorageDirectory()+ File.separator+ "OSChina"+ File.separator;
-			
+	public final static String DEFAULT_SAVE_IMAGE_PATH = Environment
+			.getExternalStorageDirectory()
+			+ File.separator
+			+ "OSChina"
+			+ File.separator
+			+ "git"
+			+ File.separator;
+
 	private Context mContext;
 	private static AppConfig appConfig;
 
@@ -68,37 +61,14 @@ public class AppConfig {
 	public static boolean isLoadImage(Context context) {
 		return getSharedPreferences(context).getBoolean(CONF_LOAD_IMAGE, true);
 	}
-	
+
 	/**
 	 * 获得用户的token
+	 * 
 	 * @return
 	 */
 	public String getPrivateToken() {
 		return get(CONF_PRIVATE_TOKEN);
-	}
-
-	public void setAccessToken(String accessToken) {
-		set(CONF_ACCESSTOKEN, accessToken);
-	}
-
-	public String getAccessToken() {
-		return get(CONF_ACCESSTOKEN);
-	}
-
-	public void setAccessSecret(String accessSecret) {
-		set(CONF_ACCESSSECRET, accessSecret);
-	}
-
-	public String getAccessSecret() {
-		return get(CONF_ACCESSSECRET);
-	}
-
-	public void setExpiresIn(long expiresIn) {
-		set(CONF_EXPIRESIN, String.valueOf(expiresIn));
-	}
-
-	public long getExpiresIn() {
-		return StringUtils.toLong(get(CONF_EXPIRESIN));
 	}
 
 	public String get(String key) {

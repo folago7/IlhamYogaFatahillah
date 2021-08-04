@@ -1,6 +1,7 @@
 package net.oschina.gitapp.api;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -34,6 +35,7 @@ import net.oschina.gitapp.bean.Issue;
 import net.oschina.gitapp.bean.Milestone;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.Session;
+import net.oschina.gitapp.bean.UpLoadFile;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.common.StringUtils;
@@ -638,7 +640,6 @@ public class ApiClient {
 		params.put(PRIVATE_TOKEN, getToken(appContext));
 		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + projectId
 				+ URLs.URL_SPLITTER + "issues", params);
-		Log.i("Test", url);
 
 		return getHttpRequestor()
 				.init(appContext, HTTPRequestor.POST_METHOD, url)
@@ -647,6 +648,23 @@ public class ApiClient {
 				.with("assignee_id", assignee_id)
 				.with("milestone_id", milestone_id).getResponseBodyString();
 
+	}
+	
+	/**
+	 * 上传文件
+	 * @param appContext
+	 * @param files
+	 * @return
+	 */
+	public static UpLoadFile upLoadFile(AppContext appContext, File file) throws AppException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(PRIVATE_TOKEN, getToken(appContext));
+		String url = makeURL(URLs.UPLOAD, params);
+		Log.i("Test", url);
+		return getHttpRequestor()
+				.init(appContext, HTTPRequestor.POST_METHOD, url)
+				.with("file", file)
+				.to(UpLoadFile.class);
 	}
 
 	/*

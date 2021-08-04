@@ -21,4 +21,6 @@ public class Contanst {
 	public static final String ISSUE = "issue";
 	
 	public static final String COMMENT = "comment";
+	
+	public static final int LOGIN_REQUESTCODE = 6168;
 }

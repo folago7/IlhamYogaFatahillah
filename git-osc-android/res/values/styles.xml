@@ -128,5 +128,35 @@
         <item name="android:singleLine">true</item>
         <item name="android:inputType">text|textAutoCorrect|textCapSentences</item>
     </style>
+    
+    <!-- 个人信息详情线性布局样式  -->
+    <style name="User_info_layout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+    
+    <!-- 个人信息title样式 -->
+    <style name="User_info_text">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:duplicateParentState">true</item>
+        <item name="android:textColor">@color/grayslate</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    
+    <style name="User_info_title" parent="User_info_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textSize">@dimen/text_size_15</item>
+        <item name="android:layout_marginLeft">10dip</item>
+    </style>
+    
+    <style name="User_info_detail_text" parent="User_info_text">
+        <item name="android:layout_width">0dip</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:autoLink">web</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
+    </style>
 
 </resources>

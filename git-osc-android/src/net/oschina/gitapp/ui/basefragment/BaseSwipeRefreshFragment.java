@@ -9,11 +9,11 @@ import net.oschina.gitapp.bean.Entity;
 import net.oschina.gitapp.bean.MessageData;
 import net.oschina.gitapp.bean.PageList;
 import net.oschina.gitapp.common.DataRequestThreadHandler;
-import net.oschina.gitapp.util.L;
 import net.oschina.gitapp.widget.NewDataToast;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,9 +90,6 @@ public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result exte
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mAdapter = getAdapter(mDataList);
-		//初始化数据,只有首发创建时调用，如果因viewpager里划动而销毁，
-		//再次创建只会调用onActivityCreated-->onCreateView-->onViewCreated
-		loadList(1, LISTVIEW_ACTION_INIT);
 	}
 	
 	@Override
@@ -155,6 +152,16 @@ public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result exte
 		}
 	}
 	
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		if (isVisibleToUser) {
+			loadList(1, LISTVIEW_ACTION_INIT);
+		} else {
+			
+		}
+		super.setUserVisibleHint(isVisibleToUser);
+	}
+
 	/** 获取HeaderView*/
 	protected View getHeaderView(LayoutInflater inflater) {
 		return null;
@@ -195,9 +202,6 @@ public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result exte
 	protected void onLoadNextPage() {
 		// 当前pageIndex
 		int pageIndex = mSumData / AppContext.PAGE_SIZE + 1;
-		if(L.Debug) {
-			L.d("加载下一页:" + pageIndex);
-		}
 		loadList(pageIndex, LISTVIEW_ACTION_SCROLL);
 	}
 	

@@ -9,7 +9,6 @@ import java.io.InvalidClassException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Properties;
@@ -29,7 +28,10 @@ import net.oschina.gitapp.bean.GitNote;
 import net.oschina.gitapp.bean.Issue;
 import net.oschina.gitapp.bean.Milestone;
 import net.oschina.gitapp.bean.Project;
+import net.oschina.gitapp.bean.UpLoadFile;
 import net.oschina.gitapp.bean.User;
+import net.oschina.gitapp.common.BroadcastController;
+import net.oschina.gitapp.common.MethodsCompat;
 import net.oschina.gitapp.common.StringUtils;
 import android.app.Application;
 import android.content.Context;
@@ -41,6 +43,7 @@ import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.webkit.CacheManager;
 
 /**
  * 全局应用程序类：用于保存和调用全局应用配置及访问网络数据
@@ -133,6 +136,84 @@ public class AppContext extends Application {
 	}
 	public void removeProperty(String...key){
 		AppConfig.getAppConfig(this).remove(key);
+	}
+	
+	/**
+	 * 是否Https登录
+	 * @return
+	 */
+	public boolean isHttpsLogin()
+	{
+		String perf_httpslogin = getProperty(AppConfig.CONF_HTTPS_LOGIN);
+		//默认是http
+		if(StringUtils.isEmpty(perf_httpslogin))
+			return false;
+		else
+			return StringUtils.toBool(perf_httpslogin);
+	}
+	
+	/**
+	 * 设置是是否Https登录
+	 * @param b
+	 */
+	public void setConfigHttpsLogin(boolean b)
+	{
+		setProperty(AppConfig.CONF_HTTPS_LOGIN, String.valueOf(b));
+	}
+	
+	/**
+	 * 是否加载显示文章图片
+	 * @return
+	 */
+	public boolean isLoadImage()
+	{
+		String perf_loadimage = getProperty(AppConfig.CONF_LOAD_IMAGE);
+		//默认是加载的
+		if(StringUtils.isEmpty(perf_loadimage))
+			return true;
+		else
+			return StringUtils.toBool(perf_loadimage);
+	}
+	
+	/**
+	 * 设置是否加载文章图片
+	 * @param b
+	 */
+	public void setConfigLoadimage(boolean b)
+	{
+		setProperty(AppConfig.CONF_LOAD_IMAGE, String.valueOf(b));
+	}
+	
+	/**
+	 * 设置是否发出提示音
+	 * @param b
+	 */
+	public void setConfigVoice(boolean b)
+	{
+		setProperty(AppConfig.CONF_VOICE, String.valueOf(b));
+	}
+	
+	/**
+	 * 是否启动检查更新
+	 * @return
+	 */
+	public boolean isCheckUp()
+	{
+		String perf_checkup = getProperty(AppConfig.CONF_CHECKUP);
+		//默认是开启
+		if(StringUtils.isEmpty(perf_checkup))
+			return true;
+		else
+			return StringUtils.toBool(perf_checkup);
+	}
+	
+	/**
+	 * 设置启动检查更新
+	 * @param b
+	 */
+	public void setConfigCheckUp(boolean b)
+	{
+		setProperty(AppConfig.CONF_CHECKUP, String.valueOf(b));
 	}
 	
 	/**
@@ -372,7 +453,7 @@ public class AppContext extends Application {
 		user.setBlog(getProperty(PROP_KEY_BLOG));
 		user.setTheme_id(StringUtils.toInt(getProperty(PROP_KEY_THEME_ID), 1));
 		user.setState(getProperty(PROP_KEY_STATE));
-		user.setCreated_at(getProperty(PROP_KEY_STATE));
+		user.setCreated_at(getProperty(PROP_KEY_CREATED_AT));
 		user.setPortrait(getProperty(PROP_KEY_PORTRAIT));
 		user.setIsAdmin(StringUtils.toBool(getProperty(PROP_KEY_IS_ADMIN)));
 		user.setCanCreateGroup(StringUtils.toBool(getProperty(PROP_KEY_CAN_CREATE_GROUP)));
@@ -449,14 +530,76 @@ public class AppContext extends Application {
 	/**
 	 * 用户注销
 	 */
-	public void logout() {
+	public void loginout() {
 		ApiClient.cleanToken();
 		// 清除token
 		cleanToken();
 		this.login = false;
 		this.loginUid = 0;
 		//发送广播通知
-		//BroadcastController.sendUserChangeBroadcase(this);
+		BroadcastController.sendUserChangeBroadcase(this);
+	}
+	
+	/**
+	 * 清除app缓存
+	 */
+	public void clearAppCache()
+	{
+		//清除webview缓存
+		File file = CacheManager.getCacheFileBaseDir();  
+		if (file != null && file.exists() && file.isDirectory()) {  
+		    for (File item : file.listFiles()) {  
+		    	item.delete();  
+		    }  
+		    file.delete();  
+		}  		  
+		deleteDatabase("webview.db");  
+		deleteDatabase("webview.db-shm");  
+		deleteDatabase("webview.db-wal");  
+		deleteDatabase("webviewCache.db");  
+		deleteDatabase("webviewCache.db-shm");  
+		deleteDatabase("webviewCache.db-wal");  
+		//清除数据缓存
+		clearCacheFolder(getFilesDir(),System.currentTimeMillis());
+		clearCacheFolder(getCacheDir(),System.currentTimeMillis());
+		//2.2版本才有将应用缓存转移到sd卡的功能
+		if(isMethodsCompat(android.os.Build.VERSION_CODES.FROYO)){
+			clearCacheFolder(MethodsCompat.getExternalCacheDir(this),System.currentTimeMillis());
+		}
+		//清除编辑器保存的临时内容
+		Properties props = getProperties();
+		for(Object key : props.keySet()) {
+			String _key = key.toString();
+			if(_key.startsWith("temp"))
+				removeProperty(_key);
+		}
+	}
+	
+	/**
+	 * 清除缓存目录
+	 * @param dir 目录
+	 * @param numDays 当前系统时间
+	 * @return
+	 */
+	private int clearCacheFolder(File dir, long curTime) {          
+	    int deletedFiles = 0;         
+	    if (dir!= null && dir.isDirectory()) {             
+	        try {                
+	            for (File child:dir.listFiles()) {    
+	                if (child.isDirectory()) {              
+	                    deletedFiles += clearCacheFolder(child, curTime);          
+	                }  
+	                if (child.lastModified() < curTime) {     
+	                    if (child.delete()) {                   
+	                        deletedFiles++;           
+	                    }    
+	                }    
+	            }             
+	        } catch(Exception e) {       
+	            e.printStackTrace();    
+	        }     
+	    }       
+	    return deletedFiles;     
 	}
 	
 	/**
@@ -931,4 +1074,14 @@ public class AppContext extends Application {
 	public String pubCreateIssue(String projectId, String title, String description, String assignee_id, String milestone_id) throws AppException {
 		return ApiClient.pubCreateIssue(this, projectId, title, description, assignee_id, milestone_id);
 	}
+	
+	/**
+	 * 上传文件
+	 * @param files
+	 * @return
+	 * @throws AppException
+	 */
+	public UpLoadFile upLoad(File file) throws AppException {
+		return ApiClient.upLoadFile(this, file);
+	} 
 }

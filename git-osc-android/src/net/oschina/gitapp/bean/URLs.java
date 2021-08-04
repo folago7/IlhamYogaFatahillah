@@ -43,4 +43,5 @@ public class URLs implements Serializable {
 	public static String PROJECTMEMBER = URL_API_HOST + "members";
 	public static String SESSION = URL_API_HOST + "session";
 	public static String USER = URL_API_HOST + "users";
+	public static String UPLOAD = URL_API_HOST + "upload";
 }

@@ -16,7 +16,6 @@
 
 package net.oschina.gitapp.common;
 
-import net.oschina.gitapp.util.Util;
 import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.os.Looper;
@@ -142,11 +141,7 @@ public class HandlerThread extends Thread {
 	public boolean quitSafely() {
         Looper looper = getLooper();
         if (looper != null) {
-        	if(Util.hasJellyBean_MR2()) {
-        		looper.quitSafely();
-        	} else {
-        		looper.quit();
-        	}
+        	looper.quit();
             return true;
         }
         return false;

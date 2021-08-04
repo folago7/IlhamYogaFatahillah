@@ -103,6 +103,10 @@ public class AppException extends Exception implements UncaughtExceptionHandler{
 			break;
 		case TYPE_FILENOTFOUND:// 文件没有找到
 			Toast.makeText(ctx, R.string.app_run_code_error, Toast.LENGTH_SHORT).show();
+			break;
+		default:
+			Toast.makeText(ctx, "抱歉，发生异常", Toast.LENGTH_SHORT).show();
+			break;
 		}
 	}
 	

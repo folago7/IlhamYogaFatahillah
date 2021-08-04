@@ -1,5 +1,6 @@
 package net.oschina.gitapp.ui.fragments;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
 /**
@@ -13,4 +14,11 @@ public class SettingViewPagerFragment extends Fragment {
     public static SettingViewPagerFragment newInstance() {
         return new SettingViewPagerFragment();
     }
+    
+    @Override
+	public void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		//addPreferencesFromResource(R.xml.preferences);
+	}
 }

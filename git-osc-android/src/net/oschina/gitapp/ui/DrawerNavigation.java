@@ -214,14 +214,16 @@ public class DrawerNavigation extends Fragment implements OnClickListener {
 			break;
 		case R.id.menu_item_myself:
 			onClickMySelf();
-			highlightSelectedItem(v);
+			if (mApplication.isLogin()) {
+				highlightSelectedItem(v);
+			}
 			break;
 		case R.id.menu_item_notice:
 			onClickNotice();
 			highlightSelectedItem(v);
 			break;
 		case R.id.menu_item_setting:
-			onClickSetting();
+			showSettingActivity();
 			break;
 		case R.id.menu_item_exit:
 			onClickExit();
@@ -234,8 +236,13 @@ public class DrawerNavigation extends Fragment implements OnClickListener {
 			Intent intent = new Intent(getActivity(), LoginActivity.class);
 			getActivity().startActivity(intent);
 		} else {
-
+			UIHelper.showUserInfoDetail(getActivity());
 		}
+	}
+	
+	private void showSettingActivity() {
+		Intent intent = new Intent(getActivity(), SettingActivity.class);
+		getActivity().startActivity(intent);
 	}
 
 	private void onClickExplore() {
@@ -253,12 +260,6 @@ public class DrawerNavigation extends Fragment implements OnClickListener {
 	private void onClickNotice() {
 		if (mCallBack != null) {
 			mCallBack.onClickNotice();
-		}
-	}
-
-	private void onClickSetting() {
-		if (mCallBack != null) {
-			mCallBack.onClickSetting();
 		}
 	}
 

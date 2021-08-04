@@ -87,11 +87,11 @@ public class CommitDiffListAdapter {
 		String diff = getCommitFileDiff(commitDiff);
 		
 		// 显示文件的内容
-		/*if (!TextUtils.isEmpty(diff)) {
+		if (!TextUtils.isEmpty(diff)) {
 			file.setText(diff);
 		} else {
 			file.setVisibility(View.GONE);
-		}*/
+		}
 
 		commitGroupView.addView(convertView);
 	}
