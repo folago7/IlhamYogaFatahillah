@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.Project;
@@ -24,8 +25,6 @@ import net.oschina.gitapp.ui.fragments.ProjectViewPageFragment;
  * 更新者：
  */
 public class ProjectActivity extends BaseActionBarActivity {
-	
-	private final int MENU_MORE_ID = 0;
 	
 	private FragmentManager mFragmentManager;
 	
@@ -49,13 +48,4 @@ public class ProjectActivity extends BaseActionBarActivity {
         	ft.replace(R.id.project_content, ProjectViewPageFragment.newInstance(project)).commit();
         }
 	}
-	
-	/*@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuItem moreOption = menu.add(0, MENU_MORE_ID, MENU_MORE_ID, "更多");
-		moreOption.setIcon(R.drawable.abc_ic_menu_moreoverflow_normal_holo_dark);
-		MenuItemCompat.setShowAsAction(moreOption,
-				MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
-		return true;
-	}*/
 }

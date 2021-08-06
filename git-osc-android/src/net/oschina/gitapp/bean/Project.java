@@ -7,8 +7,6 @@ import org.codehaus.jackson.annotate.JsonProperty;
 @SuppressWarnings("serial")
 public class Project extends Entity {
 
-    public static final String URL = "/projects";
-    
     @JsonProperty("name")
     private String _name;
     

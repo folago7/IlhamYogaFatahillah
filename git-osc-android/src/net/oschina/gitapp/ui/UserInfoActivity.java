@@ -25,6 +25,7 @@ import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.UpLoadFile;
 import net.oschina.gitapp.bean.User;
+import net.oschina.gitapp.common.BroadcastController;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.FileUtils;
 import net.oschina.gitapp.common.ImageUtils;
@@ -170,6 +171,7 @@ public class UserInfoActivity extends BaseActionBarActivity implements View.OnCl
 	
 	private void loginOut() {
 		getGitApplication().loginout();
+		BroadcastController.sendUserChangeBroadcase(getGitApplication());
 		this.finish();
 	}
 	

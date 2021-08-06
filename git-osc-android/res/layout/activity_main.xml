@@ -18,5 +18,5 @@
         android:layout_gravity="start"
         android:background="@color/gray"
         android:orientation="vertical" />
-
+    
 </android.support.v4.widget.DrawerLayout>

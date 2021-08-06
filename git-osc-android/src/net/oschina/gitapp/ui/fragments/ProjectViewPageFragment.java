@@ -15,8 +15,8 @@ import net.oschina.gitapp.ui.basefragment.BaseViewPagerFragment;
 
 public class ProjectViewPageFragment extends BaseViewPagerFragment {
 	
-	private final int MENU_MORE_ID = 0;
-	private final int MENU_CREATE_ID = 1;
+	private final int MENU_MORE_ID = 1;
+	private final int MENU_CREATE_ID = 0;
 	
 	private Project mProject;
 	
@@ -59,8 +59,13 @@ public class ProjectViewPageFragment extends BaseViewPagerFragment {
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		MenuItem moreOption = menu.add(0, MENU_MORE_ID, MENU_MORE_ID, "更多");
+		MenuItem createOption = menu.add(0, MENU_CREATE_ID, MENU_CREATE_ID, "创建Issue");
+		createOption.setIcon(R.drawable.action_create);
+		
+		MenuItem moreOption = menu.add(1, MENU_MORE_ID, MENU_MORE_ID, "更多");
 		moreOption.setIcon(R.drawable.abc_ic_menu_moreoverflow_normal_holo_dark);
+		
+		MenuItemCompat.setShowAsAction(createOption, MenuItemCompat.SHOW_AS_ACTION_IF_ROOM);
 		MenuItemCompat.setShowAsAction(moreOption,
 				MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
 	}
@@ -70,12 +75,11 @@ public class ProjectViewPageFragment extends BaseViewPagerFragment {
 
 		int id = item.getItemId();
 		switch (id) {
+		case MENU_MORE_ID:
+			break;
 		case MENU_CREATE_ID:
 			// 新增issue
 			UIHelper.showIssueEditOrCreate(getGitApplication(), mProject, null);
-			break;
-		case MENU_MORE_ID:
-			UIHelper.ToastMessage(getGitApplication(), "更多");
 			break;
 		}
 		return super.onOptionsItemSelected(item);

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <include
+        android:id="@+id/notification_fragment_readed"
+        layout="@layout/notification_fragment_footer" />
+
+    <include
+        android:id="@+id/notification_fragment_empty"
+        layout="@layout/notification_fragment_empty"
+        android:visibility="visible" />
+
+    <ListView
+        android:id="@+id/notification_fragment_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:visibility="gone" />
+
+</RelativeLayout>

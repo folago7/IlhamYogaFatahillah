@@ -21,7 +21,7 @@ import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.interfaces.*;
 import net.oschina.gitapp.ui.fragments.ExploreViewPagerFragment;
 import net.oschina.gitapp.ui.fragments.MySelfViewPagerFragment;
-import net.oschina.gitapp.ui.fragments.NoticeViewPagerFragment;
+import net.oschina.gitapp.ui.fragments.NotificationFragment;
 import net.oschina.gitapp.ui.fragments.SettingViewPagerFragment;
 
 /**
@@ -55,7 +55,7 @@ public class MainActivity extends ActionBarActivity implements
 	static final String FRAGMENTS[] = {
 		ExploreViewPagerFragment.class.getName(),
 		MySelfViewPagerFragment.class.getName(),
-		NoticeViewPagerFragment.class.getName()
+		NotificationFragment.class.getName()
 	};
 	
 	static final int TITLES[] = { 

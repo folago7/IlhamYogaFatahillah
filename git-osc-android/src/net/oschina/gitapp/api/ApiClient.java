@@ -34,6 +34,7 @@ import net.oschina.gitapp.bean.GitNote;
 import net.oschina.gitapp.bean.Issue;
 import net.oschina.gitapp.bean.Milestone;
 import net.oschina.gitapp.bean.Project;
+import net.oschina.gitapp.bean.ProjectNotification;
 import net.oschina.gitapp.bean.Session;
 import net.oschina.gitapp.bean.UpLoadFile;
 import net.oschina.gitapp.bean.User;
@@ -643,28 +644,53 @@ public class ApiClient {
 
 		return getHttpRequestor()
 				.init(appContext, HTTPRequestor.POST_METHOD, url)
-				.with("title", title)
-				.with("description", description)
+				.with("title", title).with("description", description)
 				.with("assignee_id", assignee_id)
 				.with("milestone_id", milestone_id).getResponseBodyString();
 
 	}
-	
+
 	/**
 	 * 上传文件
+	 * 
 	 * @param appContext
 	 * @param files
 	 * @return
 	 */
-	public static UpLoadFile upLoadFile(AppContext appContext, File file) throws AppException {
+	public static UpLoadFile upLoadFile(AppContext appContext, File file)
+			throws AppException {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put(PRIVATE_TOKEN, getToken(appContext));
 		String url = makeURL(URLs.UPLOAD, params);
-		Log.i("Test", url);
 		return getHttpRequestor()
 				.init(appContext, HTTPRequestor.POST_METHOD, url)
-				.with("file", file)
-				.to(UpLoadFile.class);
+				.with("file", file).to(UpLoadFile.class);
+	}
+	
+	/**
+	 * 获得通知
+	 * @param appContext
+	 * @param filter
+	 * @param all
+	 * @param project_id
+	 * @return
+	 * @throws AppException
+	 */
+	public static CommonList<ProjectNotification> getNotification(
+			AppContext appContext, String filter, String all, String project_id)
+			throws AppException {
+		CommonList<ProjectNotification> projectNotifications = new CommonList<ProjectNotification>();
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(PRIVATE_TOKEN, getToken(appContext));
+		params.put(PRIVATE_TOKEN, getToken(appContext));
+		String url = makeURL(URLs.NOTIFICATION, params);
+		List<ProjectNotification> list = getHttpRequestor().
+				init(appContext, HTTPRequestor.POST_METHOD, url)
+				.getList(ProjectNotification[].class);
+		projectNotifications.setList(list);
+		projectNotifications.setCount(list.size());
+		projectNotifications.setPageSize(list.size());
+		return projectNotifications;
 	}
 
 	/*

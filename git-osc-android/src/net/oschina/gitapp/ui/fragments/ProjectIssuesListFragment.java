@@ -37,18 +37,6 @@ public class ProjectIssuesListFragment extends BaseSwipeRefreshFragment<Issue, C
 	
 	private Project mProject;
 	
-	private Menu mOptionMenu;
-	
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		super.onCreateOptionsMenu(menu, inflater);
-		mOptionMenu = menu;
-		MenuItem createOption = mOptionMenu.add(1, MENU_CREATE_ID, MENU_CREATE_ID, "创建");
-		createOption.setIcon(R.drawable.action_create);
-		MenuItemCompat.setShowAsAction(createOption,
-				MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
-	}
-	
 	public static ProjectIssuesListFragment newInstance(Project project) {
 		ProjectIssuesListFragment fragment = new ProjectIssuesListFragment();
 		Bundle args = new Bundle();
