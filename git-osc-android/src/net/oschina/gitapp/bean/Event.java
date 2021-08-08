@@ -50,7 +50,7 @@ public class Event extends Entity {
 	private boolean _public;
 	
 	@JsonProperty("target_id")
-	private int _target_id;
+	private String _target_id;
 	
 	@JsonProperty("target_type")
 	private String _target_type;
@@ -118,10 +118,10 @@ public class Event extends Entity {
 	public void setPublic(boolean _public) {
 		this._public = _public;
 	}
-	public int getTarget_id() {
+	public String getTarget_id() {
 		return _target_id;
 	}
-	public void _setTarget_id(int target_id) {
+	public void _setTarget_id(String target_id) {
 		this._target_id = target_id;
 	}
 	public String getTarget_type() {

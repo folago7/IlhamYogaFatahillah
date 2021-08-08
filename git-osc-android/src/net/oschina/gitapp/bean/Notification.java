@@ -29,10 +29,10 @@ public class Notification extends Entity {
 	private boolean _read;
 	
 	@JsonProperty("target_id")
-	private int _target_id;
+	private String _target_id;
 	
 	@JsonProperty("target_type")
-	private int _target_type;
+	private String _target_type;
 	
 	@JsonProperty("title")
 	private String _title;
@@ -86,19 +86,19 @@ public class Notification extends Entity {
 		this._read = read;
 	}
 
-	public int getTarget_id() {
+	public String getTarget_id() {
 		return _target_id;
 	}
 
-	public void setTarget_id(int target_id) {
+	public void setTarget_id(String target_id) {
 		this._target_id = target_id;
 	}
 
-	public int getTarget_type() {
+	public String getTarget_type() {
 		return _target_type;
 	}
 
-	public void setTarget_type(int target_type) {
+	public void setTarget_type(String target_type) {
 		this._target_type = target_type;
 	}
 

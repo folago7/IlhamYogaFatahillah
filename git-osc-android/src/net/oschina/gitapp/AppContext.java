@@ -29,6 +29,7 @@ import net.oschina.gitapp.bean.Issue;
 import net.oschina.gitapp.bean.Milestone;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.ProjectNotification;
+import net.oschina.gitapp.bean.ProjectNotificationArray;
 import net.oschina.gitapp.bean.UpLoadFile;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.BroadcastController;
@@ -1197,7 +1198,7 @@ public class AppContext extends Application {
 	 * @return
 	 * @throws AppException
 	 */
-	public CommonList<ProjectNotification> getNotification(String filter,
+	public CommonList<ProjectNotificationArray> getNotification(String filter,
 			String all, String project_id) throws AppException {
 		return ApiClient.getNotification(this, filter, all, project_id);
 	}

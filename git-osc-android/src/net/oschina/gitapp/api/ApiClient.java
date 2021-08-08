@@ -35,6 +35,7 @@ import net.oschina.gitapp.bean.Issue;
 import net.oschina.gitapp.bean.Milestone;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.ProjectNotification;
+import net.oschina.gitapp.bean.ProjectNotificationArray;
 import net.oschina.gitapp.bean.Session;
 import net.oschina.gitapp.bean.UpLoadFile;
 import net.oschina.gitapp.bean.User;
@@ -676,17 +677,18 @@ public class ApiClient {
 	 * @return
 	 * @throws AppException
 	 */
-	public static CommonList<ProjectNotification> getNotification(
+	public static CommonList<ProjectNotificationArray> getNotification(
 			AppContext appContext, String filter, String all, String project_id)
 			throws AppException {
-		CommonList<ProjectNotification> projectNotifications = new CommonList<ProjectNotification>();
+		CommonList<ProjectNotificationArray> projectNotifications = new CommonList<ProjectNotificationArray>();
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put(PRIVATE_TOKEN, getToken(appContext));
-		params.put(PRIVATE_TOKEN, getToken(appContext));
+		params.put("filter", filter);
+		params.put("all", all);
 		String url = makeURL(URLs.NOTIFICATION, params);
-		List<ProjectNotification> list = getHttpRequestor().
-				init(appContext, HTTPRequestor.POST_METHOD, url)
-				.getList(ProjectNotification[].class);
+		List<ProjectNotificationArray> list = getHttpRequestor().
+				init(appContext, HTTPRequestor.GET_METHOD, url)
+				.getList(ProjectNotificationArray[].class);
 		projectNotifications.setList(list);
 		projectNotifications.setCount(list.size());
 		projectNotifications.setPageSize(list.size());

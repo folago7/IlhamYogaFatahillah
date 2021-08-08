@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:descendantFocusability="blocksDescendants"
+    android:orientation="horizontal"
+    android:paddingBottom="7dip"
+    android:paddingLeft="6dip"
+    android:paddingRight="6dip"
+    android:paddingTop="8dip" >
+
+    <net.oschina.gitapp.widget.CircleImageView
+        android:id="@+id/notification_listitem_userface"
+        style="@style/UserFaceImageStyle" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="6dip"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/notification_listitem_name"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textColor="@color/listitem_blue"
+                android:textSize="@dimen/text_size_15"
+                android:textStyle="bold" />
+            
+        </LinearLayout>
+        
+        <TextView
+            android:id="@+id/notification_listitem_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dip"
+            android:textColor="@color/listitem_black"
+            android:textColorLink="@color/listitem_blue"
+            android:maxLines="3"
+            android:ellipsize="end"
+            android:textSize="@dimen/text_size_14" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dip"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/notification_listitem_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dip"
+                android:layout_marginRight="10dip"
+                android:textSize="@dimen/text_size_10" />
+            
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

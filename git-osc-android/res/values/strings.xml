@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">开源中国git</string>
+    <string name="app_name">git@osc</string>
     
     <string name="main_menu_login_tips">点击登录</string>
     <string name="fragment_menu_title_explore">发现</string>

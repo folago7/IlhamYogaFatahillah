@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-
+    
     <include
         android:id="@+id/notification_fragment_readed"
         layout="@layout/notification_fragment_footer" />
@@ -10,14 +10,22 @@
     <include
         android:id="@+id/notification_fragment_empty"
         layout="@layout/notification_fragment_empty"
-        android:visibility="visible" />
-
+        android:visibility="gone" />
+    
+    <ProgressBar 
+        android:id="@+id/notification_fragment_loading"
+        android:layout_width="64dip"
+        android:layout_height="64dip"
+        android:layout_centerInParent="true"
+        style="@style/Spinner"/>
+    
     <ListView
         android:id="@+id/notification_fragment_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:visibility="gone" />
-
+        android:layout_above="@id/notification_fragment_readed"
+        android:visibility="visible" />
+    
 </RelativeLayout>

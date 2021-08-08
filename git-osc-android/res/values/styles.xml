@@ -1,10 +1,10 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-	
+
     <style name="Global">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
     </style>
-    
+
     <style name="detail_head_title">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -98,7 +98,7 @@
         <item name="android:layout_marginRight">6.0dip</item>
         <item name="android:background">@drawable/line_bluegray</item>
     </style>
-    
+
     <!-- 加载滚动条样式 -->
     <style name="Spinner">
         <item name="android:indeterminate">true</item>
@@ -106,30 +106,30 @@
         <item name="android:indeterminateDuration">2000</item>
         <item name="android:indeterminateOnly">true</item>
     </style>
-    
+
     <style name="ListSpinner" parent="Spinner">
         <item name="android:layout_width">60dp</item>
         <item name="android:layout_height">60dp</item>
     </style>
-    
+
     <style name="EditText" parent="Global">
         <item name="android:textColor">@color/text</item>
         <item name="android:textSize">14sp</item>
         <item name="android:padding">10dp</item>
         <item name="android:background">@drawable/edit_text_background</item>
     </style>
-    
+
     <style name="FormalMultiLineEditText" parent="EditText">
         <item name="android:gravity">top</item>
         <item name="android:inputType">textMultiLine|textAutoCorrect|textCapSentences</item>
     </style>
-    
+
     <style name="FormalSingleLineEditText" parent="EditText">
         <item name="android:singleLine">true</item>
         <item name="android:inputType">text|textAutoCorrect|textCapSentences</item>
     </style>
-    
-    <!-- 个人信息详情线性布局样式  -->
+
+    <!-- 个人信息详情线性布局样式 -->
     <style name="User_info_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -137,7 +137,7 @@
         <item name="android:focusable">true</item>
         <item name="android:gravity">center_vertical</item>
     </style>
-    
+
     <!-- 个人信息title样式 -->
     <style name="User_info_text">
         <item name="android:layout_height">wrap_content</item>
@@ -145,18 +145,28 @@
         <item name="android:textColor">@color/grayslate</item>
         <item name="android:textStyle">bold</item>
     </style>
-    
+
     <style name="User_info_title" parent="User_info_text">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:textSize">@dimen/text_size_15</item>
         <item name="android:layout_marginLeft">10dip</item>
     </style>
-    
+
     <style name="User_info_detail_text" parent="User_info_text">
         <item name="android:layout_width">0dip</item>
         <item name="android:layout_weight">1</item>
         <item name="android:autoLink">web</item>
         <item name="android:textSize">@dimen/text_size_14</item>
+    </style>
+
+    <!-- 新消息提醒样式 -->
+    <style name="BadgeView_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/widget_count_bg</item>
+        <item name="android:textSize">@dimen/text_size_8</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:gravity">center</item>
     </style>
 
 </resources>

@@ -6,16 +6,19 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import net.oschina.gitapp.bean.URLs;
@@ -23,6 +26,7 @@ import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.BroadcastController;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.interfaces.*;
+import net.oschina.gitapp.widget.BadgeView;
 import net.oschina.gitapp.widget.CircleImageView;
 
 /**
@@ -49,9 +53,13 @@ public class DrawerNavigation extends Fragment implements OnClickListener {
 	private LinearLayout mMenu_item_notice;
 	private LinearLayout mMenu_item_setting;
 	private LinearLayout mMenu_item_exit;
+	
+	private TextView mMenu_item_notice_text;
 
 	private DrawerMenuCallBack mCallBack;
 	private AppContext mApplication;
+	
+	public static BadgeView mNotification_bv;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -142,6 +150,11 @@ public class DrawerNavigation extends Fragment implements OnClickListener {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 	}
+	
+	private void initBadgeView(View view) {
+		mNotification_bv = (BadgeView) view.findViewById(R.id.menu_item_notice_badgeView);
+		mNotification_bv.setVisibility(View.GONE);
+	}
 
 	// 初始化界面控件
 	private void initView(View view) {
@@ -156,7 +169,7 @@ public class DrawerNavigation extends Fragment implements OnClickListener {
 		mMenu_item_notice = (LinearLayout) view.findViewById(R.id.menu_item_notice);
 		mMenu_item_setting = (LinearLayout) view.findViewById(R.id.menu_item_setting);
 		mMenu_item_exit = (LinearLayout) view.findViewById(R.id.menu_item_exit);
-
+		
 		// 绑定点击事件
 		mMenu_user_layout.setOnClickListener(this);
 		mMenu_item_explore.setOnClickListener(this);
@@ -167,6 +180,7 @@ public class DrawerNavigation extends Fragment implements OnClickListener {
 
 		// 高亮发现菜单栏
 		highlightSelectedItem(mMenu_item_explore);
+		initBadgeView(view);
 	}
 
 	private void highlightSelectedItem(View v) {
