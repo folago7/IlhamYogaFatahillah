@@ -59,6 +59,7 @@
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".ui.UserInfoActivity"
+            android:label="个人信息"
             android:launchMode="singleTask" />
         <activity
             android:name=".ui.SettingActivity"

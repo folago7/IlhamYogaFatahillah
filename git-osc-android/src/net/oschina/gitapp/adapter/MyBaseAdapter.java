@@ -20,7 +20,7 @@ public abstract class MyBaseAdapter<T> extends BaseAdapter {
 	protected boolean isLinkViewClick = false;
 	protected Context 					context;//运行上下文
 	protected List<T> 					listData;//数据集合
-	protected LayoutInflater 				listContainer;//视图容器
+	protected LayoutInflater 			listContainer;//视图容器
 	protected int 						itemViewResource;//自定义项视图源id
 
 	/**

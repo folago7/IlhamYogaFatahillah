@@ -17,6 +17,9 @@ public class ProjectNotification extends Entity {
 	@JsonProperty("creator_id")
 	private int _creator_id;
 	
+	@JsonProperty("owner")
+	private User _owner;
+	
 	@JsonProperty("notifications")
 	private List<Notification> _notifications;
 
@@ -42,6 +45,14 @@ public class ProjectNotification extends Entity {
 
 	public void setCreator_id(int creator_id) {
 		this._creator_id = creator_id;
+	}
+
+	public User getOwner() {
+		return _owner;
+	}
+
+	public void setOwner(User owner) {
+		this._owner = owner;
 	}
 
 	public List<Notification> getNotifications() {

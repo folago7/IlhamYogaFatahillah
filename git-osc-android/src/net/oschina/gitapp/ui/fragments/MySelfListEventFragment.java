@@ -48,7 +48,7 @@ public class MySelfListEventFragment extends BaseSwipeRefreshFragment<Event, Com
 
 	@Override
 	public void onItemClick(int position, Event event) {
-		showEventDetail(event);
+		//showEventDetail(event);
 	}
 	
 	private void showEventDetail(Event event) {

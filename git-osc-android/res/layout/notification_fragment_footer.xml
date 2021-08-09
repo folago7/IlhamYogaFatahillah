@@ -4,7 +4,7 @@
     android:layout_height="?attr/actionBarSize"
     android:layout_alignParentBottom="true"
     android:layout_alignParentLeft="true"
-    android:gravity="center_vertical"
+    android:tag="1"
     android:background="@drawable/footer_selector" >
 
     <TextView
@@ -16,4 +16,5 @@
         android:layout_gravity="center"
         android:textColor="@color/actionbar_text"
         android:textSize="15sp" />
+    
 </LinearLayout>
