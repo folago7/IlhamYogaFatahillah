@@ -20,10 +20,13 @@ public class ProjectViewPageFragment extends BaseViewPagerFragment {
 	
 	private Project mProject;
 	
-	public static ProjectViewPageFragment newInstance(Project project) {
+	private int mCurrentItem;
+	
+	public static ProjectViewPageFragment newInstance(Project project, int currentItem) {
 		ProjectViewPageFragment fragment = new ProjectViewPageFragment();
 		Bundle args = new Bundle();
 		args.putSerializable(Contanst.PROJECT, project);
+		args.putInt(Contanst.CURRENTITEM, currentItem);
 		fragment.setArguments(args);
 		return fragment;
 	}
@@ -33,11 +36,12 @@ public class ProjectViewPageFragment extends BaseViewPagerFragment {
 		Bundle args = getArguments();
 		if (args != null) {
 			mProject = (Project) args.getSerializable(Contanst.PROJECT);
+			mCurrentItem = args.getInt(Contanst.CURRENTITEM);
 		}
 		String[] title = getResources().getStringArray(R.array.project_title_array);
 		
 		adapter.addTab(title[0], "project_readme", ProjectReadMeFragment.class, args);
-		adapter.addTab(title[1], "project_commitlist", ProjectCommitListFragment.class, args);
+		//adapter.addTab(title[1], "project_commitlist", ProjectCommitListFragment.class, args);
 		adapter.addTab(title[2], "project_codetree", ProjectCodeTreeFragment.class, args);
 		
 		// 是否可以pr
@@ -55,6 +59,7 @@ public class ProjectViewPageFragment extends BaseViewPagerFragment {
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		setHasOptionsMenu(true);
+		mViewPager.setCurrentItem(mCurrentItem, true);
 	}
 
 	@Override

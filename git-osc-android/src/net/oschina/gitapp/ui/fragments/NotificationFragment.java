@@ -10,8 +10,10 @@ import net.oschina.gitapp.adapter.NotificationListAdapter;
 import net.oschina.gitapp.adapter.NotificationListAdapter1;
 import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.Notification;
+import net.oschina.gitapp.bean.NotificationReadResult;
 import net.oschina.gitapp.bean.ProjectNotification;
 import net.oschina.gitapp.bean.ProjectNotificationArray;
+import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.DrawerNavigation;
 import net.oschina.gitapp.ui.basefragment.BaseFragment;
 import android.os.AsyncTask;
@@ -29,6 +31,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -38,7 +41,7 @@ import android.widget.TextView;
  * @created 2014-07-08
  * @author 火蚁（http://my.oschina.net/LittleDY）
  */
-public class NotificationFragment extends BaseFragment implements OnClickListener {
+public class NotificationFragment extends BaseFragment implements OnClickListener, OnChildClickListener {
 	
 	private final int MENU_REFRESH_ID = 1;
 	
@@ -109,6 +112,8 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
 		mUnReadListView.setAdapter(adapter);
 		mReadedListView.setAdapter(adapter);
 		
+		mUnReadListView.setOnChildClickListener(this);
+		mReadedListView.setOnChildClickListener(this);
 	}
 
 	@Override
@@ -135,6 +140,7 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
 	}
 	
 	private void beforeLoading() {
+		mEmpty.setVisibility(View.GONE);
 		mProgressBar.setVisibility(View.VISIBLE);
 		if (mDefaultAction == ACTION_UNREAD) {
 			
@@ -154,13 +160,24 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
 		if (mDefaultAction == ACTION_UNREAD) {
 			
 			mUnReadListView.setVisibility(View.VISIBLE);
-			mUnReadListView.expandGroup(0);
+			
+			if (mData.size() == 0) {
+				mEmpty.setVisibility(View.VISIBLE);
+			} else {
+				mUnReadListView.expandGroup(0);
+				mEmpty.setVisibility(View.GONE);
+			}
 			
 		} else if (mDefaultAction == ACTION_READED) {
 			
 			mUnReadListView.setVisibility(View.GONE);
 			mReadedListView.setVisibility(View.VISIBLE);
-			mReadedListView.expandGroup(0);
+			if (mData.size() == 0) {
+				mEmpty.setVisibility(View.VISIBLE);
+			} else {
+				mReadedListView.expandGroup(0);
+				mEmpty.setVisibility(View.GONE);
+			}
 		}
 	}
 
@@ -194,19 +211,15 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
 				mData.clear();
 				if (msg.what == 1) {
 					CommonList<ProjectNotificationArray> commonList = (CommonList<ProjectNotificationArray>) msg.obj;
-					for (ProjectNotificationArray pna : commonList.getList()) {
-						mGroupStrings.add(pna.getProject().getOwner().getName() + "/" + pna.getProject().getName());
-						List<Notification> ns = new ArrayList<Notification>();
-						ns.addAll(pna.getProject().getNotifications());
-						mData.add(ns);
-					}
 					
 					if (commonList.getList().size() != 0) {
 						mEmpty.setVisibility(View.GONE);
-						DrawerNavigation.mNotification_bv.setText(mData.size() + "");
-						DrawerNavigation.mNotification_bv.setVisibility(View.VISIBLE);
-					} else {
-						mEmpty.setVisibility(View.VISIBLE);
+						for (ProjectNotificationArray pna : commonList.getList()) {
+							mGroupStrings.add(pna.getProject().getOwner().getName() + "/" + pna.getProject().getName());
+							List<Notification> ns = new ArrayList<Notification>();
+							ns.addAll(pna.getProject().getNotifications());
+							mData.add(ns);
+						}
 					}
 					adapter.notifyDataSetChanged();
 					afterLoading();
@@ -234,5 +247,31 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
 		default:
 			break;
 		}
+	}
+
+	@Override
+	public boolean onChildClick(ExpandableListView parent, View v,
+			int groupPosition, int childPosition, long id) {
+		final Notification notification = adapter.getChild(groupPosition, childPosition);
+		if (notification != null) {
+			// 设置未读通知为已读
+			if (!notification.isRead()) {
+				new Thread(){
+					public void run() {
+						try {
+							mAppContext.setNotificationIsRead(notification.getId());
+						} catch (AppException e) {
+							e.printStackTrace();
+						}
+					}
+				}.start();;
+			}
+			if (notification.getTarget_type().equalsIgnoreCase("Issue")) {
+				UIHelper.showProjectDetail(mAppContext, null, notification.getProject_id(), 2);
+			} else {
+				UIHelper.showProjectDetail(mAppContext, null, notification.getProject_id(), 0);
+			}
+		}
+		return false;
 	}
 }

@@ -41,9 +41,12 @@ public class URLs implements Serializable {
 	public static String EXPLOREFEATUREDPROJECT =PROJECT +URL_SPLITTER +  "featured";
 	public static String PROJECTHOOK = URL_API_HOST + "hooks";
 	public static String PROJECTMEMBER = URL_API_HOST + "members";
-	public static String SESSION = URL_API_HOST + "session";
+	public final static String LOGIN_HTTP = HTTP + HOST + API_VERSION + URL_SPLITTER + "session";
+	public final static String LOGIN_HTTPS = HTTPS + HOST + API_VERSION + URL_SPLITTER + "session";
 	public static String USER = URL_API_HOST + "users";
 	public static String UPLOAD = URL_API_HOST + "upload";
 	// 获得通知
 	public static String NOTIFICATION = URL_API_HOST + "user/notifications";
+	// 设置通知为已读
+	public static String NOTIFICATION_READED = NOTIFICATION + URL_SPLITTER + "readed";
 }

@@ -301,7 +301,6 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 			mSwipeRefreshLayout.setRefreshing(true);
 			// 防止多次重复刷新
 			mSwipeRefreshLayout.setEnabled(false);
-			mSwitch_branch.setVisibility(View.GONE);
 		}
 	}
 
@@ -310,7 +309,6 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 		if (mSwipeRefreshLayout != null) {
 			mSwipeRefreshLayout.setRefreshing(false);
 			mSwipeRefreshLayout.setEnabled(true);
-			mSwitch_branch.setVisibility(View.VISIBLE);
 		}
 	}
 

@@ -47,7 +47,7 @@ public abstract class BaseViewPagerFragment extends BaseFragment{
 
         if (savedInstanceState != null) {
         	int pos = savedInstanceState.getInt("position");
-        	mViewPager.setCurrentItem(pos, false);
+        	mViewPager.setCurrentItem(pos, true);
         }
 	}
 	

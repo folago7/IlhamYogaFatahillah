@@ -1,5 +1,7 @@
 package net.oschina.gitapp;
 
+import static net.oschina.gitapp.api.HTTPRequestor.GET_METHOD;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -9,8 +11,10 @@ import java.io.InvalidClassException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -27,9 +31,11 @@ import net.oschina.gitapp.bean.Event;
 import net.oschina.gitapp.bean.GitNote;
 import net.oschina.gitapp.bean.Issue;
 import net.oschina.gitapp.bean.Milestone;
+import net.oschina.gitapp.bean.NotificationReadResult;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.ProjectNotification;
 import net.oschina.gitapp.bean.ProjectNotificationArray;
+import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.bean.UpLoadFile;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.BroadcastController;
@@ -647,6 +653,16 @@ public class AppContext extends Application {
 		}
 		return deletedFiles;
 	}
+	
+	/**
+	 * 获得一个项目信息
+	 * @param projectId
+	 * @return
+	 * @throws AppException
+	 */
+	public Project getProject(String projectId) throws AppException {
+		return ApiClient.getProject(this, projectId);
+	}
 
 	/**
 	 * 获得最近更新的项目
@@ -1201,5 +1217,16 @@ public class AppContext extends Application {
 	public CommonList<ProjectNotificationArray> getNotification(String filter,
 			String all, String project_id) throws AppException {
 		return ApiClient.getNotification(this, filter, all, project_id);
+	}
+	
+	/**
+	 * 设置通知为已读
+	 * @param appContext
+	 * @param notificationId
+	 * @return
+	 * @throws AppException
+	 */
+	public NotificationReadResult setNotificationIsRead(String notificationId) throws AppException {
+		return ApiClient.setNotificationIsRead(this, notificationId);
 	}
 }

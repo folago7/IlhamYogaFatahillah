@@ -1,5 +1,6 @@
 package net.oschina.gitapp.api;
 
+import static net.oschina.gitapp.api.HTTPRequestor.*;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -20,6 +21,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import android.graphics.Bitmap;
 import android.util.Log;
+import net.oschina.gitapp.AppConfig;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.bean.Branch;
@@ -33,6 +35,8 @@ import net.oschina.gitapp.bean.Event;
 import net.oschina.gitapp.bean.GitNote;
 import net.oschina.gitapp.bean.Issue;
 import net.oschina.gitapp.bean.Milestone;
+import net.oschina.gitapp.bean.Notification;
+import net.oschina.gitapp.bean.NotificationReadResult;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.ProjectNotification;
 import net.oschina.gitapp.bean.ProjectNotificationArray;
@@ -126,7 +130,12 @@ public class ApiClient {
 	 */
 	public static User login(AppContext appContext, String userEmail,
 			String password) throws AppException {
-		String urlString = URLs.SESSION;
+		String urlString = "";
+		if (appContext.isHttpsLogin()) {
+			urlString = URLs.LOGIN_HTTPS;
+		} else {
+			urlString = URLs.LOGIN_HTTP;
+		}
 		Session session = getHttpRequestor()
 				.init(appContext, HTTPRequestor.POST_METHOD, urlString)
 				.with("email", userEmail).with("password", password)
@@ -172,7 +181,7 @@ public class ApiClient {
 	 * @throws AppException
 	 */
 	@SuppressWarnings("serial")
-	public static Project getProject(final AppContext appContext, int projectId)
+	public static Project getProject(final AppContext appContext, String projectId)
 			throws AppException {
 		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + projectId,
 				new HashMap<String, Object>() {
@@ -693,6 +702,21 @@ public class ApiClient {
 		projectNotifications.setCount(list.size());
 		projectNotifications.setPageSize(list.size());
 		return projectNotifications;
+	}
+	
+	/**
+	 * 设置通知为已读
+	 * @param appContext
+	 * @param notificationId
+	 * @return
+	 * @throws AppException
+	 */
+	public static NotificationReadResult setNotificationIsRead(AppContext appContext, String notificationId) throws AppException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(PRIVATE_TOKEN, getToken(appContext));
+		String url = makeURL(URLs.NOTIFICATION_READED + URLs.URL_SPLITTER + notificationId, params);
+		return getHttpRequestor().init(appContext, GET_METHOD, url)
+				.to(NotificationReadResult.class);
 	}
 
 	/*

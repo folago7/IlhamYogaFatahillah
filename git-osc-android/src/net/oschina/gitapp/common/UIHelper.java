@@ -368,14 +368,17 @@ public class UIHelper {
 	
 	/**
 	 * 显示项目的详情
-	 * @param fragment
+	 * @param context
 	 * @param project
+	 * @param projectId
 	 */
-	public static void showProjectDetail(Context context, Project project) {
+	public static void showProjectDetail(Context context, Project project, String projectId, int currentItem) {
 		Intent intent = new Intent(context, ProjectActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		Bundle bundle = new Bundle();
-		bundle.putSerializable(Contanst.PROJECT, project);
+		bundle.putSerializable(PROJECT, project);
+		bundle.putString(PROJECTID, projectId);
+		bundle.putInt(CURRENTITEM, currentItem);
 		intent.putExtras(bundle);
 		context.startActivity(intent);
 	}

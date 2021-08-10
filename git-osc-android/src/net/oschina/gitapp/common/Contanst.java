@@ -12,9 +12,11 @@ public class Contanst {
 	
 	public static final String PROJECT = "project";
 	
+	public static final String PROJECTID = "project_id";
+	
 	public static final String COMMIT = "commit";
 	
-	public static final String COMMITID = "commitID";
+	public static final String COMMITID = "commit_id";
 	
 	public static final String COMMITDIFF = "commitDiff";
 	
@@ -22,5 +24,8 @@ public class Contanst {
 	
 	public static final String COMMENT = "comment";
 	
+	public static final String CURRENTITEM = "currentItem";
+	
 	public static final int LOGIN_REQUESTCODE = 6168;
+	
 }

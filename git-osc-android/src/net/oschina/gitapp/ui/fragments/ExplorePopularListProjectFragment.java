@@ -48,6 +48,6 @@ public class ExplorePopularListProjectFragment extends BaseSwipeRefreshFragment<
 	
 	@Override
 	public void onItemClick(int position, Project project) {
-		UIHelper.showProjectDetail(getActivity(), project);
+		UIHelper.showProjectDetail(getActivity(), project, project.getId(), 0);
 	}
 }
