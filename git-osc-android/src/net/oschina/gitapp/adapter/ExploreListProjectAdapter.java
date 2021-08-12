@@ -85,12 +85,14 @@ public class ExploreListProjectAdapter extends MyBaseAdapter<Project> {
 		
 		// 2.显示相关信息
 		listItemView.title.setText(project.getOwner().getName() + " / " + project.getName());
+		
 		// 判断是否有项目的介绍
+		listItemView.description.setVisibility(View.GONE);
 		String descriptionStr = project.getDescription();
-		if (StringUtils.isEmpty(descriptionStr)) {
-			listItemView.description.setVisibility(View.GONE);
-		} else {
+		if (!StringUtils.isEmpty(descriptionStr)) {
+			
 			listItemView.description.setText(descriptionStr);
+			listItemView.description.setVisibility(View.VISIBLE);
 		}
 			
 		// 显示项目的star、fork、language信息

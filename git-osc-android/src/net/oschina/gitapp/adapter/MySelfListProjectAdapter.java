@@ -97,11 +97,12 @@ public class MySelfListProjectAdapter extends MyBaseAdapter<Project> {
 		// 判断项目的类型，显示不同的图标（私有项目、公有项目、fork项目）
 		
 		// 判断是否有项目的介绍
-		String descriptionStr = project.getDescription() == null ? "" : project.getDescription();
-		if (descriptionStr == null) {
-			listItemView.description.setVisibility(View.GONE);
-		} else {
+		listItemView.description.setVisibility(View.GONE);
+		String descriptionStr = project.getDescription();
+		if (!StringUtils.isEmpty(descriptionStr)) {
+			
 			listItemView.description.setText(descriptionStr);
+			listItemView.description.setVisibility(View.VISIBLE);
 		}
 		
 		// 显示项目的star、fork、language信息

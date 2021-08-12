@@ -1,18 +1,19 @@
 package net.oschina.gitapp.adapter;
 
-import java.util.Date;
 import java.util.List;
 
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.Notification;
-import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.common.BitmapManager;
 import net.oschina.gitapp.common.StringUtils;
 import android.content.Context;
 import android.graphics.BitmapFactory;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,67 +22,130 @@ import android.widget.TextView;
  * @created 2014-07-07
  * @author 火蚁（http://my.oschina.net/LittleDY）
  * 
- * 最后更新：
- * 更新者：
+ * 最后更新：2014-07-08
+ * 更新者：火蚁
+ * 
+ * @reason 改用分类的适配器
  */
-public class NotificationListAdapter extends MyBaseAdapter<Notification> {
+public class NotificationListAdapter extends BaseExpandableListAdapter {
+	
+	private Context 			mContext;
+	
+	private List<List<Notification>>	mData;
+	
+	private List<String>			mGroupStrings;
+	
+	private LayoutInflater 		mInflater;
 	
 	private BitmapManager bmpManager;
 	
-	static class ListItemView {
+	private class GroupViewHolder{
+		public TextView mGroupName;
+		public TextView mGroupCount;
+	} 
+	
+	private class ChildViewHolder {  
 		public ImageView face;
 		public TextView user_name;
 		public TextView title;
-		public TextView date;//日期
-	}
+		public TextView date;//日期 
+    } 
 	
-	public NotificationListAdapter(Context context, List<Notification> data, int resource) {
-		super(context, data, resource);
+	public NotificationListAdapter(Context context, List<List<Notification>> data, List<String> mGroupStrings) {
+		this.mContext = context;
+		this.mData = data;
+		this.mInflater = LayoutInflater.from(mContext);
+		this.mGroupStrings = mGroupStrings;
 		this.bmpManager = new BitmapManager(BitmapFactory.decodeResource(
 				context.getResources(), R.drawable.widget_dface_loading));
 	}
+	
+	@Override
+	public int getGroupCount() {
+		return mData.size();
+	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-		
-		ListItemView  listItemView = null;
-		if (convertView == null) {
-			//获取list_item布局文件的视图
-			convertView = listContainer.inflate(this.itemViewResource, null);
-			
-			listItemView = new ListItemView();
-			//获取控件对象
-			listItemView.face = (ImageView) convertView.findViewById(R.id.notification_listitem_userface);
-			listItemView.user_name = (TextView) convertView.findViewById(R.id.notification_listitem_name);
-			listItemView.title = (TextView) convertView.findViewById(R.id.notification_listitem_title);
-			listItemView.date = (TextView) convertView.findViewById(R.id.notification_listitem_date);
-			
-			//设置控件集到convertView
-			convertView.setTag(listItemView);
-		}else {
-			listItemView = (ListItemView)convertView.getTag();
-		}
-		initInfo(listItemView, position);
-		return convertView;
+	public int getChildrenCount(int groupPosition) {
+		return mData.get(groupPosition).size();
+	}
+
+	@Override
+	public List<Notification> getGroup(int groupPosition) {
+		return mData.get(groupPosition);
+	}
+
+	@Override
+	public Notification getChild(int groupPosition, int childPosition) {
+		return getGroup(groupPosition).get(childPosition);
+	}
+
+	@Override
+	public long getGroupId(int groupPosition) {
+		return groupPosition;
+	}
+
+	@Override
+	public long getChildId(int groupPosition, int childPosition) {
+		return childPosition;
+	}
+
+	@Override
+	public boolean hasStableIds() {
+		return false;
 	}
 	
-	private void initInfo(ListItemView listItemView, int position) {
-		Notification notification = listData.get(position);
-		
-		// 加载项目作者头像
+	// 返回分组的view
+	@Override
+	public View getGroupView(int groupPosition, boolean isExpanded,
+			View convertView, ViewGroup parent) {
+		if (convertView == null) {  
+            convertView = mInflater.inflate(R.layout.group_item_layout, null);  
+        }  
+        GroupViewHolder holder = new GroupViewHolder();  
+        holder.mGroupName = (TextView) convertView  
+                .findViewById(R.id.group_name);  
+        holder.mGroupName.setText(mGroupStrings.get(groupPosition));  
+        holder.mGroupCount = (TextView) convertView  
+                .findViewById(R.id.group_count);  
+        holder.mGroupCount.setText("[" + mData.get(groupPosition).size() + "]");  
+        return convertView; 
+	}
+	
+	@Override
+	public View getChildView(int groupPosition, int childPosition,
+			boolean isLastChild, View convertView, ViewGroup parent) {
+		if (convertView == null) {  
+            convertView = mInflater.inflate(R.layout.notification_listitem, null);  
+        }  
+        ChildViewHolder holder = new ChildViewHolder();
+        
+        holder.face = (ImageView) convertView.findViewById(R.id.notification_listitem_userface);
+        holder.user_name = (TextView) convertView.findViewById(R.id.notification_listitem_name);
+        holder.title = (TextView) convertView.findViewById(R.id.notification_listitem_title);
+        holder.date = (TextView) convertView.findViewById(R.id.notification_listitem_date);
+        
+        Notification notification = getChild(groupPosition, childPosition);
+        
 		String portrait = notification.getUserinfo().getPortrait() == null ? "" : notification.getUserinfo().getPortrait();
 		if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
-			listItemView.face.setImageResource(R.drawable.widget_dface);
+			holder.face.setImageResource(R.drawable.widget_dface);
 		} else {
 			String portraitURL = URLs.HTTP + URLs.HOST + URLs.URL_SPLITTER + notification.getUserinfo().getPortrait();
-			bmpManager.loadBitmap(portraitURL, listItemView.face);
+			bmpManager.loadBitmap(portraitURL, holder.face);
 		}
 		
-		listItemView.user_name.setText(notification.getUserinfo().getName());
+		holder.user_name.setText(notification.getUserinfo().getName());
 		
-		listItemView.title.setText(notification.getTitle());
+		holder.title.setText(notification.getTitle());
 		
-		listItemView.date.setText(StringUtils.friendly_time(notification.getCreated_at()));
-		
+		holder.date.setText(StringUtils.friendly_time(notification.getCreated_at()));
+         
+        return convertView; 
+	}
+
+	@Override
+	public boolean isChildSelectable(int groupPosition, int childPosition) {
+		return true;
 	}
 }

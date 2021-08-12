@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 个人动态列表项布局 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:descendantFocusability="blocksDescendants"
     android:orientation="horizontal"
@@ -15,14 +15,14 @@
         style="@style/UserFaceImageStyle" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="6dip"
         android:orientation="vertical" >
 
         <TextView
             android:id="@+id/event_listitem_username"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
             android:textColor="@color/listitem_gray"
@@ -30,7 +30,7 @@
 
         <TextView
             android:id="@+id/event_listitem_content"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dip"
             android:tag="1"
@@ -40,27 +40,27 @@
 
         <LinearLayout
             android:id="@+id/enent_listitem_commits_list"
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dip"
+            android:background="@drawable/review_bg_blue"
             android:orientation="vertical"
             android:tag="1"
             android:textColor="@color/listitem_black"
             android:textSize="@dimen/text_size_15" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dip"
             android:orientation="horizontal" >
 
             <!-- 来自哪里（android/iphone/windows phone） -->
-
             <TextView
                 android:id="@+id/event_listitem_client"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dip"
-                android:text="来自Android"
                 android:textColor="@color/listitem_gray"
                 android:textSize="@dimen/text_size_10"
                 android:visibility="gone" />

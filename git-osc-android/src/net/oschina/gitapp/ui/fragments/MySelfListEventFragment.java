@@ -48,19 +48,17 @@ public class MySelfListEventFragment extends BaseSwipeRefreshFragment<Event, Com
 
 	@Override
 	public void onItemClick(int position, Event event) {
-		//showEventDetail(event);
+		showEventDetail(event);
 	}
 	
 	private void showEventDetail(Event event) {
-		int action = event.getAction();
-		switch (action) {
-		case Event.EVENT_TYPE_PUSHED:
-			if (!event.getData().getCommits().isEmpty()) {
-				UIHelper.showCommitDetail(getGitApplication(), event.getProject(), event.getData().getCommits().get(0));
-			}
-			break;
-		default:
-			break;
+		
+		if ((event.getAction() == Event.EVENT_TYPE_COMMENTED && event.getTarget_type().equalsIgnoreCase("issue"))
+				|| (event.getAction() == Event.EVENT_TYPE_CREATED && event.getTarget_type().equalsIgnoreCase("issue"))) {
+			event.getProject().setIssuesEnabled(true);
+			UIHelper.showProjectDetail(mApplication, event.getProject(), null, 2);
+		} else {
+			UIHelper.showProjectDetail(mApplication, event.getProject(), null, 0);
 		}
 	}
 }

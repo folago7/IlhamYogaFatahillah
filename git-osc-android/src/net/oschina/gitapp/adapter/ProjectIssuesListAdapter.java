@@ -34,6 +34,7 @@ public class ProjectIssuesListAdapter extends MyBaseAdapter<Issue> {
 	static class ListItemView {
 		public ImageView face;//用户头像
 		public TextView title;
+		public TextView description;
 		public TextView username;
 		public TextView date;
 		public TextView comment_count;// 评论数量
@@ -58,6 +59,7 @@ public class ProjectIssuesListAdapter extends MyBaseAdapter<Issue> {
 			//获取控件对象
 			listItemView.face = (ImageView) convertView.findViewById(R.id.projectissues_listitem_userface);
 			listItemView.title = (TextView) convertView.findViewById(R.id.projectissues_listitem_title);
+			listItemView.description = (TextView) convertView.findViewById(R.id.projectissues_listitem_description);
 			listItemView.username = (TextView) convertView.findViewById(R.id.projectissues_listitem_author);
 			listItemView.date = (TextView) convertView.findViewById(R.id.projectissues_listitem_date);
 			listItemView.comment_count = (TextView) convertView.findViewById(R.id.projectissues_listitem_count);
@@ -85,6 +87,7 @@ public class ProjectIssuesListAdapter extends MyBaseAdapter<Issue> {
 		
 		// 2.显示相关信息
 		listItemView.title.setText(issue.getTitle());
+		listItemView.description.setText(issue.getDescription());
 		listItemView.username.setText(issue.getAuthor() == null ? "" : issue.getAuthor().getName());
 		listItemView.date.setText(StringUtils.friendly_time(issue.getCreatedAt()));
 		

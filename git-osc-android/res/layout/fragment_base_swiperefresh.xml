@@ -1,12 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<net.oschina.gitapp.widget.CBSwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/fragment_swiperefreshlayout"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
+    
+    <ProgressBar 
+        style="@style/ListSpinner"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
 
-    <ListView
-        android:id="@+id/fragment_listview"
+    <net.oschina.gitapp.widget.CBSwipeRefreshLayout
+        android:id="@+id/fragment_swiperefreshlayout"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:scrollingCache="false" />
-</net.oschina.gitapp.widget.CBSwipeRefreshLayout>
+        android:layout_height="fill_parent" >
+
+        <ListView
+            android:id="@+id/fragment_listview"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:paddingLeft="5dip"
+            android:paddingRight="5dip"
+            android:scrollingCache="false" />
+    </net.oschina.gitapp.widget.CBSwipeRefreshLayout>
+
+</FrameLayout>

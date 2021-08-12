@@ -2,27 +2,19 @@ package net.oschina.gitapp.ui.fragments;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.NotificationListAdapter;
-import net.oschina.gitapp.adapter.NotificationListAdapter1;
 import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.Notification;
-import net.oschina.gitapp.bean.NotificationReadResult;
-import net.oschina.gitapp.bean.ProjectNotification;
 import net.oschina.gitapp.bean.ProjectNotificationArray;
 import net.oschina.gitapp.common.UIHelper;
-import net.oschina.gitapp.ui.DrawerNavigation;
 import net.oschina.gitapp.ui.basefragment.BaseFragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
-import android.support.v4.view.MenuCompat;
 import android.support.v4.view.MenuItemCompat;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -32,9 +24,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
-import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 /**
  * 通知页面
@@ -68,7 +58,7 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
 	
 	private AppContext mAppContext;
 	
-	private NotificationListAdapter1 adapter;
+	private NotificationListAdapter adapter;
 	
     public static NotificationFragment newInstance() {
         return new NotificationFragment();
@@ -108,7 +98,7 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
 	private void steupList() {
 		mData = new ArrayList<List<Notification>>();
 		mGroupStrings = new ArrayList<String>();
-		adapter = new NotificationListAdapter1(mAppContext, mData, mGroupStrings);
+		adapter = new NotificationListAdapter(mAppContext, mData, mGroupStrings);
 		mUnReadListView.setAdapter(adapter);
 		mReadedListView.setAdapter(adapter);
 		
