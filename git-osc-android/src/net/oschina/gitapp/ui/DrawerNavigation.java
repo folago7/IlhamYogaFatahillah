@@ -131,8 +131,6 @@ public class DrawerNavigation extends Fragment implements OnClickListener {
 				// 加载用户头像
 				String faceUrl = URLs.HTTP + URLs.HOST + URLs.URL_SPLITTER + user.getPortrait();
 				UIHelper.showUserFace(mUser_info_userface, faceUrl);
-				mUser_info_userface.setBorderWidth(2);
-				mUser_info_userface.setBorderColor(getResources().getColor(R.color.white));
 				// 其他资料
 				mUser_info_username.setText(user.getName());
 			}

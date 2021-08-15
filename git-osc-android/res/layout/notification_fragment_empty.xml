@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:padding="15dip"
         android:textColor="@color/text_description"
-        android:text="没有未读通知！"/>
+        android:text="@string/notification_empty"/>
     
     
 </LinearLayout>

@@ -21,6 +21,7 @@ import net.oschina.gitapp.ui.IssueDetailActivity;
 import net.oschina.gitapp.ui.IssueEditActivity;
 import net.oschina.gitapp.ui.LoginActivity;
 import net.oschina.gitapp.ui.ProjectActivity;
+import net.oschina.gitapp.ui.SearchActivity;
 import net.oschina.gitapp.ui.UserInfoActivity;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -50,28 +51,6 @@ import android.widget.Toast;
  * @created 2012-3-21
  */
 public class UIHelper {
-	private final static String TAG = "UIHelper";
-	
-	public final static int LISTVIEW_ACTION_INIT = 0x01;
-	public final static int LISTVIEW_ACTION_REFRESH = 0x02;
-	public final static int LISTVIEW_ACTION_SCROLL = 0x03;
-	public final static int LISTVIEW_ACTION_CHANGE_CATALOG = 0x04;
-
-	public final static int LISTVIEW_DATA_MORE = 0x01;
-	public final static int LISTVIEW_DATA_LOADING = 0x02;
-	public final static int LISTVIEW_DATA_FULL = 0x03;
-	public final static int LISTVIEW_DATA_EMPTY = 0x04;
-
-	public final static int LISTVIEW_DATATYPE_NEWS = 0x01;
-	public final static int LISTVIEW_DATATYPE_BLOG = 0x02;
-	public final static int LISTVIEW_DATATYPE_POST = 0x03;
-	public final static int LISTVIEW_DATATYPE_TWEET = 0x04;
-	public final static int LISTVIEW_DATATYPE_ACTIVE = 0x05;
-	public final static int LISTVIEW_DATATYPE_MESSAGE = 0x06;
-	public final static int LISTVIEW_DATATYPE_COMMENT = 0x07;
-
-	public final static int REQUEST_CODE_FOR_RESULT = 0x01;
-	public final static int REQUEST_CODE_FOR_REPLY = 0x02;
 
 	/** 表情图片匹配 */
 	private static Pattern facePattern = Pattern
@@ -455,6 +434,16 @@ public class UIHelper {
 	 */
 	public static void showUserInfoDetail(Context context) {
 		Intent intent = new Intent(context, UserInfoActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		context.startActivity(intent);
+	}
+	
+	/**
+	 * 显示搜索界面
+	 * @param context
+	 */
+	public static void showSearch(Context context) {
+		Intent intent = new Intent(context, SearchActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		context.startActivity(intent);
 	}

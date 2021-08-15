@@ -36,8 +36,7 @@ import android.widget.TextView;
  * 说明 下拉刷新界面的基类
  */
 public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result extends PageList<Data>> 
-	extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, OnItemClickListener,
-	AbsListView.OnScrollListener {
+	extends BaseFragment implements SwipeRefreshLayout.OnRefreshListener, OnItemClickListener {
 	
 	//没有状态
 	public static final int LISTVIEW_ACTION_NONE = -1;
@@ -170,7 +169,6 @@ public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result exte
 	/** 初始化ListView*/
 	protected void setupListView() {
 		mListView.setOnItemClickListener(this);
-		mListView.setOnScrollListener(this);
 		mListView.addFooterView(mFooterView);
 		mListView.setAdapter(mAdapter);
 		if(mHeaderView != null) {
@@ -279,6 +277,13 @@ public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result exte
 			long id) {
 		//点击了底部
 		if(view == mFooterView) {
+			//数据已经全部加载，或数据为空时，或正在加载，不处理滚动事件
+			if(mMessageState == MessageData.MESSAGE_STATE_FULL
+					|| mMessageState == MessageData.MESSAGE_STATE_EMPTY
+					|| mState == STATE_LOADING) {
+				return;
+			}
+			onLoadNextPage();
 			return;
 		}
 		//点击了顶部
@@ -305,39 +310,6 @@ public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result exte
 	 * */
 	public Data getData(int position) {
 		return mDataList.get(position);
-	}
-	
-	@Override
-	public void onScrollStateChanged(AbsListView view, int scrollState) {
-		Adapter adapter = view.getAdapter();
-		if(adapter == null || adapter.getCount() == 0) {
-			return;
-		}
-		//数据已经全部加载，或数据为空时，或正在加载，不处理滚动事件
-		if(mMessageState == MessageData.MESSAGE_STATE_FULL
-				|| mMessageState == MessageData.MESSAGE_STATE_EMPTY
-				|| mState == STATE_LOADING) {
-			return;
-		}
-		// 判断是否滚动到底部
-		boolean scrollEnd = false;
-		try {
-			if (view.getPositionForView(mFooterView) == view
-					.getLastVisiblePosition())
-				scrollEnd = true;
-		} catch (Exception e) {
-			scrollEnd = false;
-		}
-		
-		if (scrollEnd) {
-			onLoadNextPage();
-		}
-	}
-
-	@Override
-	public void onScroll(AbsListView view, int firstVisibleItem,
-			int visibleItemCount, int totalItemCount) {
-		
 	}
 	
 	// 加载数据

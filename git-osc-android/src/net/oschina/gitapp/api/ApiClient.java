@@ -274,6 +274,22 @@ public class ApiClient {
 		projects.setPageSize(list.size());
 		return projects;
 	}
+	
+	/**
+	 * 获得查询项目的结果
+	 * @param appContext
+	 * @param page
+	 * @return
+	 * @throws AppException
+	 */
+	public static List<Project> getSearcheProject(AppContext appContext, int page) throws AppException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(PRIVATE_TOKEN, getToken(appContext));
+		params.put("page", page);
+		String url = makeURL(URLs.EXPLOREFEATUREDPROJECT, params);
+		return getHttpRequestor().init(appContext, GET_METHOD, url)
+				.getList(Project[].class);
+	}
 
 	/**
 	 * 获得个人动态列表

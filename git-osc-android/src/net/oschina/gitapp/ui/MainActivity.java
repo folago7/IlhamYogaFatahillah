@@ -8,11 +8,14 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.SearchView;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,7 +25,6 @@ import net.oschina.gitapp.interfaces.*;
 import net.oschina.gitapp.ui.fragments.ExploreViewPagerFragment;
 import net.oschina.gitapp.ui.fragments.MySelfViewPagerFragment;
 import net.oschina.gitapp.ui.fragments.NotificationFragment;
-import net.oschina.gitapp.ui.fragments.SettingViewPagerFragment;
 
 /**
  * 程序主界面
@@ -35,6 +37,8 @@ import net.oschina.gitapp.ui.fragments.SettingViewPagerFragment;
  */
 public class MainActivity extends ActionBarActivity implements
 		DrawerMenuCallBack {
+	
+	private final int MENU_SEARCH_ID = 6186;
 
 	static final String DRAWER_MENU_TAG = "drawer_menu";
 	static final String DRAWER_CONTENT_TAG = "drawer_content";
@@ -75,13 +79,13 @@ public class MainActivity extends ActionBarActivity implements
 	private String mCurrentContentTag;
 	private ActionBar mActionBar;
 	private AppContext mContext;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		initView(savedInstanceState);
 		mContext = (AppContext) getApplicationContext();
+		initView(savedInstanceState);
 	}
 
 	private void initView(Bundle savedInstanceState) {
@@ -113,6 +117,7 @@ public class MainActivity extends ActionBarActivity implements
 			mActionBar.setTitle(TITLES[0]);
 			mCurrentContentTag = CONTENT_TAG_EXPLORE;
 		}
+		
 	}
 
 	@Override
@@ -129,12 +134,18 @@ public class MainActivity extends ActionBarActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
+		MenuItem search = menu.add(MENU_SEARCH_ID, MENU_SEARCH_ID, MENU_SEARCH_ID, "查询项目");
+		search.setIcon(R.drawable.abc_ic_search);
+		MenuItemCompat.setShowAsAction(search, MenuItemCompat.SHOW_AS_ACTION_IF_ROOM);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		if (item.getItemId() == MENU_SEARCH_ID) {
+			UIHelper.showSearch(mContext);
+			return true;
+		}
 		return mDrawerToggle.onOptionsItemSelected(item)
 				|| super.onOptionsItemSelected(item);
 
@@ -223,4 +234,6 @@ public class MainActivity extends ActionBarActivity implements
 			mDrawerToggle.onDrawerStateChanged(newState);
 		}
 	}
+	
+	
 }

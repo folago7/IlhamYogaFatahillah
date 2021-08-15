@@ -758,6 +758,16 @@ public class AppContext extends Application {
 		}
 		return list;
 	}
+	
+	/**
+	 * 获得查询项目的结果
+	 * @param page
+	 * @return
+	 * @throws AppException
+	 */
+	public List<Project> getSearcheProject(int page) throws AppException {
+		return ApiClient.getSearcheProject(this, page);
+	}
 
 	/**
 	 * 获得个人动态列表
