@@ -1,11 +1,13 @@
 package net.oschina.gitapp.adapter;
 
 import java.util.List;
+
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.Commit;
 import net.oschina.gitapp.bean.Event;
 import net.oschina.gitapp.bean.Note;
 import net.oschina.gitapp.bean.URLs;
+import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.BitmapManager;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
@@ -13,6 +15,7 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -71,7 +74,7 @@ public class MySelfEventListAdapter extends MyBaseAdapter<Event> {
 		return convertView;
 	}
 	
-	private void displayContent(ListItemView listItemView, Event event) {
+	private void displayContent(ListItemView listItemView, final Event event) {
 		
 		// 1.加载项目作者头像
 		String portrait = event.getAuthor().getPortrait() == null ? "" : event.getAuthor().getPortrait();
@@ -81,6 +84,18 @@ public class MySelfEventListAdapter extends MyBaseAdapter<Event> {
 			String portraitURL = URLs.HTTP + URLs.HOST + URLs.URL_SPLITTER + portrait;
 			bmpManager.loadBitmap(portraitURL, listItemView.face);
 		}
+		
+		listItemView.face.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				User user = event.getAuthor();
+				if (user == null) {
+					return;
+				}
+				UIHelper.showUserInfoDetail(context, user);
+			}
+		});
 		
 		// 2.显示相关信息
 		listItemView.user_name.setText(UIHelper.parseEventTitle(event.getAuthor().getName(), 

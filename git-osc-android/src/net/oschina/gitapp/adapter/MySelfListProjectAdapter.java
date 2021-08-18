@@ -8,12 +8,15 @@ import java.util.logging.SimpleFormatter;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.URLs;
+import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.BitmapManager;
 import net.oschina.gitapp.common.StringUtils;
+import net.oschina.gitapp.common.UIHelper;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -78,7 +81,7 @@ public class MySelfListProjectAdapter extends MyBaseAdapter<Project> {
 	}
 	
 	private void initInfo(ListItemView listItemView, int position) {
-		Project project = listData.get(position);
+		final Project project = listData.get(position);
 		
 		// 加载项目作者头像
 		String portrait = project.getOwner().getPortrait() == null ? "" : project.getOwner().getPortrait();
@@ -89,6 +92,18 @@ public class MySelfListProjectAdapter extends MyBaseAdapter<Project> {
 			bmpManager.loadBitmap(portraitURL, listItemView.face);
 		}
 		
+		listItemView.face.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				User user = project.getOwner();
+				if (user == null) {
+					return;
+				}
+				UIHelper.showUserInfoDetail(context, user);
+			}
+		});
+		
 		listItemView.project_name.setText(project.getOwner().getName() + " / " + project.getName());
 		
 		Date last_push_at = project.getLast_push_at() != null ? project.getLast_push_at() : project.getCreatedAt();
@@ -97,12 +112,11 @@ public class MySelfListProjectAdapter extends MyBaseAdapter<Project> {
 		// 判断项目的类型，显示不同的图标（私有项目、公有项目、fork项目）
 		
 		// 判断是否有项目的介绍
-		listItemView.description.setVisibility(View.GONE);
 		String descriptionStr = project.getDescription();
 		if (!StringUtils.isEmpty(descriptionStr)) {
-			
 			listItemView.description.setText(descriptionStr);
-			listItemView.description.setVisibility(View.VISIBLE);
+		} else {
+			listItemView.description.setText(R.string.msg_project_empty_description);
 		}
 		
 		// 显示项目的star、fork、language信息

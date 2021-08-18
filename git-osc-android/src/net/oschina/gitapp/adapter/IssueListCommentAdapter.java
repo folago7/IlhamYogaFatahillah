@@ -7,13 +7,16 @@ import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.GitNote;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.URLs;
+import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.BitmapManager;
 import net.oschina.gitapp.common.StringUtils;
+import net.oschina.gitapp.common.UIHelper;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -64,7 +67,7 @@ public class IssueListCommentAdapter extends MyBaseAdapter<GitNote> {
 			listItemView = (ListItemView)convertView.getTag();
 		}
 		
-		GitNote note = listData.get(position);
+		final GitNote note = listData.get(position);
 		
 		// 1.加载项目作者头像
 		String portrait = note.getAuthor().getPortrait() == null ? "" : note.getAuthor().getPortrait();
@@ -74,9 +77,17 @@ public class IssueListCommentAdapter extends MyBaseAdapter<GitNote> {
 			String portraitURL = URLs.HTTP + URLs.HOST + URLs.URL_SPLITTER + note.getAuthor().getPortrait();
 			bmpManager.loadBitmap(portraitURL, listItemView.face);
 		}
-		/*if (faceClickEnable) {
-			listItemView.face.setOnClickListener(faceClickListener);
-		}*/
+		listItemView.face.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				User user = note.getAuthor();
+				if (user == null) {
+					return;
+				}
+				UIHelper.showUserInfoDetail(context, user);
+			}
+		});
 		
 		// 2.显示相关信息
 		listItemView.name.setText(note.getAuthor().getName());

@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.http.util.EncodingUtils;
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -286,12 +287,12 @@ public class ApiClient {
 	 * @return
 	 * @throws AppException
 	 */
+	@SuppressWarnings("deprecation")
 	public static List<Project> getSearcheProject(AppContext appContext, String query, int page) throws AppException {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put(PRIVATE_TOKEN, getToken(appContext));
 		params.put("page", page);
-		String url = makeURL(URLs.SEARCHPROJECT + URLs.URL_SPLITTER + query, params);
-		Log.i("Test", url);
+		String url = makeURL(URLs.SEARCHPROJECT + URLs.URL_SPLITTER + URLEncoder.encode(query), params);
 		return getHttpRequestor().init(appContext, GET_METHOD, url)
 				.getList(Project[].class);
 	}

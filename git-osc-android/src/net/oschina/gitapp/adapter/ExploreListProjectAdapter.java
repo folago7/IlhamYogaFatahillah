@@ -31,18 +31,6 @@ public class ExploreListProjectAdapter extends MyBaseAdapter<Project> {
 	
 	private BitmapManager bmpManager;
 	
-	private OnClickListener faceClickListener = new OnClickListener() {
-		
-		@Override
-		public void onClick(View v) {
-			User user = (User)v.getTag();
-			if (user == null) {
-				return;
-			}
-			UIHelper.showUserInfoDetail(context, user);
-		}
-	};
-	
 	static class ListItemView {
 		public CircleImageView face;//用户头像
 		public TextView title;
@@ -84,7 +72,7 @@ public class ExploreListProjectAdapter extends MyBaseAdapter<Project> {
 			listItemView = (ListItemView)convertView.getTag();
 		}
 		
-		Project project = listData.get(position);
+		final Project project = listData.get(position);
 		
 		// 1.加载项目作者头像
 		String portrait = project.getOwner().getPortrait() == null ? "" : project.getOwner().getPortrait();
@@ -94,19 +82,27 @@ public class ExploreListProjectAdapter extends MyBaseAdapter<Project> {
 			String portraitURL = URLs.HTTP + URLs.HOST + URLs.URL_SPLITTER + project.getOwner().getPortrait();
 			bmpManager.loadBitmap(portraitURL, listItemView.face);
 		}
-		listItemView.face.setTag(project.getOwner());
-		listItemView.face.setOnClickListener(faceClickListener);
+		listItemView.face.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				User user = project.getOwner();
+				if (user == null) {
+					return;
+				}
+				UIHelper.showUserInfoDetail(context, user);
+			}
+		});
 		
 		// 2.显示相关信息
 		listItemView.title.setText(project.getOwner().getName() + " / " + project.getName());
 		
 		// 判断是否有项目的介绍
-		listItemView.description.setVisibility(View.GONE);
 		String descriptionStr = project.getDescription();
 		if (!StringUtils.isEmpty(descriptionStr)) {
-			
 			listItemView.description.setText(descriptionStr);
-			listItemView.description.setVisibility(View.VISIBLE);
+		} else {
+			listItemView.description.setText(R.string.msg_project_empty_description);
 		}
 			
 		// 显示项目的star、fork、language信息

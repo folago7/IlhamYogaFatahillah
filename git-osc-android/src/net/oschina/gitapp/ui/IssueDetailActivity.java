@@ -196,7 +196,7 @@ public class IssueDetailActivity extends BaseActionBarActivity implements
 		mList.addHeaderView(mHeadView);
 		mList.addFooterView(mListFooter);
 		adapter = new IssueListCommentAdapter(getGitApplication(), mListData,
-				R.layout.issue_commtent_listitem);
+				R.layout.activity_issue_commtent_listitem);
 		mList.setAdapter(adapter);
 		mList.setVisibility(View.VISIBLE);
 	}

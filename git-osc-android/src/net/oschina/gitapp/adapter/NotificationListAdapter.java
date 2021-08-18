@@ -5,14 +5,17 @@ import java.util.List;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.Notification;
 import net.oschina.gitapp.bean.URLs;
+import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.BitmapManager;
 import net.oschina.gitapp.common.StringUtils;
+import net.oschina.gitapp.common.UIHelper;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -125,7 +128,7 @@ public class NotificationListAdapter extends BaseExpandableListAdapter {
         holder.title = (TextView) convertView.findViewById(R.id.notification_listitem_title);
         holder.date = (TextView) convertView.findViewById(R.id.notification_listitem_date);
         
-        Notification notification = getChild(groupPosition, childPosition);
+        final Notification notification = getChild(groupPosition, childPosition);
         
 		String portrait = notification.getUserinfo().getPortrait() == null ? "" : notification.getUserinfo().getPortrait();
 		if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
@@ -134,6 +137,18 @@ public class NotificationListAdapter extends BaseExpandableListAdapter {
 			String portraitURL = URLs.HTTP + URLs.HOST + URLs.URL_SPLITTER + notification.getUserinfo().getPortrait();
 			bmpManager.loadBitmap(portraitURL, holder.face);
 		}
+		
+		holder.face.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				User user = notification.getUserinfo();
+				if (user == null) {
+					return;
+				}
+				UIHelper.showUserInfoDetail(mContext, user);
+			}
+		});
 		
 		holder.user_name.setText(notification.getUserinfo().getName());
 		
