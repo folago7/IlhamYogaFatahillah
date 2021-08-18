@@ -1,24 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical" >
-
-    <include
+    android:layout_height="fill_parent" >
+	
+    <ProgressBar 
         android:id="@+id/project_readme_loading"
-        layout="@layout/listview_footer" />
-
+        style="@style/ListSpinner"
+        android:layout_centerInParent="true"/>
+    
     <WebView
         android:id="@+id/project_readme_webview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:visibility="gone" />
 
-    <TextView
-        android:id="@+id/project_readme_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    
     <TextView
         android:id="@+id/project_readme_empty"
         android:layout_width="fill_parent"

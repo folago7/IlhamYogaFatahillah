@@ -5,13 +5,16 @@ import java.util.List;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.URLs;
+import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.BitmapManager;
 import net.oschina.gitapp.common.StringUtils;
+import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.widget.CircleImageView;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,6 +30,18 @@ import android.widget.TextView;
 public class ExploreListProjectAdapter extends MyBaseAdapter<Project> {
 	
 	private BitmapManager bmpManager;
+	
+	private OnClickListener faceClickListener = new OnClickListener() {
+		
+		@Override
+		public void onClick(View v) {
+			User user = (User)v.getTag();
+			if (user == null) {
+				return;
+			}
+			UIHelper.showUserInfoDetail(context, user);
+		}
+	};
 	
 	static class ListItemView {
 		public CircleImageView face;//用户头像
@@ -79,9 +94,8 @@ public class ExploreListProjectAdapter extends MyBaseAdapter<Project> {
 			String portraitURL = URLs.HTTP + URLs.HOST + URLs.URL_SPLITTER + project.getOwner().getPortrait();
 			bmpManager.loadBitmap(portraitURL, listItemView.face);
 		}
-		/*if (faceClickEnable) {
-			listItemView.face.setOnClickListener(faceClickListener);
-		}*/
+		listItemView.face.setTag(project.getOwner());
+		listItemView.face.setOnClickListener(faceClickListener);
 		
 		// 2.显示相关信息
 		listItemView.title.setText(project.getOwner().getName() + " / " + project.getName());

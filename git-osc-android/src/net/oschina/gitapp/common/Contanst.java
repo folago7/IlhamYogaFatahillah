@@ -26,6 +26,8 @@ public class Contanst {
 	
 	public static final String CURRENTITEM = "currentItem";
 	
+	public static final String USER = "user";
+	
 	public static final int LOGIN_REQUESTCODE = 6168;
 	
 }

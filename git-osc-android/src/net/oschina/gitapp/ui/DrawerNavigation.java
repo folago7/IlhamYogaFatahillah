@@ -248,7 +248,7 @@ public class DrawerNavigation extends Fragment implements OnClickListener {
 			Intent intent = new Intent(getActivity(), LoginActivity.class);
 			getActivity().startActivity(intent);
 		} else {
-			UIHelper.showUserInfoDetail(getActivity());
+			UIHelper.showMySelfInfoDetail(getActivity());
 		}
 	}
 	

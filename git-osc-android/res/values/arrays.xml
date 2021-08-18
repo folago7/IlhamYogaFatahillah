@@ -33,4 +33,11 @@
         <item>代码</item>
         <item>问题</item>
     </string-array>
+    
+    <!-- 用户信息页面 -->
+    <string-array name="userinfo_title_array">
+        <item>最近动态</item>
+        <item>项目</item>
+    </string-array>
+    
 </resources>

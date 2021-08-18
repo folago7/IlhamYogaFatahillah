@@ -23,6 +23,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 /**
@@ -60,6 +61,7 @@ public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result exte
 	private View mHeaderView;
 	private View mFooterView;
 	private BaseAdapter mAdapter;
+	private ProgressBar mLoading;
 	
 	private View mFooterProgressBar;
 	private TextView mFooterTextView;
@@ -106,6 +108,7 @@ public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result exte
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		//loadList(1, LISTVIEW_ACTION_INIT);
 	}
 	
 	@Override
@@ -127,16 +130,8 @@ public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result exte
 	
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
-		mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_swiperefreshlayout);
-		mListView = (ListView)view.findViewById(R.id.fragment_listview);
 		
-		mSwipeRefreshLayout.setOnRefreshListener(this);
-		mSwipeRefreshLayout.setColorScheme(
-				R.color.swiperefresh_color1, 
-				R.color.swiperefresh_color2, 
-				R.color.swiperefresh_color3, 
-				R.color.swiperefresh_color4);
-		
+		initView(view);
 		setupListView();
 		
 		//viewpager划动到第三页，会将第一页的界面销毁，这里判断是初始状态，还是划画后再次加载
@@ -151,14 +146,28 @@ public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result exte
 		}
 	}
 	
+	private void initView(View view) {
+		mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_swiperefreshlayout);
+		mListView = (ListView)view.findViewById(R.id.fragment_listview);
+		
+		mSwipeRefreshLayout.setOnRefreshListener(this);
+		mSwipeRefreshLayout.setColorScheme(
+				R.color.swiperefresh_color1, 
+				R.color.swiperefresh_color2, 
+				R.color.swiperefresh_color3, 
+				R.color.swiperefresh_color4);
+		
+		mLoading = (ProgressBar) view.findViewById(R.id.fragment_swiperefresh_loading);
+	}
+	
 	@Override
 	public void setUserVisibleHint(boolean isVisibleToUser) {
+		super.setUserVisibleHint(isVisibleToUser);
 		if (isVisibleToUser) {
 			loadList(1, LISTVIEW_ACTION_INIT);
 		} else {
 			
 		}
-		super.setUserVisibleHint(isVisibleToUser);
 	}
 
 	/** 获取HeaderView*/
@@ -347,6 +356,10 @@ public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result exte
 		public void onPostExecute(MessageData<Result> msg) {
 			//加载结束
 			mState = STATE_LOADED;
+			if (mAction == LISTVIEW_ACTION_INIT) {
+				mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+				mLoading.setVisibility(View.GONE);
+			}
 			
 			//如果动作是下拉刷新，则将刷新中的状态去掉
 			if(mAction == LISTVIEW_ACTION_REFRESH) {

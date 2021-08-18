@@ -6,6 +6,7 @@
     <ProgressBar
         android:layout_width="25dip"
         android:layout_height="25dip"
+        style="@style/Spinner"
         android:layout_gravity="center" />
 
 </FrameLayout>

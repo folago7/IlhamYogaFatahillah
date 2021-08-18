@@ -15,6 +15,7 @@ import net.oschina.gitapp.bean.CommitDiff;
 import net.oschina.gitapp.bean.Event;
 import net.oschina.gitapp.bean.Issue;
 import net.oschina.gitapp.bean.Project;
+import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.ui.CommitDetailActivity;
 import net.oschina.gitapp.ui.CommitFileDetailActivity;
 import net.oschina.gitapp.ui.IssueDetailActivity;
@@ -22,6 +23,7 @@ import net.oschina.gitapp.ui.IssueEditActivity;
 import net.oschina.gitapp.ui.LoginActivity;
 import net.oschina.gitapp.ui.ProjectActivity;
 import net.oschina.gitapp.ui.SearchActivity;
+import net.oschina.gitapp.ui.MySelfInfoActivity;
 import net.oschina.gitapp.ui.UserInfoActivity;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -432,8 +434,8 @@ public class UIHelper {
 	 * 显示用户信息详情
 	 * @param context
 	 */
-	public static void showUserInfoDetail(Context context) {
-		Intent intent = new Intent(context, UserInfoActivity.class);
+	public static void showMySelfInfoDetail(Context context) {
+		Intent intent = new Intent(context, MySelfInfoActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		context.startActivity(intent);
 	}
@@ -445,6 +447,20 @@ public class UIHelper {
 	public static void showSearch(Context context) {
 		Intent intent = new Intent(context, SearchActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		context.startActivity(intent);
+	}
+	
+	/**
+	 * 显示用户详情界面
+	 * @param context
+	 * @param user
+	 */
+	public static void showUserInfoDetail(Context context, User user) {
+		Intent intent = new Intent(context, UserInfoActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		Bundle bundle = new Bundle();
+		bundle.putSerializable(Contanst.USER, user);
+		intent.putExtras(bundle);
 		context.startActivity(intent);
 	}
 }

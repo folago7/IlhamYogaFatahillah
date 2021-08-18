@@ -36,8 +36,6 @@ public class ProjectReadMeFragment extends BaseFragment {
 	
 	private WebView mWebView;
 	
-	private TextView mText;
-	
 	public static ProjectReadMeFragment newInstance(Project project) {
 		ProjectReadMeFragment fragment = new ProjectReadMeFragment();
 		Bundle args = new Bundle();
@@ -65,7 +63,6 @@ public class ProjectReadMeFragment extends BaseFragment {
 	private void initView(View view) {
 		mLoading = view.findViewById(R.id.project_readme_loading);
 		mWebView = (WebView) view.findViewById(R.id.project_readme_webview);
-		mText = (TextView) view.findViewById(R.id.project_readme_textview);
 	}
 
 	@Override

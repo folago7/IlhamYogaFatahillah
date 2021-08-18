@@ -14,13 +14,13 @@
         android:orientation="vertical"
         android:padding="15.0dip" >
 
-        <include layout="@layout/activity_user_info_head" />
+        <include layout="@layout/activity_myselfinfo_head" />
 
         <include
-            layout="@layout/activity_user_info_mid"
+            layout="@layout/activity_myselfinfo_mid"
             android:visibility="visible" />
 
-        <include            layout="@layout/activity_user_info_footer" />
+        <include            layout="@layout/activity_myselfinfo_footer" />
         
         <Button
             android:id="@+id/user_info_logout"

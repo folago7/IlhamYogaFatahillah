@@ -39,6 +39,8 @@ public class URLs implements Serializable {
 	public static String EXPLOREPOPULARPROJECT = PROJECT +URL_SPLITTER +  "popular";
 	// 推荐项目列表
 	public static String EXPLOREFEATUREDPROJECT =PROJECT +URL_SPLITTER +  "featured";
+	// 搜索项目
+	public static String SEARCHPROJECT = PROJECT + URL_SPLITTER + "search";
 	public static String PROJECTHOOK = URL_API_HOST + "hooks";
 	public static String PROJECTMEMBER = URL_API_HOST + "members";
 	public final static String LOGIN_HTTP = HTTP + HOST + API_VERSION + URL_SPLITTER + "session";
@@ -49,4 +51,6 @@ public class URLs implements Serializable {
 	public static String NOTIFICATION = URL_API_HOST + "user/notifications";
 	// 设置通知为已读
 	public static String NOTIFICATION_READED = NOTIFICATION + URL_SPLITTER + "readed";
+	// 具体用户的动态
+	public static String USEREVENTS = URL_API_HOST + URL_SPLITTER + "events" + URL_SPLITTER + "user";
 }

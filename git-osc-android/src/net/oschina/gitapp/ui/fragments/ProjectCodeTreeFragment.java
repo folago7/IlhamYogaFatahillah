@@ -2,6 +2,7 @@ package net.oschina.gitapp.ui.fragments;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -19,6 +20,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
@@ -83,13 +85,15 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 	private AppContext mAppContext;
 
 	private SwipeRefreshLayout mSwipeRefreshLayout;
-	
-	private ProgressDialog mLoad;
-	
+
+	private ProgressBar mLoading;
+
+	private ProgressDialog mLoadBranch;
+
 	private List<Branch> mBranchList = new ArrayList<Branch>();// 标签和分支列表
-	
+
 	private int mBranchIndex = 0;
-	
+
 	private AlertDialog.Builder dialog;
 
 	private DataRequestThreadHandler mRequestThreadHandler = new DataRequestThreadHandler();
@@ -130,9 +134,14 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 		mSwipeRefreshLayout = (SwipeRefreshLayout) mView
 				.findViewById(R.id.projectcode_swiperefreshlayout);
 		mSwipeRefreshLayout.setOnRefreshListener(this);
-		mSwipeRefreshLayout.setColorScheme(R.color.swiperefresh_color1,
-				R.color.swiperefresh_color2, R.color.swiperefresh_color3,
+		mSwipeRefreshLayout.setColorScheme(
+				R.color.swiperefresh_color1,
+				R.color.swiperefresh_color2, 
+				R.color.swiperefresh_color3,
 				R.color.swiperefresh_color4);
+		
+		mLoading = (ProgressBar) mView.findViewById(R.id.projectcode_loading);
+		
 		mCodeTree = (ListView) mView.findViewById(R.id.projectcode_tree);
 		mSwitch_branch = (LinearLayout) mView
 				.findViewById(R.id.projectcode_switch_branch);
@@ -154,11 +163,13 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 	}
 
 	private void loadDatas(final String path, final String ref_name, int action) {
-		mRequestThreadHandler.request(0, new AsyncDataHandler(path, ref_name, action));
+		mRequestThreadHandler.request(0, new AsyncDataHandler(path, ref_name,
+				action));
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
 
 		if (view == mHeadView) {
 			loadDatas(getPrePath(), mBranch, ACTION_PRE_TREE);
@@ -218,7 +229,7 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 			break;
 		}
 	}
-	
+
 	private void switchBranch() {
 		if (mProject == null) {
 			return;
@@ -247,7 +258,9 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 		// 加载前
 		@Override
 		public void onPreExecute() {
-			setSwipeRefreshLoadingState();
+			if (_mAction != ACTION_INIT) {
+				setSwipeRefreshLoadingState();
+			}
 		}
 
 		// 加载ing
@@ -259,7 +272,9 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 				if (_mAction == ACTION_INIT && _mAction == ACTION_PRE_TREE) {
 					refresh = false;
 				}
-				CommonList<CodeTree> list = mAppContext.getProjectCodeTree(StringUtils.toInt(mProject.getId()), _mPath, _mRef_name, refresh);
+				CommonList<CodeTree> list = mAppContext.getProjectCodeTree(
+						StringUtils.toInt(mProject.getId()), _mPath,
+						_mRef_name, refresh);
 				List<CodeTree> tree = list.getList();
 				msg.what = 1;
 				msg.obj = tree;
@@ -274,12 +289,18 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 		@SuppressWarnings("unchecked")
 		@Override
 		public void onPostExecute(Message result) {
+			if (_mAction == ACTION_INIT) {
+				mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+				mSwitch_branch.setVisibility(View.VISIBLE);
+				mLoading.setVisibility(View.GONE);
+			}
 			setSwipeRefreshLoadedState();
 			if (result.what == 1 && result.obj != null) {
 				mTrees.clear();
 				mTrees.addAll((List<CodeTree>) result.obj);
 				// 加载成功，记录相关信息
-				if (_mAction == ACTION_LOADING_TREE || _mAction == ACTION_PRE_TREE) {
+				if (_mAction == ACTION_LOADING_TREE
+						|| _mAction == ACTION_PRE_TREE) {
 					mPath = _mPath;
 					mBranch = _mRef_name;
 				}
@@ -289,7 +310,8 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 				if (result.obj instanceof AppException) {
 					((AppException) result.obj).makeToast(mAppContext);
 				} else {
-					UIHelper.ToastMessage(getActivity(), ((Exception)result.obj).getMessage());
+					UIHelper.ToastMessage(getActivity(),
+							((Exception) result.obj).getMessage());
 				}
 			}
 		}
@@ -336,68 +358,78 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 	}
-	
+
 	// 加载分支和标签数据
 	private void loadBranchAndTags(final boolean isRefalsh) {
-		
-		//异步
-    	new AsyncTask<Void, Void, Message>() {
+
+		// 异步
+		new AsyncTask<Void, Void, Message>() {
 			@Override
 			protected Message doInBackground(Void... params) {
-				Message msg =new Message();
+				Message msg = new Message();
 				try {
 					msg.what = 1;
 					if (!isRefalsh) {
 						return msg;
 					}
 					// 1.加载分支
-					CommonList<Branch> branchs = mAppContext.getProjectBranchsOrTagsLsit(mProject.getId(), 1, Branch.TYPE_BRANCH, isRefalsh);
+					CommonList<Branch> branchs = mAppContext
+							.getProjectBranchsOrTagsLsit(mProject.getId(), 1,
+									Branch.TYPE_BRANCH, isRefalsh);
 					for (Branch branch : branchs.getList()) {
 						// 设置为分支类型
 						branch.setType(Branch.TYPE_BRANCH);
 						mBranchList.add(branch);
 					}
-					
+
 					// 2.加载标签
-					CommonList<Branch> tags = mAppContext.getProjectBranchsOrTagsLsit(mProject.getId(), 1, Branch.TYPE_TAG, isRefalsh);
+					CommonList<Branch> tags = mAppContext
+							.getProjectBranchsOrTagsLsit(mProject.getId(), 1,
+									Branch.TYPE_TAG, isRefalsh);
 					for (Branch branch : tags.getList()) {
 						// 设置为标签类型
 						branch.setType(Branch.TYPE_TAG);
 						mBranchList.add(branch);
 					}
-	            } catch (Exception e) {
-			    	msg.what = -1;
-			    	msg.obj = e;
-	            }
+				} catch (Exception e) {
+					msg.what = -1;
+					msg.obj = e;
+				}
 				return msg;
 			}
-			
+
 			@Override
 			protected void onPreExecute() {
-				if (mLoad == null) {
-					mLoad = new ProgressDialog(getActivity());
-					mLoad.setCancelable(true);
-					mLoad.setCanceledOnTouchOutside(false);
-					mLoad.setMessage("加载分支和标签...");
+				if (mLoadBranch == null) {
+					mLoadBranch = new ProgressDialog(getActivity());
+					mLoadBranch.setCancelable(true);
+					mLoadBranch.setCanceledOnTouchOutside(false);
+					mLoadBranch.setMessage("加载分支和标签...");
+					mLoadBranch.setProgressStyle(R.style.Spinner);
+					mLoadBranch.show();
 				}
 				if (dialog == null) {
-					dialog = new AlertDialog.Builder(getActivity()).setTitle("选择分支或标签");
+					dialog = new AlertDialog.Builder(getActivity())
+							.setTitle("选择分支或标签");
 				}
-				mLoad.show();
 			}
-			
+
 			@Override
 			protected void onPostExecute(Message msg) {
-				if (mLoad != null) mLoad.dismiss();
+				if (mLoadBranch != null)
+					mLoadBranch.dismiss();
 				if (msg.what == 1) {
 					final String baArrays[] = new String[mBranchList.size()];
 					for (int i = 0; i < mBranchList.size(); i++) {
 						baArrays[i] = mBranchList.get(i).getName();
 					}
-					dialog.setSingleChoiceItems(baArrays, mBranchIndex, new DialogInterface.OnClickListener() {
-								public void onClick(DialogInterface dialog, int which) {
+					dialog.setSingleChoiceItems(baArrays, mBranchIndex,
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int which) {
 									dialog.dismiss();
-									if (which == mBranchIndex) return;
+									if (which == mBranchIndex)
+										return;
 									mBranchIndex = which;
 									mBranch = baArrays[which];
 									mPath = "";
@@ -408,7 +440,7 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 					dialog.show();
 				} else {
 					if (msg.obj instanceof AppException) {
-						((AppException)msg.obj).makeToast(getActivity());
+						((AppException) msg.obj).makeToast(getActivity());
 					} else {
 						UIHelper.ToastMessage(mAppContext, "加载分支和标签失败");
 					}

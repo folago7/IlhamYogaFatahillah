@@ -1,6 +1,7 @@
 package net.oschina.gitapp.api;
 
 import static net.oschina.gitapp.api.HTTPRequestor.*;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -44,6 +45,7 @@ import net.oschina.gitapp.bean.Session;
 import net.oschina.gitapp.bean.UpLoadFile;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.bean.URLs;
+import net.oschina.gitapp.common.CyptoUtils;
 import net.oschina.gitapp.common.StringUtils;
 
 /**
@@ -56,6 +58,7 @@ import net.oschina.gitapp.common.StringUtils;
 public class ApiClient {
 
 	private final static String PRIVATE_TOKEN = "private_token";
+	private final static String GITOSC_PRIVATE_TOKEN = "git@osc_token";
 
 	// 私有token，每个用户都有一个唯一的
 	private static String private_token;
@@ -79,7 +82,7 @@ public class ApiClient {
 		if (private_token == null || private_token == "") {
 			private_token = appContext.getProperty(PRIVATE_TOKEN);
 		}
-		return private_token;
+		return CyptoUtils.decode(GITOSC_PRIVATE_TOKEN, private_token);
 	}
 
 	private static HTTPRequestor getHttpRequestor() {
@@ -142,7 +145,8 @@ public class ApiClient {
 				.to(Session.class);
 		// 保存用户的私有token
 		if (session != null && null != session.get_privateToken()) {
-			appContext.setProperty(PRIVATE_TOKEN, session.get_privateToken());
+			String token = CyptoUtils.encode(GITOSC_PRIVATE_TOKEN, session.get_privateToken());
+			appContext.setProperty(PRIVATE_TOKEN, token);
 		}
 		return session;
 	}
@@ -282,11 +286,12 @@ public class ApiClient {
 	 * @return
 	 * @throws AppException
 	 */
-	public static List<Project> getSearcheProject(AppContext appContext, int page) throws AppException {
+	public static List<Project> getSearcheProject(AppContext appContext, String query, int page) throws AppException {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put(PRIVATE_TOKEN, getToken(appContext));
 		params.put("page", page);
-		String url = makeURL(URLs.EXPLOREFEATUREDPROJECT, params);
+		String url = makeURL(URLs.SEARCHPROJECT + URLs.URL_SPLITTER + query, params);
+		Log.i("Test", url);
 		return getHttpRequestor().init(appContext, GET_METHOD, url)
 				.getList(Project[].class);
 	}
@@ -338,6 +343,28 @@ public class ApiClient {
 		msProjects.setCount(list.size());
 		msProjects.setPageSize(list.size());
 		return msProjects;
+	}
+	
+	/**
+	 * 获取具体用户的最近动态列表
+	 * @param appContext
+	 * @param user_id
+	 * @param page
+	 * @return
+	 * @throws AppException
+	 */
+	public static CommonList<Event> getUserEvents(AppContext appContext, String user_id ,int page) throws AppException {
+		CommonList<Event> events = new CommonList<Event>();
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(PRIVATE_TOKEN, getToken(appContext));
+		params.put("page", page);
+		String url = makeURL(URLs.USEREVENTS + URLs.URL_SPLITTER + user_id, params);
+		List<Event> list = getHttpRequestor().init(appContext,
+				HTTPRequestor.GET_METHOD, url).getList(Event[].class);
+		events.setList(list);
+		events.setCount(list.size());
+		events.setPageSize(list.size());
+		return events;
 	}
 
 	/**
@@ -733,85 +760,5 @@ public class ApiClient {
 		String url = makeURL(URLs.NOTIFICATION_READED + URLs.URL_SPLITTER + notificationId, params);
 		return getHttpRequestor().init(appContext, GET_METHOD, url)
 				.to(NotificationReadResult.class);
-	}
-
-	/*
-	 * Function : 发送Post请求到服务器 Param : params请求体内容，encode编码格式 Author : 博客园-依旧淡然
-	 */
-	public static String submitPostData(Map<String, String> params,
-			String encode, String url) {
-
-		byte[] data = getRequestData(params, encode).toString().getBytes();// 获得请求体
-
-		try {
-			URL urlstr = new URL(url);
-			HttpURLConnection httpURLConnection = (HttpURLConnection) urlstr
-					.openConnection();
-			httpURLConnection.setConnectTimeout(3000); // 设置连接超时时间
-			httpURLConnection.setDoInput(true); // 打开输入流，以便从服务器获取数据
-			httpURLConnection.setDoOutput(true); // 打开输出流，以便向服务器提交数据
-			httpURLConnection.setRequestMethod("POST"); // 设置以Post方式提交数据
-			httpURLConnection.setUseCaches(false); // 使用Post方式不能使用缓存
-			// 设置请求体的类型是文本类型
-			httpURLConnection.setRequestProperty("Content-Type",
-					"application/x-www-form-urlencoded;charset=utf-8");
-			// 设置请求体的长度
-			httpURLConnection.setRequestProperty("Content-Length",
-					String.valueOf(data.length));
-			// 获得输出流，向服务器写入数据
-			OutputStream outputStream = httpURLConnection.getOutputStream();
-			outputStream.write(data);
-
-			int response = httpURLConnection.getResponseCode(); // 获得服务器的响应码
-			// if(response == HttpURLConnection.HTTP_OK) {
-			InputStream inptStream = httpURLConnection.getInputStream();
-			Log.i("Test", response + "返回码");
-			return response + "";
-			// return dealResponseResult(inptStream); //处理服务器的响应结果
-			// }
-		} catch (IOException e) {
-			e.printStackTrace();
-			Log.i("Test", e.getMessage() + "异常");
-		}
-		return "";
-	}
-
-	/*
-	 * Function : 封装请求体信息 Param : params请求体内容，encode编码格式 Author : 博客园-依旧淡然
-	 */
-	public static StringBuffer getRequestData(Map<String, String> params,
-			String encode) {
-		StringBuffer stringBuffer = new StringBuffer(); // 存储封装好的请求体信息
-		try {
-			for (Map.Entry<String, String> entry : params.entrySet()) {
-				stringBuffer.append(entry.getKey()).append("=")
-						.append(URLEncoder.encode(entry.getValue(), encode))
-						.append("&");
-			}
-			stringBuffer.deleteCharAt(stringBuffer.length() - 1); // 删除最后的一个"&"
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return stringBuffer;
-	}
-
-	/*
-	 * Function : 处理服务器的响应结果（将输入流转化成字符串） Param : inputStream服务器的响应输入流 Author :
-	 * 博客园-依旧淡然
-	 */
-	public static String dealResponseResult(InputStream inputStream) {
-		String resultData = null; // 存储处理结果
-		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-		byte[] data = new byte[1024];
-		int len = 0;
-		try {
-			while ((len = inputStream.read(data)) != -1) {
-				byteArrayOutputStream.write(data, 0, len);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		resultData = new String(byteArrayOutputStream.toByteArray());
-		return resultData;
 	}
 }

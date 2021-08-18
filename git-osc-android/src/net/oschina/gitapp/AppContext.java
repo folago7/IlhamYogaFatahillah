@@ -9,13 +9,16 @@ import java.io.InvalidClassException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.api.ApiClient;
+import net.oschina.gitapp.api.HTTPRequestor;
 import net.oschina.gitapp.bean.Branch;
 import net.oschina.gitapp.bean.CodeFile;
 import net.oschina.gitapp.bean.CodeTree;
@@ -30,6 +33,7 @@ import net.oschina.gitapp.bean.Milestone;
 import net.oschina.gitapp.bean.NotificationReadResult;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.ProjectNotificationArray;
+import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.bean.UpLoadFile;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.BroadcastController;
@@ -765,8 +769,8 @@ public class AppContext extends Application {
 	 * @return
 	 * @throws AppException
 	 */
-	public List<Project> getSearcheProject(int page) throws AppException {
-		return ApiClient.getSearcheProject(this, page);
+	public List<Project> getSearcheProject(String query, int page) throws AppException {
+		return ApiClient.getSearcheProject(this, query, page);
 	}
 
 	/**
@@ -837,7 +841,7 @@ public class AppContext extends Application {
 		}
 		return list;
 	}
-
+	
 	/**
 	 * 获得一个项目的commit列表
 	 * 
@@ -876,6 +880,17 @@ public class AppContext extends Application {
 				list = new CommonList<Commit>();
 		}
 		return list;
+	}
+	
+	/**
+	 * 获取具体用户的最近动态列表
+	 * @param user_id
+	 * @param page
+	 * @return
+	 * @throws AppException
+	 */
+	public CommonList<Event> getUserEvents(String user_id ,int page) throws AppException {
+		return ApiClient.getUserEvents(this, user_id, page);
 	}
 
 	/**

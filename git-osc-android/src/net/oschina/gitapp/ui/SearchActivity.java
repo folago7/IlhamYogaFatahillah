@@ -117,7 +117,7 @@ public class SearchActivity extends BaseActionBarActivity implements
 	@Override
 	public boolean onQueryTextSubmit(String arg0) {
 		mKey = arg0;
-		load(arg0, 0);
+		load(arg0, 1);
 		imm.hideSoftInputFromWindow(mListView.getWindowToken(), 0);
 		return true;
 	}
@@ -172,17 +172,18 @@ public class SearchActivity extends BaseActionBarActivity implements
 		if(mFooterView != null) {
 			mFooterLoading.setVisibility(View.VISIBLE);
 			mFooterMsg.setText(R.string.load_ing);
+			mEmpty.setVisibility(View.GONE);
 		}
 	}
 	
-	private void load(String key, final int page) {
+	private void load(final String key, final int page) {
 		new AsyncTask<Void, Void, Message>() {
 
 			@Override
 			protected Message doInBackground(Void... params) {
 				Message msg = new Message();
 				try {
-					msg.obj = mAppContext.getSearcheProject(page);
+					msg.obj = mAppContext.getSearcheProject(key, page);
 					msg.what = 1;
 				} catch (AppException e) {
 					isLoading = false;
@@ -215,12 +216,14 @@ public class SearchActivity extends BaseActionBarActivity implements
 					if (page == 1 || page == 0)
 						mData.clear();
 					List<Project> resuleData = (List<Project>) msg.obj;
-					if (resuleData.size() > 0 && resuleData.size() != AppContext.PAGE_SIZE) {
-						setFooterFullState();
-					} else if (resuleData.size() > 0) {
-						setFooterHasMoreState();
+					if (resuleData.size() > 0) {
 						mEmpty.setVisibility(View.GONE);
 						mData.addAll(resuleData);
+						if (resuleData.size() != AppContext.PAGE_SIZE) {
+							setFooterFullState();
+						} else {
+							setFooterHasMoreState();
+						}
 						adapter.notifyDataSetChanged();
 						mListView.setVisibility(View.VISIBLE);
 					} else {
