@@ -5,6 +5,7 @@ import static net.oschina.gitapp.common.Contanst.LOGIN_REQUESTCODE;
 import java.io.File;
 
 import net.oschina.gitapp.AppContext;
+import net.oschina.gitapp.AppManager;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.common.FileUtils;
 import net.oschina.gitapp.common.MethodsCompat;
@@ -46,6 +47,7 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preferences);
 		initView();
+		AppManager.getAppManager().addActivity(this);
 	}
 	
 	@SuppressWarnings("deprecation")

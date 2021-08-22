@@ -1,5 +1,6 @@
 package net.oschina.gitapp;
 
+import static net.oschina.gitapp.common.Contanst.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -61,26 +62,7 @@ public class AppContext extends Application {
 
 	public static final int PAGE_SIZE = 20;// 默认分页大小
 	private static final int CACHE_TIME = 60 * 60000;// 缓存失效时间
-
-	// 用户私有token
-	public static final String PROP_KEY_PRIVATE_TOKEN = "private_token";
-
-	public static final String PROP_KEY_UID = "user.uid";
-	public static final String PROP_KEY_USERNAME = "user.username";
-	public static final String PROP_KEY_EMAIL = "user.useremail";
-	public static final String PROP_KEY_NAME = "user.name";
-	public static final String PROP_KEY_BIO = "user.bio";// 个人介绍
-	public static final String PROP_KEY_WEIBO = "user.weibo";
-	public static final String PROP_KEY_BLOG = "user.blog";
-	public static final String PROP_KEY_THEME_ID = "user.theme_id";
-	public static final String PROP_KEY_STATE = "user.state";
-	public static final String PROP_KEY_CREATED_AT = "user.created_at";
-	public static final String PROP_KEY_PORTRAIT = "user.portrait";// 用户头像-文件名
-	public static final String PROP_KEY_IS_ADMIN = "user.is_admin";
-	public static final String PROP_KEY_CAN_CREATE_GROUP = "user.can_create_group";
-	public static final String PROP_KEY_CAN_CREATE_PROJECT = "user.can_create_project";
-	public static final String PROP_KEY_CAN_CREATE_TEAM = "user.can_create_team";
-
+	
 	private boolean login = false; // 登录状态
 	private int loginUid = 0; // 登录用户的id
 	private Hashtable<String, Object> memCacheRegion = new Hashtable<String, Object>();
@@ -111,7 +93,7 @@ public class AppContext extends Application {
 		// 初始化用记的登录信息
 		User loginUser = getLoginInfo();
 		if (null != loginUser && StringUtils.toInt(loginUser.getId()) > 0
-				&& !StringUtils.isEmpty(getProperty(PROP_KEY_PRIVATE_TOKEN))) {
+				&& !StringUtils.isEmpty(getProperty(AppConfig.CONF_PRIVATE_TOKEN))) {
 			// 记录用户的id和状态
 			this.loginUid = StringUtils.toInt(loginUser.getId());
 			this.login = true;
@@ -489,6 +471,16 @@ public class AppContext extends Application {
 		user.setCanCreateTeam(StringUtils
 				.toBool(getProperty(PROP_KEY_CAN_CREATE_TEAM)));
 		return user;
+	}
+	
+	/**
+	 * 保存用户的email和pwd
+	 * @param email
+	 * @param pwd
+	 */
+	public void saveAccountInfo(String email, String pwd) {
+		setProperty(ACCOUNT_EMAIL, email);
+		setProperty(ACCOUNT_PWD, pwd);
 	}
 
 	/**

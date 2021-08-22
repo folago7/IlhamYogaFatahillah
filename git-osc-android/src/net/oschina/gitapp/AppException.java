@@ -13,10 +13,12 @@ import java.util.Date;
 import org.apache.commons.httpclient.HttpException;
 
 import net.oschina.gitapp.common.UIHelper;
+import net.oschina.gitapp.ui.MainActivity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.os.Environment;
 import android.os.Looper;
+import android.util.Log;
 import android.widget.Toast;
 
 /**
@@ -224,7 +226,6 @@ public class AppException extends Exception implements UncaughtExceptionHandler{
 	
 	@Override
 	public void uncaughtException(Thread thread, Throwable ex) {
-
 		if(!handleException(ex) && mDefaultHandler != null) {
 			mDefaultHandler.uncaughtException(thread, ex);
 		}
@@ -240,11 +241,11 @@ public class AppException extends Exception implements UncaughtExceptionHandler{
 			return false;
 		}
 		
-		final Context context = AppManager.getAppManager().currentActivity();
-		
-		if(context == null) {
+		if(mContext == null) {
 			return false;
 		}
+		
+		final Context context = AppManager.getAppManager().currentActivity();
 		
 		final String crashReport = getCrashReport(context, ex);
 		//显示异常信息&发送报告

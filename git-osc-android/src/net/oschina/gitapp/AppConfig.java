@@ -23,12 +23,18 @@ public class AppConfig {
 	private final static String APP_CONFIG = "config";
 
 	public final static String CONF_APP_UNIQUEID = "APP_UNIQUEID";
+	
 	public final static String CONF_PRIVATE_TOKEN = "private_token";
+	
 	public final static String CONF_LOAD_IMAGE = "perf_loadimage";
+	
 	public final static String CONF_HTTPS_LOGIN = "perf_httpslogin";
+	
 	public final static String CONF_VOICE = "perf_voice";
+	
 	public final static String CONF_CHECKUP = "perf_checkup";
-
+	
+	//默认存放图片的路径
 	public final static String DEFAULT_SAVE_IMAGE_PATH = Environment
 			.getExternalStorageDirectory()
 			+ File.separator

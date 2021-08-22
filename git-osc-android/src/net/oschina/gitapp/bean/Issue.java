@@ -17,7 +17,10 @@ public class Issue extends Entity {
 	
 	public static final String StateClosed = "closed";
 	public static final String StateOpened = "opened";
-
+	
+	@JsonProperty("iid")
+	private int _iid;
+	
 	@JsonProperty("project_id")
 	private int _projectId;
 	
@@ -47,7 +50,15 @@ public class Issue extends Entity {
 	
 	@JsonProperty("created_at")
 	private Date _createdAt;
+	
+	public int getIid() {
+		return _iid;
+	}
 
+	public void setIid(int iid) {
+		this._iid = iid;
+	}
+	
 	public int getProjectId() {
 		return _projectId;
 	}

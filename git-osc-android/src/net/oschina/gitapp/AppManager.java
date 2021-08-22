@@ -2,9 +2,14 @@ package net.oschina.gitapp;
 
 import java.util.Stack;
 
+import net.oschina.gitapp.ui.MainActivity;
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 
 /**
  * 应用程序Activity管理类：用于Activity管理和应用程序退出
@@ -84,13 +89,21 @@ public class AppManager {
 	/**
 	 * 退出应用程序
 	 */
-	@SuppressWarnings("deprecation")
 	public void AppExit(Context context) {
 		try {
 			finishAllActivity();
-			ActivityManager activityMgr= (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-			activityMgr.restartPackage(context.getPackageName());
+			Intent intent = new Intent(context, MainActivity.class);  
+            PendingIntent restartIntent = PendingIntent.getActivity(    
+            		context, 0, intent,    
+                    Intent.FLAG_ACTIVITY_NEW_TASK);                                                 
+            //退出程序                                          
+            AlarmManager mgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);    
+            mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 1000,    
+                    restartIntent); // 1秒钟后重启应用
+			// 杀死该应用进程
+			android.os.Process.killProcess(android.os.Process.myPid());
 			System.exit(0);
-		} catch (Exception e) {	}
+		} catch (Exception e) {	
+		}
 	}
 }

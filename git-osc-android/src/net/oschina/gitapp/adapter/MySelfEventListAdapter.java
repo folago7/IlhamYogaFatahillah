@@ -118,6 +118,11 @@ public class MySelfEventListAdapter extends MyBaseAdapter<Event> {
 			listItemView.content.setVisibility(View.VISIBLE);
 		}
 		
+		if (event.getIssue() != null) {
+			listItemView.content.setText(event.getIssue().getTitle());
+			listItemView.content.setVisibility(View.VISIBLE);
+		}
+		
 		listItemView.date.setText(StringUtils.friendly_time(event.getUpdated_at()));
 	}
 	

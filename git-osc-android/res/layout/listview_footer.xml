@@ -10,7 +10,7 @@
         android:id="@+id/listview_foot_progress"
         android:layout_width="20dip"
         android:layout_height="20dip"
-        style="?android:attr/progressBarStyleSmall" />
+        style="@style/ListSpinner" />
 
     <TextView
         android:id="@+id/listview_foot_more"

@@ -16,11 +16,14 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import net.oschina.gitapp.AppConfig;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.BroadcastController;
+import net.oschina.gitapp.common.Contanst;
+import net.oschina.gitapp.common.CyptoUtils;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
@@ -29,6 +32,7 @@ import net.oschina.gitapp.widget.EditTextWithDel;
 public class LoginActivity extends BaseActionBarActivity 
 	implements OnClickListener, OnEditorActionListener {
 	
+	private AppContext mAppContext;
 	private EditTextWithDel mAccountEditText;
 	private EditTextWithDel mPasswordEditText;
 	private ProgressDialog mLoginProgressDialog;
@@ -40,10 +44,11 @@ public class LoginActivity extends BaseActionBarActivity
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		init();
+		mAppContext = getGitApplication();
+		initView();
 	}
 
-	private void init() {
+	private void initView() {
 		mAccountEditText = (EditTextWithDel) findViewById(R.id.login_account);
 		mPasswordEditText = (EditTextWithDel) findViewById(R.id.login_password);
 		mLogin = (Button) findViewById(R.id.login_btn_login);
@@ -74,6 +79,11 @@ public class LoginActivity extends BaseActionBarActivity
 		// 添加文本变化监听事件
 		mAccountEditText.addTextChangedListener(textWatcher);
 		mPasswordEditText.addTextChangedListener(textWatcher);
+		
+		String account = CyptoUtils.decode(Contanst.ACCOUNT_EMAIL, mAppContext.getProperty(Contanst.ACCOUNT_EMAIL));
+		mAccountEditText.setText(account);
+		String pwd = CyptoUtils.decode(Contanst.ACCOUNT_PWD, mAppContext.getProperty(Contanst.ACCOUNT_PWD));
+		mPasswordEditText.setText(pwd);
 	}
 	
 	@Override
@@ -95,11 +105,11 @@ public class LoginActivity extends BaseActionBarActivity
 	 */
 	private void checkLogin() {
 		
-		String account = mAccountEditText.getText().toString();
+		String email = mAccountEditText.getText().toString();
 		String passwd = mPasswordEditText.getText().toString();
 		
 		////检查用户输入的参数
-		if(StringUtils.isEmpty(account)){
+		if(StringUtils.isEmpty(email)){
 			UIHelper.ToastMessage(this, getString(R.string.msg_login_email_null));
 			return;
 		}
@@ -108,7 +118,10 @@ public class LoginActivity extends BaseActionBarActivity
 			return;
 		}
 		
-		login(account, passwd);
+		// 保存用户名和密码
+		mAppContext.saveAccountInfo(CyptoUtils.encode(Contanst.ACCOUNT_EMAIL, email), CyptoUtils.encode(Contanst.ACCOUNT_PWD, passwd));
+		
+		login(email, passwd);
 	}
 	
 	// 登录验证
@@ -125,8 +138,7 @@ public class LoginActivity extends BaseActionBarActivity
 			protected Message doInBackground(Void... params) {
 				Message msg =new Message();
 				try {
-					AppContext ac = getGitApplication();
-	                User user = ac.loginVerify(account, passwd);
+	                User user = mAppContext.loginVerify(account, passwd);
 	                msg.what = 1;
 	                msg.obj = user;
 	            } catch (Exception e) {

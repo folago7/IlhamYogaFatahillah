@@ -3,9 +3,9 @@ package net.oschina.gitapp.ui.baseactivity;
 import java.lang.reflect.Field;
 
 import net.oschina.gitapp.AppContext;
+import net.oschina.gitapp.AppManager;
 import net.oschina.gitapp.interfaces.ActivityHelperInterface;
 import net.oschina.gitapp.ui.ActivityHelper;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -36,12 +36,14 @@ public class BaseActionBarActivity extends ActionBarActivity
 		super.onCreate(savedInstanceState);
 		mHelper.onCreate(savedInstanceState);
 		initActionBar();
+		//将activity加入到AppManager堆栈中
+		AppManager.getAppManager().addActivity(this);
 	}
 	
 	// 关闭该Activity
 	@Override
 	public boolean onSupportNavigateUp() {
-		finish();
+		AppManager.getAppManager().finishActivity(getActivity());
 		return super.onSupportNavigateUp();
 	}
 	

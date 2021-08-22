@@ -1,6 +1,7 @@
 package net.oschina.gitapp.ui;
 
 import net.oschina.gitapp.AppContext;
+import net.oschina.gitapp.AppManager;
 import net.oschina.gitapp.R;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -86,6 +87,7 @@ public class MainActivity extends ActionBarActivity implements
 		setContentView(R.layout.activity_main);
 		mContext = (AppContext) getApplicationContext();
 		initView(savedInstanceState);
+		AppManager.getAppManager().addActivity(this);
 	}
 
 	private void initView(Bundle savedInstanceState) {

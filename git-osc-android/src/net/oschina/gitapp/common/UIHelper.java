@@ -21,12 +21,15 @@ import net.oschina.gitapp.ui.CommitFileDetailActivity;
 import net.oschina.gitapp.ui.IssueDetailActivity;
 import net.oschina.gitapp.ui.IssueEditActivity;
 import net.oschina.gitapp.ui.LoginActivity;
+import net.oschina.gitapp.ui.MainActivity;
 import net.oschina.gitapp.ui.ProjectActivity;
 import net.oschina.gitapp.ui.SearchActivity;
 import net.oschina.gitapp.ui.MySelfInfoActivity;
 import net.oschina.gitapp.ui.UserInfoActivity;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -69,10 +72,11 @@ public class UIHelper {
 	 * @param cont
 	 * @param crashReport
 	 */
-	public static void sendAppCrashReport(final Context cont,
+	public static void sendAppCrashReport(final Context context,
 			final String crashReport) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(cont);
+		AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setIcon(android.R.drawable.ic_dialog_info);
+		builder.setCancelable(false);
 		builder.setTitle(R.string.app_error);
 		builder.setMessage(R.string.app_error_message);
 		builder.setPositiveButton(R.string.submit_report,
@@ -83,14 +87,15 @@ public class UIHelper {
 						Intent i = new Intent(Intent.ACTION_SEND);
 						// i.setType("text/plain"); //模拟器
 						i.setType("message/rfc822"); // 真机
+						// 接收错误报告的邮箱地址
 						i.putExtra(Intent.EXTRA_EMAIL,
 								new String[] { "zhangdeyi@oschina.net" });
 						i.putExtra(Intent.EXTRA_SUBJECT,
-								"开源中国Android客户端 - 错误报告");
+								"GIT@OSC,Android客户端 - 错误报告");
 						i.putExtra(Intent.EXTRA_TEXT, crashReport);
-						cont.startActivity(Intent.createChooser(i, "发送错误报告"));
+						context.startActivity(Intent.createChooser(i, "发送错误报告"));
 						// 退出
-						AppManager.getAppManager().AppExit(cont);
+						AppManager.getAppManager().AppExit(context);
 					}
 				});
 		builder.setNegativeButton(R.string.sure,
@@ -98,7 +103,7 @@ public class UIHelper {
 					public void onClick(DialogInterface dialog, int which) {
 						dialog.dismiss();
 						// 退出
-						AppManager.getAppManager().AppExit(cont);
+						AppManager.getAppManager().AppExit(context);
 					}
 				});
 		builder.show();
@@ -150,6 +155,9 @@ public class UIHelper {
 		switch (action) {
 		case Event.EVENT_TYPE_CREATED:// 创建了issue
 			eventTitle = event.getTarget_type();
+			if (event.getIssue() != null) { 
+				eventTitle = eventTitle + " #" + event.getIssue().getIid();
+			}
 			title = "在项目 " + pAuthor_And_pName + " 创建了 " + eventTitle;
 			break;
 		case Event.EVENT_TYPE_UPDATED:// 更新项目
