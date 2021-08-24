@@ -97,7 +97,14 @@ public class ProjectIssuesListAdapter extends MyBaseAdapter<Issue> {
 		
 		// 2.显示相关信息
 		listItemView.title.setText(issue.getTitle());
-		listItemView.description.setText(issue.getDescription());
+		if (StringUtils.isEmpty(issue.getDescription())) {
+			listItemView.description.setText("暂无描述");
+			listItemView.description.setTextColor(context.getResources().getColor(R.color.gray));
+		} else {
+			listItemView.description.setText(issue.getDescription());
+			listItemView.description.setTextColor(context.getResources().getColor(R.color.black));
+		}
+		
 		listItemView.username.setText(issue.getAuthor() == null ? "" : issue.getAuthor().getName());
 		listItemView.date.setText(StringUtils.friendly_time(issue.getCreatedAt()));
 		

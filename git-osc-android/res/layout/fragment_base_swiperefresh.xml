@@ -2,12 +2,12 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
-    
-    <ProgressBar 
+
+    <ProgressBar
         android:id="@+id/fragment_swiperefresh_loading"
         style="@style/ListSpinner"
         android:layout_gravity="center"
-        android:visibility="visible"/>
+        android:visibility="visible" />
 
     <net.oschina.gitapp.widget.CBSwipeRefreshLayout
         android:id="@+id/fragment_swiperefreshlayout"
@@ -23,5 +23,10 @@
             android:paddingRight="3dip"
             android:scrollingCache="false" />
     </net.oschina.gitapp.widget.CBSwipeRefreshLayout>
+    
+    <include
+        android:id="@+id/fragment_swiperefresh_empty"
+        layout="@layout/data_empty"
+        android:visibility="gone" />
 
 </FrameLayout>

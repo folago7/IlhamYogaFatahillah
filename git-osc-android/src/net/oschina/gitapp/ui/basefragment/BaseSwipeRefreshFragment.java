@@ -22,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -62,6 +63,9 @@ public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result exte
 	private View mFooterView;
 	private BaseAdapter mAdapter;
 	private ProgressBar mLoading;
+	private View mEmpty;
+	private ImageView mEmptyImage;//图像
+	private TextView mEmptyMessage;//消息文字
 	
 	private View mFooterProgressBar;
 	private TextView mFooterTextView;
@@ -158,6 +162,15 @@ public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result exte
 				R.color.swiperefresh_color4);
 		
 		mLoading = (ProgressBar) view.findViewById(R.id.fragment_swiperefresh_loading);
+		mEmpty = view.findViewById(R.id.fragment_swiperefresh_empty);
+		mEmptyImage = (ImageView) mEmpty.findViewById(R.id.data_empty_image);
+		mEmptyMessage = (TextView) mEmpty.findViewById(R.id.data_empty_message);
+	}
+	
+	/** 设置列表空数据时的显示信息*/
+	public void setEmptyInfo(int imageResId, int messageResId) {
+		mEmptyImage.setBackgroundResource(imageResId);
+		mEmptyMessage.setText(messageResId);
 	}
 	
 	@Override
@@ -321,6 +334,20 @@ public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result exte
 		return mDataList.get(position);
 	}
 	
+	public void beforeLoading(int action) {
+		//开始加载
+		mState = STATE_LOADING;
+		if(action == LISTVIEW_ACTION_REFRESH) {
+			setSwipeRefreshLoadingState();
+		} else if(action == LISTVIEW_ACTION_SCROLL) {
+			setFooterLoadingState();
+		}
+	}
+	
+	public void afterLoadin() {
+		
+	}
+	
 	// 加载数据
 	private class AsyncDataHandler implements DataRequestThreadHandler.AsyncDataHandler<MessageData<Result>> {
 
@@ -334,13 +361,7 @@ public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result exte
 		
 		@Override
 		public void onPreExecute() {
-			//开始加载
-			mState = STATE_LOADING;
-			if(mAction == LISTVIEW_ACTION_REFRESH) {
-				setSwipeRefreshLoadingState();
-			} else if(mAction == LISTVIEW_ACTION_SCROLL) {
-				setFooterLoadingState();
-			}
+			beforeLoading(mAction);
 		}
 		
 		@Override
@@ -375,7 +396,7 @@ public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result exte
 				msg.state = MessageData.MESSAGE_STATE_FULL;
 			}
 			if(msg.result != null && msg.result.getList().size() == 0) {
-				msg.state = MessageData.MESSAGE_STATE_FULL;
+				msg.state = MessageData.MESSAGE_STATE_EMPTY;
 			}
 			//记录最后的数据状态
 			mMessageState = msg.state;

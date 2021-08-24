@@ -1,26 +1,18 @@
 package net.oschina.gitapp.ui;
 
-import java.io.UnsupportedEncodingException;
-
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.view.MenuItemCompat;
-import android.util.Base64;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
-import net.oschina.gitapp.api.HTTPRequestor;
 import net.oschina.gitapp.bean.CodeFile;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.common.Contanst;
@@ -45,6 +37,8 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 	private Menu optionsMenu;
 	
 	private WebView mWebView;
+	
+	private ProgressBar mLoading;
 	
 	private SourceEditor editor;
 	
@@ -79,6 +73,8 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 		mActionBar.setSubtitle(mRef);
 		mWebView = (WebView) findViewById(R.id.code_file_webview);
 		editor = new SourceEditor(mWebView);
+		
+		mLoading = (ProgressBar) findViewById(R.id.code_file_loading);
 	}
 
 	@Override
@@ -122,16 +118,13 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 		if (optionsMenu == null) {
 			return;
 		}
-		// 更新菜单的状态
-		final MenuItem refreshItem = optionsMenu.findItem(MENU_REFRESH_ID);
-		if (refreshItem == null) {
-			return;
-		}
+		
 		if (status == STATUS_LOADING) {
-			MenuItemCompat.setActionView(refreshItem,
-					R.layout.actionbar_indeterminate_progress);
+			mLoading.setVisibility(View.VISIBLE);
+			mWebView.setVisibility(View.GONE);
 		} else {
-			MenuItemCompat.setActionView(refreshItem, null);
+			mLoading.setVisibility(View.GONE);
+			mWebView.setVisibility(View.VISIBLE);
 			if (status == STATUS_NONE) {
 
 			}
@@ -166,10 +159,10 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 			@Override
 			protected void onPostExecute(Message msg) {
 				if (msg.what == 1 && msg.obj != null) {
-					onStatus(STATUS_LOADED);
 					mCodeFile = (CodeFile) msg.obj;
 
 					editor.setSource(mPath, mCodeFile);
+					onStatus(STATUS_LOADED);
 				} else {
 					onStatus(STATUS_NONE);
 					if (msg.obj instanceof AppException) {

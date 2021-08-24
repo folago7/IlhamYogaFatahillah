@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
@@ -41,6 +42,8 @@ public class CommitFileDetailActivity extends BaseActionBarActivity implements
 	private Menu optionsMenu;
 	
 	private WebView mWebView;
+	
+	private ProgressBar mLoading;
 	
 	private SourceEditor mEditor;
 	
@@ -77,6 +80,8 @@ public class CommitFileDetailActivity extends BaseActionBarActivity implements
 		mWebView = (WebView) findViewById(R.id.code_file_webview);
 
 		mEditor = new SourceEditor(mWebView);
+		
+		mLoading = (ProgressBar) findViewById(R.id.code_file_loading);
 	}
 
 	@Override
@@ -117,16 +122,13 @@ public class CommitFileDetailActivity extends BaseActionBarActivity implements
 		if(optionsMenu == null) {
 			return;
 		}
-		// 更新菜单的状态
-		final MenuItem refreshItem = optionsMenu.findItem(MENU_REFRESH_ID);
-        if (refreshItem == null) {
-            return;
-        }
+		// 更新状态
 		if(status == STATUS_LOADING) {
-			MenuItemCompat.setActionView(refreshItem, 
-					R.layout.actionbar_indeterminate_progress);
+			mLoading.setVisibility(View.VISIBLE);
+			mWebView.setVisibility(View.GONE);
 		} else {
-			MenuItemCompat.setActionView(refreshItem, null);
+			mLoading.setVisibility(View.GONE);
+			mWebView.setVisibility(View.VISIBLE);
 			if (status == STATUS_NONE) {
 				
 			}

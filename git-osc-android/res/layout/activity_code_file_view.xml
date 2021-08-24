@@ -7,12 +7,12 @@
         android:id="@+id/code_file_webview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:visibility="visible" />
+        android:visibility="gone" />
     
     <ProgressBar 
         android:id="@+id/code_file_loading"
         style="@style/ListSpinner"
         android:layout_centerInParent="true"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 
 </RelativeLayout>
