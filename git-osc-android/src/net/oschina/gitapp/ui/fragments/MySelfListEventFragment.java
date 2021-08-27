@@ -2,6 +2,7 @@ package net.oschina.gitapp.ui.fragments;
 
 import java.util.List;
 
+import android.util.Log;
 import android.widget.BaseAdapter;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
@@ -48,17 +49,7 @@ public class MySelfListEventFragment extends BaseSwipeRefreshFragment<Event, Com
 
 	@Override
 	public void onItemClick(int position, Event event) {
-		showEventDetail(event);
+		UIHelper.showEventDetail(mApplication, event);
 	}
 	
-	private void showEventDetail(Event event) {
-		
-		if ((event.getAction() == Event.EVENT_TYPE_COMMENTED && event.getTarget_type().equalsIgnoreCase("issue"))
-				|| (event.getAction() == Event.EVENT_TYPE_CREATED && event.getTarget_type().equalsIgnoreCase("issue"))) {
-			event.getProject().setIssuesEnabled(true);
-			UIHelper.showProjectDetail(mApplication, event.getProject(), null, 2);
-		} else {
-			UIHelper.showProjectDetail(mApplication, event.getProject(), null, 0);
-		}
-	}
 }

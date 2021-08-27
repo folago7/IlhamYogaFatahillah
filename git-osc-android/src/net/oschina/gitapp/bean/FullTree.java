@@ -29,11 +29,6 @@ import java.util.TreeMap;
  *
  */
 public class FullTree {
-	
-	/**
-     * 代码树
-     */
-    public final Tree tree;
 
     /**
      * 根文件夹
@@ -46,11 +41,8 @@ public class FullTree {
      * @param tree
      * @param reference
      */
-    public FullTree(final Tree tree) {
-        this.tree = tree;
-
+    public FullTree(List<CodeTree> entries) {
         root = new Folder();
-        List<CodeTree> entries = tree.getTree();
         if (entries != null && !entries.isEmpty())
             for (CodeTree entry : entries)
                 root.add(entry);

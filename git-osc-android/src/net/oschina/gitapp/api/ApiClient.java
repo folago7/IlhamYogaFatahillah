@@ -423,6 +423,7 @@ public class ApiClient {
 		params.put("ref_name", ref_name);
 		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + projectId
 				+ URLs.URL_SPLITTER + "repository/tree", params);
+		Log.i("Test", url);
 		List<CodeTree> list = getHttpRequestor().init(appContext,
 				HTTPRequestor.GET_METHOD, url).getList(CodeTree[].class);
 		codeTree.setList(list);

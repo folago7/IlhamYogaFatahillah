@@ -1,11 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:id="@+id/projectcode_tree_prefolder"
+    android:layout_width="0dip"
+    android:layout_height="38dip"
+    android:layout_weight="1"
+    android:background="@android:drawable/list_selector_background"
     android:descendantFocusability="blocksDescendants"
+    android:gravity="center|left"
     android:orientation="horizontal"
-    android:gravity="center"
-    android:padding="10dip" >
+    android:paddingLeft="15dip" >
 
     <ImageView
         android:layout_width="15dip"
@@ -18,24 +20,25 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:descendantFocusability="blocksDescendants"
-        android:paddingLeft="10dip"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:paddingLeft="10dip" >
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
             android:text=".."
             android:textColor="@color/black"
-            android:gravity="center_horizontal"
-            android:textStyle="bold"
-            android:textSize="@dimen/text_size_10" />
-        
+            android:textSize="@dimen/text_size_10"
+            android:textStyle="bold" />
+
         <TextView
+            android:id="@+id/projectcode_floders"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Parent tree"
-            android:textColor="@color/gray"
             android:gravity="center"
+            android:text="父目录"
+            android:textColor="@color/gray"
             android:textSize="@dimen/text_size_8" />
     </LinearLayout>
 

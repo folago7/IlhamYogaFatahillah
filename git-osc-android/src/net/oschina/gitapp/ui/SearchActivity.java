@@ -146,7 +146,7 @@ public class SearchActivity extends BaseActionBarActivity implements
 	/** 加载下一页*/
 	protected void onLoadNextPage() {
 		// 当前pageIndex
-		int pageIndex = mData.size() / AppContext.PAGE_SIZE + 1;
+		int pageIndex = mData.size() / 15 + 1;
 		load(mKey, pageIndex);
 	}
 	
@@ -198,6 +198,7 @@ public class SearchActivity extends BaseActionBarActivity implements
 			protected void onPreExecute() {
 				super.onPreExecute();
 				isLoading = true;
+				mEmpty.setVisibility(View.GONE);
 				if (page != 0 && page != 1) {
 					setFooterLoadingState();
 				} else {
@@ -219,7 +220,7 @@ public class SearchActivity extends BaseActionBarActivity implements
 					if (resuleData.size() > 0) {
 						mEmpty.setVisibility(View.GONE);
 						mData.addAll(resuleData);
-						if (resuleData.size() != AppContext.PAGE_SIZE) {
+						if (resuleData.size() != 15) {
 							setFooterFullState();
 						} else {
 							setFooterHasMoreState();

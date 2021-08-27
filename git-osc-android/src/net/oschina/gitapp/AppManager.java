@@ -92,7 +92,7 @@ public class AppManager {
 	public void AppExit(Context context) {
 		try {
 			finishAllActivity();
-			Intent intent = new Intent(context, MainActivity.class);  
+			/*Intent intent = new Intent(context, MainActivity.class);  
             PendingIntent restartIntent = PendingIntent.getActivity(    
             		context, 0, intent,    
                     Intent.FLAG_ACTIVITY_NEW_TASK);                                                 
@@ -100,6 +100,7 @@ public class AppManager {
             AlarmManager mgr = (AlarmManager)context.getSystemService(Context.ALARM_SERVICE);    
             mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 1000,    
                     restartIntent); // 1秒钟后重启应用
+*/			
 			// 杀死该应用进程
 			android.os.Process.killProcess(android.os.Process.myPid());
 			System.exit(0);

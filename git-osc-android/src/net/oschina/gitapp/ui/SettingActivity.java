@@ -114,6 +114,8 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 			mAppContext.setConfigCheckUp(checkup.isChecked());
 		} else if (preference == cache) {
 			onCache();
+		} else if (preference == feedback) {
+			onFeedBack();
 		}
 		return true;
 	}
@@ -166,5 +168,18 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		if (fileSize > 0)
 			cacheSize = FileUtils.formatFileSize(fileSize);
 		return cacheSize;
+	}
+	
+	/**
+	 * 发送反馈意见到指定的邮箱
+	 */
+	private void onFeedBack() {
+		Intent i = new Intent(Intent.ACTION_SEND);  
+		//i.setType("text/plain"); //模拟器
+		i.setType("message/rfc822") ; //真机
+		i.putExtra(Intent.EXTRA_EMAIL, new String[]{"ld@oschina.net", "zhangdeyi@oschina.net"});  
+		i.putExtra(Intent.EXTRA_SUBJECT,"用户反馈-git@osc Android客户端");  
+		i.putExtra(Intent.EXTRA_TEXT, "");  
+		startActivity(Intent.createChooser(i, "send email to me..."));
 	}
 }

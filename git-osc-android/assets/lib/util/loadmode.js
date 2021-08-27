@@ -26,7 +26,7 @@
     if (loading.hasOwnProperty(mode)) return loading[mode].push(cont);
 
     var script = document.createElement("script");
-    script.src = CodeMirror.modeURL.replace(/%N/g, mode);
+    script.src = CodeMirror.modeURL.replace(/%N/g, mode); 
     var others = document.getElementsByTagName("script")[0];
     others.parentNode.insertBefore(script, others);
     var list = loading[mode] = [cont];

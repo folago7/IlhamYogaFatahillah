@@ -67,17 +67,7 @@ public class UserListEventFragment extends BaseSwipeRefreshFragment<Event, Commo
 
 	@Override
 	public void onItemClick(int position, Event event) {
-		showEventDetail(event);
+		UIHelper.showEventDetail(mApplication, event);
 	}
-	
-	private void showEventDetail(Event event) {
-		
-		if ((event.getAction() == Event.EVENT_TYPE_COMMENTED && event.getTarget_type().equalsIgnoreCase("issue"))
-				|| (event.getAction() == Event.EVENT_TYPE_CREATED && event.getTarget_type().equalsIgnoreCase("issue"))) {
-			event.getProject().setIssuesEnabled(true);
-			UIHelper.showProjectDetail(mApplication, event.getProject(), null, 2);
-		} else {
-			UIHelper.showProjectDetail(mApplication, event.getProject(), null, 0);
-		}
-	}
+
 }

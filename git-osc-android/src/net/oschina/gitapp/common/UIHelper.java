@@ -155,8 +155,10 @@ public class UIHelper {
 		switch (action) {
 		case Event.EVENT_TYPE_CREATED:// 创建了issue
 			eventTitle = event.getTarget_type();
-			if (event.getIssue() != null) { 
-				eventTitle = eventTitle + " #" + event.getIssue().getIid();
+			if (event.getEvents().getIssue() != null) { 
+				eventTitle = eventTitle + " #" + event.getEvents().getIssue().getIid();
+			} else if (event.getEvents().getPull_request() != null) {
+				eventTitle = eventTitle + " #" + event.getEvents().getPull_request().getIid();
 			}
 			title = "在项目 " + pAuthor_And_pName + " 创建了 " + eventTitle;
 			break;
@@ -165,23 +167,23 @@ public class UIHelper {
 			break;
 		case Event.EVENT_TYPE_CLOSED:// 关闭项目
 			eventTitle = event.getTarget_type();
-			title = "关闭了项目 " + pAuthor_And_pName + " 的" + eventTitle;
+			title = "关闭了项目 " + pAuthor_And_pName + " 的 " + eventTitle;
 			break;
 		case Event.EVENT_TYPE_REOPENED:// 重新打开了项目
 			eventTitle = event.getTarget_type();
-			title = "重新打开了项目 " + pAuthor_And_pName + " 的" + eventTitle;
+			title = "重新打开了项目 " + pAuthor_And_pName + " 的 " + eventTitle;
 			break;
 		case Event.EVENT_TYPE_PUSHED:// push
 			eventTitle = event.getData().getRef().substring(event.getData().getRef().lastIndexOf("/") + 1);
 			title = "推送到了项目 " + pAuthor_And_pName + " 的 " + eventTitle + " 分支";
 			break;
 		case Event.EVENT_TYPE_COMMENTED:// 评论
-			if (event.getNote().getNoteable_type() != null) {
-				eventTitle = event.getNote().getNoteable_type();
+			if (event.getEvents().getNote().getNoteable_type() != null) {
+				eventTitle = event.getEvents().getNote().getNoteable_type();
 			} else {
 				eventTitle = "Issues";
 			}
-			title = "评论了项目 " + pAuthor_And_pName + " 的" + eventTitle;
+			title = "评论了项目 " + pAuthor_And_pName + " 的 " + eventTitle;
 			break;
 		case Event.EVENT_TYPE_MERGED:// 合并
 			eventTitle = event.getTarget_type();
@@ -470,5 +472,18 @@ public class UIHelper {
 		bundle.putSerializable(Contanst.USER, user);
 		intent.putExtras(bundle);
 		context.startActivity(intent);
+	}
+	
+	/**
+	 * 点击动态显示动态详情
+	 * @param context
+	 * @param event
+	 */
+	public static void showEventDetail(Context context, Event event) {
+		if (event.getEvents().getIssue() != null) {
+			UIHelper.showProjectDetail(context, null, event.getProject().getId(), 2);
+		} else {
+			UIHelper.showProjectDetail(context, null, event.getProject().getId(), 0);
+		}
 	}
 }

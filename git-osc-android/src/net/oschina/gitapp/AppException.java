@@ -267,9 +267,12 @@ public class AppException extends Exception implements UncaughtExceptionHandler{
 	private String getCrashReport(Context context, Throwable ex) {
 		PackageInfo pinfo = ((AppContext)context.getApplicationContext()).getPackageInfo();
 		StringBuffer exceptionStr = new StringBuffer();
-		exceptionStr.append("Version: "+pinfo.versionName+"("+pinfo.versionCode+")\n");
-		exceptionStr.append("Android: "+android.os.Build.VERSION.RELEASE+"("+android.os.Build.MODEL+")\n");
-		exceptionStr.append("Exception: "+ex.getMessage()+"\n");
+		exceptionStr.append("Version: "+pinfo.versionName+" ("+pinfo.versionCode+")\n");
+		exceptionStr.append("API Level: "+android.os.Build.VERSION.SDK_INT + "\n");
+		exceptionStr.append("Android: "+android.os.Build.VERSION.RELEASE+" ("+android.os.Build.MODEL+")\n\n\n");
+		exceptionStr.append("异常信息: \n");
+		exceptionStr.append("Exception: "+ex.getMessage()+"\n\n\n");
+		exceptionStr.append("堆栈信息: \n");
 		StackTraceElement[] elements = ex.getStackTrace();
 		for (int i = 0; i < elements.length; i++) {
 			exceptionStr.append(elements[i].toString()+"\n");

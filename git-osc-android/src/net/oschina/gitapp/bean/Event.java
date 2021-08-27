@@ -61,17 +61,14 @@ public class Event extends Entity {
 	@JsonProperty("update_at")
 	private Date _updated_at;
 	
-	@JsonProperty("note")
-	private Note _note;
+	@JsonProperty("events")
+	private Events _events;
 	
-	@JsonProperty("issue")
-	private Issue _issue;
-	
-	public Note getNote() {
-		return _note;
+	public Events getEvents() {
+		return _events;
 	}
-	public void setNote(Note note) {
-		this._note = note;
+	public void setEvents(Events events) {
+		this._events = events;
 	}
 	public Project getProject() {
 		return _project;
@@ -144,11 +141,5 @@ public class Event extends Entity {
 	}
 	public void setUpdated_at(Date updated_at) {
 		this._updated_at = updated_at;
-	}
-	public Issue getIssue() {
-		return _issue;
-	}
-	public void setIssue(Issue issue) {
-		this._issue = issue;
 	}
 }

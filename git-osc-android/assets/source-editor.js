@@ -160,6 +160,7 @@ window.onload = function () {
   config.lineWrapping = !!SourceEditor.getWrap();
   config.dragDrop = false;
   var editor = CodeMirror(document.body, config);
+  
 
   var mode = getMode(extension);
   if (mode.mode)
@@ -171,4 +172,5 @@ window.onload = function () {
     updateWidth();
 
   editor.refresh();
+  
 };

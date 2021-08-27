@@ -4,7 +4,11 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +23,8 @@ import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.interfaces.OnStatusListener;
 import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
+import net.oschina.gitapp.util.EncodingUtils;
+import net.oschina.gitapp.util.MarkdownUtils;
 import net.oschina.gitapp.util.SourceEditor;
 
 /**
@@ -33,7 +39,7 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 
 	private final int MENU_REFRESH_ID = 0;
 	private final int MENU_MORE_ID = 1;
-
+	
 	private Menu optionsMenu;
 	
 	private WebView mWebView;
@@ -66,6 +72,7 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 		mPath = intent.getStringExtra("path");
 		mRef = intent.getStringExtra("ref");
 		init();
+		loadDatasCode(mProject.getId(), mPath, mRef);
 	}
 
 	private void init() {
@@ -84,17 +91,17 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 		MenuItem refreshItem = menu.add(0, MENU_REFRESH_ID, MENU_REFRESH_ID,
 				"刷新");
 		refreshItem.setIcon(R.drawable.abc_ic_menu_refresh);
-
-		MenuItem moreOption = menu.add(0, MENU_MORE_ID, MENU_MORE_ID, "更多");
-		moreOption
-				.setIcon(R.drawable.abc_ic_menu_moreoverflow_normal_holo_dark);
+		
 		MenuItemCompat.setShowAsAction(refreshItem,
 				MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
-		/*
-		 * MenuItemCompat.setShowAsAction(moreOption,
-		 * MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
-		 */
-		loadDatasCode(mProject.getId(), mPath, mRef);
+		
+		/*MenuItem moreOption = menu.add(0, MENU_MORE_ID, MENU_MORE_ID, "更多");
+		moreOption
+				.setIcon(R.drawable.abc_ic_menu_moreoverflow_normal_holo_dark);
+		
+		MenuItemCompat.setShowAsAction(moreOption,
+				MenuItemCompat.SHOW_AS_ACTION_ALWAYS);*/
+		
 		return true;
 	}
 
@@ -160,8 +167,9 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 			protected void onPostExecute(Message msg) {
 				if (msg.what == 1 && msg.obj != null) {
 					mCodeFile = (CodeFile) msg.obj;
-
+					editor.setMarkdown(MarkdownUtils.isMarkdown(mPath));
 					editor.setSource(mPath, mCodeFile);
+					
 					onStatus(STATUS_LOADED);
 				} else {
 					onStatus(STATUS_NONE);

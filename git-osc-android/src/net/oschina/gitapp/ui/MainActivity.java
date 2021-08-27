@@ -104,7 +104,7 @@ public class MainActivity extends ActionBarActivity implements
 		//mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,GravityCompat.START);
 
 		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-				R.drawable.ic_navigation_drawer, 0, 0);
+				R.drawable.ic_drawer, 0, 0);
 
 		
 		mFragmentManager = getSupportFragmentManager();

@@ -9,6 +9,7 @@ import java.util.List;
  * @author 火蚁
  *
  */
+@SuppressWarnings("serial")
 public class Tree implements Serializable {
 	
 	private List<CodeTree> tree;

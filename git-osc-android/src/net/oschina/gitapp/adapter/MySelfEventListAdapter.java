@@ -113,13 +113,18 @@ public class MySelfEventListAdapter extends MyBaseAdapter<Event> {
 		}
 		
 		listItemView.content.setVisibility(View.GONE);
-		if (event.getNote() != null && event.getNote().getNote() != null) {
-			listItemView.content.setText(event.getNote().getNote());
+		if (event.getEvents().getNote() != null && event.getEvents().getNote().getNote() != null) {
+			listItemView.content.setText(event.getEvents().getNote().getNote());
 			listItemView.content.setVisibility(View.VISIBLE);
 		}
 		
-		if (event.getIssue() != null) {
-			listItemView.content.setText(event.getIssue().getTitle());
+		if (event.getEvents().getIssue() != null) {
+			listItemView.content.setText(event.getEvents().getIssue().getTitle());
+			listItemView.content.setVisibility(View.VISIBLE);
+		}
+		
+		if (event.getEvents().getPull_request() != null) {
+			listItemView.content.setText(event.getEvents().getPull_request().getTitle());
 			listItemView.content.setVisibility(View.VISIBLE);
 		}
 		

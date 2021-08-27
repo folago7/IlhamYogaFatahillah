@@ -66,13 +66,13 @@ public class ProjectViewPageFragment extends BaseViewPagerFragment {
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		MenuItem createOption = menu.add(0, MENU_CREATE_ID, MENU_CREATE_ID, "创建Issue");
 		createOption.setIcon(R.drawable.action_create);
+		MenuItemCompat.setShowAsAction(createOption, MenuItemCompat.SHOW_AS_ACTION_IF_ROOM);
 		
-		MenuItem moreOption = menu.add(1, MENU_MORE_ID, MENU_MORE_ID, "更多");
+		/*MenuItem moreOption = menu.add(1, MENU_MORE_ID, MENU_MORE_ID, "更多");
 		moreOption.setIcon(R.drawable.abc_ic_menu_moreoverflow_normal_holo_dark);
 		
-		MenuItemCompat.setShowAsAction(createOption, MenuItemCompat.SHOW_AS_ACTION_IF_ROOM);
 		MenuItemCompat.setShowAsAction(moreOption,
-				MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
+				MenuItemCompat.SHOW_AS_ACTION_ALWAYS);*/
 	}
 	
 	@Override

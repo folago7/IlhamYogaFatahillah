@@ -98,6 +98,9 @@ public class ProjectReadMeFragment extends BaseFragment {
 			
 			@Override
 			protected void onPostExecute(Message msg) {
+				if (getActivity().isFinishing()) {
+					return;
+				}
 				mLoading.setVisibility(View.GONE);
 				if (msg.what == 1) {
 					CodeFile codeFile = (CodeFile) msg.obj;

@@ -18,14 +18,13 @@ package net.oschina.gitapp.util;
 import static net.oschina.gitapp.common.Contanst.CHARSET_UTF8;
 import static net.oschina.gitapp.bean.CodeFile.ENCODING_BASE64;
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.text.TextUtils;
-import android.util.Log;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.TextView;
-
 import java.io.UnsupportedEncodingException;
-
 import net.oschina.gitapp.bean.CodeFile;
 import net.oschina.gitapp.common.UIHelper;
 
@@ -34,6 +33,7 @@ import net.oschina.gitapp.common.UIHelper;
  * @author 火蚁（http://my.oschina.net/LittleDY）
  *
  */
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 @SuppressLint("SetJavaScriptEnabled")
 public class SourceEditor {
 
@@ -56,21 +56,29 @@ public class SourceEditor {
      *
      * @param view
      */
-    @SuppressLint("JavascriptInterface")
 	public SourceEditor(final WebView view) {
         
         WebSettings settings = view.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setBuiltInZoomControls(true);
-        settings.setDisplayZoomControls(false);
+        try { 
+        	int version = Integer.valueOf(android.os.Build.VERSION.SDK_INT);
+        	if (version >= 11) {
+        		// 这个方法在API level 11 以上才可以调用，不然会发生异常
+                settings.setDisplayZoomControls(false);
+        	}
+        } catch (NumberFormatException e) { 
+        	
+        } 
         settings.setUseWideViewPort(true);
-        view.addJavascriptInterface(this, "SourceEditor");
+        view.addJavascriptInterface(SourceEditor.this, "SourceEditor");
         this.view = view;
     }
 
     /**
      * @return name
      */
+    @JavascriptInterface
     public String getName() {
         return name;
     }
@@ -78,6 +86,7 @@ public class SourceEditor {
     /**
      * @return content
      */
+    @JavascriptInterface
     public String getRawContent() {
         return content;
     }
@@ -85,6 +94,7 @@ public class SourceEditor {
     /**
      * @return content
      */
+    @JavascriptInterface
     public String getContent() {
         if (encoded)
             try {
@@ -100,6 +110,7 @@ public class SourceEditor {
     /**
      * @return wrap
      */
+    @JavascriptInterface
     public boolean getWrap() {
         return wrap;
     }
@@ -107,6 +118,7 @@ public class SourceEditor {
     /**
      * @return markdown
      */
+    @JavascriptInterface
     public boolean isMarkdown() {
         return markdown;
     }
@@ -117,6 +129,7 @@ public class SourceEditor {
      * @param wrap
      * @return this editor
      */
+    @JavascriptInterface
     public SourceEditor setWrap(final boolean wrap) {
         this.wrap = wrap;
         loadSource();
@@ -129,6 +142,7 @@ public class SourceEditor {
      * @param markdown
      * @return this editor
      */
+    @JavascriptInterface
     public SourceEditor setMarkdown(final boolean markdown) {
         this.markdown = markdown;
         return this;
@@ -142,6 +156,7 @@ public class SourceEditor {
      * @param encoded
      * @return this editor
      */
+    @JavascriptInterface
     public SourceEditor setSource(final String name, final String content,
             final boolean encoded) {
         this.name = name;
@@ -151,10 +166,12 @@ public class SourceEditor {
 
         return this;
     }
-
+    
+    @JavascriptInterface
     private void loadSource() {
     	if (name != null && content != null)
-            if (name.endsWith(".md"))
+    		
+            if (markdown)
                 view.loadDataWithBaseURL(null, UIHelper.WEB_STYLE + getContent(), "text/html", CHARSET_UTF8, null);
             else
                 view.loadUrl(URL_PAGE);
@@ -167,6 +184,7 @@ public class SourceEditor {
      * @param blob
      * @return this editor
      */
+    @JavascriptInterface
     public SourceEditor setSource(final String name, final CodeFile blob) {
         String content = blob.getContent();
         if (content == null)
@@ -181,6 +199,7 @@ public class SourceEditor {
      *
      * @return this editor
      */
+    @JavascriptInterface
     public SourceEditor toggleWrap() {
         return setWrap(!wrap);
     }
@@ -190,6 +209,7 @@ public class SourceEditor {
      *
      * @return this editor
      */
+    @JavascriptInterface
     public SourceEditor toggleMarkdown() {
         return setMarkdown(!markdown);
     }

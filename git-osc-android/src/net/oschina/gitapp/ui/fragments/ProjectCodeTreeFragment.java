@@ -11,12 +11,16 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -32,6 +36,7 @@ import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.FullTree;
 import net.oschina.gitapp.bean.FullTree.Folder;
 import net.oschina.gitapp.bean.Project;
+import net.oschina.gitapp.bean.Tree;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.DataRequestThreadHandler;
 import net.oschina.gitapp.common.StringUtils;
@@ -47,8 +52,7 @@ import net.oschina.gitapp.ui.basefragment.BaseFragment;
  * 
  *         最后更新 更新者
  */
-public class ProjectCodeTreeFragment extends BaseFragment implements
-		SwipeRefreshLayout.OnRefreshListener, OnItemClickListener,
+public class ProjectCodeTreeFragment extends BaseFragment implements OnItemClickListener,
 		OnClickListener {
 
 	private static final int ACTION_INIT = 0;// 初始化
@@ -76,15 +80,19 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 
 	private List<CodeTree> mTrees;
 
-	private View mHeadView;
-
 	private String mPath = "";
 
 	private String mBranch;
 
 	private AppContext mAppContext;
 
-	private SwipeRefreshLayout mSwipeRefreshLayout;
+	private LinearLayout mContentLayout;
+	
+	private LinearLayout mCodeTreeFolder;
+	
+	private TextView mCodeFloders;
+	
+	private ProgressBar mCodeTreeLoading;
 
 	private ProgressBar mLoading;
 
@@ -129,16 +137,16 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 	}
 
 	private void initView(LayoutInflater inflater) {
-		mHeadView = inflater.inflate(R.layout.projectcodetree_listitem_head,
-				null);
-		mSwipeRefreshLayout = (SwipeRefreshLayout) mView
-				.findViewById(R.id.projectcode_swiperefreshlayout);
-		mSwipeRefreshLayout.setOnRefreshListener(this);
-		mSwipeRefreshLayout.setColorScheme(
-				R.color.swiperefresh_color1,
-				R.color.swiperefresh_color2, 
-				R.color.swiperefresh_color3,
-				R.color.swiperefresh_color4);
+
+		mContentLayout = (LinearLayout) mView.findViewById(R.id.projectcode_content_layout);
+		
+		mCodeTreeFolder = (LinearLayout) mView.findViewById(R.id.projectcode_tree_prefolder);
+		
+		mCodeFloders = (TextView) mView.findViewById(R.id.projectcode_floders);
+		
+		mCodeTreeFolder.setOnClickListener(this);
+		
+		mCodeTreeLoading = (ProgressBar) mView.findViewById(R.id.projectcode_tree_loading);
 		
 		mLoading = (ProgressBar) mView.findViewById(R.id.projectcode_loading);
 		
@@ -155,9 +163,7 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 		mTrees = new ArrayList<CodeTree>();
 		mAdapter = new ProjectCodeTreeListAdapter(getGitApplication(), mTrees,
 				R.layout.projectcodetree_listitem);
-		mCodeTree.addHeaderView(mHeadView);
 		mCodeTree.setAdapter(mAdapter);
-		mCodeTree.removeHeaderView(mHeadView);
 		mCodeTree.setOnItemClickListener(this);
 		mSwitch_branch.setOnClickListener(this);
 	}
@@ -170,11 +176,6 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-
-		if (view == mHeadView) {
-			loadDatas(getPrePath(), mBranch, ACTION_PRE_TREE);
-			return;
-		}
 
 		position -= mCodeTree.getHeaderViewsCount();
 
@@ -224,7 +225,12 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 		case R.id.projectcode_switch_branch:
 			switchBranch();
 			break;
-
+		case R.id.projectcode_tree_prefolder:
+			if (StringUtils.isEmpty(mPath)) {
+				return;
+			}
+			loadDatas(getPrePath(), mBranch, ACTION_PRE_TREE);
+			break;
 		default:
 			break;
 		}
@@ -259,7 +265,7 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 		@Override
 		public void onPreExecute() {
 			if (_mAction != ACTION_INIT) {
-				setSwipeRefreshLoadingState();
+				mCodeTreeLoading.setVisibility(View.VISIBLE);
 			}
 		}
 
@@ -269,7 +275,7 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 			Message msg = new Message();
 			try {
 				boolean refresh = true;
-				if (_mAction == ACTION_INIT && _mAction == ACTION_PRE_TREE) {
+				if (_mAction == ACTION_INIT) {
 					refresh = false;
 				}
 				CommonList<CodeTree> list = mAppContext.getProjectCodeTree(
@@ -290,21 +296,26 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 		@Override
 		public void onPostExecute(Message result) {
 			if (_mAction == ACTION_INIT) {
-				mSwipeRefreshLayout.setVisibility(View.VISIBLE);
+				mContentLayout.setVisibility(View.VISIBLE);
 				mSwitch_branch.setVisibility(View.VISIBLE);
 				mLoading.setVisibility(View.GONE);
+			} else {
+				mCodeTreeLoading.setVisibility(View.INVISIBLE);
 			}
-			setSwipeRefreshLoadedState();
 			if (result.what == 1 && result.obj != null) {
 				mTrees.clear();
 				mTrees.addAll((List<CodeTree>) result.obj);
+				if (_mAction == ACTION_INIT) {
+					mFullTree = new FullTree(mTrees);
+				}
 				// 加载成功，记录相关信息
 				if (_mAction == ACTION_LOADING_TREE
 						|| _mAction == ACTION_PRE_TREE) {
 					mPath = _mPath;
 					mBranch = _mRef_name;
 				}
-				setCodeTreeListHeadView();
+				String floders = mProject.getName() + (StringUtils.isEmpty(mPath) ? "" : "/" + mPath);
+				mCodeFloders.setText(floders);
 				mAdapter.notifyDataSetChanged();
 			} else {
 				if (result.obj instanceof AppException) {
@@ -315,43 +326,6 @@ public class ProjectCodeTreeFragment extends BaseFragment implements
 				}
 			}
 		}
-	}
-
-	/** 设置顶部正在加载的状态 */
-	void setSwipeRefreshLoadingState() {
-		if (mSwipeRefreshLayout != null) {
-			mSwipeRefreshLayout.setRefreshing(true);
-			// 防止多次重复刷新
-			mSwipeRefreshLayout.setEnabled(false);
-		}
-	}
-
-	/** 设置顶部加载完毕的状态 */
-	void setSwipeRefreshLoadedState() {
-		if (mSwipeRefreshLayout != null) {
-			mSwipeRefreshLayout.setRefreshing(false);
-			mSwipeRefreshLayout.setEnabled(true);
-		}
-	}
-
-	/** 设置代码树的头部信息 */
-	void setCodeTreeListHeadView() {
-		if (mPath == null || StringUtils.isEmpty(mPath)) {
-			if (mCodeTree.getHeaderViewsCount() > 0) {
-				mCodeTree.removeHeaderView(mHeadView);
-			}
-
-		} else {
-			if (mCodeTree.getHeaderViewsCount() <= 0) {
-				mCodeTree.addHeaderView(mHeadView);
-			}
-		}
-		mHeadView.invalidate();
-	}
-
-	@Override
-	public void onRefresh() {
-		loadDatas(mPath, mBranch, ACTION_REFRESH);
 	}
 
 	@Override

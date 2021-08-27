@@ -109,7 +109,8 @@ public class IssueDetailActivity extends BaseActionBarActivity implements
 		imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
 		init();
 		initHead();
-		mActionBar.setTitle("Issue");
+		String title = "Issue " + (mIssue.getIid() == 0 ? "" :  "#" + mIssue.getIid());
+		mActionBar.setTitle(title);
 		mActionBar.setSubtitle(mProject.getOwner().getName() + "/"
 				+ mProject.getName());
 		steupList();
