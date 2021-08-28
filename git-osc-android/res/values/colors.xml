@@ -74,5 +74,6 @@
     <color name="inset_background">#F8F8F8</color>
     <color name="inset_outer">#C7C7C7</color>
     <color name="inset_inner">#FFFFFF</color>
+    <color name="theme">#ff00bfff</color>
 
 </resources>

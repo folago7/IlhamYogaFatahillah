@@ -2,6 +2,8 @@ package net.oschina.gitapp.adapter;
 
 import java.util.ArrayList;
 
+import net.oschina.gitapp.R;
+import net.oschina.gitapp.widget.PagerSlidingTabStrip;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,8 +11,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TabHost;
+import android.widget.TextView;
 
 /**
  * 类名 TabsFragmentPagerAdapter.java</br>
@@ -26,7 +30,7 @@ public class ViewPageFragmentAdapter extends FragmentPagerAdapter
 	implements ViewPager.OnPageChangeListener {
 	
 	private final Context mContext;
-	protected PagerTabStrip mPagerStrip;
+	protected PagerSlidingTabStrip mPagerStrip;
     private final ViewPager mViewPager;
     private final ArrayList<ViewPageInfo> mTabs = new ArrayList<ViewPageInfo>();
 
@@ -46,15 +50,14 @@ public class ViewPageFragmentAdapter extends FragmentPagerAdapter
         }
     }
 
-    public ViewPageFragmentAdapter(FragmentManager fm, PagerTabStrip pageStrip, ViewPager pager) {
+    public ViewPageFragmentAdapter(FragmentManager fm, PagerSlidingTabStrip pageStrip, ViewPager pager) {
         super(fm);
         mContext = pager.getContext();
         mPagerStrip = pageStrip;
         mViewPager = pager;
         mViewPager.setAdapter(this);
-        
         mViewPager.setOnPageChangeListener(this);
-        
+        mPagerStrip.setViewPager(mViewPager);
     }
     
     public void addTab(String title, String tag, Class<?> clss, Bundle args) {
@@ -65,6 +68,11 @@ public class ViewPageFragmentAdapter extends FragmentPagerAdapter
     @Override
     public void notifyDataSetChanged() {
     	super.notifyDataSetChanged();
+    	for (ViewPageInfo viewPageInfo : mTabs) {
+			TextView v = (TextView) LayoutInflater.from(mContext).inflate(R.layout.sliding_tab_item, null);
+			v.setText(viewPageInfo.title);
+			mPagerStrip.addTab(v);
+		}
     }
 
     @Override

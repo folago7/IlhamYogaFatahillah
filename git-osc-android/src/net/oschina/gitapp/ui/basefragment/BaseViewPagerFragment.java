@@ -2,6 +2,7 @@ package net.oschina.gitapp.ui.basefragment;
 
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.ViewPageFragmentAdapter;
+import net.oschina.gitapp.widget.PagerSlidingTabStrip;
 import android.os.Bundle;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
@@ -22,7 +23,7 @@ import android.view.ViewGroup;
  */
 public abstract class BaseViewPagerFragment extends BaseFragment{
 
-	protected PagerTabStrip mTabStrip;
+	protected PagerSlidingTabStrip mTabStrip;
 	protected ViewPager  mViewPager;
 	protected ViewPageFragmentAdapter mTabsAdapter;
 	
@@ -35,7 +36,7 @@ public abstract class BaseViewPagerFragment extends BaseFragment{
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		DisplayMetrics dm = getResources().getDisplayMetrics();
-        mTabStrip = (PagerTabStrip) view.findViewById(R.id.pager_tabstrip);
+        mTabStrip = (PagerSlidingTabStrip) view.findViewById(R.id.pager_tabstrip);
         
         mViewPager = (ViewPager)view.findViewById(R.id.pager);
 
