@@ -126,8 +126,16 @@ public class ProjectCodeTreeFragment extends BaseFragment implements OnItemClick
 		mView = inflater.inflate(R.layout.projectcode_fragment, null);
 		initView(inflater);
 		setupListView();
-		loadDatas("", "master", ACTION_INIT);
+		setUserVisibleHint(true);
 		return mView;
+	}
+	
+	@Override
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		super.setUserVisibleHint(isVisibleToUser);
+		if (isVisibleToUser) {
+			loadDatas("", "master", ACTION_INIT);
+		}
 	}
 
 	@Override

@@ -48,6 +48,6 @@ public class MySelfListProjectFragment extends BaseSwipeRefreshFragment<Project,
 	
 	@Override
 	public void onItemClick(int position, Project project) {
-		UIHelper.showProjectDetail(getActivity(), project, project.getId(), 0);
+		UIHelper.showProjectDetail(getActivity(), project, project.getId());
 	}
 }

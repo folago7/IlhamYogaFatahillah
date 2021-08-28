@@ -146,7 +146,7 @@ public class NotificationListAdapter extends BaseExpandableListAdapter {
 				if (user == null) {
 					return;
 				}
-				UIHelper.showUserInfoDetail(mContext, user);
+				UIHelper.showUserInfoDetail(mContext, user, null);
 			}
 		});
 		

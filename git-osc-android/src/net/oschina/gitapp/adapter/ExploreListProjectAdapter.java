@@ -90,7 +90,7 @@ public class ExploreListProjectAdapter extends MyBaseAdapter<Project> {
 				if (user == null) {
 					return;
 				}
-				UIHelper.showUserInfoDetail(context, user);
+				UIHelper.showUserInfoDetail(context, user, null);
 			}
 		});
 		

@@ -53,4 +53,6 @@ public class URLs implements Serializable {
 	public static String NOTIFICATION_READED = NOTIFICATION + URL_SPLITTER + "readed";
 	// 具体用户的动态
 	public static String USEREVENTS = URL_API_HOST + URL_SPLITTER + "events" + URL_SPLITTER + "user";
+	// 更新Url
+	public static String UPDATE = URL_API_HOST + URL_SPLITTER + "app_version/new/android";
 }

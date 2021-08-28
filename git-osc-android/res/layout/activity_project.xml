@@ -1,14 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- 界面内容 -->
+
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/project_content"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
-    
+
     <ProgressBar
-        android:id="@+id/project_detail_loading" 
-        android:layout_gravity="center"
+        android:id="@+id/project_detail_loading"
         style="@style/ListSpinner"
-        android:visibility="gone"/>
-    
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+    <ScrollView
+        android:id="@+id/project_content"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/graywhite"
+        android:visibility="visible" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:padding="10dip" >
+
+                <TextView
+                    android:id="@+id/project_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="android-app"
+                    android:textColor="@color/listitem_blue" />
+
+                <TextView
+                    android:id="@+id/project_update"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="更新于 4天前"
+                    android:textColor="@color/gray" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="0.1dip"
+                android:background="@color/gray" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="0.1dip"
+                android:layout_marginTop="25dip"
+                android:background="@color/gray" />
+
+            <include layout="@layout/activity_project_mid" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="0.1dip"
+                android:layout_marginTop="25dip"
+                android:background="@color/gray" />
+
+            <include layout="@layout/activity_project_footer" />
+        </LinearLayout>
+    </ScrollView>
+
 </FrameLayout>

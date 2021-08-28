@@ -91,7 +91,7 @@ public class ProjectIssuesListAdapter extends MyBaseAdapter<Issue> {
 				if (user == null) {
 					return;
 				}
-				UIHelper.showUserInfoDetail(context, user);
+				UIHelper.showUserInfoDetail(context, user, null);
 			}
 		});
 		

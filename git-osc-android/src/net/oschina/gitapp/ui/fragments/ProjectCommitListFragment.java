@@ -40,11 +40,12 @@ public class ProjectCommitListFragment extends BaseSwipeRefreshFragment<Commit, 
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		Bundle args = getArguments();
 		if (args != null) {
 			mProject = (Project) args.getSerializable(Contanst.PROJECT);
 		}
-		super.onCreate(savedInstanceState);
+		setUserVisibleHint(true);
 	}
 
 	@Override

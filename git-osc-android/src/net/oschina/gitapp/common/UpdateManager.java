@@ -150,6 +150,65 @@ public class UpdateManager {
 	}
 	
 	/**
+	 * 检查App更新
+	 * @param context
+	 * @param isShowMsg 是否显示提示消息
+	 */
+	public void checkAppUpdate(Context appContext, final boolean isShowMsg){
+		this.mContext = appContext;
+		getCurrentVersion();
+		if(isShowMsg){
+			if(mProDialog == null) {
+				mProDialog = ProgressDialog.show(mContext, null, "正在检测，请稍后...", true, true);
+				mProDialog.setCanceledOnTouchOutside(false);
+			}
+			else if(mProDialog.isShowing() || (latestOrFailDialog!=null && latestOrFailDialog.isShowing()))
+				return;
+		}
+		final Handler handler = new Handler(){
+			public void handleMessage(Message msg) {
+				//进度条对话框不显示 - 检测结果也不显示
+				if(mProDialog != null && !mProDialog.isShowing()){
+					return;
+				}
+				//关闭并释放释放进度条对话框
+				if(isShowMsg && mProDialog != null){
+					mProDialog.dismiss();
+					mProDialog = null;
+				}
+				//显示检测结果
+				if(msg.what == 1){
+					mUpdate = (Update)msg.obj;
+					if(mUpdate != null){
+						if(curVersionCode < mUpdate.getNum_version()){
+							apkUrl = mUpdate.getDownload_url();
+							updateMsg = mUpdate.getDescription();
+							showNoticeDialog();
+						}else if(isShowMsg){
+							showLatestOrFailDialog(DIALOG_TYPE_LATEST);
+						}
+					}
+				}else if(isShowMsg){
+					showLatestOrFailDialog(DIALOG_TYPE_FAIL);
+				}
+			}
+		};
+		new Thread(){
+			public void run() {
+				Message msg = new Message();
+				try {					
+					Update update = ((AppContext)mContext.getApplicationContext()).getUpdateInfo();
+					msg.what = 1;
+					msg.obj = update;
+				} catch (AppException e) {
+					e.printStackTrace();
+				}
+				handler.sendMessage(msg);
+			}			
+		}.start();		
+	}	
+	
+	/**
 	 * 显示版本更新通知对话框
 	 */
 	private void showNoticeDialog(){
@@ -211,8 +270,8 @@ public class UpdateManager {
 		@Override
 		public void run() {
 			try {
-				String apkName = "OSChinaApp_"+mUpdate.getVersionName()+".apk";
-				String tmpApk = "OSChinaApp_"+mUpdate.getVersionName()+".tmp";
+				String apkName = "OSChinaApp_"+mUpdate.getVersion()+".apk";
+				String tmpApk = "OSChinaApp_"+mUpdate.getVersion()+".tmp";
 				//判断是否挂载了SD卡
 				String storageState = Environment.getExternalStorageState();		
 				if(storageState.equals(Environment.MEDIA_MOUNTED)){

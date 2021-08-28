@@ -10,6 +10,7 @@ import net.oschina.gitapp.R;
 import net.oschina.gitapp.common.FileUtils;
 import net.oschina.gitapp.common.MethodsCompat;
 import net.oschina.gitapp.common.UIHelper;
+import net.oschina.gitapp.common.UpdateManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -116,6 +117,8 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 			onCache();
 		} else if (preference == feedback) {
 			onFeedBack();
+		} else if (preference == update) {
+			UpdateManager.getUpdateManager().checkAppUpdate(this, true);
 		}
 		return true;
 	}

@@ -47,12 +47,13 @@ public class ProjectIssuesListFragment extends BaseSwipeRefreshFragment<Issue, C
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 		Bundle args = getArguments();
 		if (args != null) {
 			mProject = (Project) args.getSerializable(Contanst.PROJECT);
 		}
-		super.onCreate(savedInstanceState);
+		super.setUserVisibleHint(true);
 	}
 
 	@Override

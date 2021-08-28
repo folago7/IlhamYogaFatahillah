@@ -93,7 +93,7 @@ public class MySelfEventListAdapter extends MyBaseAdapter<Event> {
 				if (user == null) {
 					return;
 				}
-				UIHelper.showUserInfoDetail(context, user);
+				UIHelper.showUserInfoDetail(context, user, null);
 			}
 		});
 		

@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppManager;
+import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.interfaces.ActivityHelperInterface;
 import net.oschina.gitapp.ui.ActivityHelper;
 import android.app.Activity;
@@ -31,6 +32,10 @@ public class BaseActionBarActivity extends ActionBarActivity
 	
 	protected ActionBar mActionBar;
 	
+	protected String mTitle;
+	
+	protected String mSubTitle;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -50,6 +55,16 @@ public class BaseActionBarActivity extends ActionBarActivity
 	@Override
 	public void onResume() {
 		super.onResume();
+		setActionBarTitle();
+	}
+	
+	protected void setActionBarTitle() {
+		if (mTitle != null && !StringUtils.isEmpty(mTitle)) {
+			mActionBar.setTitle(mTitle);
+		}
+		if (mSubTitle != null && !StringUtils.isEmpty(mSubTitle)) {
+			mActionBar.setSubtitle(mSubTitle);
+		}
 	}
 	
 	@Override

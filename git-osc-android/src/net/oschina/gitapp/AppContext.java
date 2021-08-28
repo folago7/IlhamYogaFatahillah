@@ -1,6 +1,7 @@
 package net.oschina.gitapp;
 
 import static net.oschina.gitapp.common.Contanst.*;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -32,6 +33,7 @@ import net.oschina.gitapp.bean.NotificationReadResult;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.ProjectNotificationArray;
 import net.oschina.gitapp.bean.UpLoadFile;
+import net.oschina.gitapp.bean.Update;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.BroadcastController;
 import net.oschina.gitapp.common.MethodsCompat;
@@ -1225,5 +1227,14 @@ public class AppContext extends Application {
 	 */
 	public NotificationReadResult setNotificationIsRead(String notificationId) throws AppException {
 		return ApiClient.setNotificationIsRead(this, notificationId);
+	}
+	
+	/**
+	 * 获取App更新信息
+	 * @return
+	 * @throws AppException
+	 */
+	public Update getUpdateInfo() throws AppException {
+		return ApiClient.getUpdateInfo(this);
 	}
 }

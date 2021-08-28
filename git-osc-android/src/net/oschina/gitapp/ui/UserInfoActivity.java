@@ -62,39 +62,33 @@ public class UserInfoActivity extends BaseActionBarActivity {
 		
 		mUser = (User) intent.getSerializableExtra(Contanst.USER);
 		
+		mUserId = intent.getStringExtra(Contanst.USERID);
+		
+		mLoading = (ProgressBar) findViewById(R.id.userinfo_loading);
+		
 		if (mUser == null) {
-			
+			loadData();
 		} else {
 			initViewPage();
 		}
 		
-
-		/*mLoading = (ProgressBar) findViewById(R.id.project_detail_loading);
-		
-		if (null == mUser) {
-			loadProject();
-		} else {
-			initViewPage();
-		}*/
 	}
 	
 	private void initViewPage() {
-		mActionBar.setTitle(mUser.getName());
+		mTitle = mUser.getName();
 		if (null == mSavedInstanceState) {
         	FragmentTransaction ft = mFragmentManager.beginTransaction();
         	ft.replace(R.id.userinfo_content, UserInfoViewPageFragment.newInstance(mUser)).commit();
         }
 	}
 	
-	private void loadProject() {
+	// 数据加载
+	private void loadData() {
     	new AsyncTask<Void, Void, Message>() {
 
 			@Override
 			protected Message doInBackground(Void... params) {
 				Message msg = new Message();
-				
-				
-				
 				return msg;
 			}
 
@@ -108,7 +102,6 @@ public class UserInfoActivity extends BaseActionBarActivity {
 			protected void onPostExecute(Message msg) {
 				super.onPostExecute(msg);
 				mLoading.setVisibility(View.GONE);
-				
 			}
     		
     	}.execute();

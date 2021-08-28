@@ -140,7 +140,7 @@ public class SearchActivity extends BaseActionBarActivity implements
 			onLoadNextPage();
 			return;
 		}
-		UIHelper.showProjectDetail(mAppContext, mData.get(position), null, 0);
+		UIHelper.showProjectDetail(mAppContext, mData.get(position), null);
 	}
 		
 	/** 加载下一页*/

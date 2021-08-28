@@ -3,7 +3,9 @@ package net.oschina.gitapp.ui;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppManager;
 import net.oschina.gitapp.R;
+import android.annotation.TargetApi;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
@@ -13,15 +15,14 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.SearchView;
 import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import net.oschina.gitapp.common.DoubleClickExitHelper;
 import net.oschina.gitapp.common.UIHelper;
+import net.oschina.gitapp.common.UpdateManager;
 import net.oschina.gitapp.interfaces.*;
 import net.oschina.gitapp.ui.fragments.ExploreViewPagerFragment;
 import net.oschina.gitapp.ui.fragments.MySelfViewPagerFragment;
@@ -36,6 +37,7 @@ import net.oschina.gitapp.ui.fragments.NotificationFragment;
  * 更新内容：更改以callBack的方式进行交互
  * 更新者：火蚁
  */
+@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class MainActivity extends ActionBarActivity implements
 		DrawerMenuCallBack {
 	
@@ -88,6 +90,10 @@ public class MainActivity extends ActionBarActivity implements
 		mContext = (AppContext) getApplicationContext();
 		initView(savedInstanceState);
 		AppManager.getAppManager().addActivity(this);
+		// 检查新版本
+		if (mContext.isCheckUp()) {
+			UpdateManager.getUpdateManager().checkAppUpdate(this, false);
+		}
 	}
 
 	private void initView(Bundle savedInstanceState) {
@@ -162,6 +168,15 @@ public class MainActivity extends ActionBarActivity implements
 				return true;
 			}
 			return mDoubleClickExitHelper.onKeyDown(keyCode, event);
+		}
+		if (keyCode == KeyEvent.KEYCODE_MENU) {
+			if (mDrawerLayout.isDrawerOpen(Gravity.START)) {
+				mDrawerLayout.closeDrawers();
+				return true;
+			} else {
+				mDrawerLayout.openDrawer(Gravity.START);
+				return true;
+			}
 		}
 		return super.onKeyDown(keyCode, event);
 	}

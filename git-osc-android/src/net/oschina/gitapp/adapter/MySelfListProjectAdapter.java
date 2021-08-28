@@ -100,7 +100,7 @@ public class MySelfListProjectAdapter extends MyBaseAdapter<Project> {
 				if (user == null) {
 					return;
 				}
-				UIHelper.showUserInfoDetail(context, user);
+				UIHelper.showUserInfoDetail(context, user, null);
 			}
 		});
 		

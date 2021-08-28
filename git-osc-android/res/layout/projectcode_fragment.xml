@@ -6,7 +6,7 @@
     <include
         android:id="@+id/projectcode_switch_branch"
         layout="@layout/projectcode_fragment_footer"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
     <ProgressBar
         android:id="@+id/projectcode_loading"
@@ -20,7 +20,7 @@
         android:layout_height="match_parent"
         android:layout_above="@id/projectcode_switch_branch"
         android:orientation="vertical"
-        android:visibility="visible" >
+        android:visibility="gone" >
 
         <LinearLayout
             android:layout_width="fill_parent"

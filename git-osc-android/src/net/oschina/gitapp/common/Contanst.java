@@ -28,6 +28,8 @@ public class Contanst {
 	
 	public static final String USER = "user";
 	
+	public static final String USERID = "user_id";
+	
 	public static final int LOGIN_REQUESTCODE = 6168;
 	
 	public static final String ACCOUNT_EMAIL = "user.email";

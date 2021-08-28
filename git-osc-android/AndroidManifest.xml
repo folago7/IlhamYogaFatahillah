@@ -40,8 +40,11 @@
             android:launchMode="singleTask" >
         </activity>
         <activity
-            android:name=".ui.ProjectActivity"
-            android:launchMode="singleTask" />
+            android:name=".ui.ProjectActivity" />
+        <activity
+            android:name=".ui.ProjectReadMeActivity" />
+        <activity
+            android:name=".ui.ProjectSomeInfoListActivity" />
         <activity
             android:name=".ui.SearchActivity"
             android:label="项目搜索"

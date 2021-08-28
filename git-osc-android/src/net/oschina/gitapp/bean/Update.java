@@ -1,16 +1,8 @@
 package net.oschina.gitapp.bean;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Serializable;
+import java.util.Date;
 
-import net.oschina.gitapp.AppException;
-import net.oschina.gitapp.common.StringUtils;
-
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
-import android.util.Xml;
+import org.codehaus.jackson.annotate.JsonProperty;
 
 /**
  * 应用程序更新实体类
@@ -19,90 +11,94 @@ import android.util.Xml;
  * @created 2012-3-21
  */
 @SuppressWarnings("serial")
-public class Update implements Serializable{
+public class Update extends Entity {
 	
-	public final static String UTF8 = "UTF-8";
-	public final static String NODE_ROOT = "oschina";
+	@JsonProperty("created_at")
+	private Date _created_at;
 	
-	private int versionCode;
-	private String versionName;
-	private String downloadUrl;
-	private String updateLog;
+	@JsonProperty("description")
+	private String _description;
 	
-	public int getVersionCode() {
-		return versionCode;
+	@JsonProperty("download_url")
+	private String _download_url;
+	
+	@JsonProperty("num_version")
+	private int _num_version;
+	
+	@JsonProperty("relevance_url")
+	private String _relevance_url;
+	
+	@JsonProperty("updated_at")
+	private Date _updated_at;
+	
+	@JsonProperty("version")
+	private String _version;
+	
+	@JsonProperty("version_type")
+	private int _version_type;
+
+	public Date getCreated_at() {
+		return _created_at;
 	}
-	public void setVersionCode(int versionCode) {
-		this.versionCode = versionCode;
+
+	public void setCreated_at(Date created_at) {
+		this._created_at = created_at;
 	}
-	public String getVersionName() {
-		return versionName;
+
+	public String getDescription() {
+		return _description;
 	}
-	public void setVersionName(String versionName) {
-		this.versionName = versionName;
+
+	public void setDescription(String description) {
+		this._description = description;
 	}
-	public String getDownloadUrl() {
-		return downloadUrl;
+
+	public String getDownload_url() {
+		return _download_url;
 	}
-	public void setDownloadUrl(String downloadUrl) {
-		this.downloadUrl = downloadUrl;
+
+	public void setDownload_url(String download_url) {
+		this._download_url = download_url;
 	}
-	public String getUpdateLog() {
-		return updateLog;
+
+	public int getNum_version() {
+		return _num_version;
 	}
-	public void setUpdateLog(String updateLog) {
-		this.updateLog = updateLog;
+
+	public void setNum_version(int num_version) {
+		this._num_version = num_version;
+	}
+
+	public String getRelevance_url() {
+		return _relevance_url;
+	}
+
+	public void setRelevance_url(String relevance_url) {
+		this._relevance_url = relevance_url;
+	}
+
+	public Date getUpdated_at() {
+		return _updated_at;
+	}
+
+	public void setUpdated_at(Date updated_at) {
+		this._updated_at = updated_at;
+	}
+
+	public String getVersion() {
+		return _version;
+	}
+
+	public void setVersion(String version) {
+		this._version = version;
+	}
+
+	public int getVersion_type() {
+		return _version_type;
+	}
+
+	public void setVersion_type(int version_type) {
+		this._version_type = version_type;
 	}
 	
-	public static Update parse(InputStream inputStream) throws IOException, AppException {
-		Update update = null;
-        //获得XmlPullParser解析器
-        XmlPullParser xmlParser = Xml.newPullParser();
-        try {        	
-            xmlParser.setInput(inputStream, UTF8);
-            //获得解析到的事件类别，这里有开始文档，结束文档，开始标签，结束标签，文本等等事件。
-            int evtType=xmlParser.getEventType();
-			//一直循环，直到文档结束    
-			while(evtType!=XmlPullParser.END_DOCUMENT){ 
-	    		String tag = xmlParser.getName(); 
-			    switch(evtType){ 
-			    	case XmlPullParser.START_TAG:			    		
-			            //通知信息
-			            if(tag.equalsIgnoreCase("android"))
-			    		{
-			            	update = new Update();
-			    		}
-			            else if(update != null)
-			    		{
-			    			if(tag.equalsIgnoreCase("versionCode"))
-				            {			      
-			    				update.setVersionCode(StringUtils.toInt(xmlParser.nextText(),0));
-				            }
-				            else if(tag.equalsIgnoreCase("versionName"))
-				            {			            	
-				            	update.setVersionName(xmlParser.nextText());
-				            }
-				            else if(tag.equalsIgnoreCase("downloadUrl"))
-				            {			            	
-				            	update.setDownloadUrl(xmlParser.nextText());
-				            }
-				            else if(tag.equalsIgnoreCase("updateLog"))
-				            {			            	
-				            	update.setUpdateLog(xmlParser.nextText());
-				            }
-			    		}
-			    		break;
-			    	case XmlPullParser.END_TAG:		    		
-				       	break; 
-			    }
-			    //如果xml没有结束，则导航到下一个节点
-			    evtType=xmlParser.next();
-			}		
-        } catch (XmlPullParserException e) {
-			throw AppException.xml(e);
-        } finally {
-        	inputStream.close();	
-        }      
-        return update;       
-	}
 }

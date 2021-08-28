@@ -16,6 +16,7 @@ import net.oschina.gitapp.bean.Event;
 import net.oschina.gitapp.bean.Issue;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.User;
+import net.oschina.gitapp.ui.CodeFileDetailActivity;
 import net.oschina.gitapp.ui.CommitDetailActivity;
 import net.oschina.gitapp.ui.CommitFileDetailActivity;
 import net.oschina.gitapp.ui.IssueDetailActivity;
@@ -23,6 +24,8 @@ import net.oschina.gitapp.ui.IssueEditActivity;
 import net.oschina.gitapp.ui.LoginActivity;
 import net.oschina.gitapp.ui.MainActivity;
 import net.oschina.gitapp.ui.ProjectActivity;
+import net.oschina.gitapp.ui.ProjectSomeInfoListActivity;
+import net.oschina.gitapp.ui.ProjectReadMeActivity;
 import net.oschina.gitapp.ui.SearchActivity;
 import net.oschina.gitapp.ui.MySelfInfoActivity;
 import net.oschina.gitapp.ui.UserInfoActivity;
@@ -363,13 +366,12 @@ public class UIHelper {
 	 * @param project
 	 * @param projectId
 	 */
-	public static void showProjectDetail(Context context, Project project, String projectId, int currentItem) {
+	public static void showProjectDetail(Context context, Project project, String projectId) {
 		Intent intent = new Intent(context, ProjectActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		Bundle bundle = new Bundle();
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		bundle.putSerializable(PROJECT, project);
 		bundle.putString(PROJECTID, projectId);
-		bundle.putInt(CURRENTITEM, currentItem);
 		intent.putExtras(bundle);
 		context.startActivity(intent);
 	}
@@ -465,11 +467,12 @@ public class UIHelper {
 	 * @param context
 	 * @param user
 	 */
-	public static void showUserInfoDetail(Context context, User user) {
+	public static void showUserInfoDetail(Context context, User user, String user_id) {
 		Intent intent = new Intent(context, UserInfoActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		Bundle bundle = new Bundle();
 		bundle.putSerializable(Contanst.USER, user);
+		bundle.putString(Contanst.USERID, user_id);
 		intent.putExtras(bundle);
 		context.startActivity(intent);
 	}
@@ -481,9 +484,51 @@ public class UIHelper {
 	 */
 	public static void showEventDetail(Context context, Event event) {
 		if (event.getEvents().getIssue() != null) {
-			UIHelper.showProjectDetail(context, null, event.getProject().getId(), 2);
+			UIHelper.showProjectDetail(context, null, event.getProject().getId());
 		} else {
-			UIHelper.showProjectDetail(context, null, event.getProject().getId(), 0);
+			UIHelper.showProjectDetail(context, null, event.getProject().getId());
 		}
+	}
+	
+	// 查看代码文件详情
+	public static void showCodeFileDetail(Context context, String path, String fileName, String ref, Project project) {
+		Intent intent = new Intent(context,
+				CodeFileDetailActivity.class);
+		Bundle bundle = new Bundle();
+		bundle.putSerializable(Contanst.PROJECT, project);
+		bundle.putString("fileName", fileName);
+		bundle.putString("path",
+				path == null || StringUtils.isEmpty(path) ? fileName : path
+						+ "/" + fileName);
+		bundle.putString("ref", ref);
+		intent.putExtras(bundle);
+		context.startActivity(intent);
+	}
+	
+	/**
+	 * 显示项目的readme详情
+	 * @param context
+	 * @param project
+	 */
+	public static void showProjectReadMeActivity(Context context, Project project) {
+		Intent intent = new Intent(context, ProjectReadMeActivity.class);
+		Bundle bundle = new Bundle();
+		bundle.putSerializable(Contanst.PROJECT, project);
+		intent.putExtras(bundle);
+		context.startActivity(intent);
+	}
+	
+	/**
+	 * 显示项目的一些列表信息列表
+	 * @param context
+	 * @param project
+	 */
+	public static void showProjectListActivity(Context context, Project project, int type) {
+		Intent intent = new Intent(context, ProjectSomeInfoListActivity.class);
+		Bundle bundle = new Bundle();
+		bundle.putSerializable(Contanst.PROJECT, project);
+		bundle.putInt("project_list_type", type);
+		intent.putExtras(bundle);
+		context.startActivity(intent);
 	}
 }

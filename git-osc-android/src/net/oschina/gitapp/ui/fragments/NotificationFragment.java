@@ -257,9 +257,9 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
 				}.start();;
 			}
 			if (notification.getTarget_type().equalsIgnoreCase("Issue")) {
-				UIHelper.showProjectDetail(mAppContext, null, notification.getProject_id(), 2);
+				UIHelper.showProjectDetail(mAppContext, null, notification.getProject_id());
 			} else {
-				UIHelper.showProjectDetail(mAppContext, null, notification.getProject_id(), 0);
+				UIHelper.showProjectDetail(mAppContext, null, notification.getProject_id());
 			}
 		}
 		return false;

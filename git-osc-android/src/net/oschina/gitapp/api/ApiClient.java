@@ -44,6 +44,7 @@ import net.oschina.gitapp.bean.ProjectNotification;
 import net.oschina.gitapp.bean.ProjectNotificationArray;
 import net.oschina.gitapp.bean.Session;
 import net.oschina.gitapp.bean.UpLoadFile;
+import net.oschina.gitapp.bean.Update;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.common.CyptoUtils;
@@ -450,6 +451,7 @@ public class ApiClient {
 		// 拼接url地址
 		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + projectId
 				+ URLs.URL_SPLITTER + "issues", params);
+		Log.i("Test", url);
 		List<Issue> list = getHttpRequestor().init(appContext,
 				HTTPRequestor.GET_METHOD, url).getList(Issue[].class);
 		commits.setList(list);
@@ -762,5 +764,19 @@ public class ApiClient {
 		String url = makeURL(URLs.NOTIFICATION_READED + URLs.URL_SPLITTER + notificationId, params);
 		return getHttpRequestor().init(appContext, GET_METHOD, url)
 				.to(NotificationReadResult.class);
+	}
+	
+	/**
+	 * 获得App更新的信息
+	 * @param appContext
+	 * @return
+	 * @throws AppException
+	 */
+	public static Update getUpdateInfo(AppContext appContext) throws AppException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(PRIVATE_TOKEN, getToken(appContext));
+		String url = makeURL(URLs.UPDATE, params);
+		return getHttpRequestor().init(appContext, GET_METHOD, url)
+				.to(Update.class);
 	}
 }

@@ -85,7 +85,7 @@ public class IssueListCommentAdapter extends MyBaseAdapter<GitNote> {
 				if (user == null) {
 					return;
 				}
-				UIHelper.showUserInfoDetail(context, user);
+				UIHelper.showUserInfoDetail(context, user, null);
 			}
 		});
 		

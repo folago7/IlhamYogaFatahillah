@@ -76,8 +76,8 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 	}
 
 	private void init() {
-		mActionBar.setTitle(mFileName);
-		mActionBar.setSubtitle(mRef);
+		mTitle = mFileName;
+		mSubTitle = mRef;
 		mWebView = (WebView) findViewById(R.id.code_file_webview);
 		editor = new SourceEditor(mWebView);
 		
@@ -174,7 +174,12 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 				} else {
 					onStatus(STATUS_NONE);
 					if (msg.obj instanceof AppException) {
-						((AppException) msg.obj).makeToast(appContext);
+						AppException appException = (AppException) msg.obj;
+						if (mFileName.equalsIgnoreCase("readme.md") && appException.getCode() == 404) {
+							UIHelper.ToastMessage(appContext, "该项目没有README.md文件");
+						} else {
+							appException.makeToast(appContext);
+						}
 					} else {
 						UIHelper.ToastMessage(appContext,
 								((Exception) msg.obj).getMessage());
