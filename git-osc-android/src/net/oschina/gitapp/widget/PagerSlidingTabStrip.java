@@ -35,7 +35,7 @@ import java.util.List;
 import net.oschina.gitapp.R;
 
 /**
- * 专为ViewPager定制的滑动选项卡 HOME URL：http://github.com/xiaopansky/Android-PagerSlidingTabStrip
+ * 专为ViewPager定制的滑动选项卡 HOME
  * @version 1.3.0
  * @author Peng fei Pan
  */

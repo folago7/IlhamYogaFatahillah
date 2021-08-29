@@ -11,7 +11,6 @@ import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import android.content.Context;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -134,7 +133,7 @@ public class NotificationListAdapter extends BaseExpandableListAdapter {
 		if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
 			holder.face.setImageResource(R.drawable.widget_dface);
 		} else {
-			String portraitURL = URLs.HTTP + URLs.HOST + URLs.URL_SPLITTER + notification.getUserinfo().getPortrait();
+			String portraitURL = URLs.GITIMG + notification.getUserinfo().getPortrait();
 			bmpManager.loadBitmap(portraitURL, holder.face);
 		}
 		

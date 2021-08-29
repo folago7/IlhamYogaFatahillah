@@ -17,7 +17,6 @@
             android:layout_height="wrap_content"
             android:lineSpacingExtra="3dp"
             android:paddingTop="5dp"
-            android:text="title这段代码什么意思啊"
             android:textColor="@color/text"
             android:textColorLink="@color/text_link"
             android:textSize="13sp"

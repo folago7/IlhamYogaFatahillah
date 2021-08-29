@@ -1,7 +1,5 @@
 package net.oschina.gitapp.bean;
 
-import java.util.Date;
-
 import org.codehaus.jackson.annotate.JsonProperty;
 
 /**

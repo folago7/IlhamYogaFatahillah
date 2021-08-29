@@ -29,6 +29,8 @@ public class URLs implements Serializable {
 	public static String MILESTONE = URL_API_HOST + "milestones";
 	public static String NAMESPACE = URL_API_HOST + "groups";
 	public static String NOTE = URL_API_HOST + "notes";
+	// GIT图片地址
+	public static String GITIMG = URLs.HTTP + URLs.HOST + URLs.URL_SPLITTER;
 	// 用户个人最新动态
 	public static String EVENTS = URL_API_HOST + "events";
 	// 项目
@@ -45,7 +47,7 @@ public class URLs implements Serializable {
 	public static String PROJECTMEMBER = URL_API_HOST + "members";
 	public final static String LOGIN_HTTP = HTTP + HOST + API_VERSION + URL_SPLITTER + "session";
 	public final static String LOGIN_HTTPS = HTTPS + HOST + API_VERSION + URL_SPLITTER + "session";
-	public static String USER = URL_API_HOST + "users";
+	public static String USER = URL_API_HOST + "user";
 	public static String UPLOAD = URL_API_HOST + "upload";
 	// 获得通知
 	public static String NOTIFICATION = URL_API_HOST + "user/notifications";

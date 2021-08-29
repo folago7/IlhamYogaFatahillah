@@ -1,13 +1,9 @@
 package net.oschina.gitapp.adapter;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import net.oschina.gitapp.R;
-import net.oschina.gitapp.bean.Commit;
 import net.oschina.gitapp.bean.Issue;
-import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.BitmapManager;
@@ -15,7 +11,6 @@ import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import android.content.Context;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
@@ -80,7 +75,7 @@ public class ProjectIssuesListAdapter extends MyBaseAdapter<Issue> {
 		if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
 			listItemView.face.setImageResource(R.drawable.widget_dface);
 		} else {
-			String portraitURL = URLs.HTTP + URLs.HOST + URLs.URL_SPLITTER + issue.getAuthor().getPortrait();
+			String portraitURL = URLs.GITIMG + issue.getAuthor().getPortrait();
 			bmpManager.loadBitmap(portraitURL, listItemView.face);
 		}
 		listItemView.face.setOnClickListener(new OnClickListener() {

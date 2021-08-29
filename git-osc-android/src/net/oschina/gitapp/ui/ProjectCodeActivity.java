@@ -1,4 +1,4 @@
-package net.oschina.gitapp.ui.fragments;
+package net.oschina.gitapp.ui;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,22 +10,19 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
+import android.support.v4.view.MenuItemCompat;
+import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.AdapterView.OnItemClickListener;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
@@ -34,34 +31,33 @@ import net.oschina.gitapp.bean.Branch;
 import net.oschina.gitapp.bean.CodeTree;
 import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.FullTree;
-import net.oschina.gitapp.bean.FullTree.Folder;
 import net.oschina.gitapp.bean.Project;
-import net.oschina.gitapp.bean.Tree;
+import net.oschina.gitapp.bean.FullTree.Folder;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.DataRequestThreadHandler;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
-import net.oschina.gitapp.ui.CodeFileDetailActivity;
-import net.oschina.gitapp.ui.basefragment.BaseFragment;
+import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
 
 /**
- * 项目代码树Fragment
+ * 项目代码列表
  * 
- * @created 2014-05-26
+ * @created 2014-07-18
  * @author 火蚁（http://my.oschina.net/LittleDY）
- * 
- *         最后更新 更新者
+ *
  */
-public class ProjectCodeTreeFragment extends BaseFragment implements OnItemClickListener,
-		OnClickListener {
-
+public class ProjectCodeActivity extends BaseActionBarActivity implements
+		OnItemClickListener, OnClickListener {
+	
+	private final int MENU_REFRESH_ID = 0;
+	
 	private static final int ACTION_INIT = 0;// 初始化
 	private static final int ACTION_REFRESH = 1;// 刷新
 	private static final int ACTION_LOADING_TREE = 2;// 加载代码层级树
 	private static final int ACTION_PRE_TREE = 3;// 前一级代码树
-
-	private View mView;
-
+	
+	private Menu optionsMenu;
+	
 	private Project mProject;
 
 	private ListView mCodeTree;
@@ -87,11 +83,12 @@ public class ProjectCodeTreeFragment extends BaseFragment implements OnItemClick
 	private AppContext mAppContext;
 
 	private LinearLayout mContentLayout;
-	
-	private LinearLayout mCodeTreeFolder;
-	
+
+	// 上一次目录
+	private LinearLayout mCodeTreePreFolder;
+
 	private TextView mCodeFloders;
-	
+
 	private ProgressBar mCodeTreeLoading;
 
 	private ProgressBar mLoading;
@@ -106,36 +103,22 @@ public class ProjectCodeTreeFragment extends BaseFragment implements OnItemClick
 
 	private DataRequestThreadHandler mRequestThreadHandler = new DataRequestThreadHandler();
 
-	public static ProjectCodeTreeFragment newInstance(Project project) {
-		ProjectCodeTreeFragment fragment = new ProjectCodeTreeFragment();
-		Bundle args = new Bundle();
-		args.putSerializable(Contanst.PROJECT, project);
-		fragment.setArguments(args);
-		return fragment;
-	}
-
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.projectcode_fragment);
 		mAppContext = getGitApplication();
-		Bundle args = getArguments();
-		if (args != null) {
-			mProject = (Project) args.getSerializable(Contanst.PROJECT);
+		Intent intent = getIntent();
+		if (intent != null) {
+			mProject = (Project) intent.getSerializableExtra(Contanst.PROJECT);
+			mTitle = "代码列表";
+			mSubTitle = mProject.getOwner().getName() + "/"
+					+ mProject.getName();
 		}
 		mBranch = "master";
-		mView = inflater.inflate(R.layout.projectcode_fragment, null);
-		initView(inflater);
+		initView();
 		setupListView();
-		setUserVisibleHint(true);
-		return mView;
-	}
-	
-	@Override
-	public void setUserVisibleHint(boolean isVisibleToUser) {
-		super.setUserVisibleHint(isVisibleToUser);
-		if (isVisibleToUser) {
-			loadDatas("", "master", ACTION_INIT);
-		}
+		loadDatas("", "master", ACTION_INIT);
 	}
 
 	@Override
@@ -144,27 +127,58 @@ public class ProjectCodeTreeFragment extends BaseFragment implements OnItemClick
 		mRequestThreadHandler.quit();
 	}
 
-	private void initView(LayoutInflater inflater) {
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		optionsMenu = menu;
+		// 刷新按钮
+		MenuItem refreshItem = menu.add(0, MENU_REFRESH_ID, MENU_REFRESH_ID,
+				"刷新");
+		refreshItem.setIcon(R.drawable.abc_ic_menu_refresh);
+		MenuItemCompat.setShowAsAction(refreshItem,
+				MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
+		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
 
-		mContentLayout = (LinearLayout) mView.findViewById(R.id.projectcode_content_layout);
-		
-		mCodeTreeFolder = (LinearLayout) mView.findViewById(R.id.projectcode_tree_prefolder);
-		
-		mCodeFloders = (TextView) mView.findViewById(R.id.projectcode_floders);
-		
-		mCodeTreeFolder.setOnClickListener(this);
-		
-		mCodeTreeLoading = (ProgressBar) mView.findViewById(R.id.projectcode_tree_loading);
-		
-		mLoading = (ProgressBar) mView.findViewById(R.id.projectcode_loading);
-		
-		mCodeTree = (ListView) mView.findViewById(R.id.projectcode_tree);
-		mSwitch_branch = (LinearLayout) mView
-				.findViewById(R.id.projectcode_switch_branch);
-		mBranchIcon = (ImageView) mView
-				.findViewById(R.id.projectcode_branch_icon);
-		mBranchName = (TextView) mView
-				.findViewById(R.id.projectcode_branch_name);
+		int id = item.getItemId();
+		switch (id) {
+		case MENU_REFRESH_ID:
+			loadDatas(mPath, mBranch, ACTION_REFRESH);
+			break;
+			
+		}
+		return super.onOptionsItemSelected(item);
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			if (!StringUtils.isEmpty(mPath)) {
+				loadDatas(getPrePath(), mBranch, ACTION_PRE_TREE);
+				return true;
+			}
+ 		}
+		return super.onKeyDown(keyCode, event);
+	}
+
+	private void initView() {
+
+		mContentLayout = (LinearLayout) findViewById(R.id.projectcode_content_layout);
+
+		mCodeTreePreFolder = (LinearLayout) findViewById(R.id.projectcode_tree_prefolder);
+
+		mCodeFloders = (TextView) findViewById(R.id.projectcode_floders);
+
+		mCodeTreePreFolder.setOnClickListener(this);
+
+		mLoading = (ProgressBar) findViewById(R.id.projectcode_loading);
+
+		mCodeTree = (ListView) findViewById(R.id.projectcode_tree);
+		mSwitch_branch = (LinearLayout) findViewById(R.id.projectcode_switch_branch);
+		mBranchIcon = (ImageView) findViewById(R.id.projectcode_branch_icon);
+		mBranchName = (TextView) findViewById(R.id.projectcode_branch_name);
 	}
 
 	private void setupListView() {
@@ -272,8 +286,12 @@ public class ProjectCodeTreeFragment extends BaseFragment implements OnItemClick
 		// 加载前
 		@Override
 		public void onPreExecute() {
-			if (_mAction != ACTION_INIT) {
-				mCodeTreeLoading.setVisibility(View.VISIBLE);
+			if (_mAction == ACTION_REFRESH) {
+				mContentLayout.setVisibility(View.GONE);
+				mSwitch_branch.setVisibility(View.GONE);
+				mLoading.setVisibility(View.VISIBLE);
+			} else if (_mAction != ACTION_INIT) {
+				MenuItemCompat.setActionView(optionsMenu.findItem(MENU_REFRESH_ID), R.layout.actionbar_indeterminate_progress);
 			}
 		}
 
@@ -303,12 +321,12 @@ public class ProjectCodeTreeFragment extends BaseFragment implements OnItemClick
 		@SuppressWarnings("unchecked")
 		@Override
 		public void onPostExecute(Message result) {
-			if (_mAction == ACTION_INIT) {
+			if (_mAction == ACTION_INIT || _mAction == ACTION_REFRESH) {
 				mContentLayout.setVisibility(View.VISIBLE);
 				mSwitch_branch.setVisibility(View.VISIBLE);
 				mLoading.setVisibility(View.GONE);
 			} else {
-				mCodeTreeLoading.setVisibility(View.INVISIBLE);
+				MenuItemCompat.setActionView(optionsMenu.findItem(MENU_REFRESH_ID), null);
 			}
 			if (result.what == 1 && result.obj != null) {
 				mTrees.clear();
@@ -321,8 +339,14 @@ public class ProjectCodeTreeFragment extends BaseFragment implements OnItemClick
 						|| _mAction == ACTION_PRE_TREE) {
 					mPath = _mPath;
 					mBranch = _mRef_name;
+					if (StringUtils.isEmpty(mPath)) {
+						mCodeTreePreFolder.setVisibility(View.GONE);
+					} else {
+						mCodeTreePreFolder.setVisibility(View.VISIBLE);
+					}
 				}
-				String floders = mProject.getName() + (StringUtils.isEmpty(mPath) ? "" : "/" + mPath);
+				String floders = mProject.getName()
+						+ (StringUtils.isEmpty(mPath) ? "" : "/" + mPath);
 				mCodeFloders.setText(floders);
 				mAdapter.notifyDataSetChanged();
 			} else {

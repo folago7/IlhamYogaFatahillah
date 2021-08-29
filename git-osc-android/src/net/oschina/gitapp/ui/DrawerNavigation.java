@@ -6,19 +6,15 @@ import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import net.oschina.gitapp.bean.URLs;
@@ -218,7 +214,7 @@ public class DrawerNavigation extends Fragment implements OnClickListener {
 		int id = v.getId();
 		switch (id) {
 		case R.id.menu_user_layout:
-			showLoginActivity();
+			onClickLogin();
 			break;
 		case R.id.menu_item_explore:
 			onClickExplore();
@@ -235,26 +231,24 @@ public class DrawerNavigation extends Fragment implements OnClickListener {
 			highlightSelectedItem(v);
 			break;
 		case R.id.menu_item_setting:
-			showSettingActivity();
+			onClickSetting();
 			break;
 		case R.id.menu_item_exit:
 			onClickExit();
 			break;
 		}
 	}
-
-	private void showLoginActivity() {
-		if (!mApplication.isLogin()) {
-			Intent intent = new Intent(getActivity(), LoginActivity.class);
-			getActivity().startActivity(intent);
-		} else {
-			UIHelper.showMySelfInfoDetail(getActivity());
+	
+	private void onClickLogin() {
+		if (mCallBack != null) {
+			mCallBack.onClickLogin();
 		}
 	}
 	
-	private void showSettingActivity() {
-		Intent intent = new Intent(getActivity(), SettingActivity.class);
-		getActivity().startActivity(intent);
+	private void onClickSetting() {
+		if (mCallBack != null) {
+			mCallBack.onClickSetting();
+		}
 	}
 
 	private void onClickExplore() {

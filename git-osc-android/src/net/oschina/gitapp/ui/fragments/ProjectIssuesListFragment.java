@@ -78,6 +78,6 @@ public class ProjectIssuesListFragment extends BaseSwipeRefreshFragment<Issue, C
 	
 	@Override
 	public void onItemClick(int position, Issue issue) {
-		UIHelper.showIssueDetail(mApplication, mProject, issue);
+		UIHelper.showIssueDetail(mApplication, mProject, issue, null, null);
 	}
 }

@@ -33,16 +33,16 @@ public class UserListEventFragment extends BaseSwipeRefreshFragment<Event, Commo
 		Bundle args = new Bundle();
 		args.putSerializable(Contanst.USER, user);
 		fragment.setArguments(args);
-		return new UserListEventFragment();
+		return fragment;
 	}
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		Bundle args = getArguments();
 		if (args != null) {
 			mUser = (User) args.getSerializable(Contanst.USER);
 		}
-		super.onCreate(savedInstanceState);
 	}
 	
 	@Override

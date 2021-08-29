@@ -12,7 +12,6 @@ import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.widget.CircleImageView;
 import android.content.Context;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -79,7 +78,7 @@ public class ExploreListProjectAdapter extends MyBaseAdapter<Project> {
 		if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
 			listItemView.face.setImageResource(R.drawable.widget_dface);
 		} else {
-			String portraitURL = URLs.HTTP + URLs.HOST + URLs.URL_SPLITTER + project.getOwner().getPortrait();
+			String portraitURL = URLs.GITIMG + project.getOwner().getPortrait();
 			bmpManager.loadBitmap(portraitURL, listItemView.face);
 		}
 		listItemView.face.setOnClickListener(new OnClickListener() {

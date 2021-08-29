@@ -28,13 +28,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 /**
- * 类名 BaseSwipeRefreshFragment.java</br>
- * 创建日期 2014年4月21日</br>
- * @author LeonLee (http://my.oschina.net/lendylongli)</br>
- * Email lendylongli@gmail.com</br>
- * 更新时间 2014年4月21日 下午11:53:10</br>
- * 最后更新者 LeonLee</br>
- * 
  * 说明 下拉刷新界面的基类
  */
 public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result extends PageList<Data>> 

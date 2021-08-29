@@ -332,6 +332,7 @@ public class ImageUtils {
 	 * 
 	 * @return
 	 */
+	@SuppressWarnings({ "deprecation", "unused" })
 	public static String getLatestImage(Activity context) {
 		String latestImage = null;
 		String[] items = { MediaStore.Images.Media._ID,
@@ -463,10 +464,6 @@ public class ImageUtils {
 		context.getWindowManager().getDefaultDisplay().getMetrics(dm);
 		int rHeight = dm.heightPixels;
 		int rWidth = dm.widthPixels;
-		// float rHeight=dm.heightPixels/dm.density+0.5f;
-		// float rWidth=dm.widthPixels/dm.density+0.5f;
-		// int height=bitmap.getScaledHeight(dm);
-		// int width = bitmap.getScaledWidth(dm);
 		int height = bitmap.getHeight();
 		int width = bitmap.getWidth();
 		float zoomScale;
@@ -599,6 +596,7 @@ public class ImageUtils {
 	 * @param bitmap
 	 * @return
 	 */
+	@SuppressWarnings("deprecation")
 	public static Drawable bitmapToDrawable(Bitmap bitmap) {
 		Drawable drawable = new BitmapDrawable(bitmap);
 		return drawable;

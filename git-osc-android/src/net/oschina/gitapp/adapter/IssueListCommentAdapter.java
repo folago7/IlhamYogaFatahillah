@@ -1,11 +1,9 @@
 package net.oschina.gitapp.adapter;
 
-import java.net.URLDecoder;
 import java.util.List;
 
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.GitNote;
-import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.BitmapManager;
@@ -13,7 +11,6 @@ import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import android.content.Context;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
@@ -74,7 +71,7 @@ public class IssueListCommentAdapter extends MyBaseAdapter<GitNote> {
 		if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
 			listItemView.face.setImageResource(R.drawable.widget_dface);
 		} else {
-			String portraitURL = URLs.HTTP + URLs.HOST + URLs.URL_SPLITTER + note.getAuthor().getPortrait();
+			String portraitURL = URLs.GITIMG + note.getAuthor().getPortrait();
 			bmpManager.loadBitmap(portraitURL, listItemView.face);
 		}
 		listItemView.face.setOnClickListener(new OnClickListener() {

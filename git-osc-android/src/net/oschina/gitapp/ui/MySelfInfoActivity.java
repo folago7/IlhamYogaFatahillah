@@ -23,10 +23,10 @@ import android.widget.TextView;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
+import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.bean.UpLoadFile;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.BroadcastController;
-import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.FileUtils;
 import net.oschina.gitapp.common.ImageUtils;
 import net.oschina.gitapp.common.StringUtils;
@@ -141,11 +141,13 @@ public class MySelfInfoActivity extends BaseActionBarActivity implements View.On
 			mWeiBo.setText(mUser.getWeibo());
 			mBlog.setText(mUser.getBlog());
 			mIntro.setText(mUser.getBio());
-			new Thread(){
-				public void run() {
-					UIHelper.showUserFace(mUserFace, mUser.getPortrait());
-				}
-			}.start();
+			String portrait = mUser.getPortrait() == null ? "" : mUser.getPortrait();
+			if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
+				mUserFace.setImageResource(R.drawable.widget_dface);
+			} else {
+				String portraitURL = URLs.GITIMG + mUser.getPortrait();
+				UIHelper.showUserFace(mUserFace, portraitURL);
+			}
 		}
 	}
 

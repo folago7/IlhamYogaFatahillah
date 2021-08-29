@@ -149,6 +149,22 @@ public class AppContext extends Application {
 	public void setConfigHttpsLogin(boolean b) {
 		setProperty(AppConfig.CONF_HTTPS_LOGIN, String.valueOf(b));
 	}
+	
+	/**
+	 * 是否是第一次启动App
+	 * @return
+	 */
+	public boolean isFristStart() {
+		boolean res = false;
+		String perf_frist = getProperty(AppConfig.CONF_FRIST_START);
+		// 默认是http
+		if (StringUtils.isEmpty(perf_frist)) {
+			res = true;
+			setProperty(AppConfig.CONF_FRIST_START, "false");
+		}
+		
+		return res;
+	}
 
 	/**
 	 * 是否加载显示文章图片
@@ -641,6 +657,17 @@ public class AppContext extends Application {
 	public Project getProject(String projectId) throws AppException {
 		return ApiClient.getProject(this, projectId);
 	}
+	
+	/**
+	 * 获得具体用户的项目列表
+	 * @param userId
+	 * @param page
+	 * @return
+	 * @throws AppException
+	 */
+	public CommonList<Project> getUserProjects(String userId, int page) throws AppException {
+		return ApiClient.getUserProjects(this, userId, page);
+	}
 
 	/**
 	 * 获得最近更新的项目
@@ -958,6 +985,17 @@ public class AppContext extends Application {
 				list = new CommonList<Issue>();
 		}
 		return list;
+	}
+	
+	/**
+	 * 获得issue详情
+	 * @param projectId
+	 * @param issueId
+	 * @return
+	 * @throws AppException
+	 */
+	public Issue getIssue(String projectId, String issueId) throws AppException {
+		return ApiClient.getIssue(this, projectId, issueId);
 	}
 
 	/**

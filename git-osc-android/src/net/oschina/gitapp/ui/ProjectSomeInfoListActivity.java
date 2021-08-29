@@ -10,13 +10,12 @@ import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
-import net.oschina.gitapp.ui.fragments.ProjectCodeTreeFragment;
 import net.oschina.gitapp.ui.fragments.ProjectCommitListFragment;
 import net.oschina.gitapp.ui.fragments.ProjectIssuesListFragment;
 
 /**
  * 显示项目的一些列表信息
- * 如：issues、commits、code列表
+ * 如：issues、commits
  * @created 2014-07-17
  * @author 火蚁（http://my.oschina.net/LittleDY）
  *
@@ -25,7 +24,6 @@ public class ProjectSomeInfoListActivity extends BaseActionBarActivity {
 	
 	public final static int PROJECT_LIST_TYPE_ISSUES = 0;
 	public final static int PROJECT_LIST_TYPE_COMMITS = 1;
-	public final static int PROJECT_LIST_TYPE_CODE = 2;
 	
 	private FragmentManager mFragmentManager;
 	
@@ -76,9 +74,6 @@ public class ProjectSomeInfoListActivity extends BaseActionBarActivity {
 		case PROJECT_LIST_TYPE_COMMITS:
 			title = "提交列表";
 			break;
-		case PROJECT_LIST_TYPE_CODE:
-			title = "代码";
-			break;
 		}
 		return title;
 	}
@@ -91,9 +86,6 @@ public class ProjectSomeInfoListActivity extends BaseActionBarActivity {
 			break;
 		case PROJECT_LIST_TYPE_COMMITS:
 			ft.replace(R.id.content, ProjectCommitListFragment.newInstance(mProject)).commit();
-			break;
-		case PROJECT_LIST_TYPE_CODE:
-			ft.replace(R.id.content, ProjectCodeTreeFragment.newInstance(mProject)).commit();
 			break;
 		}
 	}

@@ -7,7 +7,7 @@
     <!--
          1.Target SDK version must be 16, not 17, or JavaScript bridge for
          WebView widgets does not work on a 4.2 Nexus 7
-         2.也可以在js调用的方法加上注解@JavascriptInterface，不然是不用被js代码所调用的
+         2.也可以在js调用的方法加上注解@JavascriptInterface，不然是不用被js代码所调用的
     -->
     <uses-sdk
         android:maxSdkVersion="19"
@@ -26,7 +26,7 @@
         android:label="@string/app_name"
         android:theme="@style/GitAppTheme" >
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".AppStart"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -35,16 +35,23 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".WelComePage"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
+        </activity>
+        <activity
+            android:name=".ui.MainActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
             android:name=".ui.LoginActivity"
             android:label="@string/login_title"
             android:launchMode="singleTask" >
         </activity>
-        <activity
-            android:name=".ui.ProjectActivity" />
-        <activity
-            android:name=".ui.ProjectReadMeActivity" />
-        <activity
-            android:name=".ui.ProjectSomeInfoListActivity" />
+        <activity android:name=".ui.ProjectActivity" />
+        <activity android:name=".ui.ProjectReadMeActivity" />
+        <activity android:name=".ui.ProjectCodeActivity" />
+        <activity android:name=".ui.ProjectSomeInfoListActivity" />
         <activity
             android:name=".ui.SearchActivity"
             android:label="项目搜索"

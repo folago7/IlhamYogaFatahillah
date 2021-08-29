@@ -1,8 +1,6 @@
 package net.oschina.gitapp.adapter;
 
-import java.util.ArrayList;
 import java.util.List;
-
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.Commit;
 import net.oschina.gitapp.bean.CommitDiff;

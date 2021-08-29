@@ -2,28 +2,17 @@ package net.oschina.gitapp.api;
 
 import static net.oschina.gitapp.api.HTTPRequestor.*;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.http.util.EncodingUtils;
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
-
 import android.graphics.Bitmap;
 import android.util.Log;
-import net.oschina.gitapp.AppConfig;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.bean.Branch;
@@ -37,10 +26,8 @@ import net.oschina.gitapp.bean.Event;
 import net.oschina.gitapp.bean.GitNote;
 import net.oschina.gitapp.bean.Issue;
 import net.oschina.gitapp.bean.Milestone;
-import net.oschina.gitapp.bean.Notification;
 import net.oschina.gitapp.bean.NotificationReadResult;
 import net.oschina.gitapp.bean.Project;
-import net.oschina.gitapp.bean.ProjectNotification;
 import net.oschina.gitapp.bean.ProjectNotificationArray;
 import net.oschina.gitapp.bean.Session;
 import net.oschina.gitapp.bean.UpLoadFile;
@@ -197,6 +184,29 @@ public class ApiClient {
 				});
 		return getHttpRequestor().init(appContext, HTTPRequestor.GET_METHOD,
 				url).to(Project.class);
+	}
+	
+	/**
+	 * 获得具体用户的项目列表
+	 * @param appContext
+	 * @param urerId
+	 * @param page
+	 * @return
+	 * @throws AppException
+	 */
+	public static CommonList<Project> getUserProjects(final AppContext appContext, String urerId, int page) throws AppException {
+		CommonList<Project> res = new CommonList<Project>();
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(PRIVATE_TOKEN, getToken(appContext));
+		params.put("page", page);
+		String url = makeURL(URLs.USER + URLs.URL_SPLITTER + urerId + URLs.URL_SPLITTER + "projects", params);
+		Log.i("Test", url);
+		List<Project> list = getHttpRequestor().init(appContext, GET_METHOD, url)
+				.getList(Project[].class);
+		res.setCount(list.size());
+		res.setPageSize(list.size());
+		res.setList(list);
+		return res;
 	}
 
 	/**
@@ -487,6 +497,22 @@ public class ApiClient {
 		commits.setCount(list.size());
 		commits.setPageSize(list.size());
 		return commits;
+	}
+	
+	/**
+	 * 获得issue的详情
+	 * @param appContext
+	 * @param projectId
+	 * @param issueId
+	 * @return
+	 * @throws AppException
+	 */
+	public static Issue getIssue(AppContext appContext, String projectId, String issueId) throws AppException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(PRIVATE_TOKEN, getToken(appContext));
+		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + projectId + "/issues/" + issueId, params);
+		return getHttpRequestor().init(appContext, GET_METHOD, url)
+				.to(Issue.class);
 	}
 
 	/**

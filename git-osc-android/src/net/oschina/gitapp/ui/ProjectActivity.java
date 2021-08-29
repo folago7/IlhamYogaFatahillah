@@ -4,7 +4,10 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
+import android.support.v4.view.MenuItemCompat;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ProgressBar;
@@ -31,6 +34,9 @@ import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
  */
 public class ProjectActivity extends BaseActionBarActivity implements
 		OnClickListener {
+	
+	private final int MENU_MORE_ID = 1;
+	private final int MENU_CREATE_ID = 0;
 	
 	private final int ACTION_LOAD_PROJECT = 0;// 加载项目
 	private final int ACTION_LOAD_PARENT_PROJECT = 1;// 加载项目的父项目信息
@@ -130,6 +136,34 @@ public class ProjectActivity extends BaseActionBarActivity implements
 		
 	}
 	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuItem createOption = menu.add(0, MENU_CREATE_ID, MENU_CREATE_ID, "创建Issue");
+		createOption.setIcon(R.drawable.action_create);
+		MenuItemCompat.setShowAsAction(createOption, MenuItemCompat.SHOW_AS_ACTION_IF_ROOM);
+		
+		MenuItem moreOption = menu.add(1, MENU_MORE_ID, MENU_MORE_ID, "更多");
+		moreOption.setIcon(R.drawable.abc_ic_menu_moreoverflow_normal_holo_dark);
+		
+		MenuItemCompat.setShowAsAction(moreOption,
+				MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
+		return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+		switch (id) {
+		case MENU_MORE_ID:
+			break;
+		case MENU_CREATE_ID:
+			// 新增issue
+			UIHelper.showIssueEditOrCreate(getGitApplication(), mProject, null);
+			break;
+		}
+		return super.onOptionsItemSelected(item); 
+	}
+
 	private String getUpdateTime() {
 		if (mProject.getLast_push_at() !=null) {
 			return StringUtils.friendly_time(mProject.getLast_push_at());
@@ -260,7 +294,7 @@ public class ProjectActivity extends BaseActionBarActivity implements
 			UIHelper.showProjectListActivity(ProjectActivity.this, mProject, ProjectSomeInfoListActivity.PROJECT_LIST_TYPE_COMMITS);
 			break;
 		case R.id.project_code:
-			UIHelper.showProjectListActivity(ProjectActivity.this, mProject, ProjectSomeInfoListActivity.PROJECT_LIST_TYPE_CODE);
+			UIHelper.showProjectCodeActivity(ProjectActivity.this, mProject);
 			break;
 		default:
 			break;

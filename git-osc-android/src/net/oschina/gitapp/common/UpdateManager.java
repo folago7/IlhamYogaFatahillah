@@ -8,12 +8,11 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
-
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
-import net.oschina.gitapp.api.ApiClient;
 import net.oschina.gitapp.bean.Update;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -41,6 +40,7 @@ import android.widget.Toast;
  * @version 1.1
  * @created 2012-6-29
  */
+@SuppressLint("HandlerLeak")
 public class UpdateManager {
 
 	private static final int DOWN_NOSDCARD = 0;
@@ -102,7 +102,7 @@ public class UpdateManager {
 				break;
 			case DOWN_NOSDCARD:
 				downloadDialog.dismiss();
-				Toast.makeText(mContext, "无法下载安装文件，请检查SD卡是否挂载", 3000).show();
+				Toast.makeText(mContext, "无法下载安装文件，请检查SD卡是否挂载", Toast.LENGTH_SHORT).show();
 				break;
 			}
     	};

@@ -1,19 +1,10 @@
 package net.oschina.gitapp.adapter;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.CodeTree;
-import net.oschina.gitapp.bean.Commit;
-import net.oschina.gitapp.bean.Project;
-import net.oschina.gitapp.bean.URLs;
-import net.oschina.gitapp.common.BitmapManager;
-import net.oschina.gitapp.common.StringUtils;
 import android.content.Context;
-import android.graphics.BitmapFactory;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;

@@ -9,14 +9,12 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.api.ApiClient;
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.widget.ImageView;
 /**
  * 异步线程加载图片工具类
@@ -28,6 +26,7 @@ import android.widget.ImageView;
  * @version 1.0
  * @created 2012-6-25
  */
+@SuppressLint("HandlerLeak")
 public class BitmapManager {  
 	  
     private static HashMap<String, SoftReference<Bitmap>> cache;  

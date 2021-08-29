@@ -2,14 +2,8 @@ package net.oschina.gitapp;
 
 import java.util.Stack;
 
-import net.oschina.gitapp.ui.MainActivity;
 import android.app.Activity;
-import android.app.ActivityManager;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
 
 /**
  * 应用程序Activity管理类：用于Activity管理和应用程序退出

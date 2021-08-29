@@ -1,10 +1,7 @@
 package net.oschina.gitapp.adapter;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.SimpleFormatter;
-
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.URLs;
@@ -88,7 +85,7 @@ public class MySelfListProjectAdapter extends MyBaseAdapter<Project> {
 		if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
 			listItemView.face.setImageResource(R.drawable.widget_dface);
 		} else {
-			String portraitURL = URLs.HTTP + URLs.HOST + URLs.URL_SPLITTER + project.getOwner().getPortrait();
+			String portraitURL = URLs.GITIMG + project.getOwner().getPortrait();
 			bmpManager.loadBitmap(portraitURL, listItemView.face);
 		}
 		

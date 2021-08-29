@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Properties;
 
-import net.oschina.gitapp.common.StringUtils;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
@@ -33,6 +32,8 @@ public class AppConfig {
 	public final static String CONF_VOICE = "perf_voice";
 	
 	public final static String CONF_CHECKUP = "perf_checkup";
+	
+	public final static String CONF_FRIST_START = "isFristStart";
 	
 	//默认存放图片的路径
 	public final static String DEFAULT_SAVE_IMAGE_PATH = Environment

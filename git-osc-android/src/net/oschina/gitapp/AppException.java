@@ -13,12 +13,10 @@ import java.util.Date;
 import org.apache.commons.httpclient.HttpException;
 
 import net.oschina.gitapp.common.UIHelper;
-import net.oschina.gitapp.ui.MainActivity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.os.Environment;
 import android.os.Looper;
-import android.util.Log;
 import android.widget.Toast;
 
 /**

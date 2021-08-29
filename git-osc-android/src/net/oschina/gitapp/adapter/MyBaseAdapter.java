@@ -2,7 +2,6 @@ package net.oschina.gitapp.adapter;
 
 import java.util.List;
 
-import net.oschina.gitapp.bean.Commit;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.widget.BaseAdapter;

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,7 +14,6 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
@@ -23,6 +21,7 @@ import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.ListView;
 import net.oschina.gitapp.AppContext;
@@ -34,8 +33,7 @@ import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.GitNote;
 import net.oschina.gitapp.bean.Issue;
 import net.oschina.gitapp.bean.Project;
-import net.oschina.gitapp.bean.User;
-import net.oschina.gitapp.common.BroadcastController;
+import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.DataRequestThreadHandler;
 import net.oschina.gitapp.common.StringUtils;
@@ -57,6 +55,8 @@ public class IssueDetailActivity extends BaseActionBarActivity implements
 	public static final int LISTVIEW_ACTION_REFRESH = 2;
 	// 下拉到底部时，获取下一页的状态
 	public static final int LISTVIEW_ACTION_SCROLL = 3;
+	
+	private AppContext mAppContext;
 
 	private LayoutInflater mInflater;
 
@@ -106,15 +106,15 @@ public class IssueDetailActivity extends BaseActionBarActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_issue_detail);
+		mAppContext = getGitApplication();
 		imm = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
 		init();
-		initHead();
-		String title = "Issue " + (mIssue.getIid() == 0 ? "" :  "#" + mIssue.getIid());
-		mActionBar.setTitle(title);
-		mActionBar.setSubtitle(mProject.getOwner().getName() + "/"
-				+ mProject.getName());
-		steupList();
-		loadComment(1, LISTVIEW_ACTION_INIT);
+		if (mProject != null && mIssue != null) {
+			initData();
+		} else {
+			Intent intent = getIntent();
+			loadProjectAndIssue(intent.getStringExtra(Contanst.PROJECTID), intent.getStringExtra(Contanst.ISSUEID));
+		}
 	}
 
 	private void init() {
@@ -165,6 +165,54 @@ public class IssueDetailActivity extends BaseActionBarActivity implements
 		mCommentPub.setOnClickListener(this);
 		mCommentPub.setEnabled(false);
 	}
+	
+	private void loadProjectAndIssue(final String projectId, final String issueId) {
+		final ProgressBar loading = (ProgressBar) findViewById(R.id.issue_detail_loading);
+		final View content = findViewById(R.id.issue_detail_content);
+		new AsyncTask<Void, Void, Message>() {
+
+			@Override
+			protected Message doInBackground(Void... params) {
+				Message msg = new Message();
+				Object obj[] = new Object[2];
+				try {
+					obj[0] = mAppContext.getProject(projectId);
+					obj[1] = mAppContext.getIssue(projectId, issueId);
+					msg.what = 1;
+					msg.obj = obj;
+				} catch (AppException e) {
+					msg.what = -1;
+					msg.obj = e;
+				}
+				return msg;
+			}
+
+			@Override
+			protected void onPreExecute() {
+				super.onPreExecute();
+				loading.setVisibility(View.VISIBLE);
+				content.setVisibility(View.GONE);
+			}
+
+			@Override
+			protected void onPostExecute(Message msg) {
+				super.onPostExecute(msg);
+				loading.setVisibility(View.GONE);
+				content.setVisibility(View.VISIBLE);
+				if (msg.what == 1) {
+					Object obj[] = (Object[]) msg.obj;
+					if (obj[0] != null && obj[1] != null) {
+						mProject = (Project) obj[0];
+						mIssue = (Issue) obj[1];
+						initData();
+					}
+				} else {
+					
+				}
+			}
+			
+		}.execute();
+	}
 
 	private void initHead() {
 		mIssueTitle = (TextView) mHeadView.findViewById(R.id.issue_title);
@@ -181,16 +229,24 @@ public class IssueDetailActivity extends BaseActionBarActivity implements
 				+ StringUtils.friendly_time(mIssue.getCreatedAt()));
 		mWebView.loadDataWithBaseURL(null, mIssue.getDescription(),
 				"text/html", HTTPRequestor.UTF_8, null);
-		new Thread() {
-			public void run() {
-				String faceUrl = mIssue.getAuthor().getPortrait() == null ? null
-						: mIssue.getAuthor().getPortrait();
-				if (faceUrl != null) {
-					UIHelper.showUserFace(mIssueUserFace, mIssue.getAuthor()
-							.getPortrait());
-				}
-			}
-		}.start();
+		
+		String portrait = mIssue.getAuthor().getPortrait() == null ? "" : mIssue.getAuthor().getPortrait();
+		if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
+			mIssueUserFace.setImageResource(R.drawable.widget_dface);
+		} else {
+			String portraitURL = URLs.GITIMG + mIssue.getAuthor().getPortrait();
+			UIHelper.showUserFace(mIssueUserFace, portraitURL);
+		}
+	}
+	
+	private void initData() {
+		initHead();
+		String title = "Issue " + (mIssue.getIid() == 0 ? "" :  "#" + mIssue.getIid());
+		mActionBar.setTitle(title);
+		mActionBar.setSubtitle(mProject.getOwner().getName() + "/"
+				+ mProject.getName());
+		steupList();
+		loadComment(1, LISTVIEW_ACTION_INIT);
 	}
 
 	public void steupList() {

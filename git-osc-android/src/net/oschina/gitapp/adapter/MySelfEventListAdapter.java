@@ -5,7 +5,6 @@ import java.util.List;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.Commit;
 import net.oschina.gitapp.bean.Event;
-import net.oschina.gitapp.bean.Note;
 import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.BitmapManager;
@@ -81,7 +80,7 @@ public class MySelfEventListAdapter extends MyBaseAdapter<Event> {
 		if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
 			listItemView.face.setImageResource(R.drawable.widget_dface);
 		} else {
-			String portraitURL = URLs.HTTP + URLs.HOST + URLs.URL_SPLITTER + portrait;
+			String portraitURL = URLs.GITIMG + portrait;
 			bmpManager.loadBitmap(portraitURL, listItemView.face);
 		}
 		

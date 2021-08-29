@@ -1,8 +1,6 @@
 package net.oschina.gitapp.ui;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -12,21 +10,17 @@ import android.os.Bundle;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
-import net.oschina.gitapp.bean.Branch;
-import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.Issue;
 import net.oschina.gitapp.bean.Milestone;
 import net.oschina.gitapp.bean.Project;
@@ -199,6 +193,7 @@ public class IssueEditActivity extends BaseActionBarActivity implements OnClickL
 				}
 			}
 			
+			@SuppressWarnings("unchecked")
 			@Override
 			protected void onPostExecute(Message msg) {
 				if (mLoadSome != null) mLoadSome.dismiss();
@@ -271,6 +266,7 @@ public class IssueEditActivity extends BaseActionBarActivity implements OnClickL
 				}
 			}
 			
+			@SuppressWarnings("unchecked")
 			@Override
 			protected void onPostExecute(Message msg) {
 				if (mLoadSome != null) mLoadSome.dismiss();

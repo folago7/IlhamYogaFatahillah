@@ -29,7 +29,7 @@ import net.oschina.gitapp.bean.CodeFile;
 import net.oschina.gitapp.common.UIHelper;
 
 /**
- * 
+ * 用markdown渲染代码显示
  * @author 火蚁（http://my.oschina.net/LittleDY）
  *
  */

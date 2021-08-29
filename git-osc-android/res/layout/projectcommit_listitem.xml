@@ -10,7 +10,7 @@
     android:paddingTop="8dip" >
 
     <!-- 项目作者头像 -->
-    <ImageView
+    <net.oschina.gitapp.widget.CircleImageView
         android:id="@+id/projectcommit_listitem_userface"
         style="@style/UserFaceImageStyle" />
 

@@ -13,6 +13,7 @@ import net.oschina.gitapp.api.ApiClient;
 import net.oschina.gitapp.bean.Commit;
 import net.oschina.gitapp.bean.CommitDiff;
 import net.oschina.gitapp.bean.Event;
+import net.oschina.gitapp.bean.Events;
 import net.oschina.gitapp.bean.Issue;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.User;
@@ -24,6 +25,7 @@ import net.oschina.gitapp.ui.IssueEditActivity;
 import net.oschina.gitapp.ui.LoginActivity;
 import net.oschina.gitapp.ui.MainActivity;
 import net.oschina.gitapp.ui.ProjectActivity;
+import net.oschina.gitapp.ui.ProjectCodeActivity;
 import net.oschina.gitapp.ui.ProjectSomeInfoListActivity;
 import net.oschina.gitapp.ui.ProjectReadMeActivity;
 import net.oschina.gitapp.ui.SearchActivity;
@@ -157,23 +159,18 @@ public class UIHelper {
 		int action = event.getAction();
 		switch (action) {
 		case Event.EVENT_TYPE_CREATED:// 创建了issue
-			eventTitle = event.getTarget_type();
-			if (event.getEvents().getIssue() != null) { 
-				eventTitle = eventTitle + " #" + event.getEvents().getIssue().getIid();
-			} else if (event.getEvents().getPull_request() != null) {
-				eventTitle = eventTitle + " #" + event.getEvents().getPull_request().getIid();
-			}
+			eventTitle = event.getTarget_type() + getEventsTitle(event);
 			title = "在项目 " + pAuthor_And_pName + " 创建了 " + eventTitle;
 			break;
 		case Event.EVENT_TYPE_UPDATED:// 更新项目
 			title = "更新了项目 " + pAuthor_And_pName;
 			break;
 		case Event.EVENT_TYPE_CLOSED:// 关闭项目
-			eventTitle = event.getTarget_type();
+			eventTitle = event.getTarget_type() + getEventsTitle(event);
 			title = "关闭了项目 " + pAuthor_And_pName + " 的 " + eventTitle;
 			break;
 		case Event.EVENT_TYPE_REOPENED:// 重新打开了项目
-			eventTitle = event.getTarget_type();
+			eventTitle = event.getTarget_type() + getEventsTitle(event);
 			title = "重新打开了项目 " + pAuthor_And_pName + " 的 " + eventTitle;
 			break;
 		case Event.EVENT_TYPE_PUSHED:// push
@@ -189,7 +186,7 @@ public class UIHelper {
 			title = "评论了项目 " + pAuthor_And_pName + " 的 " + eventTitle;
 			break;
 		case Event.EVENT_TYPE_MERGED:// 合并
-			eventTitle = event.getTarget_type();
+			eventTitle = event.getTarget_type() + getEventsTitle(event);
 			title = "接受了项目 " + pAuthor_And_pName + " 的 " + eventTitle;
 			break;
 		case Event.EVENT_TYPE_JOINED://# User joined project
@@ -238,6 +235,18 @@ public class UIHelper {
 			}
 		}
 		return sps;
+	}
+	
+	private static String getEventsTitle(Event event) {
+		String title = "";
+		if (event.getEvents().getIssue() != null) { 
+			title = " #" + event.getEvents().getIssue().getIid();
+		}
+		
+		if (event.getEvents().getPull_request() != null) {
+			title = " #" + event.getEvents().getPull_request().getIid();
+		}
+		return title;
 	}
 	
 	/**
@@ -416,12 +425,14 @@ public class UIHelper {
 	 * @param project
 	 * @param issue
 	 */
-	public static void showIssueDetail(Context context, Project project, Issue issue) {
+	public static void showIssueDetail(Context context, Project project, Issue issue, String projectId, String issueId) {
 		Intent intent = new Intent(context, IssueDetailActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
 		Bundle bundle = new Bundle();
 		bundle.putSerializable(Contanst.PROJECT, project);
 		bundle.putSerializable(Contanst.ISSUE, issue);
+		bundle.putString(Contanst.PROJECTID, projectId);
+		bundle.putString(Contanst.ISSUEID, issueId);
 		intent.putExtras(bundle);
 		context.startActivity(intent);
 	}
@@ -448,7 +459,6 @@ public class UIHelper {
 	 */
 	public static void showMySelfInfoDetail(Context context) {
 		Intent intent = new Intent(context, MySelfInfoActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		context.startActivity(intent);
 	}
 	
@@ -484,9 +494,9 @@ public class UIHelper {
 	 */
 	public static void showEventDetail(Context context, Event event) {
 		if (event.getEvents().getIssue() != null) {
-			UIHelper.showProjectDetail(context, null, event.getProject().getId());
+			showIssueDetail(context, null, null, event.getProject().getId(), event.getEvents().getIssue().getId());
 		} else {
-			UIHelper.showProjectDetail(context, null, event.getProject().getId());
+			showProjectDetail(context, null, event.getProject().getId());
 		}
 	}
 	
@@ -528,6 +538,19 @@ public class UIHelper {
 		Bundle bundle = new Bundle();
 		bundle.putSerializable(Contanst.PROJECT, project);
 		bundle.putInt("project_list_type", type);
+		intent.putExtras(bundle);
+		context.startActivity(intent);
+	}
+	
+	/**
+	 * 显示项目的代码列表
+	 * @param context
+	 * @param project
+	 */
+	public static void showProjectCodeActivity(Context context, Project project) {
+		Intent intent = new Intent(context, ProjectCodeActivity.class);
+		Bundle bundle = new Bundle();
+		bundle.putSerializable(Contanst.PROJECT, project);
 		intent.putExtras(bundle);
 		context.startActivity(intent);
 	}

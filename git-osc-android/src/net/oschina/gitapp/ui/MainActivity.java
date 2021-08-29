@@ -4,6 +4,7 @@ import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppManager;
 import net.oschina.gitapp.R;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
@@ -83,6 +84,8 @@ public class MainActivity extends ActionBarActivity implements
 	private ActionBar mActionBar;
 	private AppContext mContext;
 	
+	private int mTitle;// actionbar标题
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -94,6 +97,13 @@ public class MainActivity extends ActionBarActivity implements
 		if (mContext.isCheckUp()) {
 			UpdateManager.getUpdateManager().checkAppUpdate(this, false);
 		}
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		mActionBar.setTitle(mTitle);
+		
 	}
 
 	private void initView(Bundle savedInstanceState) {
@@ -122,7 +132,7 @@ public class MainActivity extends ActionBarActivity implements
 							ExploreViewPagerFragment.newInstance(),
 							DRAWER_CONTENT_TAG).commit();
 
-			mActionBar.setTitle(TITLES[0]);
+			mTitle = TITLES[0];
 			mCurrentContentTag = CONTENT_TAG_EXPLORE;
 		}
 		
@@ -198,7 +208,22 @@ public class MainActivity extends ActionBarActivity implements
 		ft.commit();
 		
 		mActionBar.setTitle(TITLES[pos]);
+		mTitle = TITLES[pos];//记录主界面的标题
 		mCurrentContentTag = tag;
+	}
+	
+	private void showLoginActivity() {
+		if (!mContext.isLogin()) {
+			Intent intent = new Intent(mContext, LoginActivity.class);
+			startActivity(intent);
+		} else {
+			UIHelper.showMySelfInfoDetail(MainActivity.this);
+		}
+	}
+	
+	@Override
+	public void onClickLogin() {
+		showLoginActivity();
 	}
 
 	@Override
@@ -224,12 +249,18 @@ public class MainActivity extends ActionBarActivity implements
 		}
 		showMainContent(2);
 	}
+	
+	@Override
+	public void onClickSetting() {
+		Intent intent = new Intent(mContext, SettingActivity.class);
+		startActivity(intent);
+	}
 
 	@Override
 	public void onClickExit() {
 		this.finish();
 	}
-
+	
 	private class DrawerMenuListener implements DrawerLayout.DrawerListener {
 		@Override
 		public void onDrawerOpened(View drawerView) {
@@ -251,6 +282,4 @@ public class MainActivity extends ActionBarActivity implements
 			mDrawerToggle.onDrawerStateChanged(newState);
 		}
 	}
-	
-	
 }

@@ -1,20 +1,19 @@
 package net.oschina.gitapp.common;
 
+import android.annotation.SuppressLint;
 import java.security.Key;
 import java.security.spec.AlgorithmParameterSpec;
-
 import javax.crypto.Cipher;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.IvParameterSpec;
-
-import android.util.Base64;
 
 /**
  * 加密解密工具包
  * @author Winter Lau
  * @date 2011-12-26
  */
+@SuppressLint("TrulyRandom")
 public class CyptoUtils {
 
 	public static final String ALGORITHM_DES = "DES/CBC/PKCS5Padding";
@@ -28,7 +27,8 @@ public class CyptoUtils {
      * @throws InvalidAlgorithmParameterException 
      * @throws Exception 
      */
-    public static String encode(String key,String data) {
+    @SuppressLint("TrulyRandom")
+	public static String encode(String key,String data) {
     	if(data == null)
     		return null;
     	try{
