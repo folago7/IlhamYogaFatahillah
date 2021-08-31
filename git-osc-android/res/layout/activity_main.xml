@@ -16,7 +16,7 @@
         android:layout_width="260dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@color/gray"
+        android:background="#343636"
         android:orientation="vertical" />
 
 </android.support.v4.widget.DrawerLayout>

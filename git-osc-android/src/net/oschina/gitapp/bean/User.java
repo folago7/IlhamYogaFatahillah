@@ -9,7 +9,6 @@ import org.codehaus.jackson.annotate.JsonProperty;
  */
 @SuppressWarnings("serial")
 public class User extends Entity  {
-	public static final String URL = "/users";
 	
     @JsonProperty("username")
     private String _username;
@@ -49,6 +48,17 @@ public class User extends Entity  {
 
     @JsonProperty("can_create_team")
     private boolean _canCreateTeam;
+    
+    @JsonProperty("follow")
+    private Follow  _follow;
+
+	public Follow getFollow() {
+		return _follow;
+	}
+
+	public void setFollow(Follow follow) {
+		this._follow = follow;
+	}
 
 	public String getUsername() {
 		return _username;

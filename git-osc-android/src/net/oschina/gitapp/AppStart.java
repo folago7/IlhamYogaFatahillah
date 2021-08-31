@@ -1,5 +1,6 @@
 package net.oschina.gitapp;
 
+import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.MainActivity;
 import android.os.Bundle;
 import android.app.Activity;
@@ -20,21 +21,22 @@ public class AppStart extends Activity {
 		mAppContext = (AppContext) getApplication();
 		//setContentView(R.layout.app_start);
 		boolean isFrist = mAppContext.isFristStart();
-		if (isFrist) {
-			goWelComePage();
+		UIHelper.goMainActivity(AppStart.this);
+		/*if (isFrist) {
+			goSplashPage();
 		} else {
-			goMainActivity();
-		}
+			goWelcomePage();
+		}*/
 		finish();
 	}
 	
-	private void goMainActivity() {
-		Intent intent = new Intent(AppStart.this, MainActivity.class);
+	private void goSplashPage() {
+		Intent intent = new Intent(AppStart.this, SplashPage.class);
 		startActivity(intent);
 	}
 	
-	private void goWelComePage() {
-		Intent intent = new Intent(AppStart.this, WelComePage.class);
+	private void goWelcomePage() {
+		Intent intent = new Intent(AppStart.this, WelcomePage.class);
 		startActivity(intent);
 	}
 }

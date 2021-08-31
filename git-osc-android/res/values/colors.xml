@@ -18,28 +18,26 @@
     <color name="grayslate">#708090</color>
     <color name="lightblue">#0083FF</color>
     <color name="actionBar_color">#ff474d57</color>
-    <color name="accent_color">#ff30a1ba</color>
     <color name="pressed_gitlab">#CC30A1BA</color>
     <color name="slidingmenu_bg">#212121</color>
-    <color name="transparent">#00000000</color>
+    
+    <!-- project list color -->
+    <color name="project_listitem_title">#294fa1</color>
+    <color name="project_listitem_description">#515151</color>
+    <color name="project_listitem_someinfo">#b6b6b6</color>
 	
     <!-- 列表所需颜色值 -->
     <color name="listitem_transparent">#00000000</color>
-    <color name="listitem_black">#ff000000</color>
+    <color name="listitem_black">#515151</color>
     <color name="listitem_white">#ffffffff</color>
-    <color name="listitem_blue">#0e5986</color>
-    <color name="listitem_gray">#ff9da19e</color>
+    <color name="listitem_blue">#294fa1</color>
+    <color name="listitem_gray">#b6b6b6</color>
     <color name="listitem_green">#ffe3ffc6</color>
-    <color name="listitem_greenyellow">#ff87b869</color>
-    <color name="listitem_yellow">#fffaffbf</color> 
     
-    <color name="full_transparent">#00000000</color>
-	<color name="layout_item_pressed_color">#60000000</color>
+    <!-- 菜单layout item颜色 -->
+    <color name="menu_layout_default">#363636</color>
+	<color name="menu_layout_item_pressed_color">#252525</color>
     
-    <!-- Holo Light Colors -->
-    <color name="background_holo_light">#fff3f3f3</color>
-    <color name="holo_light_seperator_color">#ffb2b2b2</color>
-
     <!-- 下拉刷新时，颜色值 -->
     <color name="swiperefresh_color1">#ff00ddff</color>
     <color name="swiperefresh_color2">#ffffbb33</color>
@@ -74,6 +72,5 @@
     <color name="inset_background">#F8F8F8</color>
     <color name="inset_outer">#C7C7C7</color>
     <color name="inset_inner">#FFFFFF</color>
-    <color name="theme">#ff00bfff</color>
 
 </resources>

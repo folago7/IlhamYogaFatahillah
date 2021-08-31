@@ -31,10 +31,10 @@ import net.oschina.gitapp.widget.CircleImageView;
  * @author 火蚁（http://my.oschina.net/LittleDY）
  * 
  */
-public class DrawerNavigation extends Fragment implements OnClickListener {
+public class DrawerNavigationMenu extends Fragment implements OnClickListener {
 
-	public static DrawerNavigation newInstance() {
-		return new DrawerNavigation();
+	public static DrawerNavigationMenu newInstance() {
+		return new DrawerNavigationMenu();
 	}
 	
 	private View mSavedView;// 当前操作的菜单项
@@ -48,10 +48,8 @@ public class DrawerNavigation extends Fragment implements OnClickListener {
 	private LinearLayout mMenu_item_myself;
 	private LinearLayout mMenu_item_notice;
 	private LinearLayout mMenu_item_setting;
-	private LinearLayout mMenu_item_exit;
+	private View mMenu_item_exit;
 	
-	private TextView mMenu_item_notice_text;
-
 	private DrawerMenuCallBack mCallBack;
 	private AppContext mApplication;
 	
@@ -137,7 +135,7 @@ public class DrawerNavigation extends Fragment implements OnClickListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_drawer_menu, null);
+		return inflater.inflate(R.layout.activity_main_drawer_menu, null);
 	}
 
 	@Override
@@ -146,8 +144,6 @@ public class DrawerNavigation extends Fragment implements OnClickListener {
 	}
 	
 	private void initBadgeView(View view) {
-		mNotification_bv = (BadgeView) view.findViewById(R.id.menu_item_notice_badgeView);
-		mNotification_bv.setVisibility(View.GONE);
 	}
 
 	// 初始化界面控件
@@ -162,7 +158,7 @@ public class DrawerNavigation extends Fragment implements OnClickListener {
 		mMenu_item_myself = (LinearLayout) view.findViewById(R.id.menu_item_myself);
 		mMenu_item_notice = (LinearLayout) view.findViewById(R.id.menu_item_notice);
 		mMenu_item_setting = (LinearLayout) view.findViewById(R.id.menu_item_setting);
-		mMenu_item_exit = (LinearLayout) view.findViewById(R.id.menu_item_exit);
+		mMenu_item_exit = view.findViewById(R.id.menu_item_exit);
 		
 		// 绑定点击事件
 		mMenu_user_layout.setOnClickListener(this);
@@ -199,13 +195,12 @@ public class DrawerNavigation extends Fragment implements OnClickListener {
 
 		if (selected) {
 			ViewCompat.setHasTransientState(view, true);
-			view.setBackgroundColor(getResources().getColor(
-					R.color.accent_color));
+			view.setBackgroundColor(getResources()
+					.getColor(R.color.menu_layout_item_pressed_color));
 
 		} else {
 			ViewCompat.setHasTransientState(view, false);
-			view.setBackgroundColor(getResources()
-					.getColor(R.color.transparent));
+			view.setBackgroundResource(R.drawable.menu_layout_item_selector);
 		}
 	}
 

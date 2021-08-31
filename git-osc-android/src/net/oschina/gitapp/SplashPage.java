@@ -23,7 +23,7 @@ import android.widget.LinearLayout.LayoutParams;
  * @author deyi(http://my.oschina.net/LittleDY)
  *
  */
-public class WelComePage extends Activity implements OnPageChangeListener {
+public class SplashPage extends Activity implements OnPageChangeListener {
 	
 	private List<ImageView> imageViewList;
 	private TextView tvDescription;
@@ -31,16 +31,6 @@ public class WelComePage extends Activity implements OnPageChangeListener {
 	private String[] imageDescriptions;
 	private int previousSelectPosition = 0;
 	private ViewPager mViewPager;
-	private boolean isLoop = true;
-	private Handler handler = new Handler() {
-
-		@Override
-		public void handleMessage(Message msg) {
-			super.handleMessage(msg);
-
-			mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
-		}
-	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -189,6 +179,5 @@ public class WelComePage extends Activity implements OnPageChangeListener {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		isLoop = false;
 	}
 }

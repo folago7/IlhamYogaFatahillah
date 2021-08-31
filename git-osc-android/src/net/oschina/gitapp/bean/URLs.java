@@ -11,7 +11,7 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 public class URLs implements Serializable {
 	
-	public final static String HOST = "git.oschina.net";
+	public final static String HOST = "112.124.6.106";//"git.oschina.net";
 	private static final String API_VERSION = "/api/v3";// API版本
 	public final static String HTTP = "http://";
 	public final static String HTTPS = "https://";

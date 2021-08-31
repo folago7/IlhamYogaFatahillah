@@ -3,6 +3,7 @@ package net.oschina.gitapp.ui.basefragment;
 import net.oschina.gitapp.AppContext;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 
 /**
  * 碎片基类

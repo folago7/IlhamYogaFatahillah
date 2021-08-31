@@ -24,85 +24,55 @@
         android:orientation="vertical" >
 
         <!-- 项目名称 -->
-
         <TextView
             android:id="@+id/exploreproject_listitem_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:includeFontPadding="false"
-            android:textColor="@color/listitem_blue"
-            android:textSize="@dimen/text_size_14" />
+            style="@style/project_list_title"
+            android:text="oschina / android" />
 
         <!-- 项目描述 -->
-
         <TextView
             android:id="@+id/exploreproject_listitem_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dip"
-            android:textColor="@color/listitem_black"
-            android:textColorLink="@color/listitem_blue"
-            android:maxLines="4"
-            android:ellipsize="end"
-            android:textSize="@dimen/text_size_14" />
+            style="@style/project_list_description" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dip"
-            android:orientation="horizontal" >
+            android:orientation="horizontal"
+            android:gravity="center" >
 
             <!-- language类型 -->
 
             <ImageView
                 android:id="@+id/exploreproject_listitem_language_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
+                style="@style/project_list_img"
                 android:src="@drawable/language" />
 
             <TextView
                 android:id="@+id/exploreproject_listitem_language"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="3dip"
-                android:layout_marginRight="10dip"
-                android:textColor="@color/listitem_gray"
-                android:textSize="@dimen/text_size_10" />
+                style="@style/project_list_someinfo" />
 
             <!-- 项目加星数量 -->
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
+                style="@style/project_list_img"
                 android:src="@drawable/star" />
 
             <TextView
                 android:id="@+id/exploreproject_listitem_star"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="3dip"
-                android:layout_marginRight="10dip"
-                android:textColor="@color/listitem_gray"
-                android:textSize="@dimen/text_size_10" />
+                style="@style/project_list_someinfo" />
 
             <!-- fork数量 -->
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
+                style="@style/project_list_img"
                 android:src="@drawable/fork" />
 
             <TextView
                 android:id="@+id/exploreproject_listitem_fork"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="3dip"
-                android:layout_marginRight="10dip"
-                android:textColor="@color/listitem_gray"
-                android:textSize="@dimen/text_size_10" />
+                style="@style/project_list_someinfo" />
         </LinearLayout>
     </LinearLayout>
 

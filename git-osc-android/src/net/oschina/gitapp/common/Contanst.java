@@ -52,5 +52,8 @@ public class Contanst {
 	public static final String PROP_KEY_CAN_CREATE_GROUP = "user.can_create_group";
 	public static final String PROP_KEY_CAN_CREATE_PROJECT = "user.can_create_project";
 	public static final String PROP_KEY_CAN_CREATE_TEAM = "user.can_create_team";
-	
+	public static final String ROP_KEY_FOLLOWERS = "followers";
+	public static final String ROP_KEY_STARRED = "starred";
+	public static final String ROP_KEY_FOLLOWING = "following";
+	public static final String ROP_KEY_WATCHED = "watched";
 }

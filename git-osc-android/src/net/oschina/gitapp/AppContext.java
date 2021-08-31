@@ -26,6 +26,7 @@ import net.oschina.gitapp.bean.Commit;
 import net.oschina.gitapp.bean.CommitDiff;
 import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.Event;
+import net.oschina.gitapp.bean.Follow;
 import net.oschina.gitapp.bean.GitNote;
 import net.oschina.gitapp.bean.Issue;
 import net.oschina.gitapp.bean.Milestone;
@@ -472,7 +473,6 @@ public class AppContext extends Application {
 		User user = new User();
 		user.setId(getProperty(PROP_KEY_UID));
 		user.setUsername(getProperty(PROP_KEY_USERNAME));
-		// user.setEmail(getProperty(PROP_KEY_EMAIL));
 		user.setName(getProperty(PROP_KEY_NAME));
 		user.setBio(getProperty(PROP_KEY_BIO));
 		user.setWeibo(getProperty(PROP_KEY_WEIBO));
@@ -488,6 +488,12 @@ public class AppContext extends Application {
 				.toBool(getProperty(PROP_KEY_CAN_CREATE_PROJECT)));
 		user.setCanCreateTeam(StringUtils
 				.toBool(getProperty(PROP_KEY_CAN_CREATE_TEAM)));
+		Follow follow = new Follow();
+		follow.setFollowers(StringUtils.toInt(getProperty(ROP_KEY_FOLLOWERS)));
+		follow.setStarred(StringUtils.toInt(getProperty(ROP_KEY_STARRED)));
+		follow.setFollowing(StringUtils.toInt(getProperty(ROP_KEY_FOLLOWING)));
+		follow.setWatched(StringUtils.toInt(getProperty(ROP_KEY_WATCHED)));
+		user.setFollow(follow);
 		return user;
 	}
 	
@@ -518,7 +524,6 @@ public class AppContext extends Application {
 			{
 				setProperty(PROP_KEY_UID, String.valueOf(user.getId()));
 				setProperty(PROP_KEY_USERNAME, user.getUsername());
-				// setProperty(PROP_KEY_EMAIL, user.getEmail());
 				setProperty(PROP_KEY_NAME, user.getName());
 				setProperty(PROP_KEY_BIO, user.getBio());// 个人介绍
 				setProperty(PROP_KEY_WEIBO, user.getWeibo());
@@ -535,6 +540,14 @@ public class AppContext extends Application {
 						String.valueOf(user.isCanCreateProject()));
 				setProperty(PROP_KEY_CAN_CREATE_TEAM,
 						String.valueOf(user.isCanCreateTeam()));
+				setProperty(ROP_KEY_FOLLOWERS,
+						String.valueOf(user.getFollow().getFollowers()));
+				setProperty(ROP_KEY_STARRED,
+						String.valueOf(user.getFollow().getStarred()));
+				setProperty(ROP_KEY_FOLLOWING,
+						String.valueOf(user.getFollow().getFollowing()));
+				setProperty(ROP_KEY_WATCHED,
+						String.valueOf(user.getFollow().getWatched()));
 			}
 		});
 	}

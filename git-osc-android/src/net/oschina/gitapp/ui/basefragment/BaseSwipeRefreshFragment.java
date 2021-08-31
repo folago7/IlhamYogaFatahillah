@@ -105,7 +105,6 @@ public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result exte
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		//loadList(1, LISTVIEW_ACTION_INIT);
 	}
 	
 	@Override
@@ -141,6 +140,7 @@ public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result exte
 		if(mListViewAction == LISTVIEW_ACTION_REFRESH) {
 			setSwipeRefreshLoadingState();
 		}
+		loadList(1, LISTVIEW_ACTION_INIT);
 	}
 	
 	private void initView(View view) {
@@ -169,11 +169,11 @@ public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result exte
 	@Override
 	public void setUserVisibleHint(boolean isVisibleToUser) {
 		super.setUserVisibleHint(isVisibleToUser);
-		if (isVisibleToUser) {
+		/*if (isVisibleToUser) {
 			loadList(1, LISTVIEW_ACTION_INIT);
 		} else {
 			
-		}
+		}*/
 	}
 
 	/** 获取HeaderView*/

@@ -8,6 +8,7 @@ import static net.oschina.gitapp.common.Contanst.*;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.AppManager;
+import net.oschina.gitapp.AppStart;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.ApiClient;
 import net.oschina.gitapp.bean.Commit;
@@ -552,6 +553,15 @@ public class UIHelper {
 		Bundle bundle = new Bundle();
 		bundle.putSerializable(Contanst.PROJECT, project);
 		intent.putExtras(bundle);
+		context.startActivity(intent);
+	}
+	
+	/**
+	 * 进入主界面
+	 * @param context
+	 */
+	public static void goMainActivity(Context context) {
+		Intent intent = new Intent(context, MainActivity.class);
 		context.startActivity(intent);
 	}
 }

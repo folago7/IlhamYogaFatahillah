@@ -2,9 +2,12 @@ package net.oschina.gitapp.adapter;
 
 import java.util.List;
 
+import org.codehaus.jackson.impl.Indenter;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.widget.BaseAdapter;
+import android.widget.SectionIndexer;
 
 /**
  * 所有适配器基础类

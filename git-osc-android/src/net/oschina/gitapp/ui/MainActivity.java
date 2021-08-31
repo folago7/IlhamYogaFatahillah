@@ -127,7 +127,7 @@ public class MainActivity extends ActionBarActivity implements
 		if (null == savedInstanceState) {
 			FragmentTransaction ft = mFragmentManager.beginTransaction();
 			ft.replace(R.id.main_slidingmenu_frame,
-					DrawerNavigation.newInstance(), DRAWER_MENU_TAG)
+					DrawerNavigationMenu.newInstance(), DRAWER_MENU_TAG)
 					.replace(R.id.main_content,
 							ExploreViewPagerFragment.newInstance(),
 							DRAWER_CONTENT_TAG).commit();
@@ -152,7 +152,7 @@ public class MainActivity extends ActionBarActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuItem search = menu.add(MENU_SEARCH_ID, MENU_SEARCH_ID, MENU_SEARCH_ID, "查询项目");
+		MenuItem search = menu.add(MENU_SEARCH_ID, MENU_SEARCH_ID, MENU_SEARCH_ID, "搜索项目");
 		search.setIcon(R.drawable.abc_ic_search);
 		MenuItemCompat.setShowAsAction(search, MenuItemCompat.SHOW_AS_ACTION_IF_ROOM);
 		return true;
@@ -166,7 +166,6 @@ public class MainActivity extends ActionBarActivity implements
 		}
 		return mDrawerToggle.onOptionsItemSelected(item)
 				|| super.onOptionsItemSelected(item);
-
 	}
 
 	@Override

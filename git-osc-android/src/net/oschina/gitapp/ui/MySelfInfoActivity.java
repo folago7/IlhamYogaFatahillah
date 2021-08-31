@@ -148,6 +148,10 @@ public class MySelfInfoActivity extends BaseActionBarActivity implements View.On
 				String portraitURL = URLs.GITIMG + mUser.getPortrait();
 				UIHelper.showUserFace(mUserFace, portraitURL);
 			}
+			mFollowers.setText(mUser.getFollow().getFollowers() + "");
+			mStarred.setText(mUser.getFollow().getStarred() + "");
+			mFollowering.setText(mUser.getFollow().getFollowing() + "");
+			mWatched.setText(mUser.getFollow().getWatched() + "");
 		}
 	}
 
@@ -166,7 +170,6 @@ public class MySelfInfoActivity extends BaseActionBarActivity implements View.On
 			break;
 		// 其他
 		default:
-			UIHelper.ToastMessage(getGitApplication(), "" + id);
 			break;
 		}
 	}
