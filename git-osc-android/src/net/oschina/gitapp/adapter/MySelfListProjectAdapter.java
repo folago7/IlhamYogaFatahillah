@@ -104,9 +104,10 @@ public class MySelfListProjectAdapter extends MyBaseAdapter<Project> {
 		listItemView.project_name.setText(project.getOwner().getName() + " / " + project.getName());
 		
 		Date last_push_at = project.getLast_push_at() != null ? project.getLast_push_at() : project.getCreatedAt();
-		listItemView.updateData.setText("最近更新: " + StringUtils.friendly_time(last_push_at));
+		listItemView.updateData.setText("更新于: " + StringUtils.friendly_time(last_push_at));
 		
 		// 判断项目的类型，显示不同的图标（私有项目、公有项目、fork项目）
+		
 		
 		// 判断是否有项目的介绍
 		String descriptionStr = project.getDescription();
@@ -119,12 +120,13 @@ public class MySelfListProjectAdapter extends MyBaseAdapter<Project> {
 		// 显示项目的star、fork、language信息
 		listItemView.star.setText(project.getStars_count().toString());
 		listItemView.fork.setText(project.getForks_count().toString());
+		listItemView.language.setVisibility(View.GONE);
+		listItemView.languageImage.setVisibility(View.GONE);
 		String language = project.getLanguage() != null ? project.getLanguage() : "";
 		if (project.getLanguage() != null) {
 			listItemView.language.setText(language);
-		} else {
-			listItemView.language.setVisibility(View.GONE);
-			listItemView.languageImage.setVisibility(View.GONE);
+			listItemView.language.setVisibility(View.VISIBLE);
+			listItemView.languageImage.setVisibility(View.VISIBLE);
 		}
 	}
 }

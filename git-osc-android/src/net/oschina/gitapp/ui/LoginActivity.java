@@ -13,6 +13,7 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import net.oschina.gitapp.AppContext;
@@ -25,14 +26,13 @@ import net.oschina.gitapp.common.CyptoUtils;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
-import net.oschina.gitapp.widget.EditTextWithDel;
 
 public class LoginActivity extends BaseActionBarActivity 
 	implements OnClickListener, OnEditorActionListener {
 	
 	private AppContext mAppContext;
-	private EditTextWithDel mAccountEditText;
-	private EditTextWithDel mPasswordEditText;
+	private EditText mAccountEditText;
+	private EditText mPasswordEditText;
 	private ProgressDialog mLoginProgressDialog;
 	private Button mLogin;
 	private InputMethodManager imm;
@@ -47,8 +47,8 @@ public class LoginActivity extends BaseActionBarActivity
 	}
 
 	private void initView() {
-		mAccountEditText = (EditTextWithDel) findViewById(R.id.login_account);
-		mPasswordEditText = (EditTextWithDel) findViewById(R.id.login_password);
+		mAccountEditText = (EditText) findViewById(R.id.login_account);
+		mPasswordEditText = (EditText) findViewById(R.id.login_password);
 		mLogin = (Button) findViewById(R.id.login_btn_login);
 		mLogin.setOnClickListener(this);
 		imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
@@ -181,11 +181,15 @@ public class LoginActivity extends BaseActionBarActivity
 					UIHelper.ToastMessage(context, getString(
 							R.string.msg_login_fail) + msg.obj);
 				} else if(msg.what == -1){
-					AppException e = ((AppException)msg.obj);
-					if (e.getCode() == 401) {
-						UIHelper.ToastMessage(context, R.string.msg_login_error);
+					if (msg.obj instanceof AppException) {
+						AppException e = ((AppException)msg.obj);
+						if (e.getCode() == 401) {
+							UIHelper.ToastMessage(context, R.string.msg_login_error);
+						} else {
+							((AppException)msg.obj).makeToast(context);
+						}
 					} else {
-						((AppException)msg.obj).makeToast(context);
+						UIHelper.ToastMessage(context, R.string.msg_login_error);
 					}
 				}
 			}

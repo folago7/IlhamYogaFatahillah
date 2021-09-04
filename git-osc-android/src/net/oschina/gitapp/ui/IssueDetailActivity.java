@@ -428,7 +428,9 @@ public class IssueDetailActivity extends BaseActionBarActivity implements
 		// 加载前
 		@Override
 		public void onPreExecute() {
-			setSwipeRefreshLoadingState();
+			if (_mAction != LISTVIEW_ACTION_INIT) {
+				setSwipeRefreshLoadingState();
+			}
 		}
 
 		// 加载ing

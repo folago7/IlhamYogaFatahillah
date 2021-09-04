@@ -67,7 +67,7 @@ public class ApiClient {
 	 * @param appContext
 	 * @return
 	 */
-	private static String getToken(AppContext appContext) {
+	public static String getToken(AppContext appContext) {
 		if (private_token == null || private_token == "") {
 			private_token = appContext.getProperty(PRIVATE_TOKEN);
 		}
@@ -130,10 +130,11 @@ public class ApiClient {
 		}
 		Session session = getHttpRequestor()
 				.init(appContext, HTTPRequestor.POST_METHOD, urlString)
-				.with("email", userEmail).with("password", password)
+				.with("email", userEmail)
+				.with("password", password)
 				.to(Session.class);
 		// 保存用户的私有token
-		if (session != null && null != session.get_privateToken()) {
+		if (session != null && session.get_privateToken() != null) {
 			String token = CyptoUtils.encode(GITOSC_PRIVATE_TOKEN, session.get_privateToken());
 			appContext.setProperty(PRIVATE_TOKEN, token);
 		}
@@ -200,7 +201,6 @@ public class ApiClient {
 		params.put(PRIVATE_TOKEN, getToken(appContext));
 		params.put("page", page);
 		String url = makeURL(URLs.USER + URLs.URL_SPLITTER + urerId + URLs.URL_SPLITTER + "projects", params);
-		Log.i("Test", url);
 		List<Project> list = getHttpRequestor().init(appContext, GET_METHOD, url)
 				.getList(Project[].class);
 		res.setCount(list.size());
@@ -434,7 +434,6 @@ public class ApiClient {
 		params.put("ref_name", ref_name);
 		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + projectId
 				+ URLs.URL_SPLITTER + "repository/tree", params);
-		Log.i("Test", url);
 		List<CodeTree> list = getHttpRequestor().init(appContext,
 				HTTPRequestor.GET_METHOD, url).getList(CodeTree[].class);
 		codeTree.setList(list);
@@ -461,7 +460,6 @@ public class ApiClient {
 		// 拼接url地址
 		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + projectId
 				+ URLs.URL_SPLITTER + "issues", params);
-		Log.i("Test", url);
 		List<Issue> list = getHttpRequestor().init(appContext,
 				HTTPRequestor.GET_METHOD, url).getList(Issue[].class);
 		commits.setList(list);
@@ -590,6 +588,23 @@ public class ApiClient {
 				HTTPRequestor.GET_METHOD, url).to(CodeFile.class);
 		return codeFile;
 	}
+	
+	/**
+	 * 获得一个项目的readme文件
+	 * @param appContext
+	 * @param projectId
+	 * @return
+	 * @throws AppException
+	 */
+	public static String getReadMeFile(AppContext appContext, String projectId) throws AppException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(PRIVATE_TOKEN, getToken(appContext));
+		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + projectId + URLs.URL_SPLITTER + "readme", params);
+		Log.i("Test", url);
+		return getHttpRequestor()
+				.init(appContext, GET_METHOD, url)
+				.getResponseBodyString();
+	}
 
 	/**
 	 * 获得commit文件diff
@@ -717,20 +732,20 @@ public class ApiClient {
 	 * @return
 	 * @throws AppException
 	 */
-	public static String pubCreateIssue(AppContext appContext,
+	public static Issue pubCreateIssue(AppContext appContext,
 			String projectId, String title, String description,
 			String assignee_id, String milestone_id) throws AppException {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put(PRIVATE_TOKEN, getToken(appContext));
 		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + projectId
 				+ URLs.URL_SPLITTER + "issues", params);
-
 		return getHttpRequestor()
 				.init(appContext, HTTPRequestor.POST_METHOD, url)
-				.with("title", title).with("description", description)
+				.with("description", description)
+				.with("title", title)
 				.with("assignee_id", assignee_id)
-				.with("milestone_id", milestone_id).getResponseBodyString();
-
+				.with("milestone_id", milestone_id)
+				.to(Issue.class);
 	}
 
 	/**

@@ -142,11 +142,11 @@ public class ProjectActivity extends BaseActionBarActivity implements
 		createOption.setIcon(R.drawable.action_create);
 		MenuItemCompat.setShowAsAction(createOption, MenuItemCompat.SHOW_AS_ACTION_IF_ROOM);
 		
-		MenuItem moreOption = menu.add(1, MENU_MORE_ID, MENU_MORE_ID, "更多");
+		/*MenuItem moreOption = menu.add(1, MENU_MORE_ID, MENU_MORE_ID, "更多");
 		moreOption.setIcon(R.drawable.abc_ic_menu_moreoverflow_normal_holo_dark);
 		
 		MenuItemCompat.setShowAsAction(moreOption,
-				MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
+				MenuItemCompat.SHOW_AS_ACTION_ALWAYS);*/
 		return super.onCreateOptionsMenu(menu);
 	}
 	

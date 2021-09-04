@@ -118,7 +118,7 @@ public class NotificationListAdapter extends BaseExpandableListAdapter {
 	public View getChildView(int groupPosition, int childPosition,
 			boolean isLastChild, View convertView, ViewGroup parent) {
 		if (convertView == null) {  
-            convertView = mInflater.inflate(R.layout.notification_listitem, null);  
+            convertView = mInflater.inflate(R.layout.notification_listitem, null);
         }  
         ChildViewHolder holder = new ChildViewHolder();
         

@@ -32,37 +32,23 @@
 
                 <TextView
                     android:id="@+id/project_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="android-app"
-                    android:textColor="@color/listitem_blue" />
+                    style="@style/project_detail_projectname" />
 
                 <TextView
                     android:id="@+id/project_update"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="更新于 4天前"
-                    android:textColor="@color/gray" />
+                    style="@style/project_detail_updatetime" />
             </LinearLayout>
 
             <View
-                android:layout_width="wrap_content"
-                android:layout_height="0.1dip"
-                android:background="@color/gray" />
+                style="@style/project_detail_h_line" />
 
             <View
-                android:layout_width="wrap_content"
-                android:layout_height="0.1dip"
-                android:layout_marginTop="25dip"
-                android:background="@color/gray" />
+               style="@style/project_detail_line_withtop" />
 
             <include layout="@layout/activity_project_mid" />
 
             <View
-                android:layout_width="wrap_content"
-                android:layout_height="0.1dip"
-                android:layout_marginTop="25dip"
-                android:background="@color/gray" />
+               style="@style/project_detail_line_withtop" />
 
             <include layout="@layout/activity_project_footer" />
         </LinearLayout>

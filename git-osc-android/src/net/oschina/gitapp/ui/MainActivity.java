@@ -103,7 +103,6 @@ public class MainActivity extends ActionBarActivity implements
 	protected void onResume() {
 		super.onResume();
 		mActionBar.setTitle(mTitle);
-		
 	}
 
 	private void initView(Bundle savedInstanceState) {

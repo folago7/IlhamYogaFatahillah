@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Properties;
 
+import net.oschina.gitapp.common.Contanst;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
@@ -22,8 +23,6 @@ public class AppConfig {
 	private final static String APP_CONFIG = "config";
 
 	public final static String CONF_APP_UNIQUEID = "APP_UNIQUEID";
-	
-	public final static String CONF_PRIVATE_TOKEN = "private_token";
 	
 	public final static String CONF_LOAD_IMAGE = "perf_loadimage";
 	
@@ -75,7 +74,7 @@ public class AppConfig {
 	 * @return
 	 */
 	public String getPrivateToken() {
-		return get(CONF_PRIVATE_TOKEN);
+		return get(Contanst.PROP_KEY_PRIVATE_TOKEN);
 	}
 
 	public String get(String key) {

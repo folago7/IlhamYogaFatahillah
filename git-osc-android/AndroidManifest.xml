@@ -22,8 +22,7 @@
         android:allowBackup="true"
         android:icon="@drawable/icon_logo"
         android:label="@string/app_name"
-        android:theme="@style/GitAppTheme"
-         >
+        android:theme="@style/GitAppTheme" >
         <activity
             android:name=".AppStart"
             android:label="@string/app_name" >
@@ -71,10 +70,8 @@
             android:launchMode="singleTask" />
         <activity
             android:name=".ui.IssueDetailActivity"
-            android:configChanges="keyboardHidden|orientation"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.IssueEditActivity"
             android:configChanges="keyboardHidden|orientation"
@@ -87,12 +84,17 @@
             android:launchMode="singleTask" />
         <activity
             android:name=".ui.UserInfoActivity"
-            android:label="个人信息"
+            android:label="用户信息"
             android:launchMode="singleTask" />
         <activity
             android:name=".ui.SettingActivity"
-            android:label="系统设置"
+            android:label="设置"
             android:launchMode="singleTask" >
+        </activity>
+        <activity
+            android:name=".ui.ImageZoomActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
         </activity>
     </application>
 

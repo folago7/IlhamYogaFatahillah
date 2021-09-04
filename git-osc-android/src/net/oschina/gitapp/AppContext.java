@@ -33,10 +33,13 @@ import net.oschina.gitapp.bean.Milestone;
 import net.oschina.gitapp.bean.NotificationReadResult;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.ProjectNotificationArray;
+import net.oschina.gitapp.bean.Session;
 import net.oschina.gitapp.bean.UpLoadFile;
 import net.oschina.gitapp.bean.Update;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.BroadcastController;
+import net.oschina.gitapp.common.Contanst;
+import net.oschina.gitapp.common.CyptoUtils;
 import net.oschina.gitapp.common.MethodsCompat;
 import net.oschina.gitapp.common.StringUtils;
 import android.app.Application;
@@ -48,6 +51,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 /**
  * 全局应用程序类：用于保存和调用全局应用配置及访问网络数据
@@ -96,7 +100,7 @@ public class AppContext extends Application {
 		// 初始化用记的登录信息
 		User loginUser = getLoginInfo();
 		if (null != loginUser && StringUtils.toInt(loginUser.getId()) > 0
-				&& !StringUtils.isEmpty(getProperty(AppConfig.CONF_PRIVATE_TOKEN))) {
+				&& !StringUtils.isEmpty(getProperty(PROP_KEY_PRIVATE_TOKEN))) {
 			// 记录用户的id和状态
 			this.loginUid = StringUtils.toInt(loginUser.getId());
 			this.login = true;
@@ -121,7 +125,8 @@ public class AppContext extends Application {
 	}
 
 	public String getProperty(String key) {
-		return AppConfig.getAppConfig(this).get(key);
+		String res = AppConfig.getAppConfig(this).get(key);
+		return res;
 	}
 
 	public void removeProperty(String... key) {
@@ -523,31 +528,23 @@ public class AppContext extends Application {
 		setProperties(new Properties() {
 			{
 				setProperty(PROP_KEY_UID, String.valueOf(user.getId()));
-				setProperty(PROP_KEY_USERNAME, user.getUsername());
-				setProperty(PROP_KEY_NAME, user.getName());
-				setProperty(PROP_KEY_BIO, user.getBio());// 个人介绍
-				setProperty(PROP_KEY_WEIBO, user.getWeibo());
-				setProperty(PROP_KEY_BLOG, user.getBlog());
-				setProperty(PROP_KEY_THEME_ID,
-						String.valueOf(user.getTheme_id()));
-				setProperty(PROP_KEY_STATE, user.getState());
-				setProperty(PROP_KEY_CREATED_AT, user.getCreated_at());
-				setProperty(PROP_KEY_PORTRAIT, user.getPortrait());// 个人头像
+				setProperty(PROP_KEY_USERNAME, String.valueOf(user.getUsername()));
+				setProperty(PROP_KEY_NAME, String.valueOf(user.getName()));
+				setProperty(PROP_KEY_BIO, String.valueOf(user.getBio()));// 个人介绍
+				setProperty(PROP_KEY_WEIBO, String.valueOf(user.getWeibo()));
+				setProperty(PROP_KEY_BLOG, String.valueOf(user.getBlog()));
+				setProperty(PROP_KEY_THEME_ID, String.valueOf(user.getTheme_id()));
+				setProperty(PROP_KEY_STATE, String.valueOf(user.getState()));
+				setProperty(PROP_KEY_CREATED_AT, String.valueOf(user.getCreated_at()));
+				setProperty(PROP_KEY_PORTRAIT, String.valueOf(user.getPortrait()));// 个人头像
 				setProperty(PROP_KEY_IS_ADMIN, String.valueOf(user.isIsAdmin()));
-				setProperty(PROP_KEY_CAN_CREATE_GROUP,
-						String.valueOf(user.isCanCreateGroup()));
-				setProperty(PROP_KEY_CAN_CREATE_PROJECT,
-						String.valueOf(user.isCanCreateProject()));
-				setProperty(PROP_KEY_CAN_CREATE_TEAM,
-						String.valueOf(user.isCanCreateTeam()));
-				setProperty(ROP_KEY_FOLLOWERS,
-						String.valueOf(user.getFollow().getFollowers()));
-				setProperty(ROP_KEY_STARRED,
-						String.valueOf(user.getFollow().getStarred()));
-				setProperty(ROP_KEY_FOLLOWING,
-						String.valueOf(user.getFollow().getFollowing()));
-				setProperty(ROP_KEY_WATCHED,
-						String.valueOf(user.getFollow().getWatched()));
+				setProperty(PROP_KEY_CAN_CREATE_GROUP, String.valueOf(user.isCanCreateGroup()));
+				setProperty(PROP_KEY_CAN_CREATE_PROJECT, String.valueOf(user.isCanCreateProject()));
+				setProperty(PROP_KEY_CAN_CREATE_TEAM, String.valueOf(user.isCanCreateTeam()));
+				setProperty(ROP_KEY_FOLLOWERS, String.valueOf(user.getFollow().getFollowers()));
+				setProperty(ROP_KEY_STARRED, String.valueOf(user.getFollow().getStarred()));
+				setProperty(ROP_KEY_FOLLOWING, String.valueOf(user.getFollow().getFollowing()));
+				setProperty(ROP_KEY_WATCHED, String.valueOf(user.getFollow().getWatched()));
 			}
 		});
 	}
@@ -555,22 +552,16 @@ public class AppContext extends Application {
 	/**
 	 * 清除登录信息，用户的私有token也一并清除
 	 */
-	void cleanLoginInfo() {
+	private void cleanLoginInfo() {
 		this.loginUid = 0;
 		this.login = false;
-		removeProperty(PROP_KEY_UID, PROP_KEY_USERNAME, PROP_KEY_EMAIL,
+		removeProperty(PROP_KEY_PRIVATE_TOKEN, PROP_KEY_UID, PROP_KEY_USERNAME, PROP_KEY_EMAIL,
 				PROP_KEY_NAME, PROP_KEY_BIO, PROP_KEY_WEIBO, PROP_KEY_BLOG,
 				PROP_KEY_THEME_ID, PROP_KEY_STATE, PROP_KEY_CREATED_AT,
 				PROP_KEY_PORTRAIT, PROP_KEY_IS_ADMIN,
 				PROP_KEY_CAN_CREATE_GROUP, PROP_KEY_CAN_CREATE_PROJECT,
-				PROP_KEY_CAN_CREATE_TEAM);
-	}
-
-	/**
-	 * 清除保存的Token
-	 */
-	public void cleanToken() {
-		removeProperty(AppConfig.CONF_PRIVATE_TOKEN);
+				PROP_KEY_CAN_CREATE_TEAM, ROP_KEY_FOLLOWERS, ROP_KEY_STARRED,
+				ROP_KEY_FOLLOWING, ROP_KEY_WATCHED);
 	}
 
 	/**
@@ -596,8 +587,8 @@ public class AppContext extends Application {
 	 */
 	public void loginout() {
 		ApiClient.cleanToken();
-		// 清除token
-		cleanToken();
+		// 清除已登录用户的信息
+		cleanLoginInfo();
 		this.login = false;
 		this.loginUid = 0;
 		// 发送广播通知
@@ -1120,6 +1111,16 @@ public class AppContext extends Application {
 		}
 		return codeFile;
 	}
+	
+	/**
+	 * 获得一个项目的readme文件内容
+	 * @param projectId
+	 * @return
+	 * @throws AppException
+	 */
+	public String getReadMeFile(String projectId) throws AppException {
+		return ApiClient.getReadMeFile(this, projectId);
+	}
 
 	/**
 	 * 获得commit文件的diff
@@ -1238,7 +1239,7 @@ public class AppContext extends Application {
 	 * @return
 	 * @throws AppException
 	 */
-	public String pubCreateIssue(String projectId, String title,
+	public Issue pubCreateIssue(String projectId, String title,
 			String description, String assignee_id, String milestone_id)
 			throws AppException {
 		return ApiClient.pubCreateIssue(this, projectId, title, description,

@@ -8,19 +8,11 @@
 
     <TextView
         android:id="@+id/project_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:onClick="onClick"
-        android:padding="10dip"
-        android:text="OSCHINA 的 Android 客户端源码，可在 Google Play 或者国内几个应用市场上搜索“开源中国”来安装此app"
-        android:autoLink="all"
-        android:textSize="@dimen/text_size_10" />
+        style="@style/project_detail_description"
+        android:text="OSCHINA 的 Android 客户端源码，可在 Google Play 或者国内几个应用市场上搜索“开源中国”来安装此app" />
 
     <View
-        android:layout_width="wrap_content"
-        android:layout_height="0.1dip"
-        android:background="@color/gray" />
+        style="@style/project_detail_h_line" />
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -29,59 +21,39 @@
         android:orientation="horizontal" >
 
         <LinearLayout
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center|left"
-            android:orientation="horizontal"
-            android:padding="10dip" >
+            style="@style/project_detail_mid_grid_item" >
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="8dip"
+                style="@style/project_detail_mid_grid_item_img"
+                android:contentDescription="@string/img_description"
                 android:background="@drawable/locked" />
 
             <TextView
                 android:id="@+id/project_locked"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Public"
-                android:textColor="@color/gray" />
+                style="@style/project_detail_mid_grid_item_text"
+                android:text="Public" />
         </LinearLayout>
 
         <View
-            android:layout_width="0.1dip"
-            android:layout_height="fill_parent"
-            android:background="@color/gray" />
+            style="@style/project_detail_v_line" />
 
         <LinearLayout
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center|left"
-            android:orientation="horizontal"
-            android:padding="10dip" >
+            style="@style/project_detail_mid_grid_item" >
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="8dip"
+                style="@style/project_detail_mid_grid_item_img"
+                android:contentDescription="@string/img_description"
                 android:background="@drawable/language" />
 
             <TextView
                 android:id="@+id/project_language"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Java"
-                android:textColor="@color/gray" />
+                style="@style/project_detail_mid_grid_item_text"
+                android:text="Java" />
         </LinearLayout>
     </LinearLayout>
 
     <View
-        android:layout_width="wrap_content"
-        android:layout_height="0.1dip"
-        android:background="@color/gray" />
+        style="@style/project_detail_h_line" />
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -90,68 +62,47 @@
         android:orientation="horizontal" >
 
         <LinearLayout
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center|left"
-            android:orientation="horizontal"
-            android:padding="10dip" >
+            style="@style/project_detail_mid_grid_item" >
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="8dip"
+                style="@style/project_detail_mid_grid_item_img"
+                android:contentDescription="@string/img_description"
                 android:background="@drawable/star" />
 
             <TextView
                 android:id="@+id/project_starnum"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="100"
-                android:textColor="@color/gray" />
+                style="@style/project_detail_mid_grid_item_text"
+                android:text="100" />
         </LinearLayout>
 
         <View
-            android:layout_width="0.1dip"
-            android:layout_height="fill_parent"
-            android:background="@color/gray" />
+            style="@style/project_detail_v_line" />
 
         <LinearLayout
-            android:layout_width="0dip"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center|left"
-            android:orientation="horizontal"
-            android:padding="10dip" >
+            style="@style/project_detail_mid_grid_item" >
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="8dip"
+                style="@style/project_detail_mid_grid_item_img"
+                android:contentDescription="@string/img_description"
                 android:background="@drawable/fork" />
 
             <TextView
                 android:id="@+id/project_forknum"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="50"
-                android:textColor="@color/gray" />
+                style="@style/project_detail_mid_grid_item_text"
+                android:text="50" />
         </LinearLayout>
     </LinearLayout>
 
     <View
-        android:layout_width="wrap_content"
-        android:layout_height="0.1dip"
-        android:background="@color/gray" />
+        style="@style/project_detail_h_line" />
 
     <LinearLayout
         android:id="@+id/project_owner"
-        style="@style/project_layout_style" >
+        style="@style/project_detail_layout_style" >
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="8dip"
+            style="@style/project_detail_mid_grid_item_img"
+            android:contentDescription="@string/img_description"
             android:background="@drawable/person" />
 
         <TextView
@@ -162,36 +113,25 @@
 
         <TextView
             android:id="@+id/project_ownername"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="8dip"
-            android:ellipsize="end"
-            android:maxEms="7"
-            android:singleLine="true"
-            android:text="火蚁"
-            android:textColor="@color/gray" />
+            style="@style/project_detail_mid_info_text"
+            android:text="火蚁" />
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="15.0dip"
-            android:src="@drawable/widget_right_icon" />
+            style="@style/project_detail_sorrow_img"
+            android:contentDescription="@string/img_description" />
     </LinearLayout>
 
     <View
-        android:layout_width="wrap_content"
-        android:layout_height="0.1dip"
-        android:background="@color/gray" />
+        style="@style/project_detail_h_line" />
 
     <LinearLayout
         android:id="@+id/project_ll_fork"
-        style="@style/project_layout_style"
+        style="@style/project_detail_layout_style"
         android:visibility="gone" >
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="8dip"
+            style="@style/project_detail_mid_grid_item_img"
+            android:contentDescription="@string/img_description"
             android:background="@drawable/fork" />
 
         <TextView
@@ -203,26 +143,16 @@
 
         <TextView
             android:id="@+id/project_fork_form"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="8dip"
-            android:ellipsize="end"
-            android:maxEms="7"
-            android:singleLine="true"
-            android:textColor="@color/gray" />
+            style="@style/project_detail_mid_info_text" />
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="15.0dip"
-            android:src="@drawable/widget_right_icon" />
+            style="@style/project_detail_sorrow_img"
+            android:contentDescription="@string/img_description" />
     </LinearLayout>
 
     <View
         android:id="@+id/project_fork_ll_line"
-        android:layout_width="wrap_content"
-        android:layout_height="0.1dip"
-        android:background="@color/gray"
+        style="@style/project_detail_h_line"
         android:visibility="gone" />
 
 </LinearLayout>

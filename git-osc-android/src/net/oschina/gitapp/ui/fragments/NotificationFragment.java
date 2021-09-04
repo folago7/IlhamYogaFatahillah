@@ -27,7 +27,7 @@ import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ProgressBar;
 
 /**
- * 通知页面
+ * 已读通知页面
  * @created 2014-07-08
  * @author 火蚁（http://my.oschina.net/LittleDY）
  */

@@ -472,4 +472,10 @@ public abstract class BaseSwipeRefreshFragment <Data extends Entity, Result exte
 			mAdapter.notifyDataSetChanged();
 		}
 	}
+	
+	// 清空数据
+	public void clearData() {
+		mDataList.clear();
+		mAdapter.notifyDataSetChanged();
+	}
 }

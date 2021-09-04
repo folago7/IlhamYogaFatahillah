@@ -1,7 +1,11 @@
 package net.oschina.gitapp.ui;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
+import java.util.Stack;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -11,6 +15,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.view.MenuItemCompat;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,16 +28,19 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Toast;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.ProjectCodeTreeListAdapter;
+import net.oschina.gitapp.api.ApiClient;
 import net.oschina.gitapp.bean.Branch;
 import net.oschina.gitapp.bean.CodeTree;
 import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.FullTree;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.FullTree.Folder;
+import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.DataRequestThreadHandler;
 import net.oschina.gitapp.common.StringUtils;
@@ -44,27 +52,23 @@ import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
  * 
  * @created 2014-07-18
  * @author 火蚁（http://my.oschina.net/LittleDY）
- *
+ * 
  */
 public class ProjectCodeActivity extends BaseActionBarActivity implements
 		OnItemClickListener, OnClickListener {
-	
+
 	private final int MENU_REFRESH_ID = 0;
-	
+
 	private static final int ACTION_INIT = 0;// 初始化
 	private static final int ACTION_REFRESH = 1;// 刷新
 	private static final int ACTION_LOADING_TREE = 2;// 加载代码层级树
 	private static final int ACTION_PRE_TREE = 3;// 前一级代码树
-	
+
 	private Menu optionsMenu;
-	
+
 	private Project mProject;
 
 	private ListView mCodeTree;
-
-	private FullTree mFullTree;
-
-	private Folder mCurrentFolder;// 当前文件夹
 
 	private LinearLayout mSwitch_branch;
 
@@ -73,6 +77,8 @@ public class ProjectCodeActivity extends BaseActionBarActivity implements
 	private TextView mBranchName;
 
 	private ProjectCodeTreeListAdapter mAdapter;
+
+	private Stack<List<CodeTree>> mCodeFolders = new Stack<List<CodeTree>>();
 
 	private List<CodeTree> mTrees;
 
@@ -84,12 +90,10 @@ public class ProjectCodeActivity extends BaseActionBarActivity implements
 
 	private LinearLayout mContentLayout;
 
-	// 上一次目录
+	// 上一级目录
 	private LinearLayout mCodeTreePreFolder;
 
 	private TextView mCodeFloders;
-
-	private ProgressBar mCodeTreeLoading;
 
 	private ProgressBar mLoading;
 
@@ -138,7 +142,7 @@ public class ProjectCodeActivity extends BaseActionBarActivity implements
 				MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
 		return true;
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -147,19 +151,19 @@ public class ProjectCodeActivity extends BaseActionBarActivity implements
 		case MENU_REFRESH_ID:
 			loadDatas(mPath, mBranch, ACTION_REFRESH);
 			break;
-			
+
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			if (!StringUtils.isEmpty(mPath)) {
-				loadDatas(getPrePath(), mBranch, ACTION_PRE_TREE);
+				loadPreFolder();
 				return true;
 			}
- 		}
+		}
 		return super.onKeyDown(keyCode, event);
 	}
 
@@ -194,6 +198,128 @@ public class ProjectCodeActivity extends BaseActionBarActivity implements
 		mRequestThreadHandler.request(0, new AsyncDataHandler(path, ref_name,
 				action));
 	}
+	
+	/**
+	 * 加载上一级代码树
+	 */
+	private void loadPreFolder() {
+		mTrees.clear();
+		mCodeFolders.pop();
+		mTrees.addAll(mCodeFolders.peek());
+		mAdapter.notifyDataSetChanged();
+		savePathAndBranch(getPrePath(), mBranch);
+	}
+	
+	private void beforeLoading(int action) {
+		if (action == ACTION_REFRESH) {
+			mContentLayout.setVisibility(View.GONE);
+			mSwitch_branch.setVisibility(View.GONE);
+			mLoading.setVisibility(View.VISIBLE);
+		} else if (action != ACTION_INIT) {
+			MenuItemCompat.setActionView(optionsMenu.findItem(MENU_REFRESH_ID),
+					R.layout.actionbar_indeterminate_progress);
+		}
+	}
+
+	private void afterLoading(int action) {
+		if (action == ACTION_INIT || action == ACTION_REFRESH) {
+			mContentLayout.setVisibility(View.VISIBLE);
+			mSwitch_branch.setVisibility(View.VISIBLE);
+			mLoading.setVisibility(View.GONE);
+		} else {
+			MenuItemCompat.setActionView(optionsMenu.findItem(MENU_REFRESH_ID),
+					null);
+		}
+	}
+
+	/**
+	 * 记录路径和分支
+	 * 
+	 * @param _mPath
+	 * @param _mRef_name
+	 */
+	private void savePathAndBranch(String path, String branch) {
+		mPath = path;
+		mBranch = branch;
+		if (StringUtils.isEmpty(mPath)) {
+			mCodeTreePreFolder.setVisibility(View.GONE);
+		} else {
+			mCodeTreePreFolder.setVisibility(View.VISIBLE);
+		}
+		String floders = mProject.getName()
+				+ (StringUtils.isEmpty(mPath) ? "" : "/" + mPath);
+		mCodeFloders.setText(floders);
+	}
+
+	// 加载代码树
+	private class AsyncDataHandler implements
+			DataRequestThreadHandler.AsyncDataHandler<Message> {
+
+		private String _mPath;
+		private String _mRef_name;
+		private int _mAction;
+
+		AsyncDataHandler(String path, String ref_name, int action) {
+			_mPath = path;
+			_mRef_name = ref_name;
+			_mAction = action;
+		}
+
+		// 加载前
+		@Override
+		public void onPreExecute() {
+			beforeLoading(_mAction);
+		}
+
+		// 加载ing
+		@Override
+		public Message execute() {
+			Message msg = new Message();
+			try {
+				boolean refresh = true;
+				if (_mAction == ACTION_INIT) {
+					refresh = false;
+				}
+
+				CommonList<CodeTree> list = mAppContext.getProjectCodeTree(
+						StringUtils.toInt(mProject.getId()), _mPath,
+						_mRef_name, refresh);
+				List<CodeTree> tree = list.getList();
+
+				msg.what = 1;
+				msg.obj = tree;
+			} catch (Exception e) {
+				msg.what = -1;
+				msg.obj = e;
+			}
+			return msg;
+		}
+
+		// 加载完成
+		@SuppressWarnings("unchecked")
+		@Override
+		public void onPostExecute(Message result) {
+			afterLoading(_mAction);
+			if (result.what == 1 && result.obj != null) {
+				mTrees.clear();
+				mTrees.addAll((List<CodeTree>) result.obj);
+				// 加载成功，记录相关信息
+				if (_mAction == ACTION_LOADING_TREE
+						|| _mAction == ACTION_PRE_TREE) {
+					savePathAndBranch(_mPath, _mRef_name);
+				}
+				mAdapter.notifyDataSetChanged();
+				mCodeFolders.push((List<CodeTree>) result.obj);
+			} else {
+				if (result.obj instanceof AppException) {
+					((AppException) result.obj).makeToast(mAppContext);
+				} else {
+					UIHelper.ToastMessage(getActivity(),
+							((Exception) result.obj).getMessage());
+				}
+			}
+		}
+	}
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
@@ -205,7 +331,7 @@ public class ProjectCodeActivity extends BaseActionBarActivity implements
 		if (codeTree.getType().equalsIgnoreCase(CodeTree.TYPE_TREE)) {
 			loadDatas(getPath(codeTree.getName()), mBranch, ACTION_LOADING_TREE);
 		} else {
-			showDetail(codeTree.getName(), mBranch);
+			checkShow(codeTree);
 		}
 	}
 
@@ -224,6 +350,84 @@ public class ProjectCodeActivity extends BaseActionBarActivity implements
 
 		return index != -1 ? mPath.substring(0, index) : "";
 	}
+	
+	/**
+	 * 判断code的文件的类型显示不同的操作
+	 * @param codeTree
+	 */
+	private void checkShow(CodeTree codeTree) {
+		
+		String fileName = codeTree.getName();
+		
+		String url = URLs.URL_HOST + mProject.getOwner().getName()
+				+ URLs.URL_SPLITTER + mProject.getName() + URLs.URL_SPLITTER + "raw" + URLs.URL_SPLITTER
+				+ mBranch + URLs.URL_SPLITTER + getFilePath(fileName) + "?private_token=" + ApiClient.getToken(mAppContext);
+		
+		if (isCodeTextFile(fileName)) {
+			
+			showDetail(fileName, mBranch);
+			
+		} else if (isImage(fileName)) {
+			
+			UIHelper.showImageZoomActivity(ProjectCodeActivity.this, url);
+		} else {
+			UIHelper.openBrowser(ProjectCodeActivity.this, url);
+		}
+	}
+	
+	// 判断是不是代码文件
+	private boolean isCodeTextFile(String fileName) {
+		boolean res = false;
+		// 文件的后缀
+		int index = fileName.lastIndexOf(".");
+		if (index > 0) {
+			fileName = fileName.substring(index);
+		}
+		String codeFileSuffix[] = new String[]{
+				".java", ".xml", ".json", ".txt", ".php", ".js", ".css",
+				".properties", ".c", ".h", ".cpp", ".cfg", ".html", ".go",
+				".rb", ".example", ".gitignore", ".project", ".classpath",
+				".m", ".md", ".rst"
+		};
+		for (String string : codeFileSuffix) {
+			if (fileName.equalsIgnoreCase(string)) {
+				res = true;
+			}
+		}
+		
+		// 特殊的文件
+		String fileNames[] = new String[]{
+				"LICENSE", "TODO", "README", "readme"
+		};
+		
+		for (String string : fileNames) {
+			if (fileName.contains(string)) {
+				res = true;
+			}
+		}
+		
+		return res;
+	}
+	
+	// 判断是否是图片
+	private boolean isImage(String fileName) {
+		boolean res = false;
+		// 图片后缀
+		int index = fileName.lastIndexOf(".");
+		if (index > 0) {
+			fileName = fileName.substring(index);
+		}
+		String imageSuffix[] = new String[]{
+				".png", ".jpg", ".jpeg", ".jpe", ".bmp",
+				".wbmp", ".ico", ".jpe"
+		};
+		for (String string : imageSuffix) {
+			if (fileName.equalsIgnoreCase(string)) {
+				res = true;
+			}
+		}
+		return res;
+	}
 
 	// 查看代码文件详情
 	private void showDetail(String fileName, String ref) {
@@ -232,12 +436,20 @@ public class ProjectCodeActivity extends BaseActionBarActivity implements
 		Bundle bundle = new Bundle();
 		bundle.putSerializable(Contanst.PROJECT, mProject);
 		bundle.putString("fileName", fileName);
-		bundle.putString("path",
-				mPath == null || StringUtils.isEmpty(mPath) ? fileName : mPath
-						+ "/" + fileName);
+		bundle.putString("path", getFilePath(fileName));
 		bundle.putString("ref", ref);
 		intent.putExtras(bundle);
 		startActivity(intent);
+	}
+	
+	/**
+	 * 获得文件的访问路径
+	 * @param fileName
+	 * @return
+	 */
+	private String getFilePath(String fileName) {
+		return mPath == null || StringUtils.isEmpty(mPath) ? fileName : mPath
+				+ "/" + fileName;
 	}
 
 	@Override
@@ -251,7 +463,7 @@ public class ProjectCodeActivity extends BaseActionBarActivity implements
 			if (StringUtils.isEmpty(mPath)) {
 				return;
 			}
-			loadDatas(getPrePath(), mBranch, ACTION_PRE_TREE);
+			loadPreFolder();
 			break;
 		default:
 			break;
@@ -267,102 +479,6 @@ public class ProjectCodeActivity extends BaseActionBarActivity implements
 		} else {
 			loadBranchAndTags(false);
 		}
-	}
-
-	// 加载数据
-	private class AsyncDataHandler implements
-			DataRequestThreadHandler.AsyncDataHandler<Message> {
-
-		private String _mPath;
-		private String _mRef_name;
-		private int _mAction;
-
-		AsyncDataHandler(String path, String ref_name, int action) {
-			_mPath = path;
-			_mRef_name = ref_name;
-			_mAction = action;
-		}
-
-		// 加载前
-		@Override
-		public void onPreExecute() {
-			if (_mAction == ACTION_REFRESH) {
-				mContentLayout.setVisibility(View.GONE);
-				mSwitch_branch.setVisibility(View.GONE);
-				mLoading.setVisibility(View.VISIBLE);
-			} else if (_mAction != ACTION_INIT) {
-				MenuItemCompat.setActionView(optionsMenu.findItem(MENU_REFRESH_ID), R.layout.actionbar_indeterminate_progress);
-			}
-		}
-
-		// 加载ing
-		@Override
-		public Message execute() {
-			Message msg = new Message();
-			try {
-				boolean refresh = true;
-				if (_mAction == ACTION_INIT) {
-					refresh = false;
-				}
-				CommonList<CodeTree> list = mAppContext.getProjectCodeTree(
-						StringUtils.toInt(mProject.getId()), _mPath,
-						_mRef_name, refresh);
-				List<CodeTree> tree = list.getList();
-				msg.what = 1;
-				msg.obj = tree;
-			} catch (Exception e) {
-				msg.what = -1;
-				msg.obj = e;
-			}
-			return msg;
-		}
-
-		// 加载完成
-		@SuppressWarnings("unchecked")
-		@Override
-		public void onPostExecute(Message result) {
-			if (_mAction == ACTION_INIT || _mAction == ACTION_REFRESH) {
-				mContentLayout.setVisibility(View.VISIBLE);
-				mSwitch_branch.setVisibility(View.VISIBLE);
-				mLoading.setVisibility(View.GONE);
-			} else {
-				MenuItemCompat.setActionView(optionsMenu.findItem(MENU_REFRESH_ID), null);
-			}
-			if (result.what == 1 && result.obj != null) {
-				mTrees.clear();
-				mTrees.addAll((List<CodeTree>) result.obj);
-				if (_mAction == ACTION_INIT) {
-					mFullTree = new FullTree(mTrees);
-				}
-				// 加载成功，记录相关信息
-				if (_mAction == ACTION_LOADING_TREE
-						|| _mAction == ACTION_PRE_TREE) {
-					mPath = _mPath;
-					mBranch = _mRef_name;
-					if (StringUtils.isEmpty(mPath)) {
-						mCodeTreePreFolder.setVisibility(View.GONE);
-					} else {
-						mCodeTreePreFolder.setVisibility(View.VISIBLE);
-					}
-				}
-				String floders = mProject.getName()
-						+ (StringUtils.isEmpty(mPath) ? "" : "/" + mPath);
-				mCodeFloders.setText(floders);
-				mAdapter.notifyDataSetChanged();
-			} else {
-				if (result.obj instanceof AppException) {
-					((AppException) result.obj).makeToast(mAppContext);
-				} else {
-					UIHelper.ToastMessage(getActivity(),
-							((Exception) result.obj).getMessage());
-				}
-			}
-		}
-	}
-
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 	// 加载分支和标签数据

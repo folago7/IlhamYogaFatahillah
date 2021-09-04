@@ -21,6 +21,7 @@ import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.ui.CodeFileDetailActivity;
 import net.oschina.gitapp.ui.CommitDetailActivity;
 import net.oschina.gitapp.ui.CommitFileDetailActivity;
+import net.oschina.gitapp.ui.ImageZoomActivity;
 import net.oschina.gitapp.ui.IssueDetailActivity;
 import net.oschina.gitapp.ui.IssueEditActivity;
 import net.oschina.gitapp.ui.LoginActivity;
@@ -42,6 +43,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -563,5 +565,35 @@ public class UIHelper {
 	public static void goMainActivity(Context context) {
 		Intent intent = new Intent(context, MainActivity.class);
 		context.startActivity(intent);
+	}
+	
+	/**
+	 * 显示图片查看界面
+	 * @param context
+	 * @param img_url
+	 */
+	public static void showImageZoomActivity(Context context, String img_url) {
+		Intent intent = new Intent(context, ImageZoomActivity.class);
+		Bundle bundle = new Bundle();
+		bundle.putString(Contanst.IMG_URL, img_url);
+		intent.putExtras(bundle);
+		context.startActivity(intent);
+	}
+	
+	/**
+	 * 打开浏览器
+	 * 
+	 * @param context
+	 * @param url
+	 */
+	public static void openBrowser(Context context, String url) {
+		try {
+			Uri uri = Uri.parse(url);
+			Intent it = new Intent(Intent.ACTION_VIEW, uri);
+			context.startActivity(it);
+		} catch (Exception e) {
+			e.printStackTrace();
+			ToastMessage(context, "无法浏览此网页", 500);
+		}
 	}
 }

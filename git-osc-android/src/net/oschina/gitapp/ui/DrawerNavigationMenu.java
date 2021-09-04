@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.BroadcastController;
+import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.interfaces.*;
 import net.oschina.gitapp.widget.BadgeView;
@@ -123,8 +125,13 @@ public class DrawerNavigationMenu extends Fragment implements OnClickListener {
 					return;
 				}
 				// 加载用户头像
-				String faceUrl = URLs.HTTP + URLs.HOST + URLs.URL_SPLITTER + user.getPortrait();
-				UIHelper.showUserFace(mUser_info_userface, faceUrl);
+				String portrait = user.getPortrait() == null || user.getPortrait().equals("null") ? "" : user.getPortrait();
+				if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
+					mUser_info_userface.setImageResource(R.drawable.widget_dface);
+				} else {
+					String faceUrl = URLs.HTTP + URLs.HOST + URLs.URL_SPLITTER + user.getPortrait();
+					UIHelper.showUserFace(mUser_info_userface, faceUrl);
+				}
 				// 其他资料
 				mUser_info_username.setText(user.getName());
 			}

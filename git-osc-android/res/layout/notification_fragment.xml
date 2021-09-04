@@ -37,9 +37,7 @@
 
     <ProgressBar
         android:id="@+id/notification_fragment_loading"
-        style="@style/Spinner"
-        android:layout_width="64dip"
-        android:layout_height="64dip"
+        style="@style/ListSpinner"
         android:layout_gravity="center" />
 
 </FrameLayout>

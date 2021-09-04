@@ -8,12 +8,11 @@
 
     <LinearLayout 
         android:id="@+id/project_readme"
-        style="@style/project_layout_style" >
+        style="@style/project_detail_layout_style" >
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="8dip"
+            style="@style/project_detail_mid_grid_item_img"
+            android:contentDescription="@string/img_description"
             android:background="@drawable/file" />
 
         <TextView
@@ -23,25 +22,20 @@
             android:text="Readme" />
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="15.0dip"
-            android:src="@drawable/widget_right_icon" />
+            style="@style/project_detail_sorrow_img"
+            android:contentDescription="@string/img_description" />
     </LinearLayout>
 
     <View
-        android:layout_width="wrap_content"
-        android:layout_height="0.1dip"
-        android:background="@color/gray" />
+        style="@style/project_detail_h_line" />
 
     <LinearLayout 
         android:id="@+id/project_issues"
-        style="@style/project_layout_style" >
+        style="@style/project_detail_layout_style" >
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="8dip"
+            style="@style/project_detail_mid_grid_item_img"
+            android:contentDescription="@string/img_description"
             android:background="@drawable/flag" />
 
         <TextView
@@ -51,21 +45,16 @@
             android:text="问题" />
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="15.0dip"
-            android:src="@drawable/widget_right_icon" />
+            style="@style/project_detail_sorrow_img"
+            android:contentDescription="@string/img_description" />
     </LinearLayout>
 
     <View
-        android:layout_width="wrap_content"
-        android:layout_height="0.1dip"
-        android:background="@color/gray"
-        android:visibility="gone" />
+        style="@style/project_detail_h_line" />
 
     <LinearLayout 
         android:id="@+id/project_commits"
-        style="@style/project_layout_style"
+        style="@style/project_detail_layout_style"
         android:visibility="gone" >
 
         <ImageView
@@ -88,18 +77,16 @@
     </LinearLayout>
 
     <View
-        android:layout_width="wrap_content"
-        android:layout_height="0.1dip"
-        android:background="@color/gray" />
+        style="@style/project_detail_h_line"
+        android:visibility="gone" />
 
     <LinearLayout 
         android:id="@+id/project_code"
-        style="@style/project_layout_style" >
+        style="@style/project_detail_layout_style" >
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="8dip"
+            style="@style/project_detail_mid_grid_item_img"
+            android:contentDescription="@string/img_description"
             android:background="@drawable/script" />
 
         <TextView
@@ -109,15 +96,11 @@
             android:text="代码" />
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="15.0dip"
-            android:src="@drawable/widget_right_icon" />
+            style="@style/project_detail_sorrow_img"
+            android:contentDescription="@string/img_description" />
     </LinearLayout>
 
     <View
-        android:layout_width="wrap_content"
-        android:layout_height="0.1dip"
-        android:background="@color/gray" />
+        style="@style/project_detail_h_line" />
 
 </LinearLayout>

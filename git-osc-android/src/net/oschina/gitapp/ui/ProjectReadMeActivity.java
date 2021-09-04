@@ -1,9 +1,5 @@
 package net.oschina.gitapp.ui;
 
-import static net.oschina.gitapp.common.Contanst.CHARSET_UTF8;
-
-import java.io.UnsupportedEncodingException;
-
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,12 +9,10 @@ import android.webkit.WebView;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.HTTPRequestor;
-import net.oschina.gitapp.bean.CodeFile;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
-import net.oschina.gitapp.util.EncodingUtils;
 
 /**
  * 项目ReadMe文件详情
@@ -66,9 +60,8 @@ public class ProjectReadMeActivity extends BaseActionBarActivity {
 			protected Message doInBackground(Void... params) {
 				Message msg = new Message();
 				try {
-					CodeFile codeFile = getGitApplication().getCodeFile(mProject.getId(), "README.md", "master");
+					msg.obj = getGitApplication().getReadMeFile(mProject.getId());
 					msg.what = 1;
-					msg.obj = codeFile;
 				} catch (Exception e) {
 					msg.what = -1;
 					msg.obj = e;
@@ -84,10 +77,11 @@ public class ProjectReadMeActivity extends BaseActionBarActivity {
 				}
 				mLoading.setVisibility(View.GONE);
 				if (msg.what == 1) {
-					CodeFile codeFile = (CodeFile) msg.obj;
+					String content = (String) msg.obj;
 					mWebView.setVisibility(View.VISIBLE);
-					mWebView.loadDataWithBaseURL(null,
-							UIHelper.WEB_STYLE + getCodeContent(codeFile), "text/html", HTTPRequestor.UTF_8, null);
+					mWebView.loadData(content, "text/html", HTTPRequestor.UTF_8);
+					/*mWebView.loadDataWithBaseURL(null,
+							content, "text/html", HTTPRequestor.UTF_8, null);*/
 				} else {
 					if (msg.obj instanceof AppException) {
 						AppException e = (AppException)msg.obj;
@@ -100,16 +94,5 @@ public class ProjectReadMeActivity extends BaseActionBarActivity {
 				}
 			}
 		}.execute();
-	}
-	
-	private String getCodeContent(CodeFile codeFile) {
-		String res = null;
-		
-		try {
-			res = new String(EncodingUtils.fromBase64(codeFile.getContent()), CHARSET_UTF8);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		return res;
 	}
 }

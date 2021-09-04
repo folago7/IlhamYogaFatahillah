@@ -26,13 +26,14 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal" >
 
-            <!-- 项目标识 -->
+            <!-- flag -->
             <ImageView
                 android:id="@+id/myself_project_listitem_flag"
                 android:layout_width="14.0dip"
                 android:layout_height="14.0dip"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="2dip"
+                android:contentDescription="@string/img_description"
                 android:visibility="gone" />
 
             <TextView
@@ -41,7 +42,7 @@
             
         </LinearLayout>
         
-        <!-- 项目描述 -->
+        <!-- project description -->
         <TextView
             android:id="@+id/myself_project_listitem_description"
             style="@style/project_list_description" />
@@ -57,9 +58,10 @@
                 android:id="@+id/myself_project_listitem_date"
                 style="@style/project_list_someinfo" />
             
-            <!-- language类型 -->
+            <!-- language type -->
             <ImageView
                 android:id="@+id/myself_project_listitem_language_image"
+                android:contentDescription="@string/img_description"
                 style="@style/project_list_img"
                 android:src="@drawable/language" />
 
@@ -67,18 +69,20 @@
                 android:id="@+id/myself_project_listitem_language"
                 style="@style/project_list_someinfo" />
             
-            <!-- 项目加星数量 -->
+            <!-- star nums -->
             <ImageView
                 style="@style/project_list_img"
+                android:contentDescription="@string/img_description"
                 android:src="@drawable/star" />
 			
             <TextView
                 android:id="@+id/myself_project_listitem_star"
                 style="@style/project_list_someinfo" />
 				
-            <!-- fork数量 -->
+            <!-- fork nums -->
             <ImageView
                 style="@style/project_list_img"
+                android:contentDescription="@string/img_description"
                 android:src="@drawable/fork" />
 
             <TextView

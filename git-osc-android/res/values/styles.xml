@@ -27,7 +27,7 @@
         <item name="android:textColor">#dcdcdc</item>
         <item name="android:textSize">@dimen/text_size_20</item>
     </style>
-    
+
     <!-- 列表用户头像的样式 -->
     <style name="UserFaceImageStyle">
         <item name="android:layout_width">40.0dip</item>
@@ -40,6 +40,7 @@
 
     <!-- app menu style end! -->
 
+
     <!-- project list text style bgein -->
     <style name="project_list_text_parent">
         <item name="android:layout_width">wrap_content</item>
@@ -50,7 +51,8 @@
     <style name="project_list_title" parent="project_list_text_parent">
         <item name="android:includeFontPadding">false</item>
         <item name="android:textColor">@color/project_listitem_title</item>
-        <item name="android:textSize">@dimen/text_size_13</item>
+        <item name="android:textSize">@dimen/text_size_15</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <!-- description -->
@@ -69,7 +71,7 @@
         <item name="android:textColor">@color/project_listitem_someinfo</item>
         <item name="android:textSize">@dimen/text_size_10</item>
     </style>
-	
+
     <!-- language star fork nums icon -->
     <style name="project_list_img">
         <item name="android:layout_width">wrap_content</item>
@@ -78,9 +80,10 @@
     </style>
 
     <!-- project list end -->
-    
-    <!-- events list start -->
-    
+
+
+    <!-- events list style start -->
+
     <!-- events title -->
     <style name="events_list_title">
         <item name="android:layout_width">fill_parent</item>
@@ -89,7 +92,7 @@
         <item name="android:textColor">@color/listitem_gray</item>
         <item name="android:textSize">@dimen/text_size_12</item>
     </style>
-    
+
     <style name="events_list_content">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -98,7 +101,7 @@
         <item name="android:textColorLink">@color/listitem_blue</item>
         <item name="android:textSize">@dimen/text_size_15</item>
     </style>
-    
+
     <style name="events_list_commits">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -108,7 +111,7 @@
         <item name="android:textColor">@color/listitem_black</item>
         <item name="android:textSize">@dimen/text_size_15</item>
     </style>
-    
+
     <style name="events_list_client">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -117,16 +120,132 @@
         <item name="android:textSize">@dimen/text_size_10</item>
         <item name="android:visibility">gone</item>
     </style>
-    
+
     <style name="events_list_data">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/listitem_gray</item>
         <item name="android:textSize">@dimen/text_size_10</item>
     </style>
-    
-    <!-- events list end -->
 
+    <!-- events list style end -->
+
+
+    <!-- 项目详情页面 style start -->
+
+    <style name="project_detail_description">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:padding">10dip</item>
+        <item name="android:autoLink">web</item>
+        <item name="android:maxLines">7</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textSize">@dimen/text_size_13</item>
+    </style>
+
+    <!-- 横向线条 -->
+    <style name="project_detail_h_line">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">0.1dip</item>
+        <item name="android:background">@color/gray</item>
+    </style>
+    <!-- 纵向线条 -->
+    <style name="project_detail_v_line">
+        <item name="android:layout_width">0.1dip</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:background">@color/gray</item>
+    </style>
+
+    <style name="project_detail_line_withtop" parent="project_detail_h_line">
+        <item name="android:layout_marginTop">25dip</item>
+    </style>
+
+    <style name="project_detail_projectname">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/listitem_blue</item>
+    </style>
+
+    <style name="project_detail_updatetime">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
+    <style name="project_detail_mid_grid_item">
+        <item name="android:layout_width">0dip</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center|left</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:padding">10dip</item>
+    </style>
+
+    <style name="project_detail_mid_grid_item_img">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginRight">8dip</item>
+    </style>
+
+    <style name="project_detail_mid_grid_item_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
+    <style name="project_detail_mid_info_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginRight">8dip</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxEms">7</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@color/gray</item>
+        <item name="android:textColor">@color/gray</item>
+    </style>
+
+    <style name="project_detail_layout_style">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/project_layout_item_selector</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:padding">10dip</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="project_detail_sorrow_img">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginRight">15.0dip</item>
+        <item name="android:src">@drawable/widget_right_icon</item>
+    </style>
+
+    <!-- 项目详情页面 style end -->
+
+
+    <!-- project code tree style start -->
+
+    <style name="project_codetree_list_img">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:padding">1.0dip</item>
+        <item name="android:layout_marginLeft">10dip</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="project_codetree_list_name">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:layout_marginLeft">8dip</item>
+        <item name="android:textSize">@dimen/text_size_14</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <!-- project code tree style end -->
     <style name="ListItem">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
@@ -171,9 +290,6 @@
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">2.0dip</item>
         <item name="android:layout_marginTop">8.0dip</item>
-        <item name="android:layout_marginBottom">10.0dip</item>
-        <item name="android:layout_marginLeft">6.0dip</item>
-        <item name="android:layout_marginRight">6.0dip</item>
         <item name="android:background">@drawable/line_bluegray</item>
     </style>
 
@@ -185,7 +301,7 @@
         <item name="android:indeterminateOnly">true</item>
     </style>
 
-    <style name="ListSpinner" parent="Spinner">
+    <style name="ListSpinner">
         <item name="android:layout_width">52dip</item>
         <item name="android:layout_height">52dip</item>
     </style>
@@ -213,7 +329,7 @@
     <style name="User_info_layout">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:clickable">true</item>
+        <item name="android:clickable">false</item>
         <item name="android:focusable">true</item>
         <item name="android:gravity">center_vertical</item>
     </style>
@@ -239,6 +355,14 @@
         <item name="android:textSize">@dimen/text_size_14</item>
     </style>
 
+    <style name="User_info_img">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/widget_right_icon</item>
+        <item name="android:layout_marginRight">15dip</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
     <!-- 新消息提醒样式 -->
     <style name="BadgeView_style">
         <item name="android:layout_width">wrap_content</item>
@@ -249,23 +373,14 @@
         <item name="android:gravity">center</item>
     </style>
 
-    <style name="project_layout_style">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/project_layout_item_selector</item>
-        <item name="android:orientation">horizontal</item>
-        <item name="android:padding">10dip</item>
-        <item name="android:gravity">center</item>
-    </style>
-
     <!-- 文本 - 滑动标签标题 -->
     <style name="text_slidingTabTitle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingLeft">16dp</item>
-        <item name="android:paddingTop">7dp</item>
+        <item name="android:paddingTop">10dp</item>
         <item name="android:paddingRight">16dp</item>
-        <item name="android:paddingBottom">7dp</item>
+        <item name="android:paddingBottom">10dp</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">@color/selector_slide_title</item>
         <item name="android:textSize">15sp</item>

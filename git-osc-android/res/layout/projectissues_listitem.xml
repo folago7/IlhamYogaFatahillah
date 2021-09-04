@@ -21,22 +21,11 @@
 
         <TextView
             android:id="@+id/projectissues_listitem_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:includeFontPadding="false"
-            android:maxLines="2"
-            android:textColor="@color/listitem_blue"
-            android:textSize="@dimen/text_size_15"
-            android:textStyle="bold" />
+            style="@style/project_list_title" />
 
         <TextView
             android:id="@+id/projectissues_listitem_description"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dip"
-            android:maxLines="4"
-            android:ellipsize="end" />
+            style="@style/project_list_description" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -46,34 +35,26 @@
 
             <TextView
                 android:id="@+id/projectissues_listitem_author"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/listitem_gray"
-                android:textSize="@dimen/text_size_10" />
+                style="@style/project_list_someinfo" />
 
             <TextView
                 android:id="@+id/projectissues_listitem_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dip"
-                android:textColor="@color/listitem_gray"
-                android:textSize="@dimen/text_size_10" />
+                style="@style/project_list_someinfo"
+                android:layout_marginLeft="10dip" />
 
             <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="wrap_content" 
                 android:layout_gravity="center_vertical"
                 android:layout_marginLeft="10dip"
+                android:contentDescription="@string/img_description"
                 android:src="@drawable/widget_comment_count_icon"
                 android:visibility="gone" />
 
             <TextView
                 android:id="@+id/projectissues_listitem_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="3dip"
-                android:textColor="@color/listitem_gray"
-                android:textSize="@dimen/text_size_10" />
+                style="@style/project_list_someinfo"
+                android:layout_marginLeft="3dip" />
         </LinearLayout>
     </LinearLayout>
 

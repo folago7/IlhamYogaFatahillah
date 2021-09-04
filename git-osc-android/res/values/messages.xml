@@ -44,6 +44,8 @@
     
     <string name="search_hint">搜点niubility的项目</string>
     <string name="search_empty">抱歉，没有相关项目</string>
-    <string name="notification_empty">没有未读通知！</string>
+    <string name="notification_empty">没有相关的通知！</string>
+    
+    <string name="img_description">img description</string>
    
 </resources>

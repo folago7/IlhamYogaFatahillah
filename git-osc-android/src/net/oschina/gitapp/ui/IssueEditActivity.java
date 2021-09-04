@@ -1,6 +1,7 @@
 package net.oschina.gitapp.ui;
 
 import java.util.ArrayList;
+
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -337,13 +338,12 @@ public class IssueEditActivity extends BaseActionBarActivity implements OnClickL
 			protected void onPostExecute(Message msg) {
 				if (mLoadSome != null) mLoadSome.dismiss();
 				if (msg.what == 1) {
-					UIHelper.ToastMessage(getGitApplication(), "创建issue成功" + (String)msg.obj);
-					/*Issue issue = (Issue) msg.obj;
+					Issue issue = (Issue) msg.obj;
 					if (issue != null) {
-						UIHelper.showIssueDetail(getGitApplication(), mProject, issue);
-						UIHelper.ToastMessage(getGitApplication(), "创建issue成功");
+						UIHelper.showIssueDetail(getGitApplication(), mProject, issue, null, null);
+						UIHelper.ToastMessage(getGitApplication(), "创建成功");
 						getActivity().finish();
-					}*/
+					}
 				} else {
 					if (msg.obj instanceof AppException) {
 						((AppException)msg.obj).makeToast(getActivity());

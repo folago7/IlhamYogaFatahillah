@@ -2,6 +2,11 @@ package net.oschina.gitapp.ui.fragments;
 
 import java.util.List;
 
+import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.widget.BaseAdapter;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
@@ -9,6 +14,7 @@ import net.oschina.gitapp.adapter.MySelfListProjectAdapter;
 import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.MessageData;
+import net.oschina.gitapp.common.BroadcastController;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
 
@@ -24,6 +30,30 @@ public class MySelfListProjectFragment extends BaseSwipeRefreshFragment<Project,
 	
 	public static MySelfListProjectFragment newInstance() {
 		return new MySelfListProjectFragment();
+	}
+	
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		// 注册一个用户发生变化的广播
+		BroadcastController.registerUserChangeReceiver(activity, mUserChangeReceiver);
+	}
+
+	private BroadcastReceiver mUserChangeReceiver = new BroadcastReceiver() {
+		
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			//接收到变化后
+			if (isVisible()) {
+				clearData();
+			}
+		}
+	};
+
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		BroadcastController.unregisterReceiver(getActivity(), mUserChangeReceiver);
 	}
 	
 	@Override

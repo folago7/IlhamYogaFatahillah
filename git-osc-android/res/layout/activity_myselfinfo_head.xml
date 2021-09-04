@@ -30,6 +30,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:text="编辑头像"
-        android:textSize="@dimen/text_size_12" />
+        android:textSize="@dimen/text_size_12"
+        android:visibility="gone" />
 
 </RelativeLayout>

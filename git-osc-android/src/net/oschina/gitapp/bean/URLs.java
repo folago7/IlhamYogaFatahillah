@@ -11,7 +11,7 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 public class URLs implements Serializable {
 	
-	public final static String HOST = "112.124.6.106";//"git.oschina.net";
+	public final static String HOST = "git.oschina.net";
 	private static final String API_VERSION = "/api/v3";// API版本
 	public final static String HTTP = "http://";
 	public final static String HTTPS = "https://";
@@ -19,7 +19,8 @@ public class URLs implements Serializable {
 	public final static String URL_SPLITTER = "/";
 	
 	// 拼接的api根地址
-	public final static String URL_API_HOST = HTTP + HOST + API_VERSION + URL_SPLITTER;
+	public final static String URL_HOST = HTTPS + HOST + URL_SPLITTER;
+	public final static String URL_API_HOST = HTTPS + HOST + API_VERSION + URL_SPLITTER;
 	
 	// api URL地址
 	public static String BRANCH = URL_API_HOST + "repository/branches";

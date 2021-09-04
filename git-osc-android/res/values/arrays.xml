@@ -32,4 +32,10 @@
         <item>项目</item>
     </string-array>
     
+   	<!-- 系统通知title -->
+    <string-array name="notification_title_array">
+        <item>未读通知</item>
+        <item>已读通知</item>
+    </string-array>
+    
 </resources>

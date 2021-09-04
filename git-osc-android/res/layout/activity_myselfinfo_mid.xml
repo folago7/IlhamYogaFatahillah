@@ -19,10 +19,8 @@
             style="@style/User_info_detail_text" />
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="15.0dip"
-            android:src="@drawable/widget_right_icon" />
+            style="@style/User_info_img"
+            android:contentDescription="@string/img_description" />
     </LinearLayout>
 
     <LinearLayout
@@ -39,10 +37,8 @@
             style="@style/User_info_detail_text" />
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="15.0dip"
-            android:src="@drawable/widget_right_icon" />
+            style="@style/User_info_img"
+            android:contentDescription="@string/img_description" />
     </LinearLayout>
 
     <LinearLayout
@@ -59,10 +55,8 @@
             style="@style/User_info_detail_text" />
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="15.0dip"
-            android:src="@drawable/widget_right_icon" />
+            style="@style/User_info_img"
+            android:contentDescription="@string/img_description" />
     </LinearLayout>
 
     <LinearLayout
@@ -79,10 +73,8 @@
             style="@style/User_info_detail_text" />
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="15.0dip"
-            android:src="@drawable/widget_right_icon" />
+            style="@style/User_info_img"
+            android:contentDescription="@string/img_description" />
     </LinearLayout>
 
 </LinearLayout>

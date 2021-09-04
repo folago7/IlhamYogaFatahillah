@@ -1,21 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="5dip" >
+    android:layout_height="50dip"
+    android:gravity="center"
+    android:orientation="horizontal" >
 
     <EditText
         android:id="@+id/issue_comment_content"
         android:layout_width="0dip"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="8dip"
+        android:layout_marginRight="8dip"
         android:layout_weight="1"
-        android:hint="请输入评论内容" />
+        android:hint="说点什么" />
 
     <Button
         android:id="@+id/issue_comment_pub"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="80dip"
+        android:layout_height="35dip"
+        android:layout_marginRight="8dip"
+        android:background="@drawable/btn_style_green"
         android:enabled="false"
         android:text="评论" />
 

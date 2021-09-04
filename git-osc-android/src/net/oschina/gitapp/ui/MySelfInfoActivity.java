@@ -125,10 +125,10 @@ public class MySelfInfoActivity extends BaseActionBarActivity implements View.On
 		
 		mEditFace.setOnClickListener(this);
 		
-		mFollowersLL.setOnClickListener(this);
-		mStarredLL.setOnClickListener(this);
-		mFolloweringLL.setOnClickListener(this);
-		mWatchedLL.setOnClickListener(this);
+//		mFollowersLL.setOnClickListener(this);
+//		mStarredLL.setOnClickListener(this);
+//		mFolloweringLL.setOnClickListener(this);
+//		mWatchedLL.setOnClickListener(this);
 		mLoginOut.setOnClickListener(this);
 	}
 	
@@ -136,17 +136,32 @@ public class MySelfInfoActivity extends BaseActionBarActivity implements View.On
 		mUser = getGitApplication().getLoginInfo();
 		if (mUser != null) {
 			mUserName.setText(mUser.getName());
-			SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss E");
+			SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
 			mJoinTime.setText(sdf.format(new Date()));
-			mWeiBo.setText(mUser.getWeibo());
-			mBlog.setText(mUser.getBlog());
-			mIntro.setText(mUser.getBio());
-			String portrait = mUser.getPortrait() == null ? "" : mUser.getPortrait();
+			if (mUser.getWeibo().equals("null")) {
+				
+			} else {
+				mWeiBo.setText(mUser.getWeibo());
+			}
+			if (mUser.getBlog().equals("null")) {
+				
+			} else {
+				mBlog.setText(mUser.getBlog());
+			}
+			
+			if (mUser.getBio().equals("null")) {
+				
+			} else {
+				mIntro.setText(mUser.getBio());
+			}
+			
+			String portrait = mUser.getPortrait() == null || mUser.getPortrait().equals("null") ? "" : mUser.getPortrait();
 			if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
 				mUserFace.setImageResource(R.drawable.widget_dface);
 			} else {
-				String portraitURL = URLs.GITIMG + mUser.getPortrait();
-				UIHelper.showUserFace(mUserFace, portraitURL);
+				// 加载用户头像
+				String faceUrl = URLs.HTTP + URLs.HOST + URLs.URL_SPLITTER + mUser.getPortrait();
+				UIHelper.showUserFace(mUserFace, faceUrl);
 			}
 			mFollowers.setText(mUser.getFollow().getFollowers() + "");
 			mStarred.setText(mUser.getFollow().getStarred() + "");
@@ -354,7 +369,6 @@ public class MySelfInfoActivity extends BaseActionBarActivity implements View.On
 						dialog.dismiss();
 						msg.what = -1;
 						msg.obj = e;
-						Log.i("Test", "发生了一场" + e.getCode());
 					}
 				}
 				return msg;

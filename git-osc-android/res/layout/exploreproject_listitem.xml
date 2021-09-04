@@ -26,8 +26,7 @@
         <!-- 项目名称 -->
         <TextView
             android:id="@+id/exploreproject_listitem_title"
-            style="@style/project_list_title"
-            android:text="oschina / android" />
+            style="@style/project_list_title" />
 
         <!-- 项目描述 -->
         <TextView
@@ -43,31 +42,31 @@
             android:orientation="horizontal"
             android:gravity="center" >
 
-            <!-- language类型 -->
-
+            <!-- language type-->
             <ImageView
                 android:id="@+id/exploreproject_listitem_language_image"
                 style="@style/project_list_img"
+                android:contentDescription="@string/img_description"
                 android:src="@drawable/language" />
 
             <TextView
                 android:id="@+id/exploreproject_listitem_language"
                 style="@style/project_list_someinfo" />
 
-            <!-- 项目加星数量 -->
-
+            <!-- star nums -->
             <ImageView
                 style="@style/project_list_img"
+                android:contentDescription="@string/img_description"
                 android:src="@drawable/star" />
 
             <TextView
                 android:id="@+id/exploreproject_listitem_star"
                 style="@style/project_list_someinfo" />
 
-            <!-- fork数量 -->
-
+            <!-- fork nums -->
             <ImageView
                 style="@style/project_list_img"
+                android:contentDescription="@string/img_description"
                 android:src="@drawable/fork" />
 
             <TextView

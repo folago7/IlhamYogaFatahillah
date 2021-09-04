@@ -12,13 +12,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
+
 import javax.net.ssl.SSLHandshakeException;
+
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.HeadMethod;
@@ -216,6 +219,7 @@ public class HTTPRequestor {
 			httpGet = (GetMethod)getMethod(GET_METHOD, url, "");
 			int statusCode = httpClient.executeMethod(httpGet);
 			if (statusCode != HttpStatus.SC_OK) {
+				Log.i("Test", statusCode + ">>>");
 				throw AppException.http(statusCode);
 			}
 			
@@ -277,10 +281,12 @@ public class HTTPRequestor {
 			}
 			
 		} catch (HttpException e) {
+			e.printStackTrace();
 			// 发生致命的异常，可能是协议不对或者返回的内容有问题
 			throw AppException.http(e);
 		} catch (IOException e) {
 			// 发生网络异常
+			e.printStackTrace();
 			throw AppException.network(e);
 		} finally {
 			// 释放连接
@@ -326,9 +332,11 @@ public class HTTPRequestor {
 			}
 		} catch (HttpException e) {
 			// 发生致命的异常，可能是协议不对或者返回的内容有问题
+			e.printStackTrace();
 			throw AppException.http(e);
 		} catch (IOException e) {
 			// 发生网络异常
+			e.printStackTrace();
 			throw AppException.network(e);
 		} finally {
 			// 释放连接
@@ -391,31 +399,25 @@ public class HTTPRequestor {
      * 表单参数处理
      */
     private void submitData(){
+    	_method.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     	int length = (_data == null ? 0 : _data.size());
-		Part[] parts = new Part[length];
-		int i = 0;
+    	//NameValuePair nvps[] = new NameValuePair[length];
+		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
         if(_data != null) {
         	for(String name : _data.keySet()){
             	Object value = _data.get(name);
-            	if (value instanceof File) {
-            		try {
-            			File file = (File)value;
-						parts[i++] = new FilePart(name, file.getName(), file);
-						Log.i("Test", name + ((File)value).getName() + ">>" + ((File)value).getAbsolutePath());
-					} catch (FileNotFoundException e) {
-						e.printStackTrace();
-					}
-            	} else {
-            		parts[i++] = new StringPart(name, String.valueOf(value), UTF_8);
-            	}
+            	NameValuePair nvp = new NameValuePair(name, String.valueOf(value));
+            	nvps.add(nvp);
             }
         }
     	if (_method instanceof PostMethod) {
-    		((PostMethod)_method).setRequestEntity(new MultipartRequestEntity(parts,_method.getParams()));
+    		for (NameValuePair nameValuePair : nvps) {
+    			((PostMethod)_method).addParameter(nameValuePair);
+			}
     	}
-    	if (_method instanceof PutMethod) {
+    	/*if (_method instanceof PutMethod) {
     		((PutMethod)_method).setRequestEntity(new MultipartRequestEntity(parts,_method.getParams()));
-    	}
+    	}*/
     }
     
     /**

@@ -12,7 +12,7 @@
         android:id="@+id/projectcode_loading"
         style="@style/ListSpinner"
         android:layout_centerInParent="true"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <LinearLayout
         android:id="@+id/projectcode_content_layout"
