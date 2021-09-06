@@ -49,6 +49,7 @@
             android:enabled="false"
             android:padding="10dip"
             android:text="@string/login_title"
+            android:textSize="@dimen/space_15"
             android:textColor="@color/white" />
     </LinearLayout>
 

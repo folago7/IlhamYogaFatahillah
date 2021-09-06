@@ -9,13 +9,14 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/ic_launcher" />
+        android:background="@drawable/notice_empty" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="15dip"
         android:text="@string/notification_empty"
+        android:textSize="18sp"
         android:textColor="@color/text_description" />
 
 </LinearLayout>

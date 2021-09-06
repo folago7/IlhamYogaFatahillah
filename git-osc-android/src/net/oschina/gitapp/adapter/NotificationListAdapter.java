@@ -104,15 +104,24 @@ public class NotificationListAdapter extends BaseExpandableListAdapter {
 	@Override
 	public View getGroupView(int groupPosition, boolean isExpanded,
 			View convertView, ViewGroup parent) {
+		GroupViewHolder holder = null;
 		if (convertView == null) {  
             convertView = mInflater.inflate(R.layout.notification_group_item, null);  
-        }  
+            
+            holder = new GroupViewHolder();
+            
+            holder.mGroupFace = (ImageView) convertView.findViewById(R.id.group_face);
+            holder.mGroupUserName = (TextView) convertView.findViewById(R.id.group_username);
+            holder.mGroupCount = (TextView) convertView.findViewById(R.id.group_count);
+            holder.mGroupName = (TextView) convertView.findViewById(R.id.group_name);
+            
+            convertView.setTag(holder);
+        } else {
+        	holder = (GroupViewHolder) convertView.getTag();
+        } 
         
 		ProjectNotification pn = mGroups.get(groupPosition);
 		
-		GroupViewHolder holder = new GroupViewHolder();
-        
-        holder.mGroupFace = (ImageView) convertView.findViewById(R.id.group_face);
         
         String portrait = pn.getOwner().getPortrait() == null ? "" : pn.getOwner().getPortrait();
 		if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
@@ -122,15 +131,10 @@ public class NotificationListAdapter extends BaseExpandableListAdapter {
 			bmpManager.loadBitmap(portraitURL, holder.mGroupFace);
 		}
         
-        holder.mGroupUserName = (TextView) convertView.findViewById(R.id.group_username);
-        
         holder.mGroupUserName.setText(pn.getOwner().getName());
         
-        holder.mGroupName = (TextView) convertView  
-                .findViewById(R.id.group_name);  
         holder.mGroupName.setText(pn.getName());  
-        holder.mGroupCount = (TextView) convertView  
-                .findViewById(R.id.group_count);  
+        
         holder.mGroupCount.setText(mData.get(groupPosition).size() + "");
         
         // 更换状态图标
@@ -148,15 +152,21 @@ public class NotificationListAdapter extends BaseExpandableListAdapter {
 	@Override
 	public View getChildView(int groupPosition, int childPosition,
 			boolean isLastChild, View convertView, ViewGroup parent) {
+		ChildViewHolder holder = null;
 		if (convertView == null) {  
             convertView = mInflater.inflate(R.layout.notification_listitem, null);
-        }  
-        ChildViewHolder holder = new ChildViewHolder();
-        
-        holder.face = (ImageView) convertView.findViewById(R.id.notification_listitem_userface);
-        holder.user_name = (TextView) convertView.findViewById(R.id.notification_listitem_name);
-        holder.title = (TextView) convertView.findViewById(R.id.notification_listitem_title);
-        holder.date = (TextView) convertView.findViewById(R.id.notification_listitem_date);
+            
+            holder = new ChildViewHolder();
+            
+            holder.face = (ImageView) convertView.findViewById(R.id.notification_listitem_userface);
+            holder.user_name = (TextView) convertView.findViewById(R.id.notification_listitem_name);
+            holder.title = (TextView) convertView.findViewById(R.id.notification_listitem_title);
+            holder.date = (TextView) convertView.findViewById(R.id.notification_listitem_date);
+            
+            convertView.setTag(holder);
+        } else {
+        	holder = (ChildViewHolder) convertView.getTag();
+        }
         
         final Notification notification = getChild(groupPosition, childPosition);
         

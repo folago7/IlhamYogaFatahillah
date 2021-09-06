@@ -20,7 +20,6 @@
         android:layout_marginLeft="8dip"
         android:layout_toRightOf="@id/user_info_userface"
         android:text="火蚁"
-        android:textColor="@color/blue"
         android:textSize="@dimen/text_size_15" />
 
     <Button

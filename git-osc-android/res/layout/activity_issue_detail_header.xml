@@ -19,7 +19,8 @@
             android:paddingTop="5dp"
             android:textColor="@color/text"
             android:textColorLink="@color/text_link"
-            android:textSize="13sp"
+            android:text="issue的标题吗"
+            android:textSize="15sp"
             android:typeface="monospace" />
 
         <LinearLayout

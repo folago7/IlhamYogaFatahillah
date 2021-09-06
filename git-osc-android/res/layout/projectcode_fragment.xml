@@ -6,7 +6,7 @@
     <include
         android:id="@+id/projectcode_switch_branch"
         layout="@layout/projectcode_fragment_footer"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
     <ProgressBar
         android:id="@+id/projectcode_loading"

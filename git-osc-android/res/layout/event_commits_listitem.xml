@@ -41,6 +41,8 @@
            	android:layout_height="wrap_content" 
        	    android:includeFontPadding="false"
            	android:textSize="@dimen/text_size_12"
+           	android:maxLines="5"
+           	android:ellipsize="end"
             android:textColor="@color/listitem_gray"/>
 
 </LinearLayout> 
