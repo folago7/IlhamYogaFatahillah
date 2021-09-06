@@ -9,8 +9,10 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
+
 import android.graphics.Bitmap;
 import android.util.Log;
 import net.oschina.gitapp.AppContext;
@@ -29,6 +31,7 @@ import net.oschina.gitapp.bean.Milestone;
 import net.oschina.gitapp.bean.NotificationReadResult;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.ProjectNotificationArray;
+import net.oschina.gitapp.bean.ReadMe;
 import net.oschina.gitapp.bean.Session;
 import net.oschina.gitapp.bean.UpLoadFile;
 import net.oschina.gitapp.bean.Update;
@@ -596,14 +599,13 @@ public class ApiClient {
 	 * @return
 	 * @throws AppException
 	 */
-	public static String getReadMeFile(AppContext appContext, String projectId) throws AppException {
+	public static ReadMe getReadMeFile(AppContext appContext, String projectId) throws AppException {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put(PRIVATE_TOKEN, getToken(appContext));
 		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + projectId + URLs.URL_SPLITTER + "readme", params);
-		Log.i("Test", url);
 		return getHttpRequestor()
 				.init(appContext, GET_METHOD, url)
-				.getResponseBodyString();
+				.to(ReadMe.class);
 	}
 
 	/**

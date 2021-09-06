@@ -21,6 +21,9 @@
     <color name="pressed_gitlab">#CC30A1BA</color>
     <color name="slidingmenu_bg">#212121</color>
     
+    <!-- nontice list color -->
+    <color name="notice_layout_back">#3c3c3c</color>
+    
     <!-- project list color -->
     <color name="project_listitem_title">#294fa1</color>
     <color name="project_listitem_description">#515151</color>
@@ -31,7 +34,7 @@
     <color name="listitem_black">#515151</color>
     <color name="listitem_white">#ffffffff</color>
     <color name="listitem_blue">#294fa1</color>
-    <color name="listitem_gray">#b6b6b6</color>
+    <color name="listitem_gray">#515151</color>
     <color name="listitem_green">#ffe3ffc6</color>
     
     <!-- 菜单layout item颜色 -->

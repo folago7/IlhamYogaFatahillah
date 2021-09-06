@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -31,7 +32,7 @@ public class LoginActivity extends BaseActionBarActivity
 	implements OnClickListener, OnEditorActionListener {
 	
 	private AppContext mAppContext;
-	private EditText mAccountEditText;
+	private AutoCompleteTextView mAccountEditText;
 	private EditText mPasswordEditText;
 	private ProgressDialog mLoginProgressDialog;
 	private Button mLogin;
@@ -47,7 +48,7 @@ public class LoginActivity extends BaseActionBarActivity
 	}
 
 	private void initView() {
-		mAccountEditText = (EditText) findViewById(R.id.login_account);
+		mAccountEditText = (AutoCompleteTextView) findViewById(R.id.login_account);
 		mPasswordEditText = (EditText) findViewById(R.id.login_password);
 		mLogin = (Button) findViewById(R.id.login_btn_login);
 		mLogin.setOnClickListener(this);

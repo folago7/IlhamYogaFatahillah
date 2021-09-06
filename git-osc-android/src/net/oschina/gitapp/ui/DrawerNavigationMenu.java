@@ -184,6 +184,10 @@ public class DrawerNavigationMenu extends Fragment implements OnClickListener {
 		setSelected(null, false);
 		setSelected(v, true);
 	}
+	
+	public void highlightExplore() {
+		highlightSelectedItem(mMenu_item_explore);
+	}
 
 	private void setSelected(View v, boolean selected) {
 		View view;

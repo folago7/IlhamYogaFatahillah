@@ -8,12 +8,7 @@
             android:layout="@layout/preference"
             android:summary="当前以HTTP登录"
             android:title="HTTPS登录" />
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="loadimage"
-            android:layout="@layout/preference"
-            android:summary="页面加载图片 (默认在WIFI网络下加载图片)"
-            android:title="加载图片" />
+        
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="voice"

@@ -33,6 +33,7 @@ import net.oschina.gitapp.bean.Milestone;
 import net.oschina.gitapp.bean.NotificationReadResult;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.ProjectNotificationArray;
+import net.oschina.gitapp.bean.ReadMe;
 import net.oschina.gitapp.bean.Session;
 import net.oschina.gitapp.bean.UpLoadFile;
 import net.oschina.gitapp.bean.Update;
@@ -42,6 +43,7 @@ import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.CyptoUtils;
 import net.oschina.gitapp.common.MethodsCompat;
 import net.oschina.gitapp.common.StringUtils;
+import net.oschina.gitapp.common.UIHelper;
 import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -77,9 +79,8 @@ public class AppContext extends Application {
 	private Handler unLoginHandler = new Handler() {
 		public void handleMessage(Message msg) {
 			if (msg.what == 1) {
-				// UIHelper.ToastMessage(AppContext.this,
-				// getString(R.string.msg_login_error));
-				// UIHelper.showLoginDialog(AppContext.this);
+				UIHelper.ToastMessage(AppContext.this, getString(R.string.msg_login_error));
+				UIHelper.showLoginActivity(AppContext.this);
 			}
 		}
 	};
@@ -91,6 +92,22 @@ public class AppContext extends Application {
 		Thread.setDefaultUncaughtExceptionHandler(AppException
 				.getAppExceptionHandler(this));
 		init();
+	}
+	
+	/**
+	 * 获得未登录的handle
+	 * @return
+	 */
+	public Handler getUnLoginHandler(final Context context) {
+		Handler unLoginHandler = new Handler() {
+			public void handleMessage(Message msg) {
+				if (msg.what == 1) {
+					UIHelper.ToastMessage(AppContext.this, getString(R.string.msg_login_error));
+					UIHelper.showLoginActivity(context);
+				}
+			}
+		};
+		return unLoginHandler;
 	}
 
 	/**
@@ -1118,7 +1135,7 @@ public class AppContext extends Application {
 	 * @return
 	 * @throws AppException
 	 */
-	public String getReadMeFile(String projectId) throws AppException {
+	public ReadMe getReadMeFile(String projectId) throws AppException {
 		return ApiClient.getReadMeFile(this, projectId);
 	}
 

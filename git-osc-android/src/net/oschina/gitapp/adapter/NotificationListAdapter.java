@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.Notification;
+import net.oschina.gitapp.bean.ProjectNotification;
 import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.BitmapManager;
@@ -35,13 +36,15 @@ public class NotificationListAdapter extends BaseExpandableListAdapter {
 	
 	private List<List<Notification>>	mData;
 	
-	private List<String>			mGroupStrings;
+	private List<ProjectNotification>			mGroups;
 	
 	private LayoutInflater 		mInflater;
 	
 	private BitmapManager bmpManager;
 	
 	private class GroupViewHolder{
+		public ImageView mGroupFace;
+		public TextView mGroupUserName;
 		public TextView mGroupName;
 		public TextView mGroupCount;
 	} 
@@ -53,11 +56,11 @@ public class NotificationListAdapter extends BaseExpandableListAdapter {
 		public TextView date;//日期 
     } 
 	
-	public NotificationListAdapter(Context context, List<List<Notification>> data, List<String> mGroupStrings) {
+	public NotificationListAdapter(Context context, List<List<Notification>> data, List<ProjectNotification> mGroups) {
 		this.mContext = context;
 		this.mData = data;
 		this.mInflater = LayoutInflater.from(mContext);
-		this.mGroupStrings = mGroupStrings;
+		this.mGroups = mGroups;
 		this.bmpManager = new BitmapManager(BitmapFactory.decodeResource(
 				context.getResources(), R.drawable.widget_dface_loading));
 	}
@@ -102,15 +105,43 @@ public class NotificationListAdapter extends BaseExpandableListAdapter {
 	public View getGroupView(int groupPosition, boolean isExpanded,
 			View convertView, ViewGroup parent) {
 		if (convertView == null) {  
-            convertView = mInflater.inflate(R.layout.group_item_layout, null);  
+            convertView = mInflater.inflate(R.layout.notification_group_item, null);  
         }  
-        GroupViewHolder holder = new GroupViewHolder();  
+        
+		ProjectNotification pn = mGroups.get(groupPosition);
+		
+		GroupViewHolder holder = new GroupViewHolder();
+        
+        holder.mGroupFace = (ImageView) convertView.findViewById(R.id.group_face);
+        
+        String portrait = pn.getOwner().getPortrait() == null ? "" : pn.getOwner().getPortrait();
+		if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
+			holder.mGroupFace.setImageResource(R.drawable.widget_dface);
+		} else {
+			String portraitURL = URLs.GITIMG + pn.getOwner().getPortrait();
+			bmpManager.loadBitmap(portraitURL, holder.mGroupFace);
+		}
+        
+        holder.mGroupUserName = (TextView) convertView.findViewById(R.id.group_username);
+        
+        holder.mGroupUserName.setText(pn.getOwner().getName());
+        
         holder.mGroupName = (TextView) convertView  
                 .findViewById(R.id.group_name);  
-        holder.mGroupName.setText(mGroupStrings.get(groupPosition));  
+        holder.mGroupName.setText(pn.getName());  
         holder.mGroupCount = (TextView) convertView  
                 .findViewById(R.id.group_count);  
-        holder.mGroupCount.setText("[" + mData.get(groupPosition).size() + "]");  
+        holder.mGroupCount.setText(mData.get(groupPosition).size() + "");
+        
+        // 更换状态图标
+        ImageView parentImageViw=(ImageView) convertView.findViewById(R.id.group_arrow);
+        //判断isExpanded就可以控制是按下还是关闭，同时更换图片
+		if (isExpanded) {
+			parentImageViw.setBackgroundResource(R.drawable.notice_group_arrow_down);
+		} else {
+			parentImageViw.setBackgroundResource(R.drawable.notice_group_arrow_up);
+		}
+	    
         return convertView; 
 	}
 	

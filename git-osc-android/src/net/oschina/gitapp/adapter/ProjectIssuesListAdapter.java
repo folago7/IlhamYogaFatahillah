@@ -7,10 +7,13 @@ import net.oschina.gitapp.bean.Issue;
 import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.BitmapManager;
+import net.oschina.gitapp.common.HtmlRegexpUtils;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import android.content.Context;
 import android.graphics.BitmapFactory;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
@@ -94,10 +97,8 @@ public class ProjectIssuesListAdapter extends MyBaseAdapter<Issue> {
 		listItemView.title.setText(issue.getTitle());
 		if (StringUtils.isEmpty(issue.getDescription())) {
 			listItemView.description.setText("暂无描述");
-			listItemView.description.setTextColor(context.getResources().getColor(R.color.gray));
 		} else {
-			listItemView.description.setText(issue.getDescription());
-			listItemView.description.setTextColor(context.getResources().getColor(R.color.black));
+			listItemView.description.setText(HtmlRegexpUtils.filterHtml(issue.getDescription()));
 		}
 		
 		listItemView.username.setText(issue.getAuthor() == null ? "" : issue.getAuthor().getName());

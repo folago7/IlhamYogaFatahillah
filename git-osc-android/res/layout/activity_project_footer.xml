@@ -28,21 +28,21 @@
 
     <View
         style="@style/project_detail_h_line" />
-
+    
     <LinearLayout 
-        android:id="@+id/project_issues"
+        android:id="@+id/project_code"
         style="@style/project_detail_layout_style" >
 
         <ImageView
             style="@style/project_detail_mid_grid_item_img"
             android:contentDescription="@string/img_description"
-            android:background="@drawable/flag" />
+            android:background="@drawable/script" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="问题" />
+            android:text="代码" />
 
         <ImageView
             style="@style/project_detail_sorrow_img"
@@ -81,19 +81,19 @@
         android:visibility="gone" />
 
     <LinearLayout 
-        android:id="@+id/project_code"
+        android:id="@+id/project_issues"
         style="@style/project_detail_layout_style" >
 
         <ImageView
             style="@style/project_detail_mid_grid_item_img"
             android:contentDescription="@string/img_description"
-            android:background="@drawable/script" />
+            android:background="@drawable/flag" />
 
         <TextView
             android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="代码" />
+            android:text="问题" />
 
         <ImageView
             style="@style/project_detail_sorrow_img"

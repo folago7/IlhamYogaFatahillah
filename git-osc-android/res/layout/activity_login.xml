@@ -13,28 +13,25 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="45dip"
         android:gravity="center"
+        android:padding="25dip"
         android:orientation="vertical" >
 
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/login_account"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="25dip"
-            android:layout_marginRight="25dip"
             android:drawableLeft="@drawable/icon_login_account"
             android:drawablePadding="10dip"
             android:ems="10"
             android:hint="@string/login_account_hint"
+            android:inputType="textEmailAddress"
             android:singleLine="true" />
 
         <EditText
             android:id="@+id/login_password"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="25dip"
-            android:layout_marginRight="25dip"
             android:layout_marginTop="20dip"
             android:drawableLeft="@drawable/icon_login_pass"
             android:drawablePadding="10dip"
@@ -47,8 +44,6 @@
             android:id="@+id/login_btn_login"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="25dip"
-            android:layout_marginRight="25dip"
             android:layout_marginTop="35dip"
             android:background="@drawable/btn_style_login"
             android:enabled="false"

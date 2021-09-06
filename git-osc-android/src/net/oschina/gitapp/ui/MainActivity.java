@@ -4,10 +4,14 @@ import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppManager;
 import net.oschina.gitapp.R;
 import android.annotation.TargetApi;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -16,11 +20,15 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
+import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import net.oschina.gitapp.common.BroadcastController;
 import net.oschina.gitapp.common.DoubleClickExitHelper;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.common.UpdateManager;
@@ -73,7 +81,8 @@ public class MainActivity extends ActionBarActivity implements
 		R.string.fragment_menu_title_setting,
 		R.string.fragment_menu_title_exit 
 	};
-
+	
+	private DrawerNavigationMenu mMenu = DrawerNavigationMenu.newInstance();;
 	private DrawerLayout mDrawerLayout;
 	private ActionBarDrawerToggle mDrawerToggle;
 	private FragmentManager mFragmentManager;
@@ -100,9 +109,20 @@ public class MainActivity extends ActionBarActivity implements
 	}
 	
 	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+	}
+
+	@Override
 	protected void onResume() {
 		super.onResume();
 		mActionBar.setTitle(mTitle);
+		if (mCurrentContentTag.equalsIgnoreCase(CONTENTS[1]) || mCurrentContentTag.equalsIgnoreCase(CONTENTS[2])) {
+			if (!mContext.isLogin()) {
+				onClickExplore();
+				mMenu.highlightExplore();
+			}
+		}
 	}
 
 	private void initView(Bundle savedInstanceState) {
@@ -124,17 +144,20 @@ public class MainActivity extends ActionBarActivity implements
 		
 		mFragmentManager = getSupportFragmentManager();
 		if (null == savedInstanceState) {
-			FragmentTransaction ft = mFragmentManager.beginTransaction();
-			ft.replace(R.id.main_slidingmenu_frame,
-					DrawerNavigationMenu.newInstance(), DRAWER_MENU_TAG)
-					.replace(R.id.main_content,
-							ExploreViewPagerFragment.newInstance(),
-							DRAWER_CONTENT_TAG).commit();
-
-			mTitle = TITLES[0];
-			mCurrentContentTag = CONTENT_TAG_EXPLORE;
+			setExploreShow();
 		}
-		
+	}
+	
+	private void setExploreShow() {
+		FragmentTransaction ft = mFragmentManager.beginTransaction();
+		ft.replace(R.id.main_slidingmenu_frame,
+				mMenu, DRAWER_MENU_TAG)
+				.replace(R.id.main_content,
+						ExploreViewPagerFragment.newInstance(),
+						DRAWER_CONTENT_TAG).commit();
+
+		mTitle = TITLES[0];
+		mCurrentContentTag = CONTENT_TAG_EXPLORE;
 	}
 
 	@Override

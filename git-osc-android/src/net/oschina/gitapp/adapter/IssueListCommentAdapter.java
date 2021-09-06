@@ -7,10 +7,13 @@ import net.oschina.gitapp.bean.GitNote;
 import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.BitmapManager;
+import net.oschina.gitapp.common.HtmlRegexpUtils;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import android.content.Context;
 import android.graphics.BitmapFactory;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
@@ -88,7 +91,7 @@ public class IssueListCommentAdapter extends MyBaseAdapter<GitNote> {
 		
 		// 2.显示相关信息
 		listItemView.name.setText(note.getAuthor().getName());
-		listItemView.body.setText(note.getBody());
+		listItemView.body.setText(HtmlRegexpUtils.filterHtml(note.getBody()));
 		listItemView.date.setText(StringUtils.friendly_time(note.getCreated_at()));
 			
 		return convertView;

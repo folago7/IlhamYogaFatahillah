@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -74,6 +75,11 @@ public class ProjectActivity extends BaseActionBarActivity implements
 	private AppContext mAppContext;
 
 	private LayoutInflater mInflater;
+	
+	private LinearLayout mLLOwner;
+	private LinearLayout mLLReadMe;
+	private LinearLayout mLLCodes;
+	private LinearLayout mLLIssues;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -104,11 +110,17 @@ public class ProjectActivity extends BaseActionBarActivity implements
 		mForkView = findViewById(R.id.project_ll_fork);
 		mForkMes = (TextView) findViewById(R.id.project_fork_form);
 		
-		findViewById(R.id.project_owner).setOnClickListener(this);
-		findViewById(R.id.project_readme).setOnClickListener(this);
-		findViewById(R.id.project_issues).setOnClickListener(this);
-		findViewById(R.id.project_commits).setOnClickListener(this);
-		findViewById(R.id.project_code).setOnClickListener(this);
+		mLLOwner = (LinearLayout) findViewById(R.id.project_owner);
+		mLLReadMe = (LinearLayout) findViewById(R.id.project_readme);
+		mLLCodes = (LinearLayout) findViewById(R.id.project_issues);
+		mLLIssues = (LinearLayout) findViewById(R.id.project_code);
+		
+		
+		mLLOwner.setOnClickListener(this);
+		mLLReadMe.setOnClickListener(this);
+		mLLCodes.setOnClickListener(this);
+		//findViewById(R.id.project_commits).setOnClickListener(this);
+		mLLIssues.setOnClickListener(this);
 		
 		if (null == mProject) {
 			loadProject(ACTION_LOAD_PROJECT, projectId);
@@ -287,14 +299,14 @@ public class ProjectActivity extends BaseActionBarActivity implements
 		case R.id.project_readme:
 			UIHelper.showProjectReadMeActivity(ProjectActivity.this, mProject);
 			break;
-		case R.id.project_issues:
-			UIHelper.showProjectListActivity(ProjectActivity.this, mProject, ProjectSomeInfoListActivity.PROJECT_LIST_TYPE_ISSUES);
+		case R.id.project_code:
+			UIHelper.showProjectCodeActivity(ProjectActivity.this, mProject);
 			break;
 		case R.id.project_commits:
 			UIHelper.showProjectListActivity(ProjectActivity.this, mProject, ProjectSomeInfoListActivity.PROJECT_LIST_TYPE_COMMITS);
 			break;
-		case R.id.project_code:
-			UIHelper.showProjectCodeActivity(ProjectActivity.this, mProject);
+		case R.id.project_issues:
+			UIHelper.showProjectListActivity(ProjectActivity.this, mProject, ProjectSomeInfoListActivity.PROJECT_LIST_TYPE_ISSUES);
 			break;
 		default:
 			break;

@@ -2,13 +2,16 @@ package net.oschina.gitapp.ui.fragments;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.NotificationListAdapter;
 import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.Notification;
+import net.oschina.gitapp.bean.ProjectNotification;
 import net.oschina.gitapp.bean.ProjectNotificationArray;
+import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.basefragment.BaseFragment;
 import android.os.AsyncTask;
@@ -54,7 +57,7 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
 	
 	private List<List<Notification>> mData;
 	
-	private List<String> mGroupStrings;
+	private List<ProjectNotification> mGroups;
 	
 	private AppContext mAppContext;
 	
@@ -97,13 +100,16 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
 	
 	private void steupList() {
 		mData = new ArrayList<List<Notification>>();
-		mGroupStrings = new ArrayList<String>();
-		adapter = new NotificationListAdapter(mAppContext, mData, mGroupStrings);
+		mGroups = new ArrayList<ProjectNotification>();
+		adapter = new NotificationListAdapter(mAppContext, mData, mGroups);
 		mUnReadListView.setAdapter(adapter);
 		mReadedListView.setAdapter(adapter);
 		
 		mUnReadListView.setOnChildClickListener(this);
 		mReadedListView.setOnChildClickListener(this);
+		
+		mUnReadListView.setGroupIndicator(null);
+		mReadedListView.setGroupIndicator(null);
 	}
 
 	@Override
@@ -205,7 +211,7 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
 					if (commonList.getList().size() != 0) {
 						mEmpty.setVisibility(View.GONE);
 						for (ProjectNotificationArray pna : commonList.getList()) {
-							mGroupStrings.add(pna.getProject().getOwner().getName() + "/" + pna.getProject().getName());
+							mGroups.add(pna.getProject());
 							List<Notification> ns = new ArrayList<Notification>();
 							ns.addAll(pna.getProject().getNotifications());
 							mData.add(ns);

@@ -21,35 +21,10 @@ import android.util.Log;
  */
 public class MySelfViewPagerFragment extends BaseViewPagerFragment {
 	
-	
-	
     public static MySelfViewPagerFragment newInstance() {
         return new MySelfViewPagerFragment();
     }
     
-	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		// 注册一个用户发生变化的广播
-		BroadcastController.registerUserChangeReceiver(activity, mUserChangeReceiver);
-		Log.i("Test", "广播注册成功");
-	}
-
-	private BroadcastReceiver mUserChangeReceiver = new BroadcastReceiver() {
-		
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			//接收到变化后
-			Log.i("Test", "用户发生了改变");
-		}
-	};
-
-	@Override
-	public void onDetach() {
-		super.onDetach();
-		BroadcastController.unregisterReceiver(getActivity(), mUserChangeReceiver);
-	}
-
 	@Override
 	protected void onSetupTabAdapter(ViewPageFragmentAdapter adapter) {
 		String[] title = getResources().getStringArray(R.array.myself_title_array);

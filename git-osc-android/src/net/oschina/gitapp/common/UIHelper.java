@@ -367,9 +367,9 @@ public class UIHelper {
 	 * 显示登录的界面
 	 * @param context
 	 */
-	public static void showLoginActivity(Activity context) {
+	public static void showLoginActivity(Context context) {
 		Intent intent = new Intent(context, LoginActivity.class);
-		context.startActivityForResult(intent, LOGIN_REQUESTCODE);
+		context.startActivity(intent);
 	}
 	
 	/**

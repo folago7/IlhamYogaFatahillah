@@ -8,10 +8,14 @@ import net.oschina.gitapp.bean.Event;
 import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.BitmapManager;
+import net.oschina.gitapp.common.HtmlRegexpUtils;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import android.content.Context;
 import android.graphics.BitmapFactory;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
@@ -113,7 +117,7 @@ public class MySelfEventListAdapter extends MyBaseAdapter<Event> {
 		
 		listItemView.content.setVisibility(View.GONE);
 		if (event.getEvents().getNote() != null && event.getEvents().getNote().getNote() != null) {
-			listItemView.content.setText(event.getEvents().getNote().getNote());
+			listItemView.content.setText(HtmlRegexpUtils.filterHtml(event.getEvents().getNote().getNote()));
 			listItemView.content.setVisibility(View.VISIBLE);
 		}
 		

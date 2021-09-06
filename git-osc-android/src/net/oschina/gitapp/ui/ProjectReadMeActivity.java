@@ -10,6 +10,7 @@ import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.HTTPRequestor;
 import net.oschina.gitapp.bean.Project;
+import net.oschina.gitapp.bean.ReadMe;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
@@ -27,6 +28,8 @@ public class ProjectReadMeActivity extends BaseActionBarActivity {
 	private View mLoading;
 	
 	private WebView mWebView;
+	
+	public String linkCss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/readme_style.css\">";
 		
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -77,11 +80,9 @@ public class ProjectReadMeActivity extends BaseActionBarActivity {
 				}
 				mLoading.setVisibility(View.GONE);
 				if (msg.what == 1) {
-					String content = (String) msg.obj;
+					ReadMe readMe = (ReadMe) msg.obj;
 					mWebView.setVisibility(View.VISIBLE);
-					mWebView.loadData(content, "text/html", HTTPRequestor.UTF_8);
-					/*mWebView.loadDataWithBaseURL(null,
-							content, "text/html", HTTPRequestor.UTF_8, null);*/
+					mWebView.loadDataWithBaseURL(null, linkCss + "<div class='markdown-body'>"+readMe.getContent()+"</div>", "text/html", HTTPRequestor.UTF_8, null);
 				} else {
 					if (msg.obj instanceof AppException) {
 						AppException e = (AppException)msg.obj;

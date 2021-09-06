@@ -35,6 +35,7 @@ public class IssueEditActivity extends BaseActionBarActivity implements OnClickL
 
 	private InputMethodManager imm;
 	
+	
 	private Project mProject;
 	
 	private Issue mIssue;
@@ -309,6 +310,10 @@ public class IssueEditActivity extends BaseActionBarActivity implements OnClickL
 	}
 	
 	private void pubCreateIssue() {
+		if (!getGitApplication().isLogin()) {
+			UIHelper.showLoginActivity(IssueEditActivity.this);
+			return;
+		}
 		//异步
     	new AsyncTask<Void, Void, Message>() {
 			@Override

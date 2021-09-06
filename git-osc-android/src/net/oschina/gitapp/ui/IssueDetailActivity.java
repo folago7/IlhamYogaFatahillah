@@ -227,7 +227,7 @@ public class IssueDetailActivity extends BaseActionBarActivity implements
 		mIssueUserName.setText(mIssue.getAuthor().getName());
 		mIssueData.setText("创建于"
 				+ StringUtils.friendly_time(mIssue.getCreatedAt()));
-		mWebView.loadDataWithBaseURL(null, mIssue.getDescription(),
+		mWebView.loadDataWithBaseURL(null, UIHelper.WEB_STYLE + mIssue.getDescription(),
 				"text/html", HTTPRequestor.UTF_8, null);
 		
 		String portrait = mIssue.getAuthor().getPortrait() == null ? "" : mIssue.getAuthor().getPortrait();
@@ -350,6 +350,10 @@ public class IssueDetailActivity extends BaseActionBarActivity implements
 	
 	// 提交issue的评论
 	private void pubComment() {
+		if (!getGitApplication().isLogin()) {
+			UIHelper.showLoginActivity(IssueDetailActivity.this);
+			return;
+		}
 		imm.hideSoftInputFromWindow(mCommentContent.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
 		if (StringUtils.isEmpty(mCommentContent.getText().toString())) {
 			return;

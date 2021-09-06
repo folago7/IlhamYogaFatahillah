@@ -1,7 +1,5 @@
 package net.oschina.gitapp.ui;
 
-import static net.oschina.gitapp.common.Contanst.LOGIN_REQUESTCODE;
-
 import java.io.File;
 
 import net.oschina.gitapp.AppContext;
@@ -11,7 +9,6 @@ import net.oschina.gitapp.common.FileUtils;
 import net.oschina.gitapp.common.MethodsCompat;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.common.UpdateManager;
-import android.app.ActionBar;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -36,7 +33,6 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 	private Preference about;
 
 	private CheckBoxPreference httpslogin;
-	private CheckBoxPreference loadimage;
 	private CheckBoxPreference voice;
 	private CheckBoxPreference checkup;
 	
@@ -66,15 +62,6 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 			httpslogin.setSummary("当前以 HTTP 登录");
 		}
 		httpslogin.setOnPreferenceClickListener(this);
-		
-		loadimage = (CheckBoxPreference) findPreference("loadimage");
-		loadimage.setChecked(mAppContext.isLoadImage());
-		if (mAppContext.isLoadImage()) {
-			loadimage.setSummary("页面加载图片 (默认在WIFI网络下加载图片)");
-		} else {
-			loadimage.setSummary("页面不加载图片 (默认在WIFI网络下加载图片)");
-		}
-		loadimage.setOnPreferenceClickListener(this);
 		
 		// 提示声音
 		voice = (CheckBoxPreference) findPreference("voice");
@@ -108,8 +95,6 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 	public boolean onPreferenceClick(Preference preference) {
 		if (preference == httpslogin) {
 			onHttpslogin();
-		} else if (preference == loadimage) {
-			onLoadimage();
 		} else if (preference == voice) {
 			onVoice();
 		} else if (preference == checkup) {
@@ -120,6 +105,8 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 			onFeedBack();
 		} else if (preference == update) {
 			UpdateManager.getUpdateManager().checkAppUpdate(this, true);
+		} else if (preference == about) {
+			showAbout();
 		}
 		return true;
 	}
@@ -130,15 +117,6 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 			httpslogin.setSummary("当前以 HTTPS 登录");
 		} else {
 			httpslogin.setSummary("当前以 HTTP 登录");
-		}
-	}
-	
-	private void onLoadimage() {
-		mAppContext.setConfigLoadimage(loadimage.isChecked());
-		if (loadimage.isChecked()) {
-			loadimage.setSummary("页面加载图片 (默认在WIFI网络下加载图片)");
-		} else {
-			loadimage.setSummary("页面不加载图片 (默认在WIFI网络下加载图片)");
 		}
 	}
 	
@@ -185,5 +163,10 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		i.putExtra(Intent.EXTRA_SUBJECT,"用户反馈-git@osc Android客户端");  
 		i.putExtra(Intent.EXTRA_TEXT, "");  
 		startActivity(Intent.createChooser(i, "send email to me..."));
+	}
+	
+	private void showAbout() {
+		Intent intent = new Intent(SettingActivity.this, About.class);
+		startActivity(intent);
 	}
 }

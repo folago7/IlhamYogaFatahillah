@@ -33,30 +33,6 @@ public class MySelfListProjectFragment extends BaseSwipeRefreshFragment<Project,
 	}
 	
 	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		// 注册一个用户发生变化的广播
-		BroadcastController.registerUserChangeReceiver(activity, mUserChangeReceiver);
-	}
-
-	private BroadcastReceiver mUserChangeReceiver = new BroadcastReceiver() {
-		
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			//接收到变化后
-			if (isVisible()) {
-				clearData();
-			}
-		}
-	};
-
-	@Override
-	public void onDetach() {
-		super.onDetach();
-		BroadcastController.unregisterReceiver(getActivity(), mUserChangeReceiver);
-	}
-	
-	@Override
 	public BaseAdapter getAdapter(List<Project> list) {
 		return new MySelfListProjectAdapter(getActivity(), list, R.layout.myselfproject_listitem);
 	}

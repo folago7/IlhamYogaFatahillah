@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="net.oschina.gitapp"
     android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionName="0.8" >
 
     <!--
          1.Target SDK version must be 16, not 17, or JavaScript bridge for
@@ -49,6 +49,7 @@
         <activity
             android:name=".ui.LoginActivity"
             android:label="@string/login_title"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask" >
         </activity>
         <activity android:name=".ui.ProjectActivity" />
@@ -95,6 +96,11 @@
             android:name=".ui.ImageZoomActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >
+        </activity>
+        <activity
+            android:name=".ui.About"
+            android:label="关于git"
+            android:launchMode="singleTask" >
         </activity>
     </application>
 

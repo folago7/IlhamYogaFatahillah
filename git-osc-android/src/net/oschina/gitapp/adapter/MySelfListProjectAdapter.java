@@ -107,6 +107,13 @@ public class MySelfListProjectAdapter extends MyBaseAdapter<Project> {
 		listItemView.updateData.setText("更新于: " + StringUtils.friendly_time(last_push_at));
 		
 		// 判断项目的类型，显示不同的图标（私有项目、公有项目、fork项目）
+		if (project.getParent_id() == null) {
+			
+		} else if (project.isPublic()) {
+			
+		} else {
+			
+		}
 		
 		
 		// 判断是否有项目的介绍
