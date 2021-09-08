@@ -93,7 +93,7 @@ public class MainActivity extends ActionBarActivity implements
 	private ActionBar mActionBar;
 	private AppContext mContext;
 	
-	private int mTitle;// actionbar标题
+	private CharSequence mTitle;// actionbar标题
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -156,7 +156,7 @@ public class MainActivity extends ActionBarActivity implements
 						ExploreViewPagerFragment.newInstance(),
 						DRAWER_CONTENT_TAG).commit();
 
-		mTitle = TITLES[0];
+		mTitle = "发现";
 		mCurrentContentTag = CONTENT_TAG_EXPLORE;
 	}
 
@@ -229,7 +229,7 @@ public class MainActivity extends ActionBarActivity implements
 		ft.commit();
 		
 		mActionBar.setTitle(TITLES[pos]);
-		mTitle = TITLES[pos];//记录主界面的标题
+		mTitle = mActionBar.getTitle();//记录主界面的标题
 		mCurrentContentTag = tag;
 	}
 	

@@ -26,6 +26,7 @@
             android:ems="10"
             android:hint="@string/login_account_hint"
             android:inputType="textEmailAddress"
+            android:imeOptions="actionNext"
             android:singleLine="true" />
 
         <EditText

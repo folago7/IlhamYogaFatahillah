@@ -166,7 +166,7 @@ public class ImageZoomActivity extends Activity implements OnTouchListener,
 						}
 					}
 					if (bmp == null) {
-						bmp = ApiClient.getNetBitmap(imgURL);
+ 						bmp = ApiClient.getNetBitmap(imgURL);
 						if (bmp != null) {
 							try {
 								// 写图片缓存

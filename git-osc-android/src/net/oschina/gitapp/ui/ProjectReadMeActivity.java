@@ -12,7 +12,6 @@ import net.oschina.gitapp.api.HTTPRequestor;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.ReadMe;
 import net.oschina.gitapp.common.Contanst;
-import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
 
 /**
@@ -81,8 +80,15 @@ public class ProjectReadMeActivity extends BaseActionBarActivity {
 				mLoading.setVisibility(View.GONE);
 				if (msg.what == 1) {
 					ReadMe readMe = (ReadMe) msg.obj;
-					mWebView.setVisibility(View.VISIBLE);
-					mWebView.loadDataWithBaseURL(null, linkCss + "<div class='markdown-body'>"+readMe.getContent()+"</div>", "text/html", HTTPRequestor.UTF_8, null);
+					
+					if (readMe.getContent() != null) {
+						mWebView.setVisibility(View.VISIBLE);
+						String body = linkCss + "<div class='markdown-body'>" + readMe.getContent() + "</div>";
+						mWebView.loadDataWithBaseURL(null, body, "text/html", HTTPRequestor.UTF_8, null);
+					} else {
+						getActivity().findViewById(R.id.project_readme_empty).setVisibility(View.VISIBLE);
+					}
+					
 				} else {
 					if (msg.obj instanceof AppException) {
 						AppException e = (AppException)msg.obj;

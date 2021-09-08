@@ -17,8 +17,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center|bottom"
         android:layout_marginBottom="260dip"
-        android:text="V  0.8"
-        android:textSize="@dimen/space_30"
+        android:text="Beata 0.8"
+        android:textSize="@dimen/space_26"
         android:textColor="@color/gray" />
     
     <TextView

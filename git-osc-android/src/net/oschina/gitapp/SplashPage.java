@@ -103,11 +103,11 @@ public class SplashPage extends Activity implements OnPageChangeListener {
 	    
 	    private int[] getImageResIDs() {
 	    	return new int[]{
-	    			R.drawable.welcome,
-	    			R.drawable.welcome,
-	    			R.drawable.welcome,
-	    			R.drawable.welcome,
-	    			R.drawable.welcome
+	    			R.drawable.git_star,
+	    			R.drawable.git_star,
+	    			R.drawable.git_star,
+	    			R.drawable.git_star,
+	    			R.drawable.git_star
 	    	};
 	    }
 	    

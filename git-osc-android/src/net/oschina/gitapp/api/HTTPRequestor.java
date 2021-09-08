@@ -1,8 +1,6 @@
 package net.oschina.gitapp.api;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -12,9 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
-
 import javax.net.ssl.SSLHandshakeException;
-
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
@@ -22,6 +18,7 @@ import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.HeadMethod;
@@ -29,17 +26,12 @@ import org.apache.commons.httpclient.methods.OptionsMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.PutMethod;
 import org.apache.commons.httpclient.methods.TraceMethod;
-import org.apache.commons.httpclient.methods.multipart.FilePart;
-import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
-import org.apache.commons.httpclient.methods.multipart.Part;
-import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.protocol.HTTP;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.bean.URLs;
@@ -144,7 +136,7 @@ public class HTTPRequestor {
 	private static HttpClient getHttpClient() {
         HttpClient httpClient = new HttpClient();
 		// 设置 HttpClient 接收 Cookie,用与浏览器一样的策略
-		//httpClient.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
+		httpClient.getParams().setCookiePolicy(CookiePolicy.BROWSER_COMPATIBILITY);
         // 设置 默认的超时重试处理策略
 		httpClient.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler());
 		// 设置 连接超时时间
@@ -198,53 +190,28 @@ public class HTTPRequestor {
 		httpMethod.setRequestHeader("Accept-Language", "zh-CN,zh;q=0.8,en;q=0.6,zh-TW;q=0.4");
 		httpMethod.setRequestHeader("Connection","Keep-Alive");
 		httpMethod.setRequestHeader(HTTP.USER_AGENT, userAgent);
-		//URLEncodedUtils
-		//httpMethod.setRequestHeader(HTTP.CONTENT_TYPE, "application/x-www-form-urlencoded");
 		return httpMethod;
 	}
 	
+	
 	/**
 	 * 获取网络图片
-	 * @param url
 	 * @return
+	 * @throws AppException
 	 */
-	public static Bitmap getNetBitmap(String url) throws AppException {
-		HttpClient httpClient = null;
-		GetMethod httpGet = null;
+	public Bitmap getNetBitmap() throws AppException {
 		Bitmap bitmap = null;
-		
-		try 
-		{
-			httpClient = getHttpClient();
-			httpGet = (GetMethod)getMethod(GET_METHOD, url, "");
-			int statusCode = httpClient.executeMethod(httpGet);
-			if (statusCode != HttpStatus.SC_OK) {
-				Log.i("Test", statusCode + ">>>");
-				throw AppException.http(statusCode);
-			}
-			
-	        InputStream inStream = new ByteArrayInputStream(httpGet.getResponseBody());
-	        bitmap = BitmapFactory.decodeStream(inStream);
-	        inStream.close();
-	        
-		} catch (HttpException e) {
-			
-			// 发生致命的异常，可能是协议不对或者返回的内容有问题
-			e.printStackTrace();
-			throw AppException.http(e);
+		InputStream inStream = getResponseBodyStream();
+        bitmap = BitmapFactory.decodeStream(inStream);
+        try {
+			inStream.close();
 		} catch (IOException e) {
-			
-			// 发生网络异常
 			e.printStackTrace();
-			throw AppException.network(e);
-		} finally {
-			// 释放连接
-			httpGet.releaseConnection();
-			httpClient = null;
 		}
-		return bitmap;
+        return bitmap;
 	}
-
+	
+	
     /**
      * 设置拼接请求的参数
      *
@@ -290,8 +257,7 @@ public class HTTPRequestor {
 			throw AppException.network(e);
 		} finally {
 			// 释放连接
-			_method.releaseConnection();
-			_httpClient = null;
+			releaseConnection();
 		}
 		return responseBodyStream;
     }
@@ -340,11 +306,19 @@ public class HTTPRequestor {
 			throw AppException.network(e);
 		} finally {
 			// 释放连接
-			_method.releaseConnection();
-			_httpClient = null;
-			
+			releaseConnection();
 		}
 		return responseBodyString;
+    }
+    
+    private void releaseConnection() {
+    	// 释放连接
+		if (_method != null) {
+			_method.releaseConnection();
+		}
+		if (_httpClient != null) {
+			_httpClient = null;
+		}
     }
 
     public <T> T to(T instance) throws AppException {

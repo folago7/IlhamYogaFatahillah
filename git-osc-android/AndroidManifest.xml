@@ -2,12 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="net.oschina.gitapp"
     android:versionCode="1"
-    android:versionName="0.8" >
+    android:versionName="Beta 0.8" >
 
     <!--
          1.Target SDK version must be 16, not 17, or JavaScript bridge for
          WebView widgets does not work on a 4.2 Nexus 7
-         2.也可以在js调用的方法加上注解@JavascriptInterface，不然是不用被js代码所调用的    -->
+         2.也可以在js调用的方法加上注解@JavascriptInterface，不然是不用被js代码所调用的
+    -->
     <uses-sdk
         android:minSdkVersion="10"
         android:targetSdkVersion="19" />
@@ -49,8 +50,9 @@
         <activity
             android:name=".ui.LoginActivity"
             android:label="@string/login_title"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
-            android:launchMode="singleTask" >
+            android:windowSoftInputMode="adjustUnspecified" >
         </activity>
         <activity android:name=".ui.ProjectActivity" />
         <activity android:name=".ui.ProjectReadMeActivity" />

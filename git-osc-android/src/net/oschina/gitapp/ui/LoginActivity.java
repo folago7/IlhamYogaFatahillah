@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -78,6 +79,7 @@ public class LoginActivity extends BaseActionBarActivity
 		// 添加文本变化监听事件
 		mAccountEditText.addTextChangedListener(textWatcher);
 		mPasswordEditText.addTextChangedListener(textWatcher);
+		mPasswordEditText.setOnEditorActionListener(this);
 		
 		String account = CyptoUtils.decode(Contanst.ACCOUNT_EMAIL, mAppContext.getProperty(Contanst.ACCOUNT_EMAIL));
 		mAccountEditText.setText(account);
@@ -107,15 +109,20 @@ public class LoginActivity extends BaseActionBarActivity
 		String email = mAccountEditText.getText().toString();
 		String passwd = mPasswordEditText.getText().toString();
 		
-		////检查用户输入的参数
+		//检查用户输入的参数
 		if(StringUtils.isEmpty(email)){
 			UIHelper.ToastMessage(this, getString(R.string.msg_login_email_null));
+			return;
+		}
+		if(!StringUtils.isEmail(email)) {
+			UIHelper.ToastMessage(this, getString(R.string.msg_login_email_error));
 			return;
 		}
 		if(StringUtils.isEmpty(passwd)){
 			UIHelper.ToastMessage(this, getString(R.string.msg_login_pwd_null));
 			return;
 		}
+		
 		
 		// 保存用户名和密码
 		mAppContext.saveAccountInfo(CyptoUtils.encode(Contanst.ACCOUNT_EMAIL, email), CyptoUtils.encode(Contanst.ACCOUNT_PWD, passwd));

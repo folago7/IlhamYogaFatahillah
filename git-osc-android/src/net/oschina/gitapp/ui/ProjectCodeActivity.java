@@ -1,12 +1,9 @@
 package net.oschina.gitapp.ui;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.Stack;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -15,7 +12,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.view.MenuItemCompat;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,7 +24,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Toast;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
@@ -37,9 +32,7 @@ import net.oschina.gitapp.api.ApiClient;
 import net.oschina.gitapp.bean.Branch;
 import net.oschina.gitapp.bean.CodeTree;
 import net.oschina.gitapp.bean.CommonList;
-import net.oschina.gitapp.bean.FullTree;
 import net.oschina.gitapp.bean.Project;
-import net.oschina.gitapp.bean.FullTree.Folder;
 import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.DataRequestThreadHandler;
@@ -355,13 +348,14 @@ public class ProjectCodeActivity extends BaseActionBarActivity implements
 	 * 判断code的文件的类型显示不同的操作
 	 * @param codeTree
 	 */
+	@SuppressWarnings("deprecation")
 	private void checkShow(CodeTree codeTree) {
 		
 		String fileName = codeTree.getName();
 		
-		String url = URLs.URL_HOST + mProject.getOwner().getName()
-				+ URLs.URL_SPLITTER + mProject.getName() + URLs.URL_SPLITTER + "raw" + URLs.URL_SPLITTER
-				+ mBranch + URLs.URL_SPLITTER + getFilePath(fileName) + "?private_token=" + ApiClient.getToken(mAppContext);
+		String url = URLs.URL_HOST + mProject.getOwner().getUsername()
+				+ URLs.URL_SPLITTER + URLEncoder.encode(mProject.getName()) + URLs.URL_SPLITTER + "raw" + URLs.URL_SPLITTER
+				+ mBranch + URLs.URL_SPLITTER + URLEncoder.encode(getFilePath(fileName)) + "?private_token=" + ApiClient.getToken(mAppContext);
 		
 		if (isCodeTextFile(fileName)) {
 			
@@ -386,14 +380,14 @@ public class ProjectCodeActivity extends BaseActionBarActivity implements
 		String codeFileSuffix[] = new String[]{
 				".java", ".confg", ".ini", ".xml", ".json", ".txt", 
 				".php", ".php3", ".php4", ".php5", ".js", ".css",
-				".properties", ".c", ".h", ".cpp", ".cfg", ".html", ".go",
+				".properties", ".c", ".hpp", ".h", ".cpp", ".cfg", ".html", ".go",
 				".rb", ".example", ".gitignore", ".project", ".classpath",
 				".m", ".md", ".rst", ".vm", ".cl", ".py", ".pl", ".haml",
 				".erb", ".scss", ".bat", ".coffee", ".as", ".sh", ".m", ".pas",
 				".cs", ".groovy", ".scala", ".sql", ".bas", ".xml", ".vb",
 				".xsl", ".swift", ".ftl", ".yml", ".ru", ".jsp", ".markdown", 
 				".cshap", ".apsx", ".sass", ".less", ".ftl", ".haml", ".log",
-				".tx", ".csproj", ".sln", ".clj", ".scm", ".xhml", ""
+				".tx", ".csproj", ".sln", ".clj", ".scm", ".xhml"
 		};
 		for (String string : codeFileSuffix) {
 			if (fileName.equalsIgnoreCase(string)) {

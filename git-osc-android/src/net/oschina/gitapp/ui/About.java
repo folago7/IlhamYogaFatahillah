@@ -26,7 +26,7 @@ public class About extends BaseActionBarActivity {
         try { 
         	PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
         	mVersion = (TextView)findViewById(R.id.about_version);
-    		mVersion.setText("V " + info.versionName);
+    		mVersion.setText(info.versionName);
         } catch (NameNotFoundException e) {    
 			e.printStackTrace(System.err);
 		} 

@@ -166,7 +166,9 @@ public class ApiClient {
 	 * @return
 	 */
 	public static Bitmap getNetBitmap(String url) throws AppException {
-		return HTTPRequestor.getNetBitmap(url);
+		Log.i("Test", url);
+		return getHttpRequestor().init(null, GET_METHOD, url)
+				.getNetBitmap();
 	}
 
 	/**
