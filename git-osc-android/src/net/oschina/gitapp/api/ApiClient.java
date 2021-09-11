@@ -27,6 +27,7 @@ import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.Event;
 import net.oschina.gitapp.bean.GitNote;
 import net.oschina.gitapp.bean.Issue;
+import net.oschina.gitapp.bean.Language;
 import net.oschina.gitapp.bean.Milestone;
 import net.oschina.gitapp.bean.NotificationReadResult;
 import net.oschina.gitapp.bean.Project;
@@ -822,5 +823,36 @@ public class ApiClient {
 		String url = makeURL(URLs.UPDATE, params);
 		return getHttpRequestor().init(appContext, GET_METHOD, url)
 				.to(Update.class);
+	}
+	
+	/**
+	 * 获得语言列表
+	 * @param appContext
+	 * @return
+	 * @throws AppException
+	 */
+	public static List<Language> getLanguageList(AppContext appContext) throws AppException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(PRIVATE_TOKEN, getToken(appContext));
+		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + "languages", params);
+		return getHttpRequestor().init(appContext, GET_METHOD, url)
+				.getList(Language[].class);
+	}
+	
+	/**
+	 * 根据语言的ID获得项目的列表
+	 * @param appContext
+	 * @param languageId
+	 * @param page
+	 * @return
+	 * @throws AppException
+	 */
+	public static List<Project> getLanguageProjectList(AppContext appContext, String languageId, int page) throws AppException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(PRIVATE_TOKEN, getToken(appContext));
+		params.put("page", page);
+		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + "languages" + URLs.URL_SPLITTER + languageId, params);
+		return getHttpRequestor().init(appContext, GET_METHOD, url)
+				.getList(Project[].class);
 	}
 }

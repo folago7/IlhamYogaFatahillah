@@ -26,6 +26,7 @@ import net.oschina.gitapp.ui.IssueDetailActivity;
 import net.oschina.gitapp.ui.IssueEditActivity;
 import net.oschina.gitapp.ui.LoginActivity;
 import net.oschina.gitapp.ui.MainActivity;
+import net.oschina.gitapp.ui.NotificationActivity;
 import net.oschina.gitapp.ui.ProjectActivity;
 import net.oschina.gitapp.ui.ProjectCodeActivity;
 import net.oschina.gitapp.ui.ProjectSomeInfoListActivity;
@@ -43,6 +44,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -597,4 +599,41 @@ public class UIHelper {
 			ToastMessage(context, "无法浏览此网页", 500);
 		}
 	}
+	
+	/**
+	 * 显示通知详情页面
+	 * @param context
+	 */
+	public static void showNotificationDetail(Context context) {
+		Intent intent = new Intent(context, NotificationActivity.class);
+		context.startActivity(intent);
+	}
+	
+	/**
+	 * 获得屏幕的截图
+	 * @param activity
+	 * @return
+	 */
+	public static Bitmap takeScreenShot(Activity activity) {  
+        // View是你需要截图的View  
+        View view = activity.getWindow().getDecorView();  
+        view.setDrawingCacheEnabled(true);  
+        view.buildDrawingCache();  
+        Bitmap b1 = view.getDrawingCache();  
+   
+        // 获取状态栏高度  
+        Rect frame = new Rect();  
+        activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);  
+        int statusBarHeight = frame.top;  
+   
+        // 获取屏幕长和高  
+        int width = activity.getWindowManager().getDefaultDisplay().getWidth();  
+        int height = activity.getWindowManager().getDefaultDisplay()  
+                .getHeight();  
+        // 去掉标题栏  
+        Bitmap b = Bitmap.createBitmap(b1, 0, statusBarHeight, width, height  
+                - statusBarHeight);  
+        view.destroyDrawingCache();  
+        return b;  
+    }  
 }

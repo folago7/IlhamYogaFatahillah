@@ -9,6 +9,7 @@ import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.interfaces.ActivityHelperInterface;
 import net.oschina.gitapp.ui.ActivityHelper;
 import android.app.Activity;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;

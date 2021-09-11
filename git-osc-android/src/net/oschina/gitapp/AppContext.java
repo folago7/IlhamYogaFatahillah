@@ -29,6 +29,7 @@ import net.oschina.gitapp.bean.Event;
 import net.oschina.gitapp.bean.Follow;
 import net.oschina.gitapp.bean.GitNote;
 import net.oschina.gitapp.bean.Issue;
+import net.oschina.gitapp.bean.Language;
 import net.oschina.gitapp.bean.Milestone;
 import net.oschina.gitapp.bean.NotificationReadResult;
 import net.oschina.gitapp.bean.Project;
@@ -1305,5 +1306,25 @@ public class AppContext extends Application {
 	 */
 	public Update getUpdateInfo() throws AppException {
 		return ApiClient.getUpdateInfo(this);
+	}
+	
+	/**
+	 * 获得语言列表
+	 * @return
+	 * @throws AppException
+	 */
+	public List<Language> getLanguageList() throws AppException {
+		return ApiClient.getLanguageList(this);
+	}
+	
+	/**
+	 * 根据语言的ID来获得项目的列表
+	 * @param languageId
+	 * @param page
+	 * @return
+	 * @throws AppException
+	 */
+	public List<Project> getLanguageProjectList(String languageId, int page) throws AppException {
+		return ApiClient.getLanguageProjectList(this, languageId, page);
 	}
 }

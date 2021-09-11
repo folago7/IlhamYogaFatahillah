@@ -46,6 +46,21 @@
             style="@style/MenuItemTextViewStyle"
             android:text="@string/fragment_menu_title_notice" />
     </LinearLayout>
+    
+    <include layout="@layout/horizontal_divider_view" />
+    
+    <LinearLayout
+        android:id="@+id/menu_item_language"
+        style="@style/MenuItemLayoutStyle" >
+        
+        <ImageView 
+            style="@style/MenuItemImageViewStyle"
+            android:background="@drawable/menu_icon_notice"/>
+
+        <TextView
+            style="@style/MenuItemTextViewStyle"
+            android:text="@string/fragment_menu_title_language" />
+    </LinearLayout>
 
     <include layout="@layout/horizontal_divider_view" />
 

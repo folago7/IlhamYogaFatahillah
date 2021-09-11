@@ -28,6 +28,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import net.oschina.gitapp.common.BroadcastController;
 import net.oschina.gitapp.common.DoubleClickExitHelper;
 import net.oschina.gitapp.common.UIHelper;
@@ -36,6 +37,7 @@ import net.oschina.gitapp.interfaces.*;
 import net.oschina.gitapp.ui.fragments.ExploreViewPagerFragment;
 import net.oschina.gitapp.ui.fragments.MySelfViewPagerFragment;
 import net.oschina.gitapp.ui.fragments.NotificationFragment;
+import net.oschina.gitapp.widget.BadgeView;
 
 /**
  * 程序主界面
@@ -50,8 +52,6 @@ import net.oschina.gitapp.ui.fragments.NotificationFragment;
 public class MainActivity extends ActionBarActivity implements
 		DrawerMenuCallBack {
 	
-	private final int MENU_SEARCH_ID = 6186;
-
 	static final String DRAWER_MENU_TAG = "drawer_menu";
 	static final String DRAWER_CONTENT_TAG = "drawer_content";
 
@@ -73,7 +73,7 @@ public class MainActivity extends ActionBarActivity implements
 		R.string.fragment_menu_title_myself
 	};
 	
-	private DrawerNavigationMenu mMenu = DrawerNavigationMenu.newInstance();;
+	private static DrawerNavigationMenu mMenu = DrawerNavigationMenu.newInstance();
 	private DrawerLayout mDrawerLayout;
 	private ActionBarDrawerToggle mDrawerToggle;
 	private FragmentManager mFragmentManager;
@@ -85,6 +85,8 @@ public class MainActivity extends ActionBarActivity implements
 	private AppContext mContext;
 	
 	private static String mTitle;// actionbar标题
+	
+	private BadgeView mNotificationBadgeView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -150,6 +152,7 @@ public class MainActivity extends ActionBarActivity implements
 						DRAWER_CONTENT_TAG).commit();
 
 		mTitle = "发现";
+		mActionBar.setTitle(mTitle);
 		mCurrentContentTag = CONTENT_TAG_EXPLORE;
 	}
 
@@ -167,17 +170,22 @@ public class MainActivity extends ActionBarActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuItem search = menu.add(MENU_SEARCH_ID, MENU_SEARCH_ID, MENU_SEARCH_ID, "搜索项目");
-		search.setIcon(R.drawable.abc_ic_search);
-		MenuItemCompat.setShowAsAction(search, MenuItemCompat.SHOW_AS_ACTION_IF_ROOM);
+		getMenuInflater().inflate(R.menu.main_actionbar_menu, menu);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == MENU_SEARCH_ID) {
+		int id = item.getItemId();
+		switch (id) {
+		case R.id.main_actionbar_menu_search:
 			UIHelper.showSearch(mContext);
 			return true;
+		case R.id.main_actionbar_menu_notification:
+			onClickNotice();
+			return true;
+		default:
+			break;
 		}
 		return mDrawerToggle.onOptionsItemSelected(item)
 				|| super.onOptionsItemSelected(item);
@@ -262,6 +270,12 @@ public class MainActivity extends ActionBarActivity implements
 			return;
 		}
 		Intent intent = new Intent(mContext, NotificationActivity.class);
+		startActivity(intent);
+	}
+	
+	@Override
+	public void onClickLanguage() {
+		Intent intent = new Intent(mContext, LanguageActivity.class);
 		startActivity(intent);
 	}
 	

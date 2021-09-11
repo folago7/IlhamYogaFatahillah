@@ -63,6 +63,8 @@
             android:name=".ui.SearchActivity"
             android:label="项目搜索"
             android:launchMode="singleTask" />
+        <activity android:name=".ui.LanguageActivity"
+            android:label="编程语言"/>
         <activity
             android:name=".ui.CodeFileDetailActivity"
             android:launchMode="singleTask" />

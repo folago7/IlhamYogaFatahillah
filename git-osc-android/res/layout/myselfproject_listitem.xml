@@ -16,9 +16,10 @@
         style="@style/UserFaceImageStyle" />
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dip"
         android:layout_height="wrap_content"
         android:layout_marginLeft="6dip"
+        android:layout_weight="1"
         android:orientation="vertical" >
 
         <LinearLayout
@@ -32,11 +33,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginRight="2dip"
-                android:padding="2dip"
-                android:contentDescription="@string/img_description"
+                android:layout_marginRight="5dip"
                 android:background="@drawable/locked"
-                android:visibility="gone" />
+                android:contentDescription="@string/img_description"
+                android:visibility="visible" />
 
             <TextView
                 android:id="@+id/myself_project_listitem_name"
@@ -44,8 +44,9 @@
                 android:text="android" />
             
         </LinearLayout>
-        
+
         <!-- project description -->
+
         <TextView
             android:id="@+id/myself_project_listitem_description"
             style="@style/project_list_description" />
@@ -54,35 +55,38 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dip"
-            android:orientation="horizontal"
-            android:gravity="center_vertical" >
+            android:gravity="center_vertical"
+            android:orientation="horizontal" >
 
             <TextView
                 android:id="@+id/myself_project_listitem_date"
                 style="@style/project_list_someinfo" />
-            
+
             <!-- language type -->
+
             <ImageView
                 android:id="@+id/myself_project_listitem_language_image"
-                android:contentDescription="@string/img_description"
                 style="@style/project_list_img"
+                android:contentDescription="@string/img_description"
                 android:src="@drawable/language" />
 
             <TextView
                 android:id="@+id/myself_project_listitem_language"
                 style="@style/project_list_someinfo" />
-            
+
             <!-- star nums -->
+
             <ImageView
                 style="@style/project_list_img"
                 android:contentDescription="@string/img_description"
                 android:src="@drawable/star" />
-			
+
             <TextView
                 android:id="@+id/myself_project_listitem_star"
                 style="@style/project_list_someinfo" />
-				
+
             <!-- fork nums -->
+
             <ImageView
                 style="@style/project_list_img"
                 android:contentDescription="@string/img_description"
@@ -91,7 +95,6 @@
             <TextView
                 android:id="@+id/myself_project_listitem_fork"
                 style="@style/project_list_someinfo" />
-            
         </LinearLayout>
     </LinearLayout>
 

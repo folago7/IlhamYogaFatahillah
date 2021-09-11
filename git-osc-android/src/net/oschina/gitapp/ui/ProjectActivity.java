@@ -2,16 +2,19 @@ package net.oschina.gitapp.ui;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -26,6 +29,7 @@ import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
+import net.oschina.gitapp.common.WXFriendsHelper;
 import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
 import net.oschina.gitapp.widget.DropDownMenu;
 
@@ -101,9 +105,15 @@ public class ProjectActivity extends BaseActionBarActivity implements
 			if (mProject == null) {
 				return;
 			}
+			if (!mProject.isPublic()) {
+				UIHelper.ToastMessage(mAppContext, "私有项目不支持该操作");
+				return;
+			}
 			int id = v.getId();
 			switch (id) {
 			case MORE_MENU_SHARE:
+				
+				WXFriendsHelper.shareToWXFriends(ProjectActivity.this, "分享项目", url_link);
 				break;
 			case MORE_MENU_COPY_LINK:
 				ClipboardManager cbm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
@@ -111,13 +121,6 @@ public class ProjectActivity extends BaseActionBarActivity implements
 				UIHelper.ToastMessage(mAppContext, "复制链接成功");
 				break;
 			case MORE_MENU_OPEN_WITH_BROWS:
-				if (!mProject.isPublic()) {
-					if (!mAppContext.isLogin()) {
-						UIHelper.showLoginActivity(ProjectActivity.this);
-						return;
-					}
-					url_link = url_link + "?private_token=" + ApiClient.getToken(mAppContext);
-				}
 				UIHelper.openBrowser(ProjectActivity.this, url_link);
 				break;
 			default:
@@ -227,7 +230,10 @@ public class ProjectActivity extends BaseActionBarActivity implements
 				initMoreMenu();
 			}
 			if (mMoreMenuWindow != null) {
-				mMoreMenuWindow.showAsDropDown(findViewById(R.id.project_menu_more), -50, 0);
+				View v = findViewById(R.id.project_menu_more);
+				int x = mMoreMenuWindow.getWidth() - v.getWidth() + 10;
+				
+				mMoreMenuWindow.showAsDropDown(v, -x, 0);
 			}
 			break;
 		case R.id.project_menu_create_issue:

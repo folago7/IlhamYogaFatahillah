@@ -29,7 +29,7 @@ public class DropDownMenu extends PopupWindow {
 	private OnClickListener itemClickListener;
 	
 	private LayoutInflater inflater;
-
+	
 	public DropDownMenu(final Activity context, OnClickListener itemClickListener) {
 		
 		this.itemClickListener = itemClickListener;
