@@ -1,5 +1,10 @@
 package net.oschina.gitapp.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,7 +18,9 @@ import android.widget.ProgressBar;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
+import net.oschina.gitapp.api.ApiClient;
 import net.oschina.gitapp.bean.CodeFile;
+import net.oschina.gitapp.bean.MoreMenuItem;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.UIHelper;
@@ -21,6 +28,7 @@ import net.oschina.gitapp.interfaces.OnStatusListener;
 import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
 import net.oschina.gitapp.util.MarkdownUtils;
 import net.oschina.gitapp.util.SourceEditor;
+import net.oschina.gitapp.widget.DropDownMenu;
 
 /**
  * 代码文件详情
@@ -31,9 +39,12 @@ import net.oschina.gitapp.util.SourceEditor;
  */
 public class CodeFileDetailActivity extends BaseActionBarActivity implements
 		OnStatusListener {
-
-	private final int MENU_REFRESH_ID = 0;
-	private final int MENU_MORE_ID = 1;
+	
+	private final int MORE_MENU_SHARE = 00;// 分享
+	private final int MORE_MENU_COPY_LINK = 01;// 复制链接
+	private final int MORE_MENU_OPEN_WITH_BROWS = 02;// 在浏览器中打开
+	private final int MORE_MENU_DOWNLOAD = 03;
+	private final int MORE_MENU_EDIT = 04;
 	
 	private Menu optionsMenu;
 	
@@ -54,6 +65,52 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 	private String mRef;
 	
 	private AppContext appContext;
+	
+	private DropDownMenu mMoreMenuWindow;
+	
+	private List<MoreMenuItem> mMoreItems = new ArrayList<MoreMenuItem>();
+	
+	private String url_link = null;
+	
+	private View.OnClickListener onMoreItemClickListener = new View.OnClickListener() {
+		
+		@SuppressWarnings("deprecation")
+		@Override
+		public void onClick(View v) {
+			if (mMoreMenuWindow != null && mMoreMenuWindow.isShowing()) {
+				mMoreMenuWindow.dismiss();
+			}
+			if (mProject == null) {
+				return;
+			}
+			int id = v.getId();
+			switch (id) {
+			case MORE_MENU_SHARE:
+				break;
+			case MORE_MENU_COPY_LINK:
+				ClipboardManager cbm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+				cbm.setText(url_link);
+				UIHelper.ToastMessage(appContext, "复制链接成功");
+				break;
+			case MORE_MENU_OPEN_WITH_BROWS:
+				if (!mProject.isPublic()) {
+					if (!appContext.isLogin()) {
+						UIHelper.showLoginActivity(CodeFileDetailActivity.this);
+						return;
+					}
+					url_link = url_link + "?private_token=" + ApiClient.getToken(appContext);
+				}
+				UIHelper.openBrowser(CodeFileDetailActivity.this, url_link);
+				break;
+			case MORE_MENU_DOWNLOAD:
+				break;
+			case MORE_MENU_EDIT:
+				break;
+			default:
+				break;
+			}
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -78,25 +135,34 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 		
 		mLoading = (ProgressBar) findViewById(R.id.code_file_loading);
 	}
+	
+	private void initMoreMenu() {
+		MoreMenuItem shar = new MoreMenuItem(MORE_MENU_SHARE, R.drawable.abc_ic_menu_moreoverflow_normal_holo_dark, "分享项目");
+		mMoreItems.add(shar);
+		
+		MoreMenuItem copy_link = new MoreMenuItem(MORE_MENU_COPY_LINK, R.drawable.abc_ic_menu_moreoverflow_normal_holo_dark, "复制项目链接");
+		mMoreItems.add(copy_link);
+		
+		MoreMenuItem open_with_brows = new MoreMenuItem(MORE_MENU_OPEN_WITH_BROWS, R.drawable.abc_ic_menu_moreoverflow_normal_holo_dark, "在浏览器中打开");
+		mMoreItems.add(open_with_brows);
+		
+		MoreMenuItem download = new MoreMenuItem(MORE_MENU_DOWNLOAD, R.drawable.abc_ic_menu_moreoverflow_normal_holo_dark, "下载该文件");
+		mMoreItems.add(download);
+		
+		MoreMenuItem edit = new MoreMenuItem(MORE_MENU_EDIT, R.drawable.abc_ic_menu_moreoverflow_normal_holo_dark, "编辑");
+		mMoreItems.add(edit);
+		
+		for (int i = 0; i < mMoreItems.size(); i++) {
+			if (mMoreMenuWindow != null) {
+				mMoreMenuWindow.addItem(mMoreItems.get(i));
+			}
+		}
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		optionsMenu = menu;
-		// 刷新按钮
-		MenuItem refreshItem = menu.add(0, MENU_REFRESH_ID, MENU_REFRESH_ID,
-				"刷新");
-		refreshItem.setIcon(R.drawable.abc_ic_menu_refresh);
-		
-		MenuItemCompat.setShowAsAction(refreshItem,
-				MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
-		
-		/*MenuItem moreOption = menu.add(0, MENU_MORE_ID, MENU_MORE_ID, "更多");
-		moreOption
-				.setIcon(R.drawable.abc_ic_menu_moreoverflow_normal_holo_dark);
-		
-		MenuItemCompat.setShowAsAction(moreOption,
-				MenuItemCompat.SHOW_AS_ACTION_ALWAYS);*/
-		
+		getMenuInflater().inflate(R.menu.projet_code_detail_menu, menu);
 		return true;
 	}
 
@@ -105,11 +171,13 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 
 		int id = item.getItemId();
 		switch (id) {
-		case MENU_REFRESH_ID:
+		case R.id.project_detail_menu_refresh:
 			loadDatasCode(mProject.getId(), mPath, mRef);
 			break;
-		case MENU_MORE_ID:
-
+		case R.id.project_detail_menu_more:
+			if (mMoreMenuWindow != null) {
+				mMoreMenuWindow.showAsDropDown(findViewById(R.id.project_detail_menu_more), -50, 0);
+			}
 			break;
 		}
 		return super.onOptionsItemSelected(item);
@@ -161,6 +229,10 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 			@Override
 			protected void onPostExecute(Message msg) {
 				if (msg.what == 1 && msg.obj != null) {
+					if (mMoreMenuWindow == null) {
+						mMoreMenuWindow = new DropDownMenu(CodeFileDetailActivity.this, onMoreItemClickListener);
+						initMoreMenu();
+					}
 					mCodeFile = (CodeFile) msg.obj;
 					editor.setMarkdown(MarkdownUtils.isMarkdown(mPath));
 					editor.setSource(mPath, mCodeFile);
@@ -170,11 +242,7 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 					onStatus(STATUS_NONE);
 					if (msg.obj instanceof AppException) {
 						AppException appException = (AppException) msg.obj;
-						if (mFileName.equalsIgnoreCase("readme.md") && appException.getCode() == 404) {
-							UIHelper.ToastMessage(appContext, "该项目没有README.md文件");
-						} else {
-							appException.makeToast(appContext);
-						}
+						appException.makeToast(appContext);
 					} else {
 						UIHelper.ToastMessage(appContext,
 								((Exception) msg.obj).getMessage());

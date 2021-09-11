@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppManager;
+import net.oschina.gitapp.R;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.interfaces.ActivityHelperInterface;
 import net.oschina.gitapp.ui.ActivityHelper;
@@ -78,6 +79,8 @@ public class BaseActionBarActivity extends ActionBarActivity
 		mActionBar = getSupportActionBar();
 		int flags = ActionBar.DISPLAY_HOME_AS_UP;
 		int change = mActionBar.getDisplayOptions() ^ flags;
+		// 设置返回的图标
+		mActionBar.setHomeAsUpIndicator(R.drawable.ic_navigation_back);
 		mActionBar.setDisplayOptions(change, flags);
 	}
 

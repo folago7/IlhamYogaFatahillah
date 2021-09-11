@@ -76,7 +76,7 @@ public class ProjectIssuesListAdapter extends MyBaseAdapter<Issue> {
 		// 1.加载项目作者头像
 		String portrait = issue.getAuthor() == null || issue.getAuthor().getPortrait() == null ? "" : issue.getAuthor().getPortrait();
 		if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
-			listItemView.face.setImageResource(R.drawable.widget_dface);
+			listItemView.face.setImageResource(R.drawable.mini_avatar);
 		} else {
 			String portraitURL = URLs.GITIMG + issue.getAuthor().getPortrait();
 			bmpManager.loadBitmap(portraitURL, listItemView.face);

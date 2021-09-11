@@ -82,7 +82,7 @@ public class MySelfEventListAdapter extends MyBaseAdapter<Event> {
 		// 1.加载项目作者头像
 		String portrait = event.getAuthor().getPortrait() == null ? "" : event.getAuthor().getPortrait();
 		if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
-			listItemView.face.setImageResource(R.drawable.widget_dface);
+			listItemView.face.setImageResource(R.drawable.mini_avatar);
 		} else {
 			String portraitURL = URLs.GITIMG + portrait;
 			bmpManager.loadBitmap(portraitURL, listItemView.face);

@@ -13,7 +13,7 @@
         <ImageView
             style="@style/project_detail_mid_grid_item_img"
             android:contentDescription="@string/img_description"
-            android:background="@drawable/file" />
+            android:background="@drawable/project_detail_icon_readme" />
 
         <TextView
             android:layout_width="0dip"
@@ -36,7 +36,7 @@
         <ImageView
             style="@style/project_detail_mid_grid_item_img"
             android:contentDescription="@string/img_description"
-            android:background="@drawable/script" />
+            android:background="@drawable/project_detail_icon_code" />
 
         <TextView
             android:layout_width="0dip"
@@ -87,7 +87,7 @@
         <ImageView
             style="@style/project_detail_mid_grid_item_img"
             android:contentDescription="@string/img_description"
-            android:background="@drawable/flag" />
+            android:background="@drawable/project_detail_icon_issue" />
 
         <TextView
             android:layout_width="0dip"

@@ -72,7 +72,7 @@ public class IssueListCommentAdapter extends MyBaseAdapter<GitNote> {
 		// 1.加载项目作者头像
 		String portrait = note.getAuthor().getPortrait() == null ? "" : note.getAuthor().getPortrait();
 		if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
-			listItemView.face.setImageResource(R.drawable.widget_dface);
+			listItemView.face.setImageResource(R.drawable.mini_avatar);
 		} else {
 			String portraitURL = URLs.GITIMG + note.getAuthor().getPortrait();
 			bmpManager.loadBitmap(portraitURL, listItemView.face);

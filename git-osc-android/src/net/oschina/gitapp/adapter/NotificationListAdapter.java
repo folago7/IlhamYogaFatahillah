@@ -32,15 +32,15 @@ import android.widget.TextView;
  */
 public class NotificationListAdapter extends BaseExpandableListAdapter {
 	
-	private Context 			mContext;
+	private Context 					mContext;
 	
 	private List<List<Notification>>	mData;
 	
-	private List<ProjectNotification>			mGroups;
+	private List<ProjectNotification>	mGroups;
 	
-	private LayoutInflater 		mInflater;
+	private LayoutInflater 				mInflater;
 	
-	private BitmapManager bmpManager;
+	private BitmapManager 				bmpManager;
 	
 	private class GroupViewHolder{
 		public ImageView mGroupFace;
@@ -122,10 +122,9 @@ public class NotificationListAdapter extends BaseExpandableListAdapter {
         
 		ProjectNotification pn = mGroups.get(groupPosition);
 		
-        
         String portrait = pn.getOwner().getPortrait() == null ? "" : pn.getOwner().getPortrait();
 		if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
-			holder.mGroupFace.setImageResource(R.drawable.widget_dface);
+			holder.mGroupFace.setImageResource(R.drawable.mini_avatar);
 		} else {
 			String portraitURL = URLs.GITIMG + pn.getOwner().getPortrait();
 			bmpManager.loadBitmap(portraitURL, holder.mGroupFace);

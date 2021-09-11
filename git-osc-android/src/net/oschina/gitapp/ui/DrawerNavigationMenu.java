@@ -10,7 +10,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -234,7 +233,6 @@ public class DrawerNavigationMenu extends Fragment implements OnClickListener {
 			break;
 		case R.id.menu_item_notice:
 			onClickNotice();
-			highlightSelectedItem(v);
 			break;
 		case R.id.menu_item_setting:
 			onClickSetting();

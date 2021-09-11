@@ -1,6 +1,6 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- app menu style start! -->
+    <!-- app main menu style start! -->
     <!-- 菜单layout的样式 -->
     <style name="MenuItemLayoutStyle">
         <item name="android:layout_width">match_parent</item>
@@ -38,8 +38,35 @@
         <item name="android:src">@drawable/widget_dface_loading</item>
     </style>
 
-    <!-- app menu style end! -->
+    <!-- app main menu style end! -->
 
+    <!-- app more menu style start -->
+    <style name="app_more_menu_layout">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/abc_ab_bottom_solid_dark_holo</item>
+        <item name="android:gravity">center|left</item>
+        <item name="android:padding">5dip</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="app_more_menu_img">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">10dip</item>
+        <item name="android:layout_marginRight">10dip</item>
+    </style>
+
+    <style name="app_more_menu_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:layout_marginRight">30dip</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <!-- app more menu style end -->
 
     <!-- project list text style bgein -->
     <style name="project_list_text_parent">
@@ -83,6 +110,7 @@
 
 
     <!-- events list style start -->
+
 
     <!-- events title -->
     <style name="events_list_title">
@@ -211,7 +239,7 @@
         <item name="android:background">@drawable/project_layout_item_selector</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:padding">10dip</item>
-        <item name="android:gravity">center</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
 
     <style name="project_detail_sorrow_img">
@@ -245,13 +273,14 @@
     </style>
 
     <!-- project code tree style end -->
-    
+
+
     <!-- notification style start -->
-    
+
     <style name="notice_"></style>
-    
+
     <!-- notification style end -->
-    
+
     <style name="ListItem">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>

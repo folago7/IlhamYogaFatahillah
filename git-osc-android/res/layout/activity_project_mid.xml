@@ -98,12 +98,13 @@
 
     <LinearLayout
         android:id="@+id/project_owner"
-        style="@style/project_detail_layout_style" >
+        style="@style/project_detail_layout_style"
+        android:layout_gravity="center" >
 
         <ImageView
             style="@style/project_detail_mid_grid_item_img"
             android:contentDescription="@string/img_description"
-            android:background="@drawable/person" />
+            android:background="@drawable/project_detail_icon_owner" />
 
         <TextView
             android:layout_width="0dip"

@@ -1,6 +1,5 @@
 package net.oschina.gitapp.ui;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -348,14 +347,14 @@ public class ProjectCodeActivity extends BaseActionBarActivity implements
 	 * 判断code的文件的类型显示不同的操作
 	 * @param codeTree
 	 */
-	@SuppressWarnings("deprecation")
 	private void checkShow(CodeTree codeTree) {
 		
 		String fileName = codeTree.getName();
 		
+		// 带有token的
 		String url = URLs.URL_HOST + mProject.getOwner().getUsername()
-				+ URLs.URL_SPLITTER + URLEncoder.encode(mProject.getName()) + URLs.URL_SPLITTER + "raw" + URLs.URL_SPLITTER
-				+ mBranch + URLs.URL_SPLITTER + URLEncoder.encode(getFilePath(fileName)) + "?private_token=" + ApiClient.getToken(mAppContext);
+				+ URLs.URL_SPLITTER + mProject.getPath() + URLs.URL_SPLITTER + "raw" + URLs.URL_SPLITTER
+				+ mBranch + URLs.URL_SPLITTER + getFilePath(fileName) + "?private_token=" + ApiClient.getToken(mAppContext);
 		
 		if (isCodeTextFile(fileName)) {
 			

@@ -2,7 +2,6 @@ package net.oschina.gitapp.ui.fragments;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
@@ -11,7 +10,6 @@ import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.Notification;
 import net.oschina.gitapp.bean.ProjectNotification;
 import net.oschina.gitapp.bean.ProjectNotificationArray;
-import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.basefragment.BaseFragment;
 import android.os.AsyncTask;
@@ -26,11 +24,16 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.ExpandableListView.OnChildClickListener;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 /**
- * 已读通知页面
+ * 通知列表页面
+ * 1.加载未读的通知
+ * 2.加载已读的通知
+ * （加载什么类型的通知通过mAction来区分）
  * @created 2014-07-08
  * @author 火蚁（http://my.oschina.net/LittleDY）
  */
@@ -38,22 +41,19 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
 	
 	private final int MENU_REFRESH_ID = 1;
 	
-	private final int ACTION_UNREAD = 0;//未读
+	public static final String NOTIFICATION_ACTION_KEY = "notification_action";
 	
-	private final int ACTION_READED = 1;//已读
+	public static final int ACTION_UNREAD = 0;//未读
 	
+	public static final int ACTION_READED = 1;//已读
 	
-	private int mDefaultAction = ACTION_UNREAD;//默认动作为加载未读
+	private int mAction = ACTION_UNREAD;
 	
 	private ProgressBar mProgressBar;
 	
 	private View mEmpty;
 	
-	private ExpandableListView mUnReadListView;
-	
-	private ExpandableListView mReadedListView;
-	
-	private View mReaded;
+	private ExpandableListView mListView;
 	
 	private List<List<Notification>> mData;
 	
@@ -62,6 +62,10 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
 	private AppContext mAppContext;
 	
 	private NotificationListAdapter adapter;
+	
+	private ImageView mEmptyImage;
+	
+	private TextView mEmptyMsg;
 	
     public static NotificationFragment newInstance() {
         return new NotificationFragment();
@@ -85,31 +89,41 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
 		mAppContext = getGitApplication();
 		initView(view);
 		steupList();
-		loadData("", "", "");
+		initData();
 	}
 	
 	private void initView(View view) {
 		mProgressBar = (ProgressBar) view.findViewById(R.id.notification_fragment_loading);
 		mEmpty = view.findViewById(R.id.notification_fragment_empty);
-		mUnReadListView = (ExpandableListView) view.findViewById(R.id.notification_fragment_unread_list);
-		mReadedListView = (ExpandableListView) view.findViewById(R.id.notification_fragment_readed_list);
-		mReaded = view.findViewById(R.id.notification_fragment_readed);
+		mListView = (ExpandableListView) view.findViewById(R.id.notification_fragment_list);
 		
-		mReaded.setOnClickListener(this);
+		mEmptyImage = (ImageView) view.findViewById(R.id.notification_empty_img);
+		mEmptyMsg = (TextView) view.findViewById(R.id.notification_empty_msg);
+	}
+	
+	private void initData() {
+		Bundle args = getArguments();
+		if (args != null) {
+			mAction = args.getInt(NOTIFICATION_ACTION_KEY, 0);
+		}
+		if (mAction == ACTION_UNREAD) {
+			mEmptyMsg.setText("没有未读的通知");
+			loadData("", "", "");
+		} else {
+			mEmptyMsg.setText("没有已读的通知");
+			loadData("", "1", "");
+		}
 	}
 	
 	private void steupList() {
 		mData = new ArrayList<List<Notification>>();
 		mGroups = new ArrayList<ProjectNotification>();
 		adapter = new NotificationListAdapter(mAppContext, mData, mGroups);
-		mUnReadListView.setAdapter(adapter);
-		mReadedListView.setAdapter(adapter);
+		mListView.setAdapter(adapter);
 		
-		mUnReadListView.setOnChildClickListener(this);
-		mReadedListView.setOnChildClickListener(this);
+		mListView.setOnChildClickListener(this);
 		
-		mUnReadListView.setGroupIndicator(null);
-		mReadedListView.setGroupIndicator(null);
+		mListView.setGroupIndicator(null);
 	}
 
 	@Override
@@ -125,7 +139,7 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
 		int menuId = item.getItemId();
 		switch (menuId) {
 		case MENU_REFRESH_ID:
-			String all = mDefaultAction == ACTION_UNREAD ? "" : "1";
+			String all = mAction == ACTION_UNREAD ? "" : "1";
 			loadData("", all ,"");
 			break;
 
@@ -138,42 +152,15 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
 	private void beforeLoading() {
 		mEmpty.setVisibility(View.GONE);
 		mProgressBar.setVisibility(View.VISIBLE);
-		if (mDefaultAction == ACTION_UNREAD) {
-			
-			mUnReadListView.setVisibility(View.INVISIBLE);
-			mReadedListView.setVisibility(View.GONE);
-			
-		} else if (mDefaultAction == ACTION_READED) {
-			
-			mReadedListView.setVisibility(View.INVISIBLE);
-			mUnReadListView.setVisibility(View.GONE);
-			
-		}
+		mListView.setVisibility(View.GONE);
 	}
 	
-	private void afterLoading() {
+	private void afterLoading(boolean isEmpty) {
 		mProgressBar.setVisibility(View.GONE);
-		if (mDefaultAction == ACTION_UNREAD) {
-			
-			mUnReadListView.setVisibility(View.VISIBLE);
-			
-			if (mData.size() == 0) {
-				mEmpty.setVisibility(View.VISIBLE);
-			} else {
-				mUnReadListView.expandGroup(0);
-				mEmpty.setVisibility(View.GONE);
-			}
-			
-		} else if (mDefaultAction == ACTION_READED) {
-			
-			mUnReadListView.setVisibility(View.GONE);
-			mReadedListView.setVisibility(View.VISIBLE);
-			if (mData.size() == 0) {
-				mEmpty.setVisibility(View.VISIBLE);
-			} else {
-				mReadedListView.expandGroup(0);
-				mEmpty.setVisibility(View.GONE);
-			}
+		if (isEmpty) {
+			mEmpty.setVisibility(View.VISIBLE);
+		} else {
+			mListView.setVisibility(View.VISIBLE);
 		}
 	}
 
@@ -207,9 +194,9 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
 				mData.clear();
 				if (msg.what == 1) {
 					CommonList<ProjectNotificationArray> commonList = (CommonList<ProjectNotificationArray>) msg.obj;
-					
+					boolean isEmpty = true;
 					if (commonList.getList().size() != 0) {
-						mEmpty.setVisibility(View.GONE);
+						isEmpty = false;
 						for (ProjectNotificationArray pna : commonList.getList()) {
 							mGroups.add(pna.getProject());
 							List<Notification> ns = new ArrayList<Notification>();
@@ -218,7 +205,7 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
 						}
 					}
 					adapter.notifyDataSetChanged();
-					afterLoading();
+					afterLoading(isEmpty);
 				}
 			}
 		}.execute();
@@ -228,17 +215,6 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
 	public void onClick(View v) {
 		int id = v.getId();
 		switch (id) {
-		case R.id.notification_fragment_readed:
-			if (mReaded.getTag() != null) {
-				mDefaultAction = ACTION_READED;
-				loadData("", "1", "");
-				mReaded.setTag(null);
-			} else {
-				mDefaultAction = ACTION_UNREAD;
-				loadData("", "", "");
-				mReaded.setTag("1");
-			}
-			break;
 
 		default:
 			break;

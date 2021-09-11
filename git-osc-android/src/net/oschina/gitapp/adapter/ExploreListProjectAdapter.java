@@ -76,7 +76,7 @@ public class ExploreListProjectAdapter extends MyBaseAdapter<Project> {
 		// 1.加载项目作者头像
 		String portrait = project.getOwner().getPortrait() == null ? "" : project.getOwner().getPortrait();
 		if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
-			listItemView.face.setImageResource(R.drawable.widget_dface);
+			listItemView.face.setImageResource(R.drawable.mini_avatar);
 		} else {
 			String portraitURL = URLs.GITIMG + project.getOwner().getPortrait();
 			bmpManager.loadBitmap(portraitURL, listItemView.face);

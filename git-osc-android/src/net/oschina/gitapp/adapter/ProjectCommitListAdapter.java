@@ -66,7 +66,7 @@ public class ProjectCommitListAdapter extends MyBaseAdapter<Commit> {
 		// 1.加载项目作者头像
 		String portrait = commit.getAuthor() == null || commit.getAuthor().getPortrait() == null ? "" : commit.getAuthor().getPortrait();
 		if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
-			listItemView.face.setImageResource(R.drawable.widget_dface);
+			listItemView.face.setImageResource(R.drawable.mini_avatar);
 		} else {
 			String portraitURL = URLs.GITIMG + commit.getAuthor().getPortrait();
 			bmpManager.loadBitmap(portraitURL, listItemView.face);

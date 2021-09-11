@@ -1,11 +1,13 @@
 package net.oschina.gitapp.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
-import android.support.v4.view.MenuItemCompat;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,11 +19,15 @@ import android.widget.TextView;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
+import net.oschina.gitapp.api.ApiClient;
+import net.oschina.gitapp.bean.MoreMenuItem;
 import net.oschina.gitapp.bean.Project;
+import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
+import net.oschina.gitapp.widget.DropDownMenu;
 
 /**
  * 项目详情界面
@@ -36,14 +42,13 @@ import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
 public class ProjectActivity extends BaseActionBarActivity implements
 		OnClickListener {
 	
-	private final int MENU_MORE_ID = 1;
-	private final int MENU_CREATE_ID = 0;
+	private final int MORE_MENU_SHARE = 00;// 分享
+	private final int MORE_MENU_COPY_LINK = 01;// 复制链接
+	private final int MORE_MENU_OPEN_WITH_BROWS = 02;// 在浏览器中打开
 	
 	private final int ACTION_LOAD_PROJECT = 0;// 加载项目
 	private final int ACTION_LOAD_PARENT_PROJECT = 1;// 加载项目的父项目信息
 	
-	private Bundle mSavedInstanceState;
-
 	private Project mProject;
 	
 	private String projectId;
@@ -74,21 +79,59 @@ public class ProjectActivity extends BaseActionBarActivity implements
 	
 	private AppContext mAppContext;
 
-	private LayoutInflater mInflater;
-	
 	private LinearLayout mLLOwner;
 	private LinearLayout mLLReadMe;
 	private LinearLayout mLLCodes;
 	private LinearLayout mLLIssues;
-
+	
+	private DropDownMenu mMoreMenuWindow;
+	
+	private List<MoreMenuItem> mMoreItems = new ArrayList<MoreMenuItem>();
+	
+	private String url_link = null;
+	
+	private View.OnClickListener onMoreMenuItemClick = new OnClickListener() {
+		
+		@SuppressWarnings("deprecation")
+		@Override
+		public void onClick(View v) {
+			if (mMoreMenuWindow != null && mMoreMenuWindow.isShowing()) {
+				mMoreMenuWindow.dismiss();
+			}
+			if (mProject == null) {
+				return;
+			}
+			int id = v.getId();
+			switch (id) {
+			case MORE_MENU_SHARE:
+				break;
+			case MORE_MENU_COPY_LINK:
+				ClipboardManager cbm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+				cbm.setText(url_link);
+				UIHelper.ToastMessage(mAppContext, "复制链接成功");
+				break;
+			case MORE_MENU_OPEN_WITH_BROWS:
+				if (!mProject.isPublic()) {
+					if (!mAppContext.isLogin()) {
+						UIHelper.showLoginActivity(ProjectActivity.this);
+						return;
+					}
+					url_link = url_link + "?private_token=" + ApiClient.getToken(mAppContext);
+				}
+				UIHelper.openBrowser(ProjectActivity.this, url_link);
+				break;
+			default:
+				break;
+			}
+		}
+	};
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_project);
 		mAppContext = getGitApplication();
-		this.mSavedInstanceState = savedInstanceState;
 		initView();
-		mInflater = getLayoutInflater();
 	}
 
 	private void initView() {
@@ -114,7 +157,6 @@ public class ProjectActivity extends BaseActionBarActivity implements
 		mLLReadMe = (LinearLayout) findViewById(R.id.project_readme);
 		mLLCodes = (LinearLayout) findViewById(R.id.project_issues);
 		mLLIssues = (LinearLayout) findViewById(R.id.project_code);
-		
 		
 		mLLOwner.setOnClickListener(this);
 		mLLReadMe.setOnClickListener(this);
@@ -146,34 +188,54 @@ public class ProjectActivity extends BaseActionBarActivity implements
 		// 显示是否有fork信息
 		initForkMess();
 		
+		// 记录项目的地址链接：
+		url_link = URLs.URL_HOST + mProject.getOwner().getUsername() + URLs.URL_SPLITTER + mProject.getPath();
+	}
+	
+	private void initMoreMenu() {
+		MoreMenuItem shar = new MoreMenuItem(MORE_MENU_SHARE, R.drawable.abc_ic_menu_moreoverflow_normal_holo_dark, "分享项目");
+		mMoreItems.add(shar);
+		
+		MoreMenuItem copy_link = new MoreMenuItem(MORE_MENU_COPY_LINK, R.drawable.abc_ic_menu_moreoverflow_normal_holo_dark, "复制项目链接");
+		mMoreItems.add(copy_link);
+		
+		MoreMenuItem open_with_brows = new MoreMenuItem(MORE_MENU_OPEN_WITH_BROWS, R.drawable.abc_ic_menu_moreoverflow_normal_holo_dark, "在浏览器中打开");
+		mMoreItems.add(open_with_brows);
+		for (int i = 0; i < mMoreItems.size(); i++) {
+			if (mMoreMenuWindow != null) {
+				mMoreMenuWindow.addItem(mMoreItems.get(i));
+			}
+		}
 	}
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuItem createOption = menu.add(0, MENU_CREATE_ID, MENU_CREATE_ID, "创建Issue");
-		createOption.setIcon(R.drawable.action_create);
-		MenuItemCompat.setShowAsAction(createOption, MenuItemCompat.SHOW_AS_ACTION_IF_ROOM);
-		
-		/*MenuItem moreOption = menu.add(1, MENU_MORE_ID, MENU_MORE_ID, "更多");
-		moreOption.setIcon(R.drawable.abc_ic_menu_moreoverflow_normal_holo_dark);
-		
-		MenuItemCompat.setShowAsAction(moreOption,
-				MenuItemCompat.SHOW_AS_ACTION_ALWAYS);*/
+		getMenuInflater().inflate(R.menu.projet_menu, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+		if (mProject == null) {
+			return false;
+		}
 		int id = item.getItemId();
 		switch (id) {
-		case MENU_MORE_ID:
+		case R.id.project_menu_more:
+			if (mMoreMenuWindow == null) {
+				mMoreMenuWindow = new DropDownMenu(ProjectActivity.this, onMoreMenuItemClick);
+				initMoreMenu();
+			}
+			if (mMoreMenuWindow != null) {
+				mMoreMenuWindow.showAsDropDown(findViewById(R.id.project_menu_more), -50, 0);
+			}
 			break;
-		case MENU_CREATE_ID:
+		case R.id.project_menu_create_issue:
 			// 新增issue
 			UIHelper.showIssueEditOrCreate(getGitApplication(), mProject, null);
 			break;
 		}
-		return super.onOptionsItemSelected(item); 
+		return super.onOptionsItemSelected(item);
 	}
 
 	private String getUpdateTime() {
@@ -283,7 +345,6 @@ public class ProjectActivity extends BaseActionBarActivity implements
 		if (mProject == null ) {
 			return;
 		}
-		
 		int id = v.getId();
 		switch (id) {
 		case R.id.project_owner:

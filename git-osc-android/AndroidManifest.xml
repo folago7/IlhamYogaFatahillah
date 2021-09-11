@@ -58,6 +58,7 @@
         <activity android:name=".ui.ProjectReadMeActivity" />
         <activity android:name=".ui.ProjectCodeActivity" />
         <activity android:name=".ui.ProjectSomeInfoListActivity" />
+        <activity android:name=".ui.NotificationActivity"></activity>
         <activity
             android:name=".ui.SearchActivity"
             android:label="项目搜索"
@@ -104,6 +105,7 @@
             android:label="关于git"
             android:launchMode="singleTask" >
         </activity>
+        
     </application>
 
 </manifest>

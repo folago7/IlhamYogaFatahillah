@@ -57,29 +57,20 @@ public class MainActivity extends ActionBarActivity implements
 
 	static final String CONTENT_TAG_EXPLORE = "content_explore";
 	static final String CONTENT_TAG_MYSELF = "content_myself";
-	static final String CONTENT_TAG_NOTICE = "content_notice";
-	static final String CONTENT_TAG_SETTING = "content_setting";
-	static final String CONTENT_TAG_EXIT = "content_exit";
 
 	static final String CONTENTS[] = { 
 		CONTENT_TAG_EXPLORE, 
-		CONTENT_TAG_MYSELF,
-		CONTENT_TAG_NOTICE, 
-		CONTENT_TAG_SETTING, 
-		CONTENT_TAG_EXIT };
+		CONTENT_TAG_MYSELF 
+	};
 	
 	static final String FRAGMENTS[] = {
 		ExploreViewPagerFragment.class.getName(),
-		MySelfViewPagerFragment.class.getName(),
-		NotificationFragment.class.getName()
+		MySelfViewPagerFragment.class.getName()
 	};
 	
 	static final int TITLES[] = { 
 		R.string.fragment_menu_title_explore,
-		R.string.fragment_menu_title_myself,
-		R.string.fragment_menu_title_notice,
-		R.string.fragment_menu_title_setting,
-		R.string.fragment_menu_title_exit 
+		R.string.fragment_menu_title_myself
 	};
 	
 	private DrawerNavigationMenu mMenu = DrawerNavigationMenu.newInstance();;
@@ -93,7 +84,7 @@ public class MainActivity extends ActionBarActivity implements
 	private ActionBar mActionBar;
 	private AppContext mContext;
 	
-	private CharSequence mTitle;// actionbar标题
+	private static String mTitle;// actionbar标题
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -116,8 +107,10 @@ public class MainActivity extends ActionBarActivity implements
 	@Override
 	protected void onResume() {
 		super.onResume();
-		mActionBar.setTitle(mTitle);
-		if (mCurrentContentTag.equalsIgnoreCase(CONTENTS[1]) || mCurrentContentTag.equalsIgnoreCase(CONTENTS[2])) {
+		if (mTitle != null) {
+			mActionBar.setTitle(mTitle);
+		}
+		if (mCurrentContentTag.equalsIgnoreCase(CONTENTS[1])) {
 			if (!mContext.isLogin()) {
 				onClickExplore();
 				mMenu.highlightExplore();
@@ -229,7 +222,7 @@ public class MainActivity extends ActionBarActivity implements
 		ft.commit();
 		
 		mActionBar.setTitle(TITLES[pos]);
-		mTitle = mActionBar.getTitle();//记录主界面的标题
+		mTitle = mActionBar.getTitle().toString();//记录主界面的标题
 		mCurrentContentTag = tag;
 	}
 	
@@ -268,7 +261,8 @@ public class MainActivity extends ActionBarActivity implements
 			UIHelper.showLoginActivity(this);
 			return;
 		}
-		showMainContent(2);
+		Intent intent = new Intent(mContext, NotificationActivity.class);
+		startActivity(intent);
 	}
 	
 	@Override
