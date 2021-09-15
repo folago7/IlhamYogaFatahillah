@@ -30,13 +30,15 @@ public class DropDownMenu extends PopupWindow {
 	
 	private LayoutInflater inflater;
 	
+	@SuppressWarnings("deprecation")
 	public DropDownMenu(final Activity context, OnClickListener itemClickListener) {
 		
 		this.itemClickListener = itemClickListener;
 		this.inflater = LayoutInflater.from(context);
 		menuView = (ViewGroup) inflater.inflate(R.layout.more_menu_container, null);
 		this.setContentView(menuView);
-		this.setWidth(LayoutParams.WRAP_CONTENT);
+		int w = context.getWindowManager().getDefaultDisplay().getWidth();
+		this.setWidth(w / 2 + 60);
 		this.setHeight(LayoutParams.WRAP_CONTENT);
 		this.setFocusable(true);
 		ColorDrawable dw = new ColorDrawable(0000000000);

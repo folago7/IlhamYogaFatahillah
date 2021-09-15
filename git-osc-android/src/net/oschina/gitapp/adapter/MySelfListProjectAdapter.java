@@ -59,8 +59,8 @@ public class MySelfListProjectAdapter extends MyBaseAdapter<Project> {
 			listItemView = new ListItemView();
 			//获取控件对象
 			listItemView.face = (ImageView) convertView.findViewById(R.id.myself_project_listitem_userface);
-			listItemView.flag = (ImageView) convertView.findViewById(R.id.myself_project_listitem_flag);
 			listItemView.project_name = (TextView) convertView.findViewById(R.id.myself_project_listitem_name);
+			listItemView.flag = (ImageView) convertView.findViewById(R.id.myself_project_listitem_flag);
 			listItemView.description = (TextView) convertView.findViewById(R.id.myself_project_listitem_description);
 			listItemView.updateData = (TextView) convertView.findViewById(R.id.myself_project_listitem_date);
 			listItemView.languageImage = (ImageView) convertView.findViewById(R.id.myself_project_listitem_language_image);
@@ -108,13 +108,12 @@ public class MySelfListProjectAdapter extends MyBaseAdapter<Project> {
 		
 		// 判断项目的类型，显示不同的图标（私有项目、公有项目、fork项目）
 		if (project.getParent_id() != null) {
-			listItemView.flag.setBackgroundResource(R.drawable.fork);
+			listItemView.flag.setBackgroundResource(R.drawable.project_flag_fork);
 		} else if (project.isPublic()) {
-			listItemView.flag.setBackgroundResource(R.drawable.star);
+			listItemView.flag.setBackgroundResource(R.drawable.project_flag_public);
 		} else {
-			listItemView.flag.setBackgroundResource(R.drawable.locked);
+			listItemView.flag.setBackgroundResource(R.drawable.project_flag_private);
 		}
-		
 		
 		// 判断是否有项目的介绍
 		String descriptionStr = project.getDescription();

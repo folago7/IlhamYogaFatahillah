@@ -27,21 +27,21 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal" >
 
-            <!-- flag -->
-            <ImageView
-                android:id="@+id/myself_project_listitem_flag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="5dip"
-                android:background="@drawable/locked"
-                android:contentDescription="@string/img_description"
-                android:visibility="visible" />
-
             <TextView
                 android:id="@+id/myself_project_listitem_name"
                 style="@style/project_list_title"
-                android:text="android" />
+                android:layout_weight="1" />
+            
+            <!-- flag -->
+            <ImageView
+                android:id="@+id/myself_project_listitem_flag"
+                android:layout_width="22dip"
+                android:layout_height="22dip"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="5dip"
+                android:background="@drawable/project_flag_fork"
+                android:contentDescription="@string/img_description"
+                android:visibility="visible" />
             
         </LinearLayout>
 

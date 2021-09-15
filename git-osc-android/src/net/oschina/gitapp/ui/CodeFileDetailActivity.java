@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
-import android.support.v4.view.MenuItemCompat;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,7 +21,9 @@ import net.oschina.gitapp.api.ApiClient;
 import net.oschina.gitapp.bean.CodeFile;
 import net.oschina.gitapp.bean.MoreMenuItem;
 import net.oschina.gitapp.bean.Project;
+import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.common.Contanst;
+import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.interfaces.OnStatusListener;
 import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
@@ -46,6 +47,8 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 	private final int MORE_MENU_DOWNLOAD = 03;
 	private final int MORE_MENU_EDIT = 04;
 	
+	private AppContext mContext;
+	
 	private Menu optionsMenu;
 	
 	private WebView mWebView;
@@ -64,8 +67,6 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 	
 	private String mRef;
 	
-	private AppContext appContext;
-	
 	private DropDownMenu mMoreMenuWindow;
 	
 	private List<MoreMenuItem> mMoreItems = new ArrayList<MoreMenuItem>();
@@ -83,6 +84,11 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 			if (mProject == null) {
 				return;
 			}
+			
+			if (!mProject.isPublic()) {
+				UIHelper.ToastMessage(mContext, "私有项目的文件不支持该操作");
+				return;
+			}
 			int id = v.getId();
 			switch (id) {
 			case MORE_MENU_SHARE:
@@ -90,15 +96,15 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 			case MORE_MENU_COPY_LINK:
 				ClipboardManager cbm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
 				cbm.setText(url_link);
-				UIHelper.ToastMessage(appContext, "复制链接成功");
+				UIHelper.ToastMessage(mContext, "已复制到剪贴板");
 				break;
 			case MORE_MENU_OPEN_WITH_BROWS:
 				if (!mProject.isPublic()) {
-					if (!appContext.isLogin()) {
+					if (!mContext.isLogin()) {
 						UIHelper.showLoginActivity(CodeFileDetailActivity.this);
 						return;
 					}
-					url_link = url_link + "?private_token=" + ApiClient.getToken(appContext);
+					url_link = url_link + "?private_token=" + ApiClient.getToken(mContext);
 				}
 				UIHelper.openBrowser(CodeFileDetailActivity.this, url_link);
 				break;
@@ -117,7 +123,7 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 		super.onCreate(savedInstanceState);
 		// 设置actionbar加载动态
 		setContentView(R.layout.activity_code_file_view);
-		appContext = getGitApplication();
+		mContext = getGitApplication();
 		Intent intent = getIntent();
 		mProject = (Project) intent.getSerializableExtra(Contanst.PROJECT);
 		mFileName = intent.getStringExtra("fileName");
@@ -125,6 +131,10 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 		mRef = intent.getStringExtra("ref");
 		init();
 		loadDatasCode(mProject.getId(), mPath, mRef);
+		
+		url_link = URLs.URL_HOST + mProject.getOwner().getUsername()
+				+ URLs.URL_SPLITTER + mProject.getPath() + URLs.URL_SPLITTER + "blob" + URLs.URL_SPLITTER
+				+ mRef + URLs.URL_SPLITTER + mFileName;
 	}
 
 	private void init() {
@@ -137,20 +147,23 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 	}
 	
 	private void initMoreMenu() {
-		MoreMenuItem shar = new MoreMenuItem(MORE_MENU_SHARE, R.drawable.abc_ic_menu_moreoverflow_normal_holo_dark, "分享项目");
-		mMoreItems.add(shar);
+		MoreMenuItem shar = new MoreMenuItem(MORE_MENU_SHARE, R.drawable.more_menu_icon_share, "分享");
+		//mMoreItems.add(shar);
 		
-		MoreMenuItem copy_link = new MoreMenuItem(MORE_MENU_COPY_LINK, R.drawable.abc_ic_menu_moreoverflow_normal_holo_dark, "复制项目链接");
+		MoreMenuItem copy_link = new MoreMenuItem(MORE_MENU_COPY_LINK, R.drawable.more_menu_icon_copy, "复制链接");
 		mMoreItems.add(copy_link);
 		
-		MoreMenuItem open_with_brows = new MoreMenuItem(MORE_MENU_OPEN_WITH_BROWS, R.drawable.abc_ic_menu_moreoverflow_normal_holo_dark, "在浏览器中打开");
+		MoreMenuItem open_with_brows = new MoreMenuItem(MORE_MENU_OPEN_WITH_BROWS, R.drawable.more_menu_icon_browser, "在浏览器中打开");
 		mMoreItems.add(open_with_brows);
 		
-		MoreMenuItem download = new MoreMenuItem(MORE_MENU_DOWNLOAD, R.drawable.abc_ic_menu_moreoverflow_normal_holo_dark, "下载该文件");
-		mMoreItems.add(download);
+		MoreMenuItem download = new MoreMenuItem(MORE_MENU_DOWNLOAD, R.drawable.more_menu_icon_download, "下载该文件");
+		//mMoreItems.add(download);
 		
-		MoreMenuItem edit = new MoreMenuItem(MORE_MENU_EDIT, R.drawable.abc_ic_menu_moreoverflow_normal_holo_dark, "编辑");
-		mMoreItems.add(edit);
+		// 如果是登陆用户的项目，则加入可以编辑文件的菜单
+//		if (mProject.getOwner().getId().equalsIgnoreCase(String.valueOf(mContext.getLoginUid()))) {
+//			MoreMenuItem edit = new MoreMenuItem(MORE_MENU_EDIT, R.drawable.more_menu_icon_edit, "编辑");
+//			mMoreItems.add(edit);
+//		}
 		
 		for (int i = 0; i < mMoreItems.size(); i++) {
 			if (mMoreMenuWindow != null) {
@@ -175,12 +188,19 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 			loadDatasCode(mProject.getId(), mPath, mRef);
 			break;
 		case R.id.project_detail_menu_more:
-			if (mMoreMenuWindow != null) {
-				mMoreMenuWindow.showAsDropDown(findViewById(R.id.project_detail_menu_more), -50, 0);
-			}
+			showMoreOptionMenu();
 			break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	private void showMoreOptionMenu() {
+		if (mMoreMenuWindow != null) {
+			View v = findViewById(R.id.project_detail_menu_more);
+			int x = mMoreMenuWindow.getWidth() - v.getWidth() + 20;
+			
+			mMoreMenuWindow.showAsDropDown(v, -x, 0);
+		}
 	}
 
 	@Override
@@ -242,9 +262,9 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 					onStatus(STATUS_NONE);
 					if (msg.obj instanceof AppException) {
 						AppException appException = (AppException) msg.obj;
-						appException.makeToast(appContext);
+						appException.makeToast(mContext);
 					} else {
-						UIHelper.ToastMessage(appContext,
+						UIHelper.ToastMessage(mContext,
 								((Exception) msg.obj).getMessage());
 					}
 				}

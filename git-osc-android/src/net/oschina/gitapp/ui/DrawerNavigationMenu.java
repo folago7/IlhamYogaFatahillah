@@ -47,7 +47,6 @@ public class DrawerNavigationMenu extends Fragment implements OnClickListener {
 
 	private LinearLayout mMenu_item_explore;
 	private LinearLayout mMenu_item_myself;
-	private LinearLayout mMenu_item_notice;
 	private LinearLayout mMenu_item_language;
 	private LinearLayout mMenu_item_setting;
 	private View mMenu_item_exit;
@@ -163,7 +162,6 @@ public class DrawerNavigationMenu extends Fragment implements OnClickListener {
 
 		mMenu_item_explore = (LinearLayout) view.findViewById(R.id.menu_item_explore);
 		mMenu_item_myself = (LinearLayout) view.findViewById(R.id.menu_item_myself);
-		mMenu_item_notice = (LinearLayout) view.findViewById(R.id.menu_item_notice);
 		mMenu_item_language = (LinearLayout) view.findViewById(R.id.menu_item_language);
 		mMenu_item_setting = (LinearLayout) view.findViewById(R.id.menu_item_setting);
 		mMenu_item_exit = view.findViewById(R.id.menu_item_exit);
@@ -172,7 +170,6 @@ public class DrawerNavigationMenu extends Fragment implements OnClickListener {
 		mMenu_user_layout.setOnClickListener(this);
 		mMenu_item_explore.setOnClickListener(this);
 		mMenu_item_myself.setOnClickListener(this);
-		mMenu_item_notice.setOnClickListener(this);
 		mMenu_item_language.setOnClickListener(this);
 		mMenu_item_setting.setOnClickListener(this);
 		mMenu_item_exit.setOnClickListener(this);
@@ -234,9 +231,6 @@ public class DrawerNavigationMenu extends Fragment implements OnClickListener {
 				highlightSelectedItem(v);
 			}
 			break;
-		case R.id.menu_item_notice:
-			onClickNotice();
-			break;
 		case R.id.menu_item_language:
 			onClickLanguage();
 			break;
@@ -273,12 +267,6 @@ public class DrawerNavigationMenu extends Fragment implements OnClickListener {
 		}
 	}
 
-	private void onClickNotice() {
-		if (mCallBack != null) {
-			mCallBack.onClickNotice();
-		}
-	}
-	
 	private void onClickLanguage() {
 		if (mCallBack != null) {
 			mCallBack.onClickLanguage();

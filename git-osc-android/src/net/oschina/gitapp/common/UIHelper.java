@@ -600,6 +600,16 @@ public class UIHelper {
 		}
 	}
 	
+	// 发送通知广播
+	public static void sendBroadCast(Context context, int count) {
+		if (!((AppContext) context.getApplicationContext()).isLogin()
+				|| count == 0)
+			return;
+		Intent intent = new Intent("net.oschina.gitapp.action.APPWIDGET_UPDATE");
+		intent.putExtra("count", count);
+		context.sendBroadcast(intent);
+	}
+	
 	/**
 	 * 显示通知详情页面
 	 * @param context
@@ -635,5 +645,5 @@ public class UIHelper {
                 - statusBarHeight);  
         view.destroyDrawingCache();  
         return b;  
-    }  
+    }
 }

@@ -1,11 +1,10 @@
 package net.oschina.gitapp.ui;
 
 import net.oschina.gitapp.AppContext;
+import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.AppManager;
 import net.oschina.gitapp.R;
 import android.annotation.TargetApi;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
@@ -16,27 +15,23 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
-import android.view.DragEvent;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
-import net.oschina.gitapp.common.BroadcastController;
+import net.oschina.gitapp.bean.CommonList;
+import net.oschina.gitapp.bean.ProjectNotificationArray;
 import net.oschina.gitapp.common.DoubleClickExitHelper;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.common.UpdateManager;
 import net.oschina.gitapp.interfaces.*;
 import net.oschina.gitapp.ui.fragments.ExploreViewPagerFragment;
 import net.oschina.gitapp.ui.fragments.MySelfViewPagerFragment;
-import net.oschina.gitapp.ui.fragments.NotificationFragment;
 import net.oschina.gitapp.widget.BadgeView;
 
 /**
@@ -86,7 +81,7 @@ public class MainActivity extends ActionBarActivity implements
 	
 	private static String mTitle;// actionbar标题
 	
-	private BadgeView mNotificationBadgeView;
+	public static BadgeView mNotificationBadgeView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +94,9 @@ public class MainActivity extends ActionBarActivity implements
 		if (mContext.isCheckUp()) {
 			UpdateManager.getUpdateManager().checkAppUpdate(this, false);
 		}
+		
+		// 启动轮询获取通知信息
+		foreachUserNotice();
 	}
 	
 	@Override
@@ -112,10 +110,12 @@ public class MainActivity extends ActionBarActivity implements
 		if (mTitle != null) {
 			mActionBar.setTitle(mTitle);
 		}
-		if (mCurrentContentTag.equalsIgnoreCase(CONTENTS[1])) {
-			if (!mContext.isLogin()) {
-				onClickExplore();
-				mMenu.highlightExplore();
+		if (mCurrentContentTag != null && mContext !=null && mMenu != null) {
+			if (mCurrentContentTag.equalsIgnoreCase(CONTENTS[1])) {
+				if (!mContext.isLogin()) {
+					onClickExplore();
+					mMenu.highlightExplore();
+				}
 			}
 		}
 	}
@@ -154,6 +154,44 @@ public class MainActivity extends ActionBarActivity implements
 		mTitle = "发现";
 		mActionBar.setTitle(mTitle);
 		mCurrentContentTag = CONTENT_TAG_EXPLORE;
+	}
+	
+	/**
+	 * 轮询通知信息
+	 */
+	private void foreachUserNotice() {
+		final boolean isLogin = mContext.isLogin();
+		final Handler handler = new Handler() {
+			@SuppressWarnings("unchecked")
+			public void handleMessage(Message msg) {
+				if (msg.what == 1) {
+					CommonList<ProjectNotificationArray> commonList = (CommonList<ProjectNotificationArray>) msg.obj;
+					UIHelper.sendBroadCast(MainActivity.this, commonList.getCount());
+				}
+				foreachUserNotice();// 回调
+			}
+		};
+		new Thread() {
+			public void run() {
+				Message msg = new Message();
+				try {
+					sleep(60 * 1000);
+					if (isLogin) {
+						msg.obj = mContext.getNotification("", "", "");
+						msg.what = 1;
+					} else {
+						msg.what = 0;
+					}
+				} catch (AppException e) {
+					e.printStackTrace();
+					msg.what = -1;
+				} catch (Exception e) {
+					e.printStackTrace();
+					msg.what = -1;
+				}
+				handler.sendMessage(msg);
+			}
+		}.start();
 	}
 
 	@Override
@@ -263,7 +301,6 @@ public class MainActivity extends ActionBarActivity implements
 		}
 	}
 
-	@Override
 	public void onClickNotice() {
 		if (!mContext.isLogin()) {
 			UIHelper.showLoginActivity(this);

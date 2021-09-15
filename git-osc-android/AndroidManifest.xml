@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="net.oschina.gitapp"
-    android:versionCode="1"
-    android:versionName="Beta 0.8" >
+    android:versionCode="2"
+    android:versionName="Beta 0.9" >
 
     <!--
          1.Target SDK version must be 16, not 17, or JavaScript bridge for
@@ -107,6 +107,13 @@
             android:label="关于git"
             android:launchMode="singleTask" >
         </activity>
+        
+        <!-- 注册app广播接收器 -->
+         <receiver android:name=".ui.BroadCast" >
+            <intent-filter>
+                <action android:name="net.oschina.gitapp.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+        </receiver>
         
     </application>
 

@@ -13,6 +13,50 @@
 
     <View
         style="@style/project_detail_h_line" />
+    
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:id="@+id/project_star"
+            style="@style/project_detail_mid_grid_item" >
+			
+            <!-- 项目star的状态 -->
+            <ImageView
+                android:id="@+id/project_star_stared"
+                style="@style/project_detail_mid_grid_item_img"
+                android:contentDescription="@string/img_description"
+                android:background="@drawable/unstar" />
+
+            <TextView
+                android:id="@+id/project_starnum"
+                style="@style/project_detail_mid_grid_item_text"
+                android:text="100" />
+        </LinearLayout>
+
+        <View
+            style="@style/project_detail_v_line" />
+
+        <LinearLayout
+            style="@style/project_detail_mid_grid_item" >
+
+            <ImageView
+                style="@style/project_detail_mid_grid_item_img"
+                android:contentDescription="@string/img_description"
+                android:background="@drawable/fork" />
+
+            <TextView
+                android:id="@+id/project_forknum"
+                style="@style/project_detail_mid_grid_item_text"
+                android:text="50" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        style="@style/project_detail_h_line" />
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -49,47 +93,6 @@
                 android:id="@+id/project_language"
                 style="@style/project_detail_mid_grid_item_text"
                 android:text="Java" />
-        </LinearLayout>
-    </LinearLayout>
-
-    <View
-        style="@style/project_detail_h_line" />
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal" >
-
-        <LinearLayout
-            style="@style/project_detail_mid_grid_item" >
-
-            <ImageView
-                style="@style/project_detail_mid_grid_item_img"
-                android:contentDescription="@string/img_description"
-                android:background="@drawable/star" />
-
-            <TextView
-                android:id="@+id/project_starnum"
-                style="@style/project_detail_mid_grid_item_text"
-                android:text="100" />
-        </LinearLayout>
-
-        <View
-            style="@style/project_detail_v_line" />
-
-        <LinearLayout
-            style="@style/project_detail_mid_grid_item" >
-
-            <ImageView
-                style="@style/project_detail_mid_grid_item_img"
-                android:contentDescription="@string/img_description"
-                android:background="@drawable/fork" />
-
-            <TextView
-                android:id="@+id/project_forknum"
-                style="@style/project_detail_mid_grid_item_text"
-                android:text="50" />
         </LinearLayout>
     </LinearLayout>
 

@@ -377,16 +377,16 @@ public class ProjectCodeActivity extends BaseActionBarActivity implements
 			fileName = fileName.substring(index);
 		}
 		String codeFileSuffix[] = new String[]{
-				".java", ".confg", ".ini", ".xml", ".json", ".txt", 
+				".java", ".confg", ".ini", ".xml", ".json", ".txt",
 				".php", ".php3", ".php4", ".php5", ".js", ".css",
 				".properties", ".c", ".hpp", ".h", ".cpp", ".cfg", ".html", ".go",
 				".rb", ".example", ".gitignore", ".project", ".classpath",
 				".m", ".md", ".rst", ".vm", ".cl", ".py", ".pl", ".haml",
 				".erb", ".scss", ".bat", ".coffee", ".as", ".sh", ".m", ".pas",
 				".cs", ".groovy", ".scala", ".sql", ".bas", ".xml", ".vb",
-				".xsl", ".swift", ".ftl", ".yml", ".ru", ".jsp", ".markdown", 
+				".xsl", ".swift", ".ftl", ".yml", ".ru", ".jsp", ".markdown",
 				".cshap", ".apsx", ".sass", ".less", ".ftl", ".haml", ".log",
-				".tx", ".csproj", ".sln", ".clj", ".scm", ".xhml"
+				".tx", ".csproj", ".sln", ".clj", ".scm", ".xhml", ".xaml"
 		};
 		for (String string : codeFileSuffix) {
 			if (fileName.equalsIgnoreCase(string)) {
@@ -396,7 +396,8 @@ public class ProjectCodeActivity extends BaseActionBarActivity implements
 		
 		// 特殊的文件
 		String fileNames[] = new String[]{
-				"LICENSE", "TODO", "README", "readme", "makefile"
+				"LICENSE", "TODO", "README", "readme", "makefile", "gemfile", "gemfile.*", "gemfile.lock",
+				"CHANGELOG"
 		};
 		
 		for (String string : fileNames) {

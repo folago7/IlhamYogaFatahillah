@@ -21,6 +21,8 @@
     <color name="pressed_gitlab">#CC30A1BA</color>
     <color name="slidingmenu_bg">#212121</color>
     
+    <color name="project_detail_item">#e2e0e0</color>
+    
     <!-- nontice list color -->
     <color name="notice_layout_back">#3c3c3c</color>
     

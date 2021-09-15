@@ -34,6 +34,7 @@ import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.ProjectNotificationArray;
 import net.oschina.gitapp.bean.ReadMe;
 import net.oschina.gitapp.bean.Session;
+import net.oschina.gitapp.bean.StarOptionResult;
 import net.oschina.gitapp.bean.UpLoadFile;
 import net.oschina.gitapp.bean.Update;
 import net.oschina.gitapp.bean.User;
@@ -854,5 +855,25 @@ public class ApiClient {
 		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + "languages" + URLs.URL_SPLITTER + languageId, params);
 		return getHttpRequestor().init(appContext, GET_METHOD, url)
 				.getList(Project[].class);
+	}
+	
+	/**
+	 * star or unstar一个项目
+	 * @param appContext
+	 * @param projectId
+	 * @return
+	 * @throws AppException
+	 */
+	public static StarOptionResult starProject(AppContext appContext, String projectId, String type) throws AppException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(PRIVATE_TOKEN, getToken(appContext));
+		String url = "";
+		if (type.equalsIgnoreCase("star")) {
+			url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + projectId + URLs.URL_SPLITTER + "star", params);
+		} else {
+			url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + projectId + URLs.URL_SPLITTER + "unstar", params);
+		}
+		return getHttpRequestor().init(appContext, POST_METHOD, url)
+				.to(StarOptionResult.class);
 	}
 }

@@ -43,6 +43,25 @@ public class FileUtils {
 			e.printStackTrace();
 		}
 	}
+	
+	/**
+	 * 保存文本内容到指定的目录
+	 * @param context
+	 * @param path
+	 * @param fileName
+	 * @param content
+	 * @return
+	 */
+	public static boolean write(Context context, String path, String fileName, String content) {
+		boolean res = false;
+		if (content == null) {
+			return res;
+		}
+		
+		
+		
+		return res;
+	}
 
 	/**
 	 * 读取文本文件

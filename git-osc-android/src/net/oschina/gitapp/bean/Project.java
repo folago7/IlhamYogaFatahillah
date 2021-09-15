@@ -71,7 +71,10 @@ public class Project extends Entity {
     @JsonProperty("language")
     private String _language;
     
-    public Integer getParent_id() {
+    @JsonProperty("stared")
+    private boolean _stared;
+    
+	public Integer getParent_id() {
 		return _parent_id;
 	}
 
@@ -230,4 +233,12 @@ public class Project extends Entity {
     public void setPublic(boolean aPublic) {
         _public = aPublic;
     }
+    
+    public boolean isStared() {
+		return _stared;
+	}
+
+	public void setStared(boolean stared) {
+		this._stared = stared;
+	}
 }

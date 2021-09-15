@@ -169,12 +169,9 @@ public class SourceEditor {
     
     @JavascriptInterface
     private void loadSource() {
-    	if (name != null && content != null)
-    		
-            if (markdown)
-                view.loadDataWithBaseURL(null, UIHelper.WEB_STYLE + getContent(), "text/html", CHARSET_UTF8, null);
-            else
-                view.loadUrl(URL_PAGE);
+    	if (name != null && content != null) {
+    		view.loadUrl(URL_PAGE);
+    	}
     }
 
     /**

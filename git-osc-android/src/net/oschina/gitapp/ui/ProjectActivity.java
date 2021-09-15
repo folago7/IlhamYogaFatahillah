@@ -9,12 +9,11 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewTreeObserver;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -25,11 +24,11 @@ import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.ApiClient;
 import net.oschina.gitapp.bean.MoreMenuItem;
 import net.oschina.gitapp.bean.Project;
+import net.oschina.gitapp.bean.StarOptionResult;
 import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
-import net.oschina.gitapp.common.WXFriendsHelper;
 import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
 import net.oschina.gitapp.widget.DropDownMenu;
 
@@ -65,15 +64,19 @@ public class ProjectActivity extends BaseActionBarActivity implements
 	
 	private TextView mUpdateTime;
 	
+	private ImageView mFlag;
+	
 	private TextView mDescription;
+	
+	private TextView mStarNum;
+	
+	private ImageView mStarStared;// 项目的star状态
+	
+	private TextView mForkNum;
 	
 	private TextView mLocked;
 	
 	private TextView mLanguage;
-	
-	private TextView mStarNum;
-	
-	private TextView mForkNum;
 	
 	private TextView mOwnerName;
 	
@@ -82,7 +85,8 @@ public class ProjectActivity extends BaseActionBarActivity implements
 	private TextView mForkMes;
 	
 	private AppContext mAppContext;
-
+	
+	private LinearLayout mLLStar;
 	private LinearLayout mLLOwner;
 	private LinearLayout mLLReadMe;
 	private LinearLayout mLLCodes;
@@ -113,12 +117,11 @@ public class ProjectActivity extends BaseActionBarActivity implements
 			switch (id) {
 			case MORE_MENU_SHARE:
 				
-				WXFriendsHelper.shareToWXFriends(ProjectActivity.this, "分享项目", url_link);
 				break;
 			case MORE_MENU_COPY_LINK:
 				ClipboardManager cbm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
 				cbm.setText(url_link);
-				UIHelper.ToastMessage(mAppContext, "复制链接成功");
+				UIHelper.ToastMessage(mAppContext, "已复制到剪贴板");
 				break;
 			case MORE_MENU_OPEN_WITH_BROWS:
 				UIHelper.openBrowser(ProjectActivity.this, url_link);
@@ -147,20 +150,24 @@ public class ProjectActivity extends BaseActionBarActivity implements
 		mContent = (ScrollView) findViewById(R.id.project_content);
 		mProjectName = (TextView) findViewById(R.id.project_name);
 		mUpdateTime = (TextView) findViewById(R.id.project_update);
+		mFlag = (ImageView) findViewById(R.id.project_flag);
 		mDescription = (TextView) findViewById(R.id.project_description);
+		mStarNum = (TextView) findViewById(R.id.project_starnum);
+		mStarStared = (ImageView) findViewById(R.id.project_star_stared);
+		mForkNum = (TextView) findViewById(R.id.project_forknum);
 		mLocked = (TextView) findViewById(R.id.project_locked);
 		mLanguage = (TextView) findViewById(R.id.project_language);
-		mStarNum = (TextView) findViewById(R.id.project_starnum);
-		mForkNum = (TextView) findViewById(R.id.project_forknum);
 		mOwnerName = (TextView) findViewById(R.id.project_ownername);
 		mForkView = findViewById(R.id.project_ll_fork);
 		mForkMes = (TextView) findViewById(R.id.project_fork_form);
 		
+		mLLStar = (LinearLayout) findViewById(R.id.project_star);
 		mLLOwner = (LinearLayout) findViewById(R.id.project_owner);
 		mLLReadMe = (LinearLayout) findViewById(R.id.project_readme);
 		mLLCodes = (LinearLayout) findViewById(R.id.project_issues);
 		mLLIssues = (LinearLayout) findViewById(R.id.project_code);
 		
+		mLLStar.setOnClickListener(this);
 		mLLOwner.setOnClickListener(this);
 		mLLReadMe.setOnClickListener(this);
 		mLLCodes.setOnClickListener(this);
@@ -180,12 +187,14 @@ public class ProjectActivity extends BaseActionBarActivity implements
 		
 		mProjectName.setText(mProject.getName());
 		mUpdateTime.setText("更新于 " + getUpdateTime());
+		setFlag();
 		
 		mDescription.setText(getDescription(mProject.getDescription()));
+		mStarNum.setText(mProject.getStars_count() + "");
+		setStared(mProject.isStared());
+		mForkNum.setText(mProject.getForks_count() + "");
 		mLocked.setText(getLocked());
 		mLanguage.setText(getLanguage());
-		mStarNum.setText(mProject.getStars_count() + "");
-		mForkNum.setText(mProject.getForks_count() + "");
 		mOwnerName.setText(mProject.getOwner().getName());
 		
 		// 显示是否有fork信息
@@ -195,14 +204,33 @@ public class ProjectActivity extends BaseActionBarActivity implements
 		url_link = URLs.URL_HOST + mProject.getOwner().getUsername() + URLs.URL_SPLITTER + mProject.getPath();
 	}
 	
+	private void setStared(boolean stared) {
+		if (stared) {
+			mStarStared.setBackgroundResource(R.drawable.star);
+		} else {
+			mStarStared.setBackgroundResource(R.drawable.unstar);
+		}
+	}
+	
+	private void setFlag() {
+		// 判断项目的类型，显示不同的图标（私有项目、公有项目、fork项目）   
+		if (mProject.getParent_id() != null) {
+			mFlag.setBackgroundResource(R.drawable.project_flag_fork);
+		} else if (mProject.isPublic()) {
+			mFlag.setBackgroundResource(R.drawable.project_flag_public);
+		} else {
+			mFlag.setBackgroundResource(R.drawable.project_flag_private);
+		}
+	}
+	
 	private void initMoreMenu() {
-		MoreMenuItem shar = new MoreMenuItem(MORE_MENU_SHARE, R.drawable.abc_ic_menu_moreoverflow_normal_holo_dark, "分享项目");
-		mMoreItems.add(shar);
+		MoreMenuItem shar = new MoreMenuItem(MORE_MENU_SHARE, R.drawable.more_menu_icon_share, "分享项目");
+		//mMoreItems.add(shar);
 		
-		MoreMenuItem copy_link = new MoreMenuItem(MORE_MENU_COPY_LINK, R.drawable.abc_ic_menu_moreoverflow_normal_holo_dark, "复制项目链接");
+		MoreMenuItem copy_link = new MoreMenuItem(MORE_MENU_COPY_LINK, R.drawable.more_menu_icon_copy, "复制项目链接");
 		mMoreItems.add(copy_link);
 		
-		MoreMenuItem open_with_brows = new MoreMenuItem(MORE_MENU_OPEN_WITH_BROWS, R.drawable.abc_ic_menu_moreoverflow_normal_holo_dark, "在浏览器中打开");
+		MoreMenuItem open_with_brows = new MoreMenuItem(MORE_MENU_OPEN_WITH_BROWS, R.drawable.more_menu_icon_browser, "在浏览器中打开");
 		mMoreItems.add(open_with_brows);
 		for (int i = 0; i < mMoreItems.size(); i++) {
 			if (mMoreMenuWindow != null) {
@@ -225,16 +253,7 @@ public class ProjectActivity extends BaseActionBarActivity implements
 		int id = item.getItemId();
 		switch (id) {
 		case R.id.project_menu_more:
-			if (mMoreMenuWindow == null) {
-				mMoreMenuWindow = new DropDownMenu(ProjectActivity.this, onMoreMenuItemClick);
-				initMoreMenu();
-			}
-			if (mMoreMenuWindow != null) {
-				View v = findViewById(R.id.project_menu_more);
-				int x = mMoreMenuWindow.getWidth() - v.getWidth() + 10;
-				
-				mMoreMenuWindow.showAsDropDown(v, -x, 0);
-			}
+			showMoreOptionMenu();
 			break;
 		case R.id.project_menu_create_issue:
 			// 新增issue
@@ -242,6 +261,19 @@ public class ProjectActivity extends BaseActionBarActivity implements
 			break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	private void showMoreOptionMenu() {
+		if (mMoreMenuWindow == null) {
+			mMoreMenuWindow = new DropDownMenu(ProjectActivity.this, onMoreMenuItemClick);
+			initMoreMenu();
+		}
+		if (mMoreMenuWindow != null) {
+			View v = findViewById(R.id.project_menu_more);
+			int x = mMoreMenuWindow.getWidth() - v.getWidth() + 20;
+			
+			mMoreMenuWindow.showAsDropDown(v, -x, 0);
+		}
 	}
 
 	private String getUpdateTime() {
@@ -353,6 +385,9 @@ public class ProjectActivity extends BaseActionBarActivity implements
 		}
 		int id = v.getId();
 		switch (id) {
+		case R.id.project_star:
+			starOption();
+			break;
 		case R.id.project_owner:
 			if (mProject.getOwner() != null) {
 				UIHelper.showUserInfoDetail(ProjectActivity.this, mProject.getOwner(), mProject.getOwner().getId());
@@ -378,5 +413,58 @@ public class ProjectActivity extends BaseActionBarActivity implements
 		default:
 			break;
 		}
+	}
+	
+	private void starOption() {
+		if (mProject == null) {
+			return;
+		}
+		new AsyncTask<Void, Void, Message>() {
+
+			@Override
+			protected Message doInBackground(Void... params) {
+				Message msg = new Message();
+				try {
+					if (mProject.isStared()) {
+						msg.obj = ApiClient.starProject(mAppContext, mProject.getId(), "unstar");
+					} else {
+						msg.obj = ApiClient.starProject(mAppContext, mProject.getId(), "star");
+					}
+					msg.what = 1;
+				} catch (AppException e) {
+					e.printStackTrace();
+					msg.obj = -1;
+				}
+				return msg;
+			}
+
+			@Override
+			protected void onPreExecute() {
+				super.onPreExecute();
+			}
+
+			@Override
+			protected void onPostExecute(Message msg) {
+				super.onPostExecute(msg);
+				if (msg.what == 1) {
+					String resMsg = "";
+					StarOptionResult res = (StarOptionResult) msg.obj;
+					if (res.getCount() > mProject.getStars_count()) {
+						setStared(true);
+						mProject.setStared(true);
+						resMsg = "star成功";
+					} else {
+						setStared(false);
+						mProject.setStared(false);
+						resMsg = "unstar成功";
+					}
+					mProject.setStars_count(res.getCount());
+					mStarNum.setText(res.getCount() + "");
+					UIHelper.ToastMessage(mAppContext, resMsg);
+				} else {
+					UIHelper.ToastMessage(mAppContext, "操作失败");
+				}
+			}
+		}.execute();
 	}
 }

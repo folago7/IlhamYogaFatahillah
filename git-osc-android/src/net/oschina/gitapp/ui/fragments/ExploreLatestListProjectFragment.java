@@ -48,6 +48,6 @@ public class ExploreLatestListProjectFragment extends BaseSwipeRefreshFragment<P
 	
 	@Override
 	public void onItemClick(int position, Project project) {
-		UIHelper.showProjectDetail(getActivity(), project, project.getId());
+		UIHelper.showProjectDetail(getActivity(), null, project.getId());
 	}
 }
