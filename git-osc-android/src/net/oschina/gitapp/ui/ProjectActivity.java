@@ -3,6 +3,7 @@ package net.oschina.gitapp.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.ProgressDialog;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
@@ -419,6 +420,19 @@ public class ProjectActivity extends BaseActionBarActivity implements
 		if (mProject == null) {
 			return;
 		}
+		if (!mAppContext.isLogin()) {
+			UIHelper.showLoginActivity(ProjectActivity.this);
+			return;
+		}
+		final ProgressDialog loadingDialog = new ProgressDialog(this);
+		loadingDialog.setCanceledOnTouchOutside(false);
+		loadingDialog.setTitle("操作进行中");
+		if (mProject.isStared()) {
+			loadingDialog.setMessage("正在为你unstar，请稍候");
+		} else {
+			loadingDialog.setMessage("正在为你star，请稍候");
+		}
+		
 		new AsyncTask<Void, Void, Message>() {
 
 			@Override
@@ -433,7 +447,8 @@ public class ProjectActivity extends BaseActionBarActivity implements
 					msg.what = 1;
 				} catch (AppException e) {
 					e.printStackTrace();
-					msg.obj = -1;
+					msg.what = -1;
+					msg.obj = e;
 				}
 				return msg;
 			}
@@ -441,11 +456,15 @@ public class ProjectActivity extends BaseActionBarActivity implements
 			@Override
 			protected void onPreExecute() {
 				super.onPreExecute();
+				if (loadingDialog != null) {
+					loadingDialog.show();
+				}
 			}
 
 			@Override
 			protected void onPostExecute(Message msg) {
 				super.onPostExecute(msg);
+				loadingDialog.hide();
 				if (msg.what == 1) {
 					String resMsg = "";
 					StarOptionResult res = (StarOptionResult) msg.obj;
@@ -462,7 +481,7 @@ public class ProjectActivity extends BaseActionBarActivity implements
 					mStarNum.setText(res.getCount() + "");
 					UIHelper.ToastMessage(mAppContext, resMsg);
 				} else {
-					UIHelper.ToastMessage(mAppContext, "操作失败");
+					((AppException)msg.obj).makeToast(mAppContext);
 				}
 			}
 		}.execute();

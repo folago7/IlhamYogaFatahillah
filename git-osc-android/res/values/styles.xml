@@ -214,11 +214,12 @@
     <style name="project_detail_mid_grid_item_img">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginRight">8dip</item>
+        <item name="android:layout_marginRight">5dip</item>
     </style>
 
     <style name="project_detail_mid_grid_item_text">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">0dip</item>
+        <item name="android:layout_weight">1</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/gray</item>
     </style>
@@ -261,6 +262,7 @@
         <item name="android:layout_gravity">center</item>
         <item name="android:padding">1.0dip</item>
         <item name="android:clickable">true</item>
+        <item name="android:textSize">21sp</item>
     </style>
 
     <style name="project_codetree_list_name">
@@ -268,13 +270,12 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:includeFontPadding">false</item>
         <item name="android:layout_marginLeft">8dip</item>
-        <item name="android:textSize">@dimen/text_size_14</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:textColor">@color/black</item>
     </style>
 
     <!-- project code tree style end -->
-
 
     <!-- notification style start -->
 

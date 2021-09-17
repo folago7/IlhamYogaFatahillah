@@ -106,8 +106,8 @@
 
         <ImageView
             style="@style/project_detail_mid_grid_item_img"
-            android:contentDescription="@string/img_description"
-            android:background="@drawable/project_detail_icon_owner" />
+            android:background="@drawable/project_detail_icon_owner"
+            android:contentDescription="@string/img_description" />
 
         <TextView
             android:layout_width="0dip"

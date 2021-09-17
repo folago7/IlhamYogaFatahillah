@@ -10,7 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
+
 import javax.net.ssl.SSLHandshakeException;
+
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
@@ -32,6 +34,7 @@ import org.apache.http.protocol.HTTP;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.bean.URLs;
@@ -64,9 +67,12 @@ public class HTTPRequestor {
 	public final static int TIMEOUT_CONNECTION = 20000;// 连接超时时间
 	public final static int TIMEOUT_SOCKET = 20000;// socket超时
 	
+	private AppContext mContext;
+	
+	private String url;
+	
 	// 网络请求agent
 	private static String appUserAgent;
-	
 	// 请求client
 	private HttpClient _httpClient;
 	// 请求方法类型
@@ -106,6 +112,9 @@ public class HTTPRequestor {
     	_methodType = methodType;
         _httpClient = getHttpClient();
         
+        this.mContext = appContext;
+        this.url = url;
+        
         String urser_agent = appContext != null ? getUserAgent(appContext) : "";
         _method = getMethod(methodType, url, urser_agent);
         return this;
@@ -118,7 +127,7 @@ public class HTTPRequestor {
 	 */
 	private static String getUserAgent(AppContext appContext) {
 		if(appUserAgent == null || appUserAgent == "") {
-			StringBuilder ua = new StringBuilder("OSChina.NET");
+			StringBuilder ua = new StringBuilder("Git@OSC.NET");
 			ua.append('/'+appContext.getPackageInfo().versionName+'_'+appContext.getPackageInfo().versionCode);//App版本
 			ua.append("/Android");//手机系统平台
 			ua.append("/"+android.os.Build.VERSION.RELEASE);//手机系统版本  
@@ -230,7 +239,7 @@ public class HTTPRequestor {
     	
     	// 设置请求参数
     	if (hasOutput()) {
-            submitData();
+            submitData(_data, _method);
         }
     	
     	InputStream responseBodyStream = null;
@@ -238,6 +247,9 @@ public class HTTPRequestor {
 		{
 			int statusCode = _httpClient.executeMethod(_method);
 			if (statusCode != HttpStatus.SC_OK && !String.valueOf(statusCode).startsWith("2")) {
+				if (hasOutput()) {
+					uploadErrorToServer(mContext, url, statusCode, getUserAgent(mContext) + getJsonString(_data));
+				}
 				throw AppException.http(statusCode);
 			}
 			Header header = _method.getResponseHeader("Content-Encoding");
@@ -266,7 +278,7 @@ public class HTTPRequestor {
     	
     	// 设置请求参数
     	if (hasOutput()) {
-            submitData();
+            submitData(_data, _method);
         }
     	
     	String responseBodyString = null;
@@ -275,6 +287,9 @@ public class HTTPRequestor {
 		{
 			int statusCode = _httpClient.executeMethod(_method);
 			if (statusCode != HttpStatus.SC_OK && !String.valueOf(statusCode).startsWith("2")) {
+				if (hasOutput()) {
+					uploadErrorToServer(mContext, url, statusCode, getUserAgent(mContext) + getJsonString(_data));
+				}
 				throw AppException.http(statusCode);
 			}
 			Header header = _method.getResponseHeader("Content-Encoding");
@@ -372,21 +387,20 @@ public class HTTPRequestor {
     /**
      * 表单参数处理
      */
-    private void submitData(){
-    	_method.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    	int length = (_data == null ? 0 : _data.size());
+    private void submitData(Map<String, Object> data, HttpMethod method){
+    	method.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     	//NameValuePair nvps[] = new NameValuePair[length];
 		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
-        if(_data != null) {
-        	for(String name : _data.keySet()){
-            	Object value = _data.get(name);
+        if(data != null) {
+        	for(String name : data.keySet()){
+            	Object value = data.get(name);
             	NameValuePair nvp = new NameValuePair(name, String.valueOf(value));
             	nvps.add(nvp);
             }
         }
-    	if (_method instanceof PostMethod) {
+    	if (method instanceof PostMethod) {
     		for (NameValuePair nameValuePair : nvps) {
-    			((PostMethod)_method).addParameter(nameValuePair);
+    			((PostMethod)method).addParameter(nameValuePair);
 			}
     	}
     	/*if (_method instanceof PutMethod) {
@@ -429,6 +443,56 @@ public class HTTPRequestor {
         } finally {
             IOUtils.closeQuietly(reader);
         }
+    }
+    
+    /**
+     * 上传post请求错误到服务器日志上
+     * @param appContext
+     * @param errorUrl
+     * @param errorCode
+     * @param post_content
+     */
+    private void uploadErrorToServer(final AppContext appContext, final String errorUrl, final int errorCode, final String post_content) {
+    	new Thread(){
+    		public void run() {
+        		try {
+        			HttpClient client = getHttpClient();
+            		String url = URLs.URL_API_HOST + "app_logger";
+            		HttpMethod post = getMethod(POST_METHOD, url, getUserAgent(appContext));
+            		Map<String, Object> data = new HashMap<String, Object>();
+            		data.put("app_type", "android");
+            		data.put("url", errorUrl);
+            		data.put("error", errorCode);
+            		data.put("post_content", post_content);
+            		submitData(data, post);
+					client.executeMethod(post);
+				} catch (HttpException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+    		}
+    	}.start();
+    }
+    
+    private String getJsonString(Map<String, Object> data) {
+    	String res = "";
+    	if (data != null && data.size() > 0) {
+    		StringBuilder ua = new StringBuilder("{");
+    		int i = 0;
+    		for(String name : data.keySet()){
+            	String value = (String) data.get(name);
+            	i++;
+            	if (i != data.size()) {
+            		ua.append("\"" + name + "\"" + ":" + value + ",");
+            	} else {
+            		ua.append("\"" + name + "\"" + ":" + value);
+            	}
+            }
+    		ua.append("}");
+    		res = ua.toString();
+    	}
+    	return res;
     }
 
     /**

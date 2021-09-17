@@ -10,12 +10,12 @@
   	android:orientation="vertical">  
   	<ProgressBar
   		android:id="@+id/update_progress"
-  		android:layout_width="wrap_content"
+  		android:layout_width="fill_parent"
   		android:layout_height="wrap_content"
-  		style="?android:attr/progressBarStyleInverse"/>
+  		style="?android:attr/progressBarStyleHorizontal"/>
   	<TextView 
   	    android:id="@+id/update_progress_text"
   		android:layout_width="wrap_content"
   		android:layout_height="wrap_content"
-  		android:text="正在加载数据"/>
+  		android:text="正在下载更新包"/>
 </LinearLayout>

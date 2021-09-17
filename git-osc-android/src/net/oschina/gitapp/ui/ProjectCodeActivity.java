@@ -1,8 +1,10 @@
 package net.oschina.gitapp.ui;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
+
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -38,6 +40,7 @@ import net.oschina.gitapp.common.DataRequestThreadHandler;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
+import net.oschina.gitapp.util.TypefaceUtils;
 
 /**
  * 项目代码列表
@@ -63,8 +66,8 @@ public class ProjectCodeActivity extends BaseActionBarActivity implements
 	private ListView mCodeTree;
 
 	private LinearLayout mSwitch_branch;
-
-	private ImageView mBranchIcon;
+	
+	private TextView mBranchIcon;
 
 	private TextView mBranchName;
 
@@ -115,6 +118,7 @@ public class ProjectCodeActivity extends BaseActionBarActivity implements
 		initView();
 		setupListView();
 		loadDatas("", "master", ACTION_INIT);
+		TypefaceUtils.setOcticons(mBranchIcon);
 	}
 
 	@Override
@@ -166,6 +170,8 @@ public class ProjectCodeActivity extends BaseActionBarActivity implements
 		mCodeTreePreFolder = (LinearLayout) findViewById(R.id.projectcode_tree_prefolder);
 
 		mCodeFloders = (TextView) findViewById(R.id.projectcode_floders);
+		
+		TypefaceUtils.setOcticons((TextView)findViewById(R.id.projectcode_pre_img));
 
 		mCodeTreePreFolder.setOnClickListener(this);
 
@@ -173,7 +179,7 @@ public class ProjectCodeActivity extends BaseActionBarActivity implements
 
 		mCodeTree = (ListView) findViewById(R.id.projectcode_tree);
 		mSwitch_branch = (LinearLayout) findViewById(R.id.projectcode_switch_branch);
-		mBranchIcon = (ImageView) findViewById(R.id.projectcode_branch_icon);
+		mBranchIcon = (TextView) findViewById(R.id.projectcode_branch_icon);
 		mBranchName = (TextView) findViewById(R.id.projectcode_branch_name);
 	}
 
@@ -347,6 +353,7 @@ public class ProjectCodeActivity extends BaseActionBarActivity implements
 	 * 判断code的文件的类型显示不同的操作
 	 * @param codeTree
 	 */
+	@SuppressWarnings("deprecation")
 	private void checkShow(CodeTree codeTree) {
 		
 		String fileName = codeTree.getName();
@@ -354,7 +361,7 @@ public class ProjectCodeActivity extends BaseActionBarActivity implements
 		// 带有token的
 		String url = URLs.URL_HOST + mProject.getOwner().getUsername()
 				+ URLs.URL_SPLITTER + mProject.getPath() + URLs.URL_SPLITTER + "raw" + URLs.URL_SPLITTER
-				+ mBranch + URLs.URL_SPLITTER + getFilePath(fileName) + "?private_token=" + ApiClient.getToken(mAppContext);
+				+ mBranch + URLs.URL_SPLITTER + URLEncoder.encode(getFilePath(fileName)) + "?private_token=" + ApiClient.getToken(mAppContext);
 		
 		if (isCodeTextFile(fileName)) {
 			

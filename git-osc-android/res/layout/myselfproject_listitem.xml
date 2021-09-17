@@ -79,7 +79,7 @@
             <ImageView
                 style="@style/project_list_img"
                 android:contentDescription="@string/img_description"
-                android:src="@drawable/star" />
+                android:src="@drawable/unstar" />
 
             <TextView
                 android:id="@+id/myself_project_listitem_star"
