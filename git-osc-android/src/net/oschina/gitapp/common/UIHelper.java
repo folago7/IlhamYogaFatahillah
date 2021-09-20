@@ -4,6 +4,22 @@ import java.io.File;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
+import com.tencent.connect.share.QQShare;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.bean.ShareType;
+import com.umeng.socialize.controller.UMServiceFactory;
+import com.umeng.socialize.controller.UMSocialService;
+import com.umeng.socialize.media.QQShareContent;
+import com.umeng.socialize.media.SinaShareContent;
+import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.sso.EmailHandler;
+import com.umeng.socialize.sso.SinaSsoHandler;
+import com.umeng.socialize.sso.SmsHandler;
+import com.umeng.socialize.sso.UMQQSsoHandler;
+import com.umeng.socialize.weixin.controller.UMWXHandler;
+import com.umeng.socialize.weixin.media.CircleShareContent;
+import com.umeng.socialize.weixin.media.WeiXinShareContent;
+
 import static net.oschina.gitapp.common.Contanst.*;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
@@ -72,7 +88,7 @@ public class UIHelper {
 			.compile("\\[{1}([0-9]\\d*)\\]{1}");
 
 	/** 全局web样式 */
-	public final static String WEB_STYLE =  "<style>* {font-size:14px;line-height:20px;} p {color:#333;} a {color:#3E62A6;} img {max-width:310px;} "
+	public final static String WEB_STYLE = "<style>* {font-size:14px;line-height:20px;} p {color:#333;} a {color:#3E62A6;} img {max-width:310px;} "
 			+ "img.alignleft {float:left;max-width:120px;margin:0 10px 5px 0;border:1px solid #ccc;background:#fff;padding:2px;} "
 			+ "a.tag {font-size:15px;text-decoration:none;background-color:#bbd6f3;border-bottom:2px solid #3E6D8E;border-right:2px solid #7F9FB6;color:#284a7b;margin:2px 2px 2px 0;padding:2px 4px;white-space:nowrap;}</style>";
 
@@ -118,7 +134,7 @@ public class UIHelper {
 				});
 		builder.show();
 	}
-	
+
 	/**
 	 * 点击返回监听事件
 	 * 
@@ -132,7 +148,7 @@ public class UIHelper {
 			}
 		};
 	}
-	
+
 	/**
 	 * 弹出Toast消息
 	 * 
@@ -149,15 +165,19 @@ public class UIHelper {
 	public static void ToastMessage(Context cont, String msg, int time) {
 		Toast.makeText(cont, msg, time).show();
 	}
-	
+
 	/**
 	 * 分析并组合动态的标题
-	 * @param author_name 动态作者的名称
-	 * @param pAuthor_And_pName 项目的作者和项目名
-	 * @param eventTitle 事件的title（Issue或者pr或分支）
+	 * 
+	 * @param author_name
+	 *            动态作者的名称
+	 * @param pAuthor_And_pName
+	 *            项目的作者和项目名
+	 * @param eventTitle
+	 *            事件的title（Issue或者pr或分支）
 	 * @return
 	 */
-	public static SpannableString parseEventTitle(String author_name, 
+	public static SpannableString parseEventTitle(String author_name,
 			String pAuthor_And_pName, Event event) {
 		String title = "";
 		String eventTitle = "";
@@ -179,13 +199,14 @@ public class UIHelper {
 			title = "重新打开了项目 " + pAuthor_And_pName + " 的 " + eventTitle;
 			break;
 		case Event.EVENT_TYPE_PUSHED:// push
-			eventTitle = event.getData().getRef().substring(event.getData().getRef().lastIndexOf("/") + 1);
+			eventTitle = event.getData().getRef()
+					.substring(event.getData().getRef().lastIndexOf("/") + 1);
 			title = "推送到了项目 " + pAuthor_And_pName + " 的 " + eventTitle + " 分支";
 			break;
 		case Event.EVENT_TYPE_COMMENTED:// 评论
 			if (event.getEvents().getIssue() != null) {
 				eventTitle = "Issues";
-			} else if(event.getEvents().getPull_request() != null) {
+			} else if (event.getEvents().getPull_request() != null) {
 				eventTitle = "PullRequest";
 			}
 			eventTitle = eventTitle + getEventsTitle(event);
@@ -195,10 +216,10 @@ public class UIHelper {
 			eventTitle = event.getTarget_type() + getEventsTitle(event);
 			title = "接受了项目 " + pAuthor_And_pName + " 的 " + eventTitle;
 			break;
-		case Event.EVENT_TYPE_JOINED://# User joined project
+		case Event.EVENT_TYPE_JOINED:// # User joined project
 			title = "加入了项目 " + pAuthor_And_pName;
 			break;
-		case Event.EVENT_TYPE_LEFT://# User left project
+		case Event.EVENT_TYPE_LEFT:// # User left project
 			title = "离开了项目 " + pAuthor_And_pName;
 			break;
 		case Event.EVENT_TYPE_FORKED:// fork了项目
@@ -210,7 +231,7 @@ public class UIHelper {
 		}
 		title = author_name + " " + title;
 		SpannableString sps = new SpannableString(title);
-		
+
 		// 设置用户名字体大小、加粗、高亮
 		sps.setSpan(new AbsoluteSizeSpan(14, true), 0, author_name.length(),
 				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -218,16 +239,15 @@ public class UIHelper {
 				author_name.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		sps.setSpan(new ForegroundColorSpan(Color.parseColor("#0e5986")), 0,
 				author_name.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		
+
 		// 设置项目名字体大小和高亮
 		int start = title.indexOf(pAuthor_And_pName);
 		int end = start + pAuthor_And_pName.length();
 		sps.setSpan(new AbsoluteSizeSpan(14, true), start, end,
-			Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		sps.setSpan(new ForegroundColorSpan(Color.parseColor("#0e5986")),
-			start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		
-		
+				start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
 		// 设置动态的title字体大小和高亮
 		if (!StringUtils.isEmpty(eventTitle) && eventTitle != null) {
 			start = title.indexOf(eventTitle);
@@ -242,19 +262,19 @@ public class UIHelper {
 		}
 		return sps;
 	}
-	
+
 	private static String getEventsTitle(Event event) {
 		String title = "";
-		if (event.getEvents().getIssue() != null) { 
+		if (event.getEvents().getIssue() != null) {
 			title = " #" + event.getEvents().getIssue().getIid();
 		}
-		
+
 		if (event.getEvents().getPull_request() != null) {
 			title = " #" + event.getEvents().getPull_request().getIid();
 		}
 		return title;
 	}
-	
+
 	/**
 	 * 加载显示用户头像
 	 * 
@@ -334,7 +354,7 @@ public class UIHelper {
 			}
 		}.start();
 	}
-	
+
 	/**
 	 * 清除app缓存
 	 * 
@@ -365,23 +385,26 @@ public class UIHelper {
 			}
 		}.start();
 	}
-	
+
 	/**
 	 * 显示登录的界面
+	 * 
 	 * @param context
 	 */
 	public static void showLoginActivity(Context context) {
 		Intent intent = new Intent(context, LoginActivity.class);
 		context.startActivity(intent);
 	}
-	
+
 	/**
 	 * 显示项目的详情
+	 * 
 	 * @param context
 	 * @param project
 	 * @param projectId
 	 */
-	public static void showProjectDetail(Context context, Project project, String projectId) {
+	public static void showProjectDetail(Context context, Project project,
+			String projectId) {
 		Intent intent = new Intent(context, ProjectActivity.class);
 		Bundle bundle = new Bundle();
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -390,14 +413,16 @@ public class UIHelper {
 		intent.putExtras(bundle);
 		context.startActivity(intent);
 	}
-	
+
 	/**
 	 * 显示commit详情
+	 * 
 	 * @param context
 	 * @param project
 	 * @param commit
 	 */
-	public static void showCommitDetail(Context context, Project project, Commit commit) {
+	public static void showCommitDetail(Context context, Project project,
+			Commit commit) {
 		Intent intent = new Intent(context, CommitDetailActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		Bundle bundle = new Bundle();
@@ -406,17 +431,19 @@ public class UIHelper {
 		intent.putExtras(bundle);
 		context.startActivity(intent);
 	}
-	
+
 	/**
 	 * 显示commit的Diff详情
+	 * 
 	 * @param context
 	 * @param project
 	 * @param commit
 	 * @param commitDiff
 	 */
-	public static void showCommitDiffFileDetail(Context context, Project project, Commit commit, CommitDiff commitDiff) {
+	public static void showCommitDiffFileDetail(Context context,
+			Project project, Commit commit, CommitDiff commitDiff) {
 		Intent intent = new Intent(context, CommitFileDetailActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		Bundle bundle = new Bundle();
 		bundle.putSerializable(Contanst.PROJECT, project);
 		bundle.putSerializable(Contanst.COMMIT, commit);
@@ -424,16 +451,18 @@ public class UIHelper {
 		intent.putExtras(bundle);
 		context.startActivity(intent);
 	}
-	
+
 	/**
 	 * 显示issue的详情
+	 * 
 	 * @param context
 	 * @param project
 	 * @param issue
 	 */
-	public static void showIssueDetail(Context context, Project project, Issue issue, String projectId, String issueId) {
+	public static void showIssueDetail(Context context, Project project,
+			Issue issue, String projectId, String issueId) {
 		Intent intent = new Intent(context, IssueDetailActivity.class);
-		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);  
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		Bundle bundle = new Bundle();
 		bundle.putSerializable(Contanst.PROJECT, project);
 		bundle.putSerializable(Contanst.ISSUE, issue);
@@ -442,14 +471,16 @@ public class UIHelper {
 		intent.putExtras(bundle);
 		context.startActivity(intent);
 	}
-	
+
 	/**
 	 * 显示issue的编辑或者新增issue的界面
+	 * 
 	 * @param context
 	 * @param project
 	 * @param issue
 	 */
-	public static void showIssueEditOrCreate(Context context, Project project, Issue issue) {
+	public static void showIssueEditOrCreate(Context context, Project project,
+			Issue issue) {
 		Intent intent = new Intent(context, IssueEditActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		Bundle bundle = new Bundle();
@@ -458,18 +489,20 @@ public class UIHelper {
 		intent.putExtras(bundle);
 		context.startActivity(intent);
 	}
-	
+
 	/**
 	 * 显示用户信息详情
+	 * 
 	 * @param context
 	 */
 	public static void showMySelfInfoDetail(Context context) {
 		Intent intent = new Intent(context, MySelfInfoActivity.class);
 		context.startActivity(intent);
 	}
-	
+
 	/**
 	 * 显示搜索界面
+	 * 
 	 * @param context
 	 */
 	public static void showSearch(Context context) {
@@ -477,13 +510,15 @@ public class UIHelper {
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		context.startActivity(intent);
 	}
-	
+
 	/**
 	 * 显示用户详情界面
+	 * 
 	 * @param context
 	 * @param user
 	 */
-	public static void showUserInfoDetail(Context context, User user, String user_id) {
+	public static void showUserInfoDetail(Context context, User user,
+			String user_id) {
 		Intent intent = new Intent(context, UserInfoActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		Bundle bundle = new Bundle();
@@ -492,24 +527,26 @@ public class UIHelper {
 		intent.putExtras(bundle);
 		context.startActivity(intent);
 	}
-	
+
 	/**
 	 * 点击动态显示动态详情
+	 * 
 	 * @param context
 	 * @param event
 	 */
 	public static void showEventDetail(Context context, Event event) {
 		if (event.getEvents().getIssue() != null) {
-			showIssueDetail(context, null, null, event.getProject().getId(), event.getEvents().getIssue().getId());
+			showIssueDetail(context, null, null, event.getProject().getId(),
+					event.getEvents().getIssue().getId());
 		} else {
 			showProjectDetail(context, null, event.getProject().getId());
 		}
 	}
-	
+
 	// 查看代码文件详情
-	public static void showCodeFileDetail(Context context, String path, String fileName, String ref, Project project) {
-		Intent intent = new Intent(context,
-				CodeFileDetailActivity.class);
+	public static void showCodeFileDetail(Context context, String path,
+			String fileName, String ref, Project project) {
+		Intent intent = new Intent(context, CodeFileDetailActivity.class);
 		Bundle bundle = new Bundle();
 		bundle.putSerializable(Contanst.PROJECT, project);
 		bundle.putString("fileName", fileName);
@@ -520,26 +557,30 @@ public class UIHelper {
 		intent.putExtras(bundle);
 		context.startActivity(intent);
 	}
-	
+
 	/**
 	 * 显示项目的readme详情
+	 * 
 	 * @param context
 	 * @param project
 	 */
-	public static void showProjectReadMeActivity(Context context, Project project) {
+	public static void showProjectReadMeActivity(Context context,
+			Project project) {
 		Intent intent = new Intent(context, ProjectReadMeActivity.class);
 		Bundle bundle = new Bundle();
 		bundle.putSerializable(Contanst.PROJECT, project);
 		intent.putExtras(bundle);
 		context.startActivity(intent);
 	}
-	
+
 	/**
 	 * 显示项目的一些列表信息列表
+	 * 
 	 * @param context
 	 * @param project
 	 */
-	public static void showProjectListActivity(Context context, Project project, int type) {
+	public static void showProjectListActivity(Context context,
+			Project project, int type) {
 		Intent intent = new Intent(context, ProjectSomeInfoListActivity.class);
 		Bundle bundle = new Bundle();
 		bundle.putSerializable(Contanst.PROJECT, project);
@@ -547,9 +588,10 @@ public class UIHelper {
 		intent.putExtras(bundle);
 		context.startActivity(intent);
 	}
-	
+
 	/**
 	 * 显示项目的代码列表
+	 * 
 	 * @param context
 	 * @param project
 	 */
@@ -560,18 +602,20 @@ public class UIHelper {
 		intent.putExtras(bundle);
 		context.startActivity(intent);
 	}
-	
+
 	/**
 	 * 进入主界面
+	 * 
 	 * @param context
 	 */
 	public static void goMainActivity(Context context) {
 		Intent intent = new Intent(context, MainActivity.class);
 		context.startActivity(intent);
 	}
-	
+
 	/**
 	 * 显示图片查看界面
+	 * 
 	 * @param context
 	 * @param img_url
 	 */
@@ -582,7 +626,7 @@ public class UIHelper {
 		intent.putExtras(bundle);
 		context.startActivity(intent);
 	}
-	
+
 	/**
 	 * 打开浏览器
 	 * 
@@ -599,7 +643,7 @@ public class UIHelper {
 			ToastMessage(context, "无法浏览此网页", 500);
 		}
 	}
-	
+
 	// 发送通知广播
 	public static void sendBroadCast(Context context, int count) {
 		if (!((AppContext) context.getApplicationContext()).isLogin()
@@ -609,41 +653,113 @@ public class UIHelper {
 		intent.putExtra("count", count);
 		context.sendBroadcast(intent);
 	}
-	
+
 	/**
 	 * 显示通知详情页面
+	 * 
 	 * @param context
 	 */
 	public static void showNotificationDetail(Context context) {
 		Intent intent = new Intent(context, NotificationActivity.class);
 		context.startActivity(intent);
 	}
-	
+
+	/**
+	 * 显示分享操作
+	 * 
+	 * @param context
+	 * @param shareContent
+	 * @param shareImage
+	 */
+	public static void showShareOption(Activity context, String title,
+			String url, String shareContent, Bitmap shareImage) {
+
+		UMImage mUMImgBitmap = new UMImage(context, shareImage);
+		// 首先在您的Activity中添加如下成员变量
+		final UMSocialService mController = UMServiceFactory
+				.getUMSocialService("com.umeng.share");
+
+		// appID是你在微信开发平台注册应用的AppID, 这里需要替换成你注册的AppID
+		String appID = "wx850b854f6aad6764";
+		// 添加微信平台
+		UMWXHandler wxHandler = new UMWXHandler(context, appID);
+		wxHandler.addToSocialSDK();
+		// 设置分享到微信的内容
+		WeiXinShareContent weixinContent = new WeiXinShareContent(mUMImgBitmap);
+		weixinContent.setShareContent(shareContent);
+		weixinContent.setTitle(title);
+		weixinContent.setTargetUrl(url);
+		weixinContent.setShareImage(mUMImgBitmap);
+		wxHandler.mShareMedia = weixinContent;
+		mController.setShareMedia(weixinContent);
+
+		// 支持微信朋友圈
+		UMWXHandler wxCircleHandler = new UMWXHandler(context, appID);
+		// 设置朋友圈分享的内容
+		CircleShareContent circleMedia = new CircleShareContent();
+		circleMedia.setShareContent(shareContent);
+		circleMedia.setShareImage(mUMImgBitmap);
+		circleMedia.setTargetUrl(url);
+		circleMedia.setTitle(title);
+		wxCircleHandler.mShareMedia = circleMedia;
+		mController.setShareMedia(circleMedia);
+		wxCircleHandler.setToCircle(true);
+		wxCircleHandler.addToSocialSDK();
+
+		// 参数1为当前Activity，参数2为开发者在QQ互联申请的APP ID，参数3为开发者在QQ互联申请的APP kEY.
+		UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(context, "1101982202",
+				"GJxJGse5cu9iH4NM");
+		QQShareContent qqShareContent = new QQShareContent();
+		qqShareContent.setTitle(title);
+		qqShareContent.setShareContent(shareContent);
+		qqShareContent.setShareImage(mUMImgBitmap);
+		qqShareContent.setTargetUrl(url);
+		qqSsoHandler.mShareMedia = mUMImgBitmap;
+		mController.setShareMedia(qqShareContent);
+		qqSsoHandler.addToSocialSDK();
+
+		SinaSsoHandler sinaSsoHandler = new SinaSsoHandler();
+		SinaShareContent sinaShareContent = new SinaShareContent();
+		String form = "  分享自GitOSC移动客户端，好项目尽在https://git.oschina.net";
+		sinaShareContent.setShareContent(shareContent + " " + url + form);
+		sinaShareContent.setTargetUrl(url);
+		sinaShareContent.setShareImage(mUMImgBitmap);
+		sinaShareContent.setTitle(title);
+		mController.setShareMedia(sinaShareContent);
+		mController.getConfig().setSsoHandler(sinaSsoHandler);
+		// 移除人人分享操作
+		mController.getConfig().removePlatform(SHARE_MEDIA.RENREN,
+				SHARE_MEDIA.DOUBAN, SHARE_MEDIA.TENCENT);
+
+		mController.openShare(context, false);
+	}
+
 	/**
 	 * 获得屏幕的截图
+	 * 
 	 * @param activity
 	 * @return
 	 */
-	public static Bitmap takeScreenShot(Activity activity) {  
-        // View是你需要截图的View  
-        View view = activity.getWindow().getDecorView();  
-        view.setDrawingCacheEnabled(true);  
-        view.buildDrawingCache();  
-        Bitmap b1 = view.getDrawingCache();  
-   
-        // 获取状态栏高度  
-        Rect frame = new Rect();  
-        activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);  
-        int statusBarHeight = frame.top;  
-   
-        // 获取屏幕长和高  
-        int width = activity.getWindowManager().getDefaultDisplay().getWidth();  
-        int height = activity.getWindowManager().getDefaultDisplay()  
-                .getHeight();  
-        // 去掉标题栏  
-        Bitmap b = Bitmap.createBitmap(b1, 0, statusBarHeight, width, height  
-                - statusBarHeight);  
-        view.destroyDrawingCache();  
-        return b;  
-    }
+	public static Bitmap takeScreenShot(Activity activity) {
+		// View是你需要截图的View
+		View view = activity.getWindow().getDecorView();
+		view.setDrawingCacheEnabled(true);
+		view.buildDrawingCache();
+		Bitmap b1 = view.getDrawingCache();
+
+		// 获取状态栏高度
+		Rect frame = new Rect();
+		activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
+		int statusBarHeight = frame.top;
+
+		// 获取屏幕长和高
+		int width = activity.getWindowManager().getDefaultDisplay().getWidth();
+		int height = activity.getWindowManager().getDefaultDisplay()
+				.getHeight();
+		// 去掉标题栏
+		Bitmap b = Bitmap.createBitmap(b1, 0, statusBarHeight, width, height
+				- statusBarHeight);
+		view.destroyDrawingCache();
+		return b;
+	}
 }

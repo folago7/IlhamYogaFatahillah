@@ -44,7 +44,7 @@
     <style name="app_more_menu_layout">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@drawable/abc_ab_bottom_solid_dark_holo</item>
+        <item name="android:background">@drawable/menu_layout_item_selector</item>
         <item name="android:gravity">center|left</item>
         <item name="android:padding">5dip</item>
         <item name="android:orientation">horizontal</item>
@@ -62,7 +62,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:textColor">#ffffff</item>
-        <item name="android:layout_marginRight">30dip</item>
+        <item name="android:layout_marginRight">20dip</item>
         <item name="android:textSize">16sp</item>
     </style>
 
@@ -259,10 +259,8 @@
     <style name="project_codetree_list_img">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_gravity">center</item>
-        <item name="android:padding">1.0dip</item>
-        <item name="android:clickable">true</item>
-        <item name="android:textSize">21sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">25sp</item>
     </style>
 
     <style name="project_codetree_list_name">
@@ -276,12 +274,6 @@
     </style>
 
     <!-- project code tree style end -->
-
-    <!-- notification style start -->
-
-    <style name="notice_"></style>
-
-    <!-- notification style end -->
 
     <style name="ListItem">
         <item name="android:layout_height">wrap_content</item>

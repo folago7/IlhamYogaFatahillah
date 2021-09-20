@@ -136,8 +136,8 @@ public class MySelfInfoActivity extends BaseActionBarActivity implements View.On
 		mUser = getGitApplication().getLoginInfo();
 		if (mUser != null) {
 			mUserName.setText(mUser.getName());
-			SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-			mJoinTime.setText(sdf.format(new Date()));
+			
+			mJoinTime.setText(mUser.getCreated_at().substring(0, 10));
 			if (mUser.getWeibo().equals("null")) {
 				
 			} else {

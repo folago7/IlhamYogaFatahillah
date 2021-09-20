@@ -3,6 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:descendantFocusability="blocksDescendants"
+    android:background="@drawable/list_layout_item_selector"
     android:orientation="horizontal"
     android:paddingBottom="7dip"
     android:paddingLeft="6dip"

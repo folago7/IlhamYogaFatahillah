@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="net.oschina.gitapp"
-    android:versionCode="2"
-    android:versionName="Beta 0.9" >
+    android:versionCode="3"
+    android:versionName="Beta 1.0" >
 
     <!--
          1.Target SDK version must be 16, not 17, or JavaScript bridge for
          WebView widgets does not work on a 4.2 Nexus 7
-         2.也可以在js调用的方法加上注解@JavascriptInterface，不然是不用被js代码所调用的
-    -->
+         2.也可以在js调用的方法加上注解@JavascriptInterface，不然是不用被js代码所调用的   	-->
     <uses-sdk
         android:minSdkVersion="10"
         android:targetSdkVersion="19" />
@@ -17,6 +16,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:name="net.oschina.gitapp.AppContext"
@@ -58,13 +59,15 @@
         <activity android:name=".ui.ProjectReadMeActivity" />
         <activity android:name=".ui.ProjectCodeActivity" />
         <activity android:name=".ui.ProjectSomeInfoListActivity" />
-        <activity android:name=".ui.NotificationActivity"></activity>
+        <activity android:name=".ui.NotificationActivity" >
+        </activity>
         <activity
             android:name=".ui.SearchActivity"
             android:label="项目搜索"
             android:launchMode="singleTask" />
-        <activity android:name=".ui.LanguageActivity"
-            android:label="编程语言"/>
+        <activity
+            android:name=".ui.LanguageActivity"
+            android:label="编程语言" />
         <activity
             android:name=".ui.CodeFileDetailActivity"
             android:launchMode="singleTask" />
@@ -107,14 +110,51 @@
             android:label="关于git"
             android:launchMode="singleTask" >
         </activity>
-        
+
         <!-- 注册app广播接收器 -->
-         <receiver android:name=".ui.BroadCast" >
+        <receiver android:name=".ui.BroadCast" >
             <intent-filter>
                 <action android:name="net.oschina.gitapp.action.APPWIDGET_UPDATE" />
             </intent-filter>
         </receiver>
-        
+
+        <!-- umeng -->
+        <!-- ###################注册SDK使用的Activity###################### -->
+        <!-- 分享编辑页 -->
+        <activity
+            android:name="com.umeng.socialize.view.ShareActivity"
+            android:configChanges="orientation|keyboard"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:theme="@style/Theme.UMDialog"
+            android:windowSoftInputMode="stateVisible|adjustResize" >
+        </activity>
+
+        <!-- ############ QQ空间和QQ SSO授权的Activity注册 ############ -->
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- 100424468，如果你使用的公用账号，则不需要修改；否则修改成你在QQ开放平台申请的 APP ID -->
+                <data android:scheme="tencent100424468" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.tencent.connect.common.AssistActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
+
+        <!-- ###################添加UmengAppkey###################### -->
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="53ce746f56240bfb4105762d" >
+        </meta-data>
     </application>
 
 </manifest>

@@ -43,25 +43,6 @@ public class FileUtils {
 			e.printStackTrace();
 		}
 	}
-	
-	/**
-	 * 保存文本内容到指定的目录
-	 * @param context
-	 * @param path
-	 * @param fileName
-	 * @param content
-	 * @return
-	 */
-	public static boolean write(Context context, String path, String fileName, String content) {
-		boolean res = false;
-		if (content == null) {
-			return res;
-		}
-		
-		
-		
-		return res;
-	}
 
 	/**
 	 * 读取文本文件
@@ -93,7 +74,6 @@ public class FileUtils {
 			inStream.close();
 			return outStream.toString();
 		} catch (IOException e) {
-			Log.i("FileTest", e.getMessage());
 		}
 		return null;
 	}
@@ -107,7 +87,7 @@ public class FileUtils {
 	}
 
 	/**
-	 * 向手机写图片
+	 * 向手机写文件
 	 * 
 	 * @param buffer
 	 * @param folder
@@ -117,24 +97,12 @@ public class FileUtils {
 	public static boolean writeFile(byte[] buffer, String folder,
 			String fileName) {
 		boolean writeSucc = false;
-
-		boolean sdCardExist = Environment.getExternalStorageState().equals(
-				android.os.Environment.MEDIA_MOUNTED);
-
-		String folderPath = "";
-		if (sdCardExist) {
-			folderPath = Environment.getExternalStorageDirectory()
-					+ File.separator + folder + File.separator;
-		} else {
-			writeSucc = false;
-		}
-
-		File fileDir = new File(folderPath);
+		File fileDir = new File(folder.substring(0,
+				folder.lastIndexOf(File.separator)));
 		if (!fileDir.exists()) {
 			fileDir.mkdirs();
 		}
-
-		File file = new File(folderPath + fileName);
+		File file = new File(folder + fileName);
 		FileOutputStream out = null;
 		try {
 			out = new FileOutputStream(file);
@@ -142,6 +110,7 @@ public class FileUtils {
 			writeSucc = true;
 		} catch (Exception e) {
 			e.printStackTrace();
+			writeSucc = false;
 		} finally {
 			try {
 				out.close();

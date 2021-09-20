@@ -4,22 +4,24 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
+import android.os.Vibrator;
 import android.support.v4.view.MenuItemCompat;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
-import android.widget.ImageView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -33,6 +35,7 @@ import net.oschina.gitapp.api.ApiClient;
 import net.oschina.gitapp.bean.Branch;
 import net.oschina.gitapp.bean.CodeTree;
 import net.oschina.gitapp.bean.CommonList;
+import net.oschina.gitapp.bean.MoreMenuItem;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.common.Contanst;
@@ -41,6 +44,7 @@ import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
 import net.oschina.gitapp.util.TypefaceUtils;
+import net.oschina.gitapp.widget.DropDownMenu;
 
 /**
  * 项目代码列表
@@ -50,8 +54,11 @@ import net.oschina.gitapp.util.TypefaceUtils;
  * 
  */
 public class ProjectCodeActivity extends BaseActionBarActivity implements
-		OnItemClickListener, OnClickListener {
-
+		OnItemClickListener, OnItemLongClickListener, OnClickListener {
+	
+	private final int MORE_MENU_OPENDEFAULT = 00;// 分享
+	private final int MORE_MENU_OPEN_WITH_BROWS = 01;// 在浏览器中打开
+	
 	private final int MENU_REFRESH_ID = 0;
 
 	private static final int ACTION_INIT = 0;// 初始化
@@ -76,6 +83,8 @@ public class ProjectCodeActivity extends BaseActionBarActivity implements
 	private Stack<List<CodeTree>> mCodeFolders = new Stack<List<CodeTree>>();
 
 	private List<CodeTree> mTrees;
+	
+	private CodeTree mOnCilkCodeTree;
 
 	private String mPath = "";
 
@@ -101,6 +110,38 @@ public class ProjectCodeActivity extends BaseActionBarActivity implements
 	private AlertDialog.Builder dialog;
 
 	private DataRequestThreadHandler mRequestThreadHandler = new DataRequestThreadHandler();
+	
+	private DropDownMenu mMoreMenuWindow;
+	
+	private List<MoreMenuItem> mMoreItems = new ArrayList<MoreMenuItem>();
+	
+	private View.OnClickListener onMoreMenuItemClick = new OnClickListener() {
+		
+		@Override
+		public void onClick(View v) {
+			if (mMoreMenuWindow != null && mMoreMenuWindow.isShowing()) {
+				mMoreMenuWindow.dismiss();
+			}
+			if (mProject == null) {
+				return;
+			}
+			if (!mProject.isPublic()) {
+				UIHelper.ToastMessage(mAppContext, "私有项目不支持该操作");
+				return;
+			}
+			int id = v.getId();
+			switch (id) {
+			case MORE_MENU_OPENDEFAULT:
+				showDetail(mOnCilkCodeTree.getName(), mBranch);
+				break;
+			case MORE_MENU_OPEN_WITH_BROWS:
+				openWithBrowser(mOnCilkCodeTree);
+				break;
+			default:
+				break;
+			}
+		}
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -137,6 +178,16 @@ public class ProjectCodeActivity extends BaseActionBarActivity implements
 		MenuItemCompat.setShowAsAction(refreshItem,
 				MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
 		return true;
+	}
+	
+	private void initMoreOption() {
+		MoreMenuItem openDefault = new MoreMenuItem(MORE_MENU_OPENDEFAULT, R.drawable.more_menu_icon_app, "在该app中打开");
+		mMoreItems.add(openDefault);
+		
+		MoreMenuItem open_with_brows = new MoreMenuItem(MORE_MENU_OPEN_WITH_BROWS, R.drawable.more_menu_icon_browser, "在浏览器中打开");
+		mMoreItems.add(open_with_brows);
+		
+		mMoreMenuWindow.addItems(mMoreItems);
 	}
 
 	@Override
@@ -189,6 +240,7 @@ public class ProjectCodeActivity extends BaseActionBarActivity implements
 				R.layout.projectcodetree_listitem);
 		mCodeTree.setAdapter(mAdapter);
 		mCodeTree.setOnItemClickListener(this);
+		mCodeTree.setOnItemLongClickListener(this);
 		mSwitch_branch.setOnClickListener(this);
 	}
 
@@ -325,12 +377,31 @@ public class ProjectCodeActivity extends BaseActionBarActivity implements
 
 		position -= mCodeTree.getHeaderViewsCount();
 
-		CodeTree codeTree = mTrees.get(position);
-		if (codeTree.getType().equalsIgnoreCase(CodeTree.TYPE_TREE)) {
-			loadDatas(getPath(codeTree.getName()), mBranch, ACTION_LOADING_TREE);
+		mOnCilkCodeTree = mTrees.get(position);
+		if (mOnCilkCodeTree.getType().equalsIgnoreCase(CodeTree.TYPE_TREE)) {
+			loadDatas(getPath(mOnCilkCodeTree.getName()), mBranch, ACTION_LOADING_TREE);
 		} else {
-			checkShow(codeTree);
+			checkShow(mOnCilkCodeTree);
 		}
+	}
+	
+	@Override
+	public boolean onItemLongClick(AdapterView<?> parent, View view,
+			int position, long id) {
+		position -= mCodeTree.getHeaderViewsCount();
+		// 震动
+		Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+		vibrator.vibrate(80);
+		mOnCilkCodeTree = mTrees.get(position); 
+		if (mOnCilkCodeTree.getType().equalsIgnoreCase(CodeTree.TYPE_BLOB)) {
+			if (mMoreMenuWindow == null) {
+				mMoreMenuWindow = new DropDownMenu(ProjectCodeActivity.this, onMoreMenuItemClick);
+				initMoreOption();
+				mMoreMenuWindow.getViewGroup().setPadding(0, 0, 0, 0);
+			}
+			mMoreMenuWindow.showAtLocation(view, Gravity.CENTER, 0, 0);
+		}
+		return true;
 	}
 
 	// 获得访问的路径
@@ -358,28 +429,37 @@ public class ProjectCodeActivity extends BaseActionBarActivity implements
 		
 		String fileName = codeTree.getName();
 		
-		// 带有token的
-		String url = URLs.URL_HOST + mProject.getOwner().getUsername()
-				+ URLs.URL_SPLITTER + mProject.getPath() + URLs.URL_SPLITTER + "raw" + URLs.URL_SPLITTER
-				+ mBranch + URLs.URL_SPLITTER + URLEncoder.encode(getFilePath(fileName)) + "?private_token=" + ApiClient.getToken(mAppContext);
-		
 		if (isCodeTextFile(fileName)) {
 			
 			showDetail(fileName, mBranch);
 			
 		} else if (isImage(fileName)) {
-			
+			String url = URLs.URL_HOST + mProject.getOwner().getUsername()
+					+ URLs.URL_SPLITTER + mProject.getPath() + URLs.URL_SPLITTER + "raw" + URLs.URL_SPLITTER
+					+ mBranch + URLs.URL_SPLITTER + URLEncoder.encode(getFilePath(fileName)) + "?private_token=" + ApiClient.getToken(mAppContext);
 			UIHelper.showImageZoomActivity(ProjectCodeActivity.this, url);
 		} else {
-			UIHelper.openBrowser(ProjectCodeActivity.this, url);
+			openWithBrowser(codeTree);
 		}
+	}
+	
+	/**
+	 * 在浏览器中在打开
+	 * @param codeTree
+	 */
+	@SuppressWarnings("deprecation")
+	private void openWithBrowser(CodeTree codeTree) {
+		String url = URLs.URL_HOST + mProject.getOwner().getUsername()
+				+ URLs.URL_SPLITTER + mProject.getPath() + URLs.URL_SPLITTER + "blob" + URLs.URL_SPLITTER
+				+ mBranch + URLs.URL_SPLITTER + URLEncoder.encode(getFilePath(codeTree.getName())) + "?private_token=" + ApiClient.getToken(mAppContext);
+		UIHelper.openBrowser(ProjectCodeActivity.this, url);
 	}
 	
 	// 判断是不是代码文件
 	private boolean isCodeTextFile(String fileName) {
 		boolean res = false;
 		// 文件的后缀
-		int index = fileName.lastIndexOf(".");
+		int index = fileName.lastIndexOf(".");	
 		if (index > 0) {
 			fileName = fileName.substring(index);
 		}
@@ -477,7 +557,7 @@ public class ProjectCodeActivity extends BaseActionBarActivity implements
 			break;
 		}
 	}
-
+	
 	private void switchBranch() {
 		if (mProject == null) {
 			return;

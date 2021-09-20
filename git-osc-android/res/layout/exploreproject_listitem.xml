@@ -9,6 +9,7 @@
     android:paddingLeft="6dip"
     android:paddingRight="6dip"
     android:paddingTop="8dip"
+    android:background="@drawable/list_layout_item_selector"
     tools:context=".ui.fragments.ExploreLatestListProjectFragment" >
 
     <!-- 项目作者头像 -->

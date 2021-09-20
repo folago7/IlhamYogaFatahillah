@@ -1,21 +1,24 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/list_item_background"
     android:orientation="vertical" >
 
     <LinearLayout
         android:id="@+id/projectcode_tree_prefolder"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:drawable/list_selector_background"
-        android:orientation="horizontal"
-        android:layout_gravity="center"
-        android:paddingLeft="10dip" >
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="5dip"
+        android:padding="5dip"
+        android:gravity="center"
+        android:background="@drawable/list_item_background" >
 
         <TextView
             android:id="@+id/projectcode_pre_img"
-            android:text="@string/icon_folder"
+            android:text="@string/icon_folders"
             android:textColor="@color/gray"
+            android:gravity="center"
+            android:layout_marginTop="5dip"
             style="@style/project_codetree_list_img" />
 
         <LinearLayout
@@ -23,17 +26,16 @@
             android:layout_height="wrap_content"
             android:descendantFocusability="blocksDescendants"
             android:orientation="vertical"
-            android:gravity="center|left"
             android:paddingLeft="10dip"
             android:paddingBottom="2dip" >
 
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:text=".."
                 android:textColor="@color/black"
-                android:gravity="center"
-                android:textSize="16sp" />
+                android:textStyle="bold"
+                android:textSize="10sp" />
 
             <TextView
                 android:id="@+id/projectcode_floders"
@@ -48,6 +50,6 @@
     <View
         android:layout_width="fill_parent"
         android:layout_height="0.1dip"
-        android:background="@color/red" />
+        android:background="@color/gray" />
 
 </LinearLayout>

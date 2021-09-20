@@ -26,7 +26,6 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import java.io.UnsupportedEncodingException;
 import net.oschina.gitapp.bean.CodeFile;
-import net.oschina.gitapp.common.UIHelper;
 
 /**
  * 用markdown渲染代码显示

@@ -1,7 +1,6 @@
 package net.oschina.gitapp.ui;
 
 import java.util.ArrayList;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -34,7 +33,6 @@ import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
 public class IssueEditActivity extends BaseActionBarActivity implements OnClickListener {
 
 	private InputMethodManager imm;
-	
 	
 	private Project mProject;
 	

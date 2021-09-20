@@ -14,8 +14,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:padding="25dip"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:padding="25dip" >
 
         <AutoCompleteTextView
             android:id="@+id/login_account"
@@ -25,8 +25,8 @@
             android:drawablePadding="10dip"
             android:ems="10"
             android:hint="@string/login_account_hint"
-            android:inputType="textEmailAddress"
             android:imeOptions="actionNext"
+            android:inputType="textEmailAddress"
             android:singleLine="true" />
 
         <EditText
@@ -50,8 +50,41 @@
             android:enabled="false"
             android:padding="10dip"
             android:text="@string/login_title"
-            android:textSize="@dimen/space_15"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:textSize="@dimen/space_15" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="25dip" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:text="tips:"
+                android:textColor="@color/gray"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="请使用Git@OSC的push邮箱和密码登录"
+                android:layout_marginLeft="15dip"
+                android:textColor="@color/gray"
+                android:textSize="12sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:autoLink="web"
+                android:layout_marginLeft="15dip"
+                android:text="注册请前往http://git.oschina.net"
+                android:textColor="@color/gray"
+                android:textSize="12sp" />
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

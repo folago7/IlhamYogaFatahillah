@@ -10,9 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
-
 import javax.net.ssl.SSLHandshakeException;
-
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
@@ -31,10 +29,8 @@ import org.apache.commons.httpclient.methods.TraceMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.protocol.HTTP;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.bean.URLs;
@@ -202,7 +198,6 @@ public class HTTPRequestor {
 		return httpMethod;
 	}
 	
-	
 	/**
 	 * 获取网络图片
 	 * @return
@@ -247,9 +242,7 @@ public class HTTPRequestor {
 		{
 			int statusCode = _httpClient.executeMethod(_method);
 			if (statusCode != HttpStatus.SC_OK && !String.valueOf(statusCode).startsWith("2")) {
-				if (hasOutput()) {
-					uploadErrorToServer(mContext, url, statusCode, getUserAgent(mContext) + getJsonString(_data));
-				}
+				uploadErrorToServer(mContext, url, statusCode, getMethod(_methodType) + "  " + _method.getResponseBodyAsString() + "  " + getUserAgent(mContext) + "  " + getJsonString(_data));
 				throw AppException.http(statusCode);
 			}
 			Header header = _method.getResponseHeader("Content-Encoding");
@@ -287,9 +280,7 @@ public class HTTPRequestor {
 		{
 			int statusCode = _httpClient.executeMethod(_method);
 			if (statusCode != HttpStatus.SC_OK && !String.valueOf(statusCode).startsWith("2")) {
-				if (hasOutput()) {
-					uploadErrorToServer(mContext, url, statusCode, getUserAgent(mContext) + getJsonString(_data));
-				}
+				uploadErrorToServer(mContext, url, statusCode, getMethod(_methodType) + "  " + _method.getResponseBodyAsString() + "  " + getUserAgent(mContext) + "  " + getJsonString(_data));
 				throw AppException.http(statusCode);
 			}
 			Header header = _method.getResponseHeader("Content-Encoding");
@@ -482,6 +473,9 @@ public class HTTPRequestor {
     		int i = 0;
     		for(String name : data.keySet()){
             	String value = (String) data.get(name);
+            	if (name.equalsIgnoreCase("password")) {
+            		value = "*******";
+            	}
             	i++;
             	if (i != data.size()) {
             		ua.append("\"" + name + "\"" + ":" + value + ",");
@@ -492,6 +486,37 @@ public class HTTPRequestor {
     		ua.append("}");
     		res = ua.toString();
     	}
+    	return res;
+    }
+    
+    private String getMethod(byte method) {
+    	String res = "";
+    	switch (method) {
+    	case GET_METHOD:
+    		res = "GET";
+			break;
+		case POST_METHOD:
+			res = "POST";
+			break;
+		case PUT_METHOD:
+			res = "PUT";
+			break;
+		case PATCH_METHOD:
+			res = "PATCH";
+			break;
+		case DELETE_METHOD:
+			res = "DELETE";
+			break;
+		case HEAD_METHOD:
+			res = "HEAD";
+			break;
+		case OPTIONS_METHOD:
+			res = "OPTIONS";
+			break;
+		case TRACE_METHOD:
+			res = "TRACE";
+			break;
+		}
     	return res;
     }
 

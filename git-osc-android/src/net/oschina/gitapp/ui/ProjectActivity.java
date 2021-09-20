@@ -3,12 +3,23 @@ package net.oschina.gitapp.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.controller.UMServiceFactory;
+import com.umeng.socialize.controller.UMSocialService;
+import com.umeng.socialize.sso.EmailHandler;
+import com.umeng.socialize.sso.SinaSsoHandler;
+import com.umeng.socialize.sso.SmsHandler;
+import com.umeng.socialize.sso.UMQQSsoHandler;
+import com.umeng.socialize.weixin.controller.UMWXHandler;
+
 import android.app.ProgressDialog;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -99,6 +110,8 @@ public class ProjectActivity extends BaseActionBarActivity implements
 	
 	private String url_link = null;
 	
+	private Bitmap bitmap;
+	
 	private View.OnClickListener onMoreMenuItemClick = new OnClickListener() {
 		
 		@SuppressWarnings("deprecation")
@@ -117,7 +130,8 @@ public class ProjectActivity extends BaseActionBarActivity implements
 			int id = v.getId();
 			switch (id) {
 			case MORE_MENU_SHARE:
-				
+				UIHelper.showShareOption(ProjectActivity.this, mProject.getName(), url_link , 
+						"我在关注《" + mProject.getOwner().getName() + "的项目" + mProject.getName() + "》" + "，你也来瞧瞧呗！", bitmap);
 				break;
 			case MORE_MENU_COPY_LINK:
 				ClipboardManager cbm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
@@ -203,6 +217,17 @@ public class ProjectActivity extends BaseActionBarActivity implements
 		
 		// 记录项目的地址链接：
 		url_link = URLs.URL_HOST + mProject.getOwner().getUsername() + URLs.URL_SPLITTER + mProject.getPath();
+		// 截取屏幕
+		Handler mHandler = new Handler();
+		mHandler.postDelayed(new Runnable() {
+			
+			@Override
+			public void run() {
+				if (bitmap == null) {
+					bitmap = UIHelper.takeScreenShot(ProjectActivity.this);
+				}
+			}
+		}, 500);
 	}
 	
 	private void setStared(boolean stared) {
@@ -225,19 +250,16 @@ public class ProjectActivity extends BaseActionBarActivity implements
 	}
 	
 	private void initMoreMenu() {
-		MoreMenuItem shar = new MoreMenuItem(MORE_MENU_SHARE, R.drawable.more_menu_icon_share, "分享项目");
-		//mMoreItems.add(shar);
+		MoreMenuItem share = new MoreMenuItem(MORE_MENU_SHARE, R.drawable.more_menu_icon_share, "分享项目");
+		mMoreItems.add(share);
 		
 		MoreMenuItem copy_link = new MoreMenuItem(MORE_MENU_COPY_LINK, R.drawable.more_menu_icon_copy, "复制项目链接");
 		mMoreItems.add(copy_link);
 		
 		MoreMenuItem open_with_brows = new MoreMenuItem(MORE_MENU_OPEN_WITH_BROWS, R.drawable.more_menu_icon_browser, "在浏览器中打开");
 		mMoreItems.add(open_with_brows);
-		for (int i = 0; i < mMoreItems.size(); i++) {
-			if (mMoreMenuWindow != null) {
-				mMoreMenuWindow.addItem(mMoreItems.get(i));
-			}
-		}
+		
+		mMoreMenuWindow.addItems(mMoreItems);
 	}
 	
 	@Override
@@ -426,11 +448,10 @@ public class ProjectActivity extends BaseActionBarActivity implements
 		}
 		final ProgressDialog loadingDialog = new ProgressDialog(this);
 		loadingDialog.setCanceledOnTouchOutside(false);
-		loadingDialog.setTitle("操作进行中");
 		if (mProject.isStared()) {
-			loadingDialog.setMessage("正在为你unstar，请稍候");
+			loadingDialog.setMessage("正在unstar该项目...");
 		} else {
-			loadingDialog.setMessage("正在为你star，请稍候");
+			loadingDialog.setMessage("正在star该项目...");
 		}
 		
 		new AsyncTask<Void, Void, Message>() {

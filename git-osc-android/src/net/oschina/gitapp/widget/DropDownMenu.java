@@ -1,5 +1,6 @@
 package net.oschina.gitapp.widget;
 
+import java.util.List;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.MoreMenuItem;
 import android.app.Activity;
@@ -16,32 +17,33 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 /**
- * 弹出菜单
- * 说明：所有的的DropDownMenu的根的ID都需要时set_up(用于设置在menu外点击关闭)
+ * 弹出菜单 说明：所有的的DropDownMenu的根的ID都需要时set_up(用于设置在menu外点击关闭)
+ * 
  * @created 2014-08-01
  * @author 火蚁(http://my.oschina.net/LittleDY)
- *
+ * 
  */
 public class DropDownMenu extends PopupWindow {
 
 	private ViewGroup menuView;
-	
+
 	private OnClickListener itemClickListener;
-	
+
 	private LayoutInflater inflater;
-	
-	@SuppressWarnings("deprecation")
-	public DropDownMenu(final Activity context, OnClickListener itemClickListener) {
-		
+
+	public DropDownMenu(final Activity context,
+			OnClickListener itemClickListener) {
+
 		this.itemClickListener = itemClickListener;
 		this.inflater = LayoutInflater.from(context);
-		menuView = (ViewGroup) inflater.inflate(R.layout.more_menu_container, null);
+		menuView = (ViewGroup) inflater.inflate(R.layout.more_menu_container,
+				null);
 		this.setContentView(menuView);
-		int w = context.getWindowManager().getDefaultDisplay().getWidth();
-		this.setWidth(w / 2 + 60);
+		this.setWidth(LayoutParams.WRAP_CONTENT);
 		this.setHeight(LayoutParams.WRAP_CONTENT);
 		this.setFocusable(true);
 		ColorDrawable dw = new ColorDrawable(0000000000);
+		this.getContentView().setPadding(0, 0, 25, 0);
 		this.setBackgroundDrawable(dw);
 		menuView.setOnTouchListener(new OnTouchListener() {
 
@@ -53,19 +55,42 @@ public class DropDownMenu extends PopupWindow {
 					if (y < height) {
 						dismiss();
 					}
-				}   
+				}
 				return true;
 			}
 		});
 	}
 	
+	public View getViewGroup() {
+		return this.menuView;
+	}
+
 	// 添加菜单项
-	public void addItem(MoreMenuItem moreMenuItem) {
+	private void addItem(MoreMenuItem moreMenuItem, boolean isAddLine) {
 		View item = inflater.inflate(R.layout.more_menu_item, null);
 		item.setId(moreMenuItem.getViewId());
-		((ImageView)item.findViewById(R.id.more_menu_item_img)).setBackgroundResource(moreMenuItem.getImgId());
-		((TextView)item.findViewById(R.id.more_menu_item_text)).setText(moreMenuItem.getText());
+		((ImageView) item.findViewById(R.id.more_menu_item_img))
+				.setBackgroundResource(moreMenuItem.getImgId());
+		((TextView) item.findViewById(R.id.more_menu_item_text))
+				.setText(moreMenuItem.getText());
 		item.setOnClickListener(itemClickListener);
 		menuView.addView(item);
+		if (isAddLine) {
+			View line = inflater
+					.inflate(R.layout.horizontal_divider_view, null);
+			menuView.addView(line);
+		}
+	}
+
+	public void addItems(List<MoreMenuItem> mMoreItems) {
+		for (int i = 0; i < mMoreItems.size(); i++) {
+			if (this != null) {
+				if (i != mMoreItems.size() - 1) {
+					this.addItem(mMoreItems.get(i), true);
+				} else {
+					this.addItem(mMoreItems.get(i), false);
+				}
+			}
+		}
 	}
 }
