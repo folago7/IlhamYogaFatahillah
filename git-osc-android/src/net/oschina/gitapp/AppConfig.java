@@ -28,6 +28,8 @@ public class AppConfig {
 	
 	public final static String CONF_HTTPS_LOGIN = "perf_httpslogin";
 	
+	public final static String CONF_RECEIVENOTICE = "perf_receivenotice";
+	
 	public final static String CONF_VOICE = "perf_voice";
 	
 	public final static String CONF_CHECKUP = "perf_checkup";

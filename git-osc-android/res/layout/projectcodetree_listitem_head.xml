@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_marginLeft="5dip"
-        android:padding="5dip"
+        android:padding="8dip"
         android:gravity="center"
         android:background="@drawable/list_item_background" >
 
@@ -36,7 +36,7 @@
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:textSize="10sp" />
-
+     
             <TextView
                 android:id="@+id/projectcode_floders"
                 android:layout_width="wrap_content"

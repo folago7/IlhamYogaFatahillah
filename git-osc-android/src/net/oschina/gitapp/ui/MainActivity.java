@@ -1,5 +1,7 @@
 package net.oschina.gitapp.ui;
 
+import com.umeng.analytics.MobclickAgent;
+
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.AppManager;
@@ -52,7 +54,7 @@ public class MainActivity extends ActionBarActivity implements
 	static final String CONTENT_TAG_EXPLORE = "content_explore";
 	static final String CONTENT_TAG_MYSELF = "content_myself";
 
-	static final String CONTENTS[] = { 
+	static final String CONTENTS[] = {
 		CONTENT_TAG_EXPLORE, 
 		CONTENT_TAG_MYSELF 
 	};
@@ -93,9 +95,12 @@ public class MainActivity extends ActionBarActivity implements
 		if (mContext.isCheckUp()) {
 			UpdateManager.getUpdateManager().checkAppUpdate(this, false);
 		}
-		
+		// 禁止默认的页面统计方式
+		MobclickAgent.openActivityDurationTrack(false);
 		// 启动轮询获取通知信息
-		foreachUserNotice();
+		if (mContext.isReceiveNotice()) {
+			foreachUserNotice();
+		}
 	}
 	
 	@Override

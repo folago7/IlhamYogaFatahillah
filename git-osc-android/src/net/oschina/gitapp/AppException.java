@@ -12,6 +12,8 @@ import java.util.Date;
 
 import org.apache.commons.httpclient.HttpException;
 
+import com.umeng.analytics.MobclickAgent;
+
 import net.oschina.gitapp.common.UIHelper;
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -234,7 +236,7 @@ public class AppException extends Exception implements UncaughtExceptionHandler{
 	 * @param ex
 	 * @return true:处理了该异常信息;否则返回false
 	 */
-	private boolean handleException(Throwable ex) {
+	private boolean handleException(final Throwable ex) {
 		if(ex == null) {
 			return false;
 		}
@@ -250,6 +252,8 @@ public class AppException extends Exception implements UncaughtExceptionHandler{
 		new Thread() {
 			public void run() {
 				Looper.prepare();
+				// 上传错误信息到友盟的后台
+				MobclickAgent.reportError(mContext, ex);
 				UIHelper.sendAppCrashReport(context, crashReport);
 				Looper.loop();
 			}

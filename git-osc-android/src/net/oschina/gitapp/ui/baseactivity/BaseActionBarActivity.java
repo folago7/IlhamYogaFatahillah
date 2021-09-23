@@ -1,7 +1,7 @@
 package net.oschina.gitapp.ui.baseactivity;
 
 import java.lang.reflect.Field;
-
+import com.umeng.analytics.MobclickAgent;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppManager;
 import net.oschina.gitapp.R;
@@ -9,7 +9,6 @@ import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.interfaces.ActivityHelperInterface;
 import net.oschina.gitapp.ui.ActivityHelper;
 import android.app.Activity;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
@@ -48,6 +47,8 @@ public class BaseActionBarActivity extends ActionBarActivity
 	public void onResume() {
 		super.onResume();
 		setActionBarTitle();
+		MobclickAgent.onPageStart("SplashScreen"); //统计页面
+		MobclickAgent.onResume(this);
 	}
 	
 	protected void setActionBarTitle() {
@@ -62,6 +63,8 @@ public class BaseActionBarActivity extends ActionBarActivity
 	@Override
 	public void onPause() {
 		super.onPause();
+		MobclickAgent.onPageEnd("SplashScreen"); // 保证 onPageEnd 在onPause 之前调用,因为 onPause 中会保存信息
+		MobclickAgent.onPause(this);
 	}
 	
 	@Override

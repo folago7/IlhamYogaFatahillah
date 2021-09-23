@@ -263,6 +263,27 @@ public class AppContext extends Application {
 	public boolean isAppSound() {
 		return isAudioNormal() && isVoice();
 	}
+	
+	/**
+	 * 是否接收通知
+	 * @return
+	 */
+	public boolean isReceiveNotice() {
+		String perf_notice = getProperty(AppConfig.CONF_RECEIVENOTICE);
+		// 默认是开启提示声音
+		if (StringUtils.isEmpty(perf_notice)) {
+			return true;
+		} else {
+			return StringUtils.toBool(perf_notice);
+		}
+	}
+	
+	/**
+	 * 设置是否接收通知
+	 */
+	public void setConfigReceiveNotice(boolean isReceiveNotice) {
+		setProperty(AppConfig.CONF_RECEIVENOTICE, String.valueOf(isReceiveNotice));
+	}
 
 	/**
 	 * 是否发出提示音

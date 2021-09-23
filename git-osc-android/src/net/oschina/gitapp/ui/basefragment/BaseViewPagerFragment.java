@@ -4,9 +4,7 @@ import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.ViewPageFragmentAdapter;
 import net.oschina.gitapp.widget.PagerSlidingTabStrip;
 import android.os.Bundle;
-import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +27,6 @@ public abstract class BaseViewPagerFragment extends BaseFragment{
 	
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
-		DisplayMetrics dm = getResources().getDisplayMetrics();
         mTabStrip = (PagerSlidingTabStrip) view.findViewById(R.id.pager_tabstrip);
         
         mViewPager = (ViewPager)view.findViewById(R.id.pager);

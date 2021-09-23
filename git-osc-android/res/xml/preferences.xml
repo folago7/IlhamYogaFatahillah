@@ -8,7 +8,12 @@
             android:layout="@layout/preference"
             android:summary="当前以HTTP登录"
             android:title="HTTPS登录" />
-        
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="isnotice"
+            android:layout="@layout/preference"
+            android:summary="已开启接收通知"
+            android:title="接收通知" />
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="voice"

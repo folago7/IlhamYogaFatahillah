@@ -33,6 +33,7 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 	private Preference about;
 
 	private CheckBoxPreference httpslogin;
+	private CheckBoxPreference isReceiveNotice;
 	private CheckBoxPreference voice;
 	private CheckBoxPreference checkup;
 	
@@ -62,6 +63,16 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 			httpslogin.setSummary("当前以 HTTP 登录");
 		}
 		httpslogin.setOnPreferenceClickListener(this);
+		
+		// 接收通知
+		isReceiveNotice = (CheckBoxPreference) findPreference("isnotice");
+		isReceiveNotice.setChecked(mAppContext.isReceiveNotice());
+		if (mAppContext.isReceiveNotice()) {
+			isReceiveNotice.setSummary("已开启接收通知");
+		} else {
+			isReceiveNotice.setSummary("已关闭接收通知");
+		}
+		isReceiveNotice.setOnPreferenceClickListener(this);
 		
 		// 提示声音
 		voice = (CheckBoxPreference) findPreference("voice");
@@ -95,6 +106,8 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 	public boolean onPreferenceClick(Preference preference) {
 		if (preference == httpslogin) {
 			onHttpslogin();
+		} else if (preference == isReceiveNotice) {
+			onReceiveNotice();
 		} else if (preference == voice) {
 			onVoice();
 		} else if (preference == checkup) {
@@ -117,6 +130,15 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 			httpslogin.setSummary("当前以 HTTPS 登录");
 		} else {
 			httpslogin.setSummary("当前以 HTTP 登录");
+		}
+	}
+	
+	private void onReceiveNotice() {
+		mAppContext.setConfigReceiveNotice(isReceiveNotice.isChecked());
+		if (isReceiveNotice.isChecked()) {
+			isReceiveNotice.setSummary("已开启接收通知");
+		} else {
+			isReceiveNotice.setSummary("已关闭接收通知");
 		}
 	}
 	
