@@ -4,12 +4,12 @@
     <string name="app_name">Git@OSC</string>
     
     <string name="main_menu_login_tips">点击登录</string>
-    <string name="fragment_menu_title_explore">发现</string>
-    <string name="fragment_menu_title_myself">我的</string>
-    <string name="fragment_menu_title_notice">通知</string>
-    <string name="fragment_menu_title_language">语言</string>
-    <string name="fragment_menu_title_setting">设置</string>
-    <string name="fragment_menu_title_exit">退出</string>
+    <string name="main_menu_title_explore">发现</string>
+    <string name="main_menu_title_myself">我的</string>
+    <string name="main_menu_title_notice">通知</string>
+    <string name="main_menu_title_language">语言</string>
+    <string name="main_menu_title_setting">设置</string>
+    <string name="main_menu_title_exit">退出</string>
     
     <string name="msg_load_userface_fail">加载头像失败</string>
     <string name="msg_load_image_fail">加载图像失败</string>

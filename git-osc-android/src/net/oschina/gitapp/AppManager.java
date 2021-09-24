@@ -75,7 +75,10 @@ public class AppManager {
 	public void finishAllActivity(){
 		for (int i = 0, size = activityStack.size(); i < size; i++){
             if (null != activityStack.get(i)){
-            	activityStack.get(i).finish();
+            	Activity activity = activityStack.get(i);
+            	if (!activity.isFinishing()) {
+            		activity.finish();
+            	}
             }
 	    }
 		activityStack.clear();

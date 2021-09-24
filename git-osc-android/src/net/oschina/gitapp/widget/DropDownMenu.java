@@ -33,7 +33,7 @@ public class DropDownMenu extends PopupWindow {
 
 	public DropDownMenu(final Activity context,
 			OnClickListener itemClickListener) {
-
+		
 		this.itemClickListener = itemClickListener;
 		this.inflater = LayoutInflater.from(context);
 		menuView = (ViewGroup) inflater.inflate(R.layout.more_menu_container,

@@ -12,6 +12,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -112,7 +113,7 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 						UIHelper.showLoginActivity(CodeFileDetailActivity.this);
 						return;
 					}
-					url_link = url_link + "?private_token=" + ApiClient.getToken(mContext); 
+					url_link = url_link + "?private_token=" + ApiClient.getToken(mContext);
 				}
 				UIHelper.openBrowser(CodeFileDetailActivity.this, url_link);
 				break;
@@ -153,7 +154,7 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 		
 		url_link = URLs.URL_HOST + mProject.getOwner().getUsername()
 				+ URLs.URL_SPLITTER + mProject.getPath() + URLs.URL_SPLITTER + "blob" + URLs.URL_SPLITTER
-				+ mRef + URLs.URL_SPLITTER + mFileName;
+				+ mRef + URLs.URL_SPLITTER + mPath;
 	}
 
 	private void init() {
@@ -166,6 +167,9 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 	}
 	
 	private void initMoreMenu() {
+		
+		mMoreMenuWindow = new DropDownMenu(CodeFileDetailActivity.this, onMoreItemClickListener);
+		
 		MoreMenuItem shar = new MoreMenuItem(MORE_MENU_SHARE, R.drawable.more_menu_icon_share, "分享");
 		mMoreItems.add(shar);
 		
@@ -178,11 +182,12 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 		MoreMenuItem download = new MoreMenuItem(MORE_MENU_DOWNLOAD, R.drawable.more_menu_icon_download, "下载该文件");
 		mMoreItems.add(download);
 		
-		// 如果是登陆用户的项目，则加入可以编辑文件的菜单
-//		if (mProject.getOwner().getId().equalsIgnoreCase(String.valueOf(mContext.getLoginUid()))) {
-//			MoreMenuItem edit = new MoreMenuItem(MORE_MENU_EDIT, R.drawable.more_menu_icon_edit, "编辑");
-//			mMoreItems.add(edit);
-//		}
+		// 如果该文件是属于登陆用户的项目，则显示有编辑的操作
+		if (mProject.getRelation() != null && (mProject.getRelation().equalsIgnoreCase(Project.RELATION_TYPE_DEVELOPER)
+				|| mProject.getRelation().equalsIgnoreCase(Project.RELATION_TYPE_MASTER))) {
+			MoreMenuItem edit = new MoreMenuItem(MORE_MENU_EDIT, R.drawable.more_menu_icon_edit, "编辑");
+			mMoreItems.add(edit);
+		}
 		mMoreMenuWindow.addItems(mMoreItems);
 	}
 
@@ -230,7 +235,6 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 			mLoading.setVisibility(View.GONE);
 			mWebView.setVisibility(View.VISIBLE);
 			if (status == STATUS_NONE) {
-
 			}
 		}
 	}
@@ -264,7 +268,6 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 			protected void onPostExecute(Message msg) {
 				if (msg.what == 1 && msg.obj != null) {
 					if (mMoreMenuWindow == null) {
-						mMoreMenuWindow = new DropDownMenu(CodeFileDetailActivity.this, onMoreItemClickListener);
 						initMoreMenu();
 					}
 					mCodeFile = (CodeFile) msg.obj;

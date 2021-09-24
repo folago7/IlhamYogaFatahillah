@@ -1,20 +1,17 @@
 package net.oschina.gitapp.common;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
-import com.tencent.connect.share.QQShare;
 import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.bean.ShareType;
 import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
 import com.umeng.socialize.media.QQShareContent;
 import com.umeng.socialize.media.SinaShareContent;
 import com.umeng.socialize.media.UMImage;
-import com.umeng.socialize.sso.EmailHandler;
 import com.umeng.socialize.sso.SinaSsoHandler;
-import com.umeng.socialize.sso.SmsHandler;
 import com.umeng.socialize.sso.UMQQSsoHandler;
 import com.umeng.socialize.weixin.controller.UMWXHandler;
 import com.umeng.socialize.weixin.media.CircleShareContent;
@@ -24,13 +21,11 @@ import static net.oschina.gitapp.common.Contanst.*;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.AppManager;
-import net.oschina.gitapp.AppStart;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.ApiClient;
 import net.oschina.gitapp.bean.Commit;
 import net.oschina.gitapp.bean.CommitDiff;
 import net.oschina.gitapp.bean.Event;
-import net.oschina.gitapp.bean.Events;
 import net.oschina.gitapp.bean.Issue;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.User;
@@ -51,16 +46,13 @@ import net.oschina.gitapp.ui.SearchActivity;
 import net.oschina.gitapp.ui.MySelfInfoActivity;
 import net.oschina.gitapp.ui.UserInfoActivity;
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -70,6 +62,7 @@ import android.text.SpannableString;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -673,7 +666,6 @@ public class UIHelper {
 	 */
 	public static void showShareOption(Activity context, String title,
 			String url, String shareContent, Bitmap shareImage) {
-
 		UMImage mUMImgBitmap = new UMImage(context, shareImage);
 		// 首先在您的Activity中添加如下成员变量
 		final UMSocialService mController = UMServiceFactory
@@ -738,6 +730,7 @@ public class UIHelper {
 	 * 获得屏幕的截图
 	 * 
 	 * @param activity
+	 * 
 	 * @return
 	 */
 	public static Bitmap takeScreenShot(Activity activity) {
@@ -746,20 +739,23 @@ public class UIHelper {
 		view.setDrawingCacheEnabled(true);
 		view.buildDrawingCache();
 		Bitmap b1 = view.getDrawingCache();
-
-		// 获取状态栏高度
-		Rect frame = new Rect();
-		activity.getWindow().getDecorView().getWindowVisibleDisplayFrame(frame);
-		int statusBarHeight = frame.top;
-
-		// 获取屏幕长和高
-		int width = activity.getWindowManager().getDefaultDisplay().getWidth();
-		int height = activity.getWindowManager().getDefaultDisplay()
-				.getHeight();
-		// 去掉标题栏
-		Bitmap b = Bitmap.createBitmap(b1, 0, statusBarHeight, width, height
-				- statusBarHeight);
-		view.destroyDrawingCache();
-		return b;
+		//图片允许最大空间   单位：KB 
+        double maxSize = 100.00; 
+        //将bitmap放至数组中，意在bitmap的大小（与实际读取的原文件要大）   
+        ByteArrayOutputStream baos = new ByteArrayOutputStream(); 
+        b1.compress(Bitmap.CompressFormat.JPEG, 70, baos); 
+        byte[] b = baos.toByteArray(); 
+        //将字节换成KB 
+        double mid = b.length/1024; 
+        //判断bitmap占用空间是否大于允许最大空间  如果大于则压缩 小于则不压缩 
+        if (mid > maxSize) { 
+                //获取bitmap大小 是允许最大大小的多少倍 
+                double i = mid / maxSize; 
+                //开始压缩  此处用到平方根 将宽带和高度压缩掉对应的平方根倍 （1.保持刻度和高度和原bitmap比率一致，压缩后也达到了最大大小占用空间的大小） 
+                b1 = ImageUtils.zoomBitmap(b1, b1.getWidth() / Math.sqrt(i), 
+                		b1.getHeight() / Math.sqrt(i));
+        } 
+		
+		return b1;
 	}
 }

@@ -14,7 +14,7 @@
 
         <TextView
             style="@style/MenuItemTextViewStyle"
-            android:text="@string/fragment_menu_title_explore" />
+            android:text="@string/main_menu_title_explore" />
     </LinearLayout>
 
     <include layout="@layout/horizontal_divider_view" />
@@ -29,7 +29,7 @@
 
         <TextView
             style="@style/MenuItemTextViewStyle"
-            android:text="@string/fragment_menu_title_myself" />
+            android:text="@string/main_menu_title_myself" />
     </LinearLayout>
 
     <include layout="@layout/horizontal_divider_view" />
@@ -44,7 +44,7 @@
 
         <TextView
             style="@style/MenuItemTextViewStyle"
-            android:text="@string/fragment_menu_title_language" />
+            android:text="@string/main_menu_title_language" />
     </LinearLayout>
 
     <include layout="@layout/horizontal_divider_view" />
@@ -59,7 +59,7 @@
 
         <TextView
             style="@style/MenuItemTextViewStyle"
-            android:text="@string/fragment_menu_title_setting" />
+            android:text="@string/main_menu_title_setting" />
     </LinearLayout>
 
     <include layout="@layout/horizontal_divider_view" />
@@ -74,7 +74,7 @@
 
         <TextView
             style="@style/MenuItemTextViewStyle"
-            android:text="@string/fragment_menu_title_exit" />
+            android:text="@string/main_menu_title_exit" />
     </LinearLayout>
     
     <include layout="@layout/horizontal_divider_view" />

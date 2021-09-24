@@ -1334,8 +1334,27 @@ public class AppContext extends Application {
 	 * @return
 	 * @throws AppException
 	 */
-	public List<Language> getLanguageList() throws AppException {
-		return ApiClient.getLanguageList(this);
+	public CommonList<Language> getLanguageList() throws AppException {
+		CommonList<Language> list = null;
+		String cacheKey = "languages_list";
+		if (!isReadDataCache(cacheKey)) {
+			try {
+				list = ApiClient.getLanguageList(this);
+				if (list != null) {
+					list.setCacheKey(cacheKey);
+					saveObject(list, cacheKey);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				list = (CommonList<Language>) readObject(cacheKey);
+			}
+		} else {
+			// 从缓存中读取
+			list = (CommonList<Language>) readObject(cacheKey);
+			if (list == null)
+				list = new CommonList<Language>();
+		}
+		return list;
 	}
 	
 	/**

@@ -51,8 +51,8 @@ public abstract class MyBaseAdapter<T> extends BaseAdapter {
 	}
 	
 	@Override
-	public Object getItem(int arg0) {
-		return null;
+	public T getItem(int arg0) {
+		return listData.get(arg0);
 	}
 	
 	@Override

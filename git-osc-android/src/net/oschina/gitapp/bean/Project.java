@@ -6,6 +6,10 @@ import org.codehaus.jackson.annotate.JsonProperty;
 
 @SuppressWarnings("serial")
 public class Project extends Entity {
+	
+	public final static String RELATION_TYPE_MASTER = "master";
+	
+	public final static String RELATION_TYPE_DEVELOPER = "developer";
 
     @JsonProperty("name")
     private String _name;
@@ -74,6 +78,17 @@ public class Project extends Entity {
     @JsonProperty("stared")
     private boolean _stared;
     
+    @JsonProperty("relation")
+    private String _relation;
+    
+	public String getRelation() {
+		return _relation;
+	}
+
+	public void setRelation(String relation) {
+		this._relation = relation;
+	}
+
 	public Integer getParent_id() {
 		return _parent_id;
 	}

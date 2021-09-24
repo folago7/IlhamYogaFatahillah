@@ -832,12 +832,18 @@ public class ApiClient {
 	 * @return
 	 * @throws AppException
 	 */
-	public static List<Language> getLanguageList(AppContext appContext) throws AppException {
+	public static CommonList<Language> getLanguageList(AppContext appContext) throws AppException {
+		CommonList<Language> languages = new CommonList<Language>();
+		
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put(PRIVATE_TOKEN, getToken(appContext));
 		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + "languages", params);
-		return getHttpRequestor().init(appContext, GET_METHOD, url)
+		List<Language> list = getHttpRequestor().init(appContext, GET_METHOD, url)
 				.getList(Language[].class);
+		languages.setCount(list.size());
+		languages.setList(list);
+		languages.setPageSize(list.size());
+		return languages;
 	}
 	
 	/**

@@ -64,9 +64,9 @@ public class MainActivity extends ActionBarActivity implements
 		MySelfViewPagerFragment.class.getName()
 	};
 	
-	static final int TITLES[] = { 
-		R.string.fragment_menu_title_explore,
-		R.string.fragment_menu_title_myself
+	final String TITLES[] = {
+		"发现",
+		"我的"
 	};
 	
 	private static DrawerNavigationMenu mMenu = DrawerNavigationMenu.newInstance();

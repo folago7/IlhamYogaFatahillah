@@ -3,6 +3,7 @@ package net.oschina.gitapp.ui.fragments;
 import java.util.List;
 
 import android.os.Bundle;
+import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
@@ -69,9 +70,5 @@ public class CommitCommentFragment extends BaseSwipeRefreshFragment<Comment, Com
 			msg = new MessageData<CommonList<Comment>>(e);
 		}
 		return msg;
-	}
-	
-	@Override
-	public void onItemClick(int position, Comment comment) {
 	}
 }

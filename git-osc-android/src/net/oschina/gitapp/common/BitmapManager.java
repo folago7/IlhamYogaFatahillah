@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.WeakHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.api.ApiClient;
 import android.annotation.SuppressLint;
@@ -36,7 +38,7 @@ public class BitmapManager {
     
     static {  
         cache = new HashMap<String, SoftReference<Bitmap>>();  
-        pool = Executors.newFixedThreadPool(5);  //固定线程池
+        pool = Executors.newFixedThreadPool(20);  //固定线程池
         imageViews = Collections.synchronizedMap(new WeakHashMap<ImageView, String>());
     }  
     

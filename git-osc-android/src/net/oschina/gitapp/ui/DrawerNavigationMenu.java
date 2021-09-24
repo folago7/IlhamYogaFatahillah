@@ -259,7 +259,7 @@ public class DrawerNavigationMenu extends Fragment implements OnClickListener {
 		if (mCallBack != null) {
 			mCallBack.onClickExplore();
 		}
-	}
+	}	
 
 	private void onClickMySelf() {
 		if (mCallBack != null) {

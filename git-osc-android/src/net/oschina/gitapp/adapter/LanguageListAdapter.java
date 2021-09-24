@@ -1,16 +1,18 @@
 package net.oschina.gitapp.adapter;
 
 import java.util.List;
+
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.Language;
 
 public class LanguageListAdapter extends MyBaseAdapter<Language> {
 	
 	static class ViewHolder {
-		private TextView text;
+		public TextView text;
 	} 
 	
 	public LanguageListAdapter(Context context, List<Language> data,
@@ -27,7 +29,7 @@ public class LanguageListAdapter extends MyBaseAdapter<Language> {
 
 			viewHolder = new ViewHolder();
 			
-			viewHolder.text = (TextView) convertView.findViewById(android.R.id.text1);
+			viewHolder.text = (TextView) convertView.findViewById(R.id.language_name);
 			
 			//设置控件集到convertView
 			convertView.setTag(viewHolder);
@@ -35,7 +37,7 @@ public class LanguageListAdapter extends MyBaseAdapter<Language> {
 			viewHolder = (ViewHolder)convertView.getTag();
 		}
 		
-		Language language = listData.get(position);
+		Language language = getItem(position);
 		viewHolder.text.setText(language.getName());
 		
 		return convertView;

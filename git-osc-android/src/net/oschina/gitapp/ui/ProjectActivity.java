@@ -250,6 +250,7 @@ public class ProjectActivity extends BaseActionBarActivity implements
 	}
 	
 	private void initMoreMenu() {
+		mMoreMenuWindow = new DropDownMenu(ProjectActivity.this, onMoreMenuItemClick);
 		MoreMenuItem share = new MoreMenuItem(MORE_MENU_SHARE, R.drawable.more_menu_icon_share, "分享项目");
 		mMoreItems.add(share);
 		
@@ -287,16 +288,11 @@ public class ProjectActivity extends BaseActionBarActivity implements
 	}
 	
 	private void showMoreOptionMenu() {
-		if (mMoreMenuWindow == null) {
-			mMoreMenuWindow = new DropDownMenu(ProjectActivity.this, onMoreMenuItemClick);
-			initMoreMenu();
-		}
-		if (mMoreMenuWindow != null) {
-			View v = findViewById(R.id.project_menu_more);
-			int x = mMoreMenuWindow.getWidth() - v.getWidth() + 20;
-			
-			mMoreMenuWindow.showAsDropDown(v, -x, 0);
-		}
+		
+		View v = findViewById(R.id.project_menu_more);
+		int x = mMoreMenuWindow.getWidth() - v.getWidth() + 20;
+		
+		mMoreMenuWindow.showAsDropDown(v, -x, 0);
 	}
 
 	private String getUpdateTime() {
@@ -383,6 +379,9 @@ public class ProjectActivity extends BaseActionBarActivity implements
 						if (action == ACTION_LOAD_PROJECT) {
 							mProject = (Project) msg.obj;
 							initData();
+							if (mMoreMenuWindow == null) {
+								initMoreMenu();
+							}
 						} else {
 							Project p = (Project) msg.obj;
 							if (p != null) {

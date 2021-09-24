@@ -2,6 +2,7 @@ package net.oschina.gitapp.ui;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
@@ -18,6 +19,7 @@ import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.ExploreListProjectAdapter;
 import net.oschina.gitapp.adapter.LanguageListAdapter;
+import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.Language;
 import net.oschina.gitapp.bean.MessageData;
 import net.oschina.gitapp.bean.Project;
@@ -101,7 +103,7 @@ public class LanguageActivity extends BaseActionBarActivity implements
 		mProjectAdapter = new ExploreListProjectAdapter(mContext, mProjects, R.layout.exploreproject_listitem);
 		
 		mLanguages = new ArrayList<Language>();
-		mLanguageAdapter = new LanguageListAdapter(mContext, mLanguages, android.R.layout.simple_list_item_1);
+		mLanguageAdapter = new LanguageListAdapter(mContext, mLanguages, R.layout.languages);
 		mActionBar.setListNavigationCallbacks(mLanguageAdapter, this);
 	}
 	
@@ -136,7 +138,18 @@ public class LanguageActivity extends BaseActionBarActivity implements
 	}
 	
 	private void loadProjects(final String languageId, final int page) {
+		if (mLanguages.isEmpty()) {
+			setFooterNotLanguages();
+			return;
+		}
 		mRequestThreadHandler.request(page, new AsyncDataHandler(languageId, page));
+	}
+	
+	void setFooterNotLanguages() {
+		if(mFooterView != null) {
+			mFooterProgressBar.setVisibility(View.GONE);
+			mFooterTextView.setText("没有加载到语言列表");
+		}
 	}
 	
 	/** 设置底部有错误的状态*/
@@ -268,12 +281,12 @@ public class LanguageActivity extends BaseActionBarActivity implements
 				super.onPostExecute(msg);
 				afterLoading(false);
 				if (msg.what == 1) {
-					List<Language> languages = (List<Language>) msg.obj;
-					if (languages != null && languages.size() > 0) {
-						mLanguages.addAll(languages);
+					CommonList<Language> languages = (CommonList<Language>) msg.obj;
+					if (languages != null && languages.getCount() > 0) {
+						mLanguages.addAll(languages.getList());
 						mLanguageAdapter.notifyDataSetChanged();
 					} else {
-						UIHelper.ToastMessage(mContext, "没有加载到语言分类");
+						setFooterNotLanguages();
 					}
 				} else {
 					
@@ -288,7 +301,7 @@ public class LanguageActivity extends BaseActionBarActivity implements
 		Language language = mLanguages.get(arg0);
 		mLanguageId = language.getId();
 		loadProjects(mLanguageId, 1);
-		return false;
+		return true;
 	}
 
 	@Override
