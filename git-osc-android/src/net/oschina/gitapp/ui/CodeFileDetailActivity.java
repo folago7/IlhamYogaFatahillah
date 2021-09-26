@@ -121,6 +121,7 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 				downloadFile();
 				break;
 			case MORE_MENU_EDIT:
+				showEditCodeFileActivity();
 				break;
 			default:
 				break;
@@ -136,6 +137,15 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 		} else {
 			UIHelper.ToastMessage(mContext, "保存文件失败");
 		}
+	}
+	
+	private void showEditCodeFileActivity() {
+		Intent intent = new Intent(CodeFileDetailActivity.this, CodeFileEditActivity.class);
+		Bundle bundle = new Bundle();
+		bundle.putSerializable(Contanst.CODE_FILE, mCodeFile);
+		bundle.putSerializable(Contanst.PROJECT, mProject);
+		intent.putExtras(bundle);
+		startActivity(intent);
 	}
 
 	@Override

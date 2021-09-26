@@ -104,6 +104,11 @@
             android:launchMode="singleTask" >
         </activity>
         <activity
+            android:name=".ui.CodeFileEditActivity"
+            android:label="编辑"
+            android:launchMode="singleTask" >
+        </activity>
+        <activity
             android:name=".ui.ImageZoomActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" >

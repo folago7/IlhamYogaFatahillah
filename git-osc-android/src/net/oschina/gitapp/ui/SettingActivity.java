@@ -9,6 +9,7 @@ import net.oschina.gitapp.common.FileUtils;
 import net.oschina.gitapp.common.MethodsCompat;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.common.UpdateManager;
+import android.app.ActionBar;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -25,7 +26,7 @@ import android.preference.PreferenceManager;
  *
  */
 public class SettingActivity extends PreferenceActivity implements OnPreferenceClickListener {
-		
+	
 	private SharedPreferences mPreferences;
 	private Preference cache;
 	private Preference feedback;

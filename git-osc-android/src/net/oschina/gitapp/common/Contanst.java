@@ -60,4 +60,6 @@ public class Contanst {
 	
 	public static final String IMG_URL = "img_url";
 	
+	public static final String CODE_FILE = "code_file";
+	
 }
