@@ -10,7 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
+
 import javax.net.ssl.SSLHandshakeException;
+
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
@@ -26,9 +28,13 @@ import org.apache.commons.httpclient.methods.OptionsMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.PutMethod;
 import org.apache.commons.httpclient.methods.TraceMethod;
+import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
+import org.apache.commons.httpclient.methods.multipart.Part;
+import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.protocol.HTTP;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import net.oschina.gitapp.AppContext;
@@ -380,23 +386,28 @@ public class HTTPRequestor {
      */
     private void submitData(Map<String, Object> data, HttpMethod method){
     	method.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-    	//NameValuePair nvps[] = new NameValuePair[length];
-		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
-        if(data != null) {
-        	for(String name : data.keySet()){
-            	Object value = data.get(name);
-            	NameValuePair nvp = new NameValuePair(name, String.valueOf(value));
-            	nvps.add(nvp);
-            }
-        }
     	if (method instanceof PostMethod) {
+    		List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+            if(data != null) {
+            	for(String name : data.keySet()){
+                	Object value = data.get(name);
+                	NameValuePair nvp = new NameValuePair(name, String.valueOf(value));
+                	nvps.add(nvp);
+                }
+            }
     		for (NameValuePair nameValuePair : nvps) {
     			((PostMethod)method).addParameter(nameValuePair);
 			}
     	}
-    	/*if (_method instanceof PutMethod) {
+    	if (_method instanceof PutMethod) {
+    		Part parts[] = new Part[data.size()];
+    		int i = 0;
+    		for(String name : data.keySet()){
+            	Object value = data.get(name);
+            	parts[i++] = new StringPart(name, String.valueOf(value));
+            }
     		((PutMethod)_method).setRequestEntity(new MultipartRequestEntity(parts,_method.getParams()));
-    	}*/
+    	}
     }
     
     /**

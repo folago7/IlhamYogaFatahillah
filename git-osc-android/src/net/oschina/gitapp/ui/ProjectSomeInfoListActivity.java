@@ -86,9 +86,11 @@ public class ProjectSomeInfoListActivity extends BaseActionBarActivity {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuItem createOption = menu.add(0, MENU_CREATE_ID, MENU_CREATE_ID, "创建Issue");
-		createOption.setIcon(R.drawable.action_create);
-		MenuItemCompat.setShowAsAction(createOption, MenuItemCompat.SHOW_AS_ACTION_IF_ROOM);
+		if (mListType == PROJECT_LIST_TYPE_ISSUES) {
+			MenuItem createOption = menu.add(0, MENU_CREATE_ID, MENU_CREATE_ID, "创建Issue");
+			createOption.setIcon(R.drawable.action_create);
+			MenuItemCompat.setShowAsAction(createOption, MenuItemCompat.SHOW_AS_ACTION_IF_ROOM);
+		}
 		
 		return super.onCreateOptionsMenu(menu);
 	}

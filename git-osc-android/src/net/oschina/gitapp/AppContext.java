@@ -1,5 +1,6 @@
 package net.oschina.gitapp;
 
+import static net.oschina.gitapp.api.HTTPRequestor.PUT_METHOD;
 import static net.oschina.gitapp.common.Contanst.*;
 
 import java.io.File;
@@ -11,8 +12,10 @@ import java.io.InvalidClassException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -36,6 +39,7 @@ import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.ProjectNotificationArray;
 import net.oschina.gitapp.bean.ReadMe;
 import net.oschina.gitapp.bean.Session;
+import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.bean.UpLoadFile;
 import net.oschina.gitapp.bean.Update;
 import net.oschina.gitapp.bean.User;
@@ -1366,5 +1370,28 @@ public class AppContext extends Application {
 	 */
 	public List<Project> getLanguageProjectList(String languageId, int page) throws AppException {
 		return ApiClient.getLanguageProjectList(this, languageId, page);
+	}
+	
+	/**
+	 * 获得一个随机的项目
+	 * @return
+	 * @throws AppException
+	 */
+	public Project getRandomProject() throws AppException {
+		return ApiClient.getRandomProject(this);
+	}
+	
+	/**
+	 * 更新代码库中的代码文件
+	 * @param appContext
+	 * @param project_id
+	 * @param branch_name
+	 * @param content
+	 * @param commit_message
+	 * @return
+	 * @throws AppException
+	 */
+	public String updateRepositoryFiles(String project_id, String ref, String file_path, String branch_name, String content, String commit_message) throws AppException {
+		return ApiClient.updateRepositoryFiles(this, project_id, ref, file_path, branch_name, content, commit_message);
 	}
 }

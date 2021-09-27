@@ -1,7 +1,5 @@
 package net.oschina.gitapp.ui;
 
-import com.umeng.analytics.MobclickAgent;
-
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.AppManager;
@@ -95,8 +93,6 @@ public class MainActivity extends ActionBarActivity implements
 		if (mContext.isCheckUp()) {
 			UpdateManager.getUpdateManager().checkAppUpdate(this, false);
 		}
-		// 禁止默认的页面统计方式
-		MobclickAgent.openActivityDurationTrack(false);
 		// 启动轮询获取通知信息
 		if (mContext.isReceiveNotice()) {
 			foreachUserNotice();

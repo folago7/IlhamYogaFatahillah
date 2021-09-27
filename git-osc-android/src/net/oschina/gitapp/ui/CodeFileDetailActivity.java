@@ -2,8 +2,6 @@ package net.oschina.gitapp.ui;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import net.oschina.gitapp.util.*;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +10,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -41,47 +38,47 @@ import net.oschina.gitapp.widget.DropDownMenu;
  * 
  * @created 2014-06-04
  * @author 火蚁
- *
+ * 
  */
 public class CodeFileDetailActivity extends BaseActionBarActivity implements
 		OnStatusListener {
-	
+
 	private final int MORE_MENU_SHARE = 00;// 分享
 	private final int MORE_MENU_COPY_LINK = 01;// 复制链接
 	private final int MORE_MENU_OPEN_WITH_BROWS = 02;// 在浏览器中打开
 	private final int MORE_MENU_DOWNLOAD = 03;
 	private final int MORE_MENU_EDIT = 04;
-	
+
 	private AppContext mContext;
-	
+
 	private Menu optionsMenu;
-	
+
 	private WebView mWebView;
-	
+
 	private ProgressBar mLoading;
-	
+
 	private SourceEditor editor;
-	
+
 	private CodeFile mCodeFile;
-	
+
 	private Project mProject;
-	
+
 	private String mFileName;
-	
+
 	private String mPath;
-	
+
 	private String mRef;
-	
+
 	private DropDownMenu mMoreMenuWindow;
-	
+
 	private List<MoreMenuItem> mMoreItems = new ArrayList<MoreMenuItem>();
-	
+
 	private String url_link = null;
-	
+
 	private Bitmap bitmap;
-	
+
 	private View.OnClickListener onMoreItemClickListener = new View.OnClickListener() {
-		
+
 		@SuppressWarnings("deprecation")
 		@Override
 		public void onClick(View v) {
@@ -91,7 +88,7 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 			if (mProject == null) {
 				return;
 			}
-			
+
 			if (!mProject.isPublic()) {
 				UIHelper.ToastMessage(mContext, "私有项目的文件不支持该操作");
 				return;
@@ -99,8 +96,9 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 			int id = v.getId();
 			switch (id) {
 			case MORE_MENU_SHARE:
-				UIHelper.showShareOption(CodeFileDetailActivity.this, mFileName, url_link, 
-						"我正在看项目《" + mProject.getName() + "》的文件" + mFileName + "，你也来瞧瞧呗！", bitmap);
+				UIHelper.showShareOption(CodeFileDetailActivity.this,
+						mFileName, url_link, "我正在看项目《" + mProject.getName()
+								+ "》的文件" + mFileName + "，你也来瞧瞧呗！", bitmap);
 				break;
 			case MORE_MENU_COPY_LINK:
 				ClipboardManager cbm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
@@ -113,7 +111,8 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 						UIHelper.showLoginActivity(CodeFileDetailActivity.this);
 						return;
 					}
-					url_link = url_link + "?private_token=" + ApiClient.getToken(mContext);
+					url_link = url_link + "?private_token="
+							+ ApiClient.getToken(mContext);
 				}
 				UIHelper.openBrowser(CodeFileDetailActivity.this, url_link);
 				break;
@@ -128,22 +127,26 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 			}
 		}
 	};
-	
+
 	private void downloadFile() {
 		String path = AppConfig.DEFAULT_SAVE_FILE_PATH;
-		boolean res = FileUtils.writeFile(mCodeFile.getContent().getBytes(), path, mFileName);
+		boolean res = FileUtils.writeFile(mCodeFile.getContent().getBytes(),
+				path, mFileName);
 		if (res) {
 			UIHelper.ToastMessage(mContext, "文件已经保存在" + path);
 		} else {
 			UIHelper.ToastMessage(mContext, "保存文件失败");
 		}
 	}
-	
+
 	private void showEditCodeFileActivity() {
-		Intent intent = new Intent(CodeFileDetailActivity.this, CodeFileEditActivity.class);
+		Intent intent = new Intent(CodeFileDetailActivity.this,
+				CodeFileEditActivity.class);
 		Bundle bundle = new Bundle();
 		bundle.putSerializable(Contanst.CODE_FILE, mCodeFile);
 		bundle.putSerializable(Contanst.PROJECT, mProject);
+		bundle.putString(Contanst.BRANCH, mRef);
+		bundle.putString(Contanst.PATH, mPath);
 		intent.putExtras(bundle);
 		startActivity(intent);
 	}
@@ -161,10 +164,10 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 		mRef = intent.getStringExtra("ref");
 		init();
 		loadDatasCode(mProject.getId(), mPath, mRef);
-		
+
 		url_link = URLs.URL_HOST + mProject.getOwner().getUsername()
-				+ URLs.URL_SPLITTER + mProject.getPath() + URLs.URL_SPLITTER + "blob" + URLs.URL_SPLITTER
-				+ mRef + URLs.URL_SPLITTER + mPath;
+				+ URLs.URL_SPLITTER + mProject.getPath() + URLs.URL_SPLITTER
+				+ "blob" + URLs.URL_SPLITTER + mRef + URLs.URL_SPLITTER + mPath;
 	}
 
 	private void init() {
@@ -172,30 +175,40 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 		mSubTitle = mRef;
 		mWebView = (WebView) findViewById(R.id.code_file_webview);
 		editor = new SourceEditor(mWebView);
-		
+
 		mLoading = (ProgressBar) findViewById(R.id.code_file_loading);
 	}
-	
+
 	private void initMoreMenu() {
-		
-		mMoreMenuWindow = new DropDownMenu(CodeFileDetailActivity.this, onMoreItemClickListener);
-		
-		MoreMenuItem shar = new MoreMenuItem(MORE_MENU_SHARE, R.drawable.more_menu_icon_share, "分享");
+
+		mMoreMenuWindow = new DropDownMenu(CodeFileDetailActivity.this,
+				onMoreItemClickListener);
+
+		MoreMenuItem shar = new MoreMenuItem(MORE_MENU_SHARE,
+				R.drawable.more_menu_icon_share, "分享");
 		mMoreItems.add(shar);
-		
-		MoreMenuItem copy_link = new MoreMenuItem(MORE_MENU_COPY_LINK, R.drawable.more_menu_icon_copy, "复制链接");
+
+		MoreMenuItem copy_link = new MoreMenuItem(MORE_MENU_COPY_LINK,
+				R.drawable.more_menu_icon_copy, "复制链接");
 		mMoreItems.add(copy_link);
-		
-		MoreMenuItem open_with_brows = new MoreMenuItem(MORE_MENU_OPEN_WITH_BROWS, R.drawable.more_menu_icon_browser, "在浏览器中打开");
+
+		MoreMenuItem open_with_brows = new MoreMenuItem(
+				MORE_MENU_OPEN_WITH_BROWS, R.drawable.more_menu_icon_browser,
+				"在浏览器中打开");
 		mMoreItems.add(open_with_brows);
-		
-		MoreMenuItem download = new MoreMenuItem(MORE_MENU_DOWNLOAD, R.drawable.more_menu_icon_download, "下载该文件");
+
+		MoreMenuItem download = new MoreMenuItem(MORE_MENU_DOWNLOAD,
+				R.drawable.more_menu_icon_download, "下载该文件");
 		mMoreItems.add(download);
-		
+
 		// 如果该文件是属于登陆用户的项目，则显示有编辑的操作
-		if (mProject.getRelation() != null && (mProject.getRelation().equalsIgnoreCase(Project.RELATION_TYPE_DEVELOPER)
-				|| mProject.getRelation().equalsIgnoreCase(Project.RELATION_TYPE_MASTER))) {
-			MoreMenuItem edit = new MoreMenuItem(MORE_MENU_EDIT, R.drawable.more_menu_icon_edit, "编辑");
+		if (mProject.getRelation() != null
+				&& (mProject.getRelation().equalsIgnoreCase(
+						Project.RELATION_TYPE_DEVELOPER) || mProject
+						.getRelation().equalsIgnoreCase(
+								Project.RELATION_TYPE_MASTER))) {
+			MoreMenuItem edit = new MoreMenuItem(MORE_MENU_EDIT,
+					R.drawable.more_menu_icon_edit, "编辑");
 			mMoreItems.add(edit);
 		}
 		mMoreMenuWindow.addItems(mMoreItems);
@@ -222,12 +235,12 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 		}
 		return super.onOptionsItemSelected(item);
 	}
-	
+
 	private void showMoreOptionMenu() {
 		if (mMoreMenuWindow != null) {
 			View v = findViewById(R.id.project_detail_menu_more);
 			int x = mMoreMenuWindow.getWidth() - v.getWidth() + 20;
-			
+
 			mMoreMenuWindow.showAsDropDown(v, -x, 0);
 		}
 	}
@@ -237,7 +250,7 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 		if (optionsMenu == null) {
 			return;
 		}
-		
+
 		if (status == STATUS_LOADING) {
 			mLoading.setVisibility(View.VISIBLE);
 			mWebView.setVisibility(View.GONE);
@@ -283,17 +296,18 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 					mCodeFile = (CodeFile) msg.obj;
 					editor.setMarkdown(MarkdownUtils.isMarkdown(mPath));
 					editor.setSource(mPath, mCodeFile);
-					
+
 					onStatus(STATUS_LOADED);
-					
+
 					// 截取屏幕
 					Handler mHandler = new Handler();
 					mHandler.postDelayed(new Runnable() {
-						
+
 						@Override
 						public void run() {
 							if (bitmap == null) {
-								bitmap = UIHelper.takeScreenShot(CodeFileDetailActivity.this);
+								bitmap = UIHelper
+										.takeScreenShot(CodeFileDetailActivity.this);
 							}
 						}
 					}, 500);

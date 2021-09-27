@@ -102,6 +102,7 @@ public class ProjectActivity extends BaseActionBarActivity implements
 	private LinearLayout mLLOwner;
 	private LinearLayout mLLReadMe;
 	private LinearLayout mLLCodes;
+	private LinearLayout mLLCommits;
 	private LinearLayout mLLIssues;
 	
 	private DropDownMenu mMoreMenuWindow;
@@ -180,13 +181,14 @@ public class ProjectActivity extends BaseActionBarActivity implements
 		mLLOwner = (LinearLayout) findViewById(R.id.project_owner);
 		mLLReadMe = (LinearLayout) findViewById(R.id.project_readme);
 		mLLCodes = (LinearLayout) findViewById(R.id.project_issues);
+		mLLCommits = (LinearLayout) findViewById(R.id.project_commits);
 		mLLIssues = (LinearLayout) findViewById(R.id.project_code);
 		
 		mLLStar.setOnClickListener(this);
 		mLLOwner.setOnClickListener(this);
 		mLLReadMe.setOnClickListener(this);
 		mLLCodes.setOnClickListener(this);
-		//findViewById(R.id.project_commits).setOnClickListener(this);
+		mLLCommits.setOnClickListener(this);
 		mLLIssues.setOnClickListener(this);
 		
 		if (null == mProject) {

@@ -36,6 +36,10 @@ public class Contanst {
 	
 	public static final String PROJECT = "project";
 	
+	public static final String BRANCH = "branch";
+	
+	public static final String PATH = "path";
+	
 	public static final String PROJECTID = "project_id";
 	
 	public static final String COMMIT = "commit";

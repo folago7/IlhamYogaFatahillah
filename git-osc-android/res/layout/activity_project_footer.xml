@@ -55,30 +55,27 @@
     <LinearLayout 
         android:id="@+id/project_commits"
         style="@style/project_detail_layout_style"
-        android:visibility="gone" >
+        android:visibility="visible" >
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="8dip"
-            android:background="@drawable/commit" />
+            style="@style/project_detail_mid_grid_item_img"
+            android:contentDescription="@string/img_description"
+            android:background="@drawable/project_detail_icon_commit" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="提交" />
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="15.0dip"
-            android:src="@drawable/widget_right_icon" />
+            style="@style/project_detail_sorrow_img"
+            android:contentDescription="@string/img_description" />
     </LinearLayout>
 
     <View
         style="@style/project_detail_h_line"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <LinearLayout 
         android:id="@+id/project_issues"

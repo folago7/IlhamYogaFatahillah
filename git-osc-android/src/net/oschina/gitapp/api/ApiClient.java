@@ -882,4 +882,41 @@ public class ApiClient {
 		return getHttpRequestor().init(appContext, POST_METHOD, url)
 				.to(StarOptionResult.class);
 	}
+	
+	/**
+	 * 随机获取一个项目
+	 * @param appContext
+	 * @return
+	 * @throws AppException
+	 */
+	public static Project getRandomProject(AppContext appContext) throws AppException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(PRIVATE_TOKEN, getToken(appContext));
+		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + "random", params);
+		return getHttpRequestor().init(appContext, GET_METHOD, url)
+				.to(Project.class);
+	}
+	
+	/**
+	 * 更新代码库中的代码文件
+	 * @param appContext
+	 * @param project_id
+	 * @param branch_name
+	 * @param content
+	 * @param commit_message
+	 * @return
+	 * @throws AppException
+	 */
+	public static String updateRepositoryFiles(AppContext appContext, String project_id, String ref, String file_path, String branch_name, String content, String commit_message) throws AppException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(PRIVATE_TOKEN, getToken(appContext));
+		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + project_id + "/repository/files", params);
+		return getHttpRequestor().init(appContext, POST_METHOD, url)
+				.with("ref", ref)
+				.with("file_path", file_path)
+				.with("branch_name", branch_name)
+				.with("content", content)
+				.with("commit_message", commit_message)
+				.getResponseBodyString();
+	}
 }

@@ -47,8 +47,6 @@ public class BaseActionBarActivity extends ActionBarActivity
 	public void onResume() {
 		super.onResume();
 		setActionBarTitle();
-		MobclickAgent.onPageStart("SplashScreen"); //统计页面
-		MobclickAgent.onResume(this);
 	}
 	
 	protected void setActionBarTitle() {
@@ -63,8 +61,6 @@ public class BaseActionBarActivity extends ActionBarActivity
 	@Override
 	public void onPause() {
 		super.onPause();
-		MobclickAgent.onPageEnd("SplashScreen"); // 保证 onPageEnd 在onPause 之前调用,因为 onPause 中会保存信息
-		MobclickAgent.onPause(this);
 	}
 	
 	@Override

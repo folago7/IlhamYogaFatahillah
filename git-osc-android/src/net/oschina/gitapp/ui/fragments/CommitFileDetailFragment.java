@@ -156,9 +156,10 @@ public class CommitFileDetailFragment extends BaseFragment implements
 			@SuppressWarnings("unchecked")
 			@Override
 			protected void onPostExecute(Message msg) {
+				
 				if (msg.what == 1 && msg.obj != null) {
-					onStatus(STATUS_LOADED);
 					mLoading.setVisibility(View.GONE);
+					onStatus(STATUS_LOADED);
 					mCommitDiffList = (CommonList<CommitDiff>) msg.obj;
 					mCommitFileSum.setText(mCommitDiffList.getCount() + " 个文件发生了变化");
 					adapter = new CommitDiffListAdapter(mAppContext, mCommitDiffList.getList(), R.layout.commit_diff_listitem, mCommitDiffll);
@@ -166,6 +167,7 @@ public class CommitFileDetailFragment extends BaseFragment implements
 					mCommitDiffll.setVisibility(View.VISIBLE);
 					adapter.notifyDataSetChanged();
 				} else {
+					mLoading.setVisibility(View.GONE);
 					((AppException)msg.obj).makeToast(getActivity());
 					onStatus(STATUS_NONE);
 				}

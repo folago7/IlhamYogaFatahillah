@@ -22,6 +22,7 @@
         android:layout_marginRight="8dip"
         android:background="@drawable/btn_style_green"
         android:enabled="false"
+        android:textColor="@color/white"
         android:text="提交" />
 
 </LinearLayout>
