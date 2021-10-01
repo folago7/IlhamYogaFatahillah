@@ -48,6 +48,7 @@ public class DrawerNavigationMenu extends Fragment implements OnClickListener {
 	private LinearLayout mMenu_item_explore;
 	private LinearLayout mMenu_item_myself;
 	private LinearLayout mMenu_item_language;
+	private LinearLayout mMenu_item_shake;
 	private LinearLayout mMenu_item_setting;
 	private View mMenu_item_exit;
 	
@@ -128,7 +129,7 @@ public class DrawerNavigationMenu extends Fragment implements OnClickListener {
 				if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
 					mUser_info_userface.setImageResource(R.drawable.widget_dface);
 				} else {
-					String faceUrl = URLs.HTTP + URLs.HOST + URLs.URL_SPLITTER + user.getPortrait();
+					String faceUrl = URLs.HTTPS + URLs.HOST + URLs.URL_SPLITTER + user.getPortrait();
 					UIHelper.showUserFace(mUser_info_userface, faceUrl);
 				}
 				// 其他资料
@@ -163,6 +164,7 @@ public class DrawerNavigationMenu extends Fragment implements OnClickListener {
 		mMenu_item_explore = (LinearLayout) view.findViewById(R.id.menu_item_explore);
 		mMenu_item_myself = (LinearLayout) view.findViewById(R.id.menu_item_myself);
 		mMenu_item_language = (LinearLayout) view.findViewById(R.id.menu_item_language);
+		mMenu_item_shake = (LinearLayout) view.findViewById(R.id.menu_item_shake);
 		mMenu_item_setting = (LinearLayout) view.findViewById(R.id.menu_item_setting);
 		mMenu_item_exit = view.findViewById(R.id.menu_item_exit);
 		
@@ -171,6 +173,7 @@ public class DrawerNavigationMenu extends Fragment implements OnClickListener {
 		mMenu_item_explore.setOnClickListener(this);
 		mMenu_item_myself.setOnClickListener(this);
 		mMenu_item_language.setOnClickListener(this);
+		mMenu_item_shake.setOnClickListener(this);
 		mMenu_item_setting.setOnClickListener(this);
 		mMenu_item_exit.setOnClickListener(this);
 
@@ -234,6 +237,9 @@ public class DrawerNavigationMenu extends Fragment implements OnClickListener {
 		case R.id.menu_item_language:
 			onClickLanguage();
 			break;
+		case R.id.menu_item_shake:
+			onClickmShake();
+			break;
 		case R.id.menu_item_setting:
 			onClickSetting();
 			break;
@@ -270,6 +276,12 @@ public class DrawerNavigationMenu extends Fragment implements OnClickListener {
 	private void onClickLanguage() {
 		if (mCallBack != null) {
 			mCallBack.onClickLanguage();
+		}
+	}
+	
+	private void onClickmShake() {
+		if (mCallBack != null) {
+			mCallBack.onClickShake();
 		}
 	}
 

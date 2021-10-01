@@ -12,5 +12,6 @@ public interface DrawerMenuCallBack {
 	public void onClickExplore();
 	public void onClickMySelf();
 	public void onClickLanguage();
+	public void onClickShake();
 	public void onClickExit();
 }

@@ -6,6 +6,7 @@ import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.Comment;
 import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.common.BitmapManager;
+import net.oschina.gitapp.common.HtmlRegexpUtils;
 import net.oschina.gitapp.common.StringUtils;
 import android.content.Context;
 import android.graphics.BitmapFactory;
@@ -77,7 +78,7 @@ public class CommitListCommentdapter extends MyBaseAdapter<Comment> {
 		
 		// 2.显示相关信息
 		listItemView.name.setText(comment.getAuthor().getName());
-		listItemView.body.setText(comment.getNote());
+		listItemView.body.setText(HtmlRegexpUtils.filterHtml(comment.getNote()));
 		listItemView.date.setText(StringUtils.friendly_time(comment.getCreated_at()));
 			
 		return convertView;

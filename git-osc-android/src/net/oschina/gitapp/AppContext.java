@@ -1,8 +1,6 @@
 package net.oschina.gitapp;
 
-import static net.oschina.gitapp.api.HTTPRequestor.PUT_METHOD;
 import static net.oschina.gitapp.common.Contanst.*;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -12,13 +10,10 @@ import java.io.InvalidClassException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
-
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.api.ApiClient;
 import net.oschina.gitapp.bean.Branch;
@@ -38,14 +33,10 @@ import net.oschina.gitapp.bean.NotificationReadResult;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.ProjectNotificationArray;
 import net.oschina.gitapp.bean.ReadMe;
-import net.oschina.gitapp.bean.Session;
-import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.bean.UpLoadFile;
 import net.oschina.gitapp.bean.Update;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.BroadcastController;
-import net.oschina.gitapp.common.Contanst;
-import net.oschina.gitapp.common.CyptoUtils;
 import net.oschina.gitapp.common.MethodsCompat;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
@@ -58,7 +49,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
 /**
  * 全局应用程序类：用于保存和调用全局应用配置及访问网络数据

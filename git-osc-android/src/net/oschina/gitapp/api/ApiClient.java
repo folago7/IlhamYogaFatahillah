@@ -127,12 +127,7 @@ public class ApiClient {
 	 */
 	public static User login(AppContext appContext, String userEmail,
 			String password) throws AppException {
-		String urlString = "";
-		if (appContext.isHttpsLogin()) {
-			urlString = URLs.LOGIN_HTTPS;
-		} else {
-			urlString = URLs.LOGIN_HTTP;
-		}
+		String urlString = URLs.LOGIN_HTTPS;
 		Session session = getHttpRequestor()
 				.init(appContext, HTTPRequestor.POST_METHOD, urlString)
 				.with("email", userEmail)

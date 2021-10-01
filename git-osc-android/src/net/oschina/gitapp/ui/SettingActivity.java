@@ -1,7 +1,6 @@
 package net.oschina.gitapp.ui;
 
 import java.io.File;
-
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppManager;
 import net.oschina.gitapp.R;
@@ -9,15 +8,12 @@ import net.oschina.gitapp.common.FileUtils;
 import net.oschina.gitapp.common.MethodsCompat;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.common.UpdateManager;
-import android.app.ActionBar;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
-import android.preference.PreferenceManager;
 
 /**
  * 设置界面
@@ -27,13 +23,11 @@ import android.preference.PreferenceManager;
  */
 public class SettingActivity extends PreferenceActivity implements OnPreferenceClickListener {
 	
-	private SharedPreferences mPreferences;
 	private Preference cache;
 	private Preference feedback;
 	private Preference update;
 	private Preference about;
 
-	private CheckBoxPreference httpslogin;
 	private CheckBoxPreference isReceiveNotice;
 	private CheckBoxPreference voice;
 	private CheckBoxPreference checkup;
@@ -53,17 +47,6 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 	@SuppressWarnings("deprecation")
 	private void initView() {
 		mAppContext = (AppContext) getApplication();
-		// 获得SharedPreferences
-		mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-		
-		httpslogin = (CheckBoxPreference) findPreference("httpslogin");
-		httpslogin.setChecked(mAppContext.isHttpsLogin());
-		if (mAppContext.isHttpsLogin()) {
-			httpslogin.setSummary("当前以 HTTPS 登录");
-		} else {
-			httpslogin.setSummary("当前以 HTTP 登录");
-		}
-		httpslogin.setOnPreferenceClickListener(this);
 		
 		// 接收通知
 		isReceiveNotice = (CheckBoxPreference) findPreference("isnotice");
@@ -105,9 +88,7 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 
 	@Override
 	public boolean onPreferenceClick(Preference preference) {
-		if (preference == httpslogin) {
-			onHttpslogin();
-		} else if (preference == isReceiveNotice) {
+		if (preference == isReceiveNotice) {
 			onReceiveNotice();
 		} else if (preference == voice) {
 			onVoice();
@@ -125,15 +106,6 @@ public class SettingActivity extends PreferenceActivity implements OnPreferenceC
 		return true;
 	}
 
-	private void onHttpslogin() {
-		mAppContext.setConfigHttpsLogin(httpslogin.isChecked());
-		if (httpslogin.isChecked()) {
-			httpslogin.setSummary("当前以 HTTPS 登录");
-		} else {
-			httpslogin.setSummary("当前以 HTTP 登录");
-		}
-	}
-	
 	private void onReceiveNotice() {
 		mAppContext.setConfigReceiveNotice(isReceiveNotice.isChecked());
 		if (isReceiveNotice.isChecked()) {

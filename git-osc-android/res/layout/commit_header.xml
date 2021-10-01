@@ -27,7 +27,7 @@
         <ImageView
             android:id="@+id/commit_author_face"
             style="@style/AvatarMedium"
-            android:background="@drawable/abc_ab_bottom_solid_dark_holo"
+            android:background="@drawable/widget_dface_loading"
             android:contentDescription="@string/avatar" />
 
         <LinearLayout

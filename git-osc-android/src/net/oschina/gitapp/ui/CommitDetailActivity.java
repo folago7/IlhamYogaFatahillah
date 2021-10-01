@@ -37,7 +37,7 @@ public class CommitDetailActivity extends BaseActionBarActivity implements
 		Intent intent = getIntent();
 		Project mProject = (Project) intent.getSerializableExtra(Contanst.PROJECT);
 		Commit mCommit = (Commit) intent.getSerializableExtra(Contanst.COMMIT);
-		mActionBar.setTitle(mCommit.getId().substring(0, 9));
+		mActionBar.setTitle("提交" + mCommit.getId().substring(0, 9));
 		mActionBar.setSubtitle(mProject.getOwner().getName() + "/" + mProject.getName());
 		
         if (null == savedInstanceState) {

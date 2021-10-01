@@ -81,7 +81,7 @@
                 android:gravity="left"
                 android:autoLink="web"
                 android:layout_marginLeft="15dip"
-                android:text="注册请前往http://git.oschina.net"
+                android:text="注册请前往https://git.oschina.net"
                 android:textColor="@color/gray"
                 android:textSize="12sp" />
         </LinearLayout>

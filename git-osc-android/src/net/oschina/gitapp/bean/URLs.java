@@ -13,7 +13,6 @@ public class URLs implements Serializable {
 	
 	public final static String HOST = "git.oschina.net";
 	private static final String API_VERSION = "/api/v3";// API版本
-	public final static String HTTP = "http://";
 	public final static String HTTPS = "https://";
 	
 	public final static String URL_SPLITTER = "/";
@@ -31,7 +30,7 @@ public class URLs implements Serializable {
 	public static String NAMESPACE = URL_API_HOST + "groups";
 	public static String NOTE = URL_API_HOST + "notes";
 	// GIT图片地址
-	public static String GITIMG = URLs.HTTP + URLs.HOST + URLs.URL_SPLITTER;
+	public static String GITIMG = URLs.HTTPS + URLs.HOST + URLs.URL_SPLITTER;
 	// 用户个人最新动态
 	public static String EVENTS = URL_API_HOST + "events";
 	// 项目
@@ -46,7 +45,6 @@ public class URLs implements Serializable {
 	public static String SEARCHPROJECT = PROJECT + URL_SPLITTER + "search";
 	public static String PROJECTHOOK = URL_API_HOST + "hooks";
 	public static String PROJECTMEMBER = URL_API_HOST + "members";
-	public final static String LOGIN_HTTP = HTTP + HOST + API_VERSION + URL_SPLITTER + "session";
 	public final static String LOGIN_HTTPS = HTTPS + HOST + API_VERSION + URL_SPLITTER + "session";
 	public static String USER = URL_API_HOST + "user";
 	public static String UPLOAD = URL_API_HOST + "upload";

@@ -1,6 +1,5 @@
 package net.oschina.gitapp.ui.fragments;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
@@ -18,6 +17,7 @@ import net.oschina.gitapp.bean.Commit;
 import net.oschina.gitapp.bean.CommitDiff;
 import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.Project;
+import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
@@ -121,13 +121,15 @@ public class CommitFileDetailFragment extends BaseFragment implements
 		
 	}
 	
-	// 加载头像
+	// 加载提交用户头像
 	private void loadAuthorFace() {
-		new Thread(){
-			public void run() {
-				//UIHelper.showUserFace(mCommitAuthorFace, mCommit.getAuthor().getPortrait());
-			}
-		}.start();
+		String portrait = mCommit.getAuthor() == null ? null : mCommit.getAuthor().getPortrait();
+		if (portrait == null || portrait.endsWith(".gif")) {
+			mCommitAuthorFace.setBackgroundResource(R.drawable.mini_avatar);
+		} else {
+			String faceurl = URLs.GITIMG + portrait;
+			UIHelper.showUserFace(mCommitAuthorFace, faceurl);
+		}
 	}
 	
 	private void loadDatasCode(final boolean isRefresh) {

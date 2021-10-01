@@ -317,6 +317,12 @@ public class MainActivity extends ActionBarActivity implements
 	}
 	
 	@Override
+	public void onClickShake() {
+		Intent intent = new Intent(mContext, ShakeActivity.class);
+		startActivity(intent);
+	}
+	
+	@Override
 	public void onClickSetting() {
 		Intent intent = new Intent(mContext, SettingActivity.class);
 		startActivity(intent);

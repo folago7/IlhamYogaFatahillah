@@ -160,7 +160,7 @@ public class MySelfInfoActivity extends BaseActionBarActivity implements View.On
 				mUserFace.setImageResource(R.drawable.widget_dface);
 			} else {
 				// 加载用户头像
-				String faceUrl = URLs.HTTP + URLs.HOST + URLs.URL_SPLITTER + mUser.getPortrait();
+				String faceUrl = URLs.HTTPS + URLs.HOST + URLs.URL_SPLITTER + mUser.getPortrait();
 				UIHelper.showUserFace(mUserFace, faceUrl);
 			}
 			mFollowers.setText(mUser.getFollow().getFollowers() + "");
