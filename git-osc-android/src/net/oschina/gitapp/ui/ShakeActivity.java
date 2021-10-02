@@ -201,7 +201,7 @@ public class ShakeActivity extends BaseActionBarActivity implements OnClickListe
 		switch (id) {
 		case R.id.shakeres:
 			if (mProject != null) {
-				UIHelper.showProjectDetail(mAppContext, null, mProject.getId());
+				UIHelper.showProjectDetail(ShakeActivity.this, mProject, mProject.getId());
 			}
 			break;
 

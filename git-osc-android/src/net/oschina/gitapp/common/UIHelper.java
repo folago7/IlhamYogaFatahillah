@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.regex.Pattern;
+
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
@@ -15,6 +16,7 @@ import com.umeng.socialize.sso.UMQQSsoHandler;
 import com.umeng.socialize.weixin.controller.UMWXHandler;
 import com.umeng.socialize.weixin.media.CircleShareContent;
 import com.umeng.socialize.weixin.media.WeiXinShareContent;
+
 import static net.oschina.gitapp.common.Contanst.*;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
@@ -60,6 +62,7 @@ import android.text.SpannableString;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -242,7 +245,7 @@ public class UIHelper {
 		if (!StringUtils.isEmpty(eventTitle) && eventTitle != null) {
 			start = title.indexOf(eventTitle);
 			end = start + eventTitle.length();
-			if (start > 0) {
+			if (start > 0 && end > 0 && start < end) {
 				sps.setSpan(new AbsoluteSizeSpan(14, true), start, end,
 						Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 				sps.setSpan(

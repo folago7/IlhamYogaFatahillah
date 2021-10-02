@@ -30,9 +30,11 @@
             android:layout_marginTop="4dip"
             android:text="火蚁"
             android:textColor="@color/gray"
+            android:maxEms="3"
+            android:gravity="center"
             android:textSize="@dimen/space_10" />
     </LinearLayout>
-
+    
     <TextView
         android:id="@+id/notification_listitem_title"
         android:layout_width="0dip"
@@ -41,8 +43,8 @@
         android:ellipsize="end"
         android:maxLines="3"
         android:text="累了就"
-        android:layout_marginLeft="15dip"
         android:textColor="#505253"
+        android:layout_marginLeft="15dip"
         android:textColorLink="@color/listitem_blue"
         android:textSize="@dimen/text_size_14" />
 

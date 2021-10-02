@@ -2,16 +2,6 @@ package net.oschina.gitapp.ui;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.controller.UMServiceFactory;
-import com.umeng.socialize.controller.UMSocialService;
-import com.umeng.socialize.sso.EmailHandler;
-import com.umeng.socialize.sso.SinaSsoHandler;
-import com.umeng.socialize.sso.SmsHandler;
-import com.umeng.socialize.sso.UMQQSsoHandler;
-import com.umeng.socialize.weixin.controller.UMWXHandler;
-
 import android.app.ProgressDialog;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -252,7 +242,7 @@ public class ProjectActivity extends BaseActionBarActivity implements
 	}
 	
 	private void initMoreMenu() {
-		mMoreMenuWindow = new DropDownMenu(ProjectActivity.this, onMoreMenuItemClick);
+		mMoreMenuWindow = new DropDownMenu(mAppContext, onMoreMenuItemClick);
 		MoreMenuItem share = new MoreMenuItem(MORE_MENU_SHARE, R.drawable.more_menu_icon_share, "分享项目");
 		mMoreItems.add(share);
 		
@@ -290,7 +280,9 @@ public class ProjectActivity extends BaseActionBarActivity implements
 	}
 	
 	private void showMoreOptionMenu() {
-		
+		if (mMoreMenuWindow == null) {
+			return;
+		}
 		View v = findViewById(R.id.project_menu_more);
 		int x = mMoreMenuWindow.getWidth() - v.getWidth() + 20;
 		

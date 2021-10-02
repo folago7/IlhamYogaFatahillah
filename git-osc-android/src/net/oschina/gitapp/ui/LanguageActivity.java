@@ -300,6 +300,7 @@ public class LanguageActivity extends BaseActionBarActivity implements
 	public boolean onNavigationItemSelected(int arg0, long arg1) {
 		Language language = mLanguages.get(arg0);
 		mLanguageId = language.getId();
+		mMessageState = MessageData.MESSAGE_STATE_MORE;
 		loadProjects(mLanguageId, 1);
 		return true;
 	}

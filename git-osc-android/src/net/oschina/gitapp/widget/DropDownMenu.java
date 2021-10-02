@@ -1,9 +1,10 @@
 package net.oschina.gitapp.widget;
 
 import java.util.List;
+
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.MoreMenuItem;
-import android.app.Activity;
+import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -24,20 +25,19 @@ import android.widget.TextView;
  * 
  */
 public class DropDownMenu extends PopupWindow {
-
+	
 	private ViewGroup menuView;
 
 	private OnClickListener itemClickListener;
 
 	private LayoutInflater inflater;
 
-	public DropDownMenu(final Activity context,
+	public DropDownMenu(final Context context,
 			OnClickListener itemClickListener) {
 		
 		this.itemClickListener = itemClickListener;
 		this.inflater = LayoutInflater.from(context);
-		menuView = (ViewGroup) inflater.inflate(R.layout.more_menu_container,
-				null);
+		menuView = (ViewGroup) inflater.inflate(R.layout.more_menu_container, null);
 		this.setContentView(menuView);
 		this.setWidth(LayoutParams.WRAP_CONTENT);
 		this.setHeight(LayoutParams.WRAP_CONTENT);

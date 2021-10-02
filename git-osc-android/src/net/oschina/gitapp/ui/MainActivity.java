@@ -18,12 +18,14 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import net.oschina.gitapp.bean.CommonList;
+import net.oschina.gitapp.bean.ProjectNotification;
 import net.oschina.gitapp.bean.ProjectNotificationArray;
 import net.oschina.gitapp.common.DoubleClickExitHelper;
 import net.oschina.gitapp.common.UIHelper;
@@ -166,7 +168,11 @@ public class MainActivity extends ActionBarActivity implements
 			public void handleMessage(Message msg) {
 				if (msg.what == 1) {
 					CommonList<ProjectNotificationArray> commonList = (CommonList<ProjectNotificationArray>) msg.obj;
-					UIHelper.sendBroadCast(MainActivity.this, commonList.getCount());
+					int count = 0;
+					for (ProjectNotificationArray pna : commonList.getList()) {
+						count += pna.getProject().getNotifications().size();
+					}
+					UIHelper.sendBroadCast(MainActivity.this, count);
 				}
 				foreachUserNotice();// 回调
 			}

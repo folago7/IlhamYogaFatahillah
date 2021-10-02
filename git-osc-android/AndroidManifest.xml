@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="net.oschina.gitapp"
-    android:versionCode="4"
+    android:versionCode="5"
     android:versionName="V 1.1" >
 
     <!--
          1.Target SDK version must be 16, not 17, or JavaScript bridge for
          WebView widgets does not work on a 4.2 Nexus 7
-         2.也可以在js调用的方法加上注解@JavascriptInterface，不然是不用被js代码所调用的    -->
+         2.也可以在js调用的方法加上注解@JavascriptInterface，不然是不用被js代码所调用的
+    -->
     <uses-sdk
         android:minSdkVersion="10"
         android:targetSdkVersion="19" />
@@ -46,8 +47,7 @@
         <activity
             android:name=".ui.MainActivity"
             android:label="@string/app_name"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" >
+            android:launchMode="singleTask" >
         </activity>
         <activity
             android:name=".ui.LoginActivity"
@@ -74,8 +74,7 @@
             android:label="摇一摇" />
         <activity
             android:name=".ui.CodeFileDetailActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
+            android:launchMode="singleTask" />
         <activity
             android:name=".ui.CommitDetailActivity"
             android:launchMode="singleTask" />
@@ -84,13 +83,11 @@
             android:launchMode="singleTask" />
         <activity
             android:name=".ui.IssueDetailActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
+            android:launchMode="singleTask" />
         <activity
             android:name=".ui.IssueEditActivity"
             android:configChanges="keyboardHidden|orientation"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".ui.MySelfInfoActivity"

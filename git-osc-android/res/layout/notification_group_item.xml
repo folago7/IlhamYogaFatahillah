@@ -26,8 +26,9 @@
             android:layout_marginTop="4dip"
             android:textColor="@color/gray"
             android:textSize="@dimen/space_10"
-            android:singleLine="true"
             android:layout_gravity="center"
+            android:maxEms="3"
+            android:gravity="center"
             android:text="火蚁火蚁火"/>
         
     </LinearLayout>
