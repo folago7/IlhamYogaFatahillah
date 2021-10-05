@@ -2,7 +2,6 @@ package net.oschina.gitapp.ui.fragments;
 
 import java.util.List;
 
-import android.util.Log;
 import android.widget.BaseAdapter;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;

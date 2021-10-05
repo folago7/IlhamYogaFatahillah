@@ -348,7 +348,6 @@ public class ProjectActivity extends BaseActionBarActivity implements
 					msg.obj = e;
 					e.printStackTrace();
 				}
-
 				return msg;
 			}
 
@@ -384,7 +383,9 @@ public class ProjectActivity extends BaseActionBarActivity implements
 						}
 					} else {
 						if (action == ACTION_LOAD_PROJECT) {
-							((AppException) msg.obj).makeToast(mAppContext);
+							if (msg.obj instanceof AppException) {
+								((AppException) msg.obj).makeToast(mAppContext);
+							}
 						}
 					}
 				}

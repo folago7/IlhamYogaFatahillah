@@ -44,12 +44,12 @@ public class CommitCommentFragment extends BaseSwipeRefreshFragment<Comment, Com
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		Bundle args = getArguments();
 		if (args != null) {
 			mProject = (Project) args.getSerializable(Contanst.PROJECT);
 			mCommit = (Commit) args.getSerializable(Contanst.COMMIT);
 		}
-		super.onCreate(savedInstanceState);
 	}
 	
 	@Override

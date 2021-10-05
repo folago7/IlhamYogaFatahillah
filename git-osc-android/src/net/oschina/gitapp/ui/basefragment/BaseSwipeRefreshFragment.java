@@ -2,7 +2,6 @@ package net.oschina.gitapp.ui.basefragment;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.Entity;
@@ -13,7 +12,6 @@ import net.oschina.gitapp.widget.NewDataToast;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

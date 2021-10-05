@@ -1,5 +1,7 @@
 package net.oschina.gitapp.ui.fragments;
 
+import static net.oschina.gitapp.ui.fragments.ExploreListProjectFragment.*;
+import android.os.Bundle;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.ViewPageFragmentAdapter;
 import net.oschina.gitapp.ui.basefragment.BaseViewPagerFragment;
@@ -19,8 +21,14 @@ public class ExploreViewPagerFragment extends BaseViewPagerFragment {
 	@Override
 	protected void onSetupTabAdapter(ViewPageFragmentAdapter adapter) {
 		String[] title = getResources().getStringArray(R.array.explore_title_array);
-		adapter.addTab(title[0], "featured", ExploreFeaturedListProjectFragment.class, null);
-		adapter.addTab(title[1], "popular", ExplorePopularListProjectFragment.class, null);
-		adapter.addTab(title[2], "latest", ExploreLatestListProjectFragment.class, null);
+		Bundle featuredBundle = new Bundle();
+		featuredBundle.putByte(EXPLORE_TYPE, TYPE_FEATURED);
+		adapter.addTab(title[0], "featured", ExploreListProjectFragment.class, featuredBundle);
+		Bundle popularBundle = new Bundle();
+		popularBundle.putByte(EXPLORE_TYPE, TYPE_POPULAR);
+		adapter.addTab(title[1], "popular", ExploreListProjectFragment.class, popularBundle);
+		Bundle latestdBundle = new Bundle();
+		latestdBundle.putByte(EXPLORE_TYPE, TYPE_LATEST);
+		adapter.addTab(title[2], "latest", ExploreListProjectFragment.class, latestdBundle);
 	}
 }
