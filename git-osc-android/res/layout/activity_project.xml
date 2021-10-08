@@ -56,8 +56,10 @@
                     android:background="@drawable/project_flag_private"/>
                 
             </LinearLayout>
-
+            
             <View style="@style/project_detail_h_line" />
+            
+            <include layout="@layout/activity_project_star_watch"/>
 
             <View style="@style/project_detail_line_withtop" />
 

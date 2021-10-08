@@ -33,7 +33,7 @@ import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.ProjectNotificationArray;
 import net.oschina.gitapp.bean.ReadMe;
 import net.oschina.gitapp.bean.Session;
-import net.oschina.gitapp.bean.StarOptionResult;
+import net.oschina.gitapp.bean.StarWatchOptionResult;
 import net.oschina.gitapp.bean.UpLoadFile;
 import net.oschina.gitapp.bean.Update;
 import net.oschina.gitapp.bean.User;
@@ -864,7 +864,7 @@ public class ApiClient {
 	 * @return
 	 * @throws AppException
 	 */
-	public static StarOptionResult starProject(AppContext appContext, String projectId, String type) throws AppException {
+	public static StarWatchOptionResult starProject(AppContext appContext, String projectId, String type) throws AppException {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put(PRIVATE_TOKEN, getToken(appContext));
 		String url = "";
@@ -874,7 +874,27 @@ public class ApiClient {
 			url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + projectId + URLs.URL_SPLITTER + "unstar", params);
 		}
 		return getHttpRequestor().init(appContext, POST_METHOD, url)
-				.to(StarOptionResult.class);
+				.to(StarWatchOptionResult.class);
+	}
+	
+	/**
+	 * watch or unwatch一个项目
+	 * @param appContext
+	 * @param projectId
+	 * @return
+	 * @throws AppException
+	 */
+	public static StarWatchOptionResult watchProject(AppContext appContext, String projectId, String type) throws AppException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(PRIVATE_TOKEN, getToken(appContext));
+		String url = "";
+		if (type.equalsIgnoreCase("watch")) {
+			url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + projectId + URLs.URL_SPLITTER + "watch", params);
+		} else {
+			url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + projectId + URLs.URL_SPLITTER + "unwatch", params);
+		}
+		return getHttpRequestor().init(appContext, POST_METHOD, url)
+				.to(StarWatchOptionResult.class);
 	}
 	
 	/**

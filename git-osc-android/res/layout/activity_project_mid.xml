@@ -21,20 +21,18 @@
         android:orientation="horizontal" >
 
         <LinearLayout
-            android:id="@+id/project_star"
             style="@style/project_detail_mid_grid_item" >
 			
             <!-- 项目star的状态 -->
             <ImageView
-                android:id="@+id/project_star_stared"
                 style="@style/project_detail_mid_grid_item_img"
                 android:contentDescription="@string/img_description"
-                android:background="@drawable/unstar" />
+                android:background="@drawable/time" />
 
             <TextView
-                android:id="@+id/project_starnum"
+                android:id="@+id/project_createed"
                 style="@style/project_detail_mid_grid_item_text"
-                android:text="100" />
+                android:text="2014-08-21" />
         </LinearLayout>
 
         <View

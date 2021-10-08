@@ -116,16 +116,20 @@ public class MySelfEventListAdapter extends MyBaseAdapter<Event> {
 		}
 		
 		listItemView.content.setVisibility(View.GONE);
+		
+		// 评论的内容
 		if (event.getEvents().getNote() != null && event.getEvents().getNote().getNote() != null) {
 			listItemView.content.setText(HtmlRegexpUtils.filterHtml(event.getEvents().getNote().getNote()));
 			listItemView.content.setVisibility(View.VISIBLE);
 		}
 		
-		if (event.getEvents().getIssue() != null) {
+		// issue的title
+		if (event.getEvents().getIssue() != null && event.getEvents().getNote() == null) {
 			listItemView.content.setText(event.getEvents().getIssue().getTitle());
 			listItemView.content.setVisibility(View.VISIBLE);
 		}
 		
+		// pr的title
 		if (event.getEvents().getPull_request() != null) {
 			listItemView.content.setText(event.getEvents().getPull_request().getTitle());
 			listItemView.content.setVisibility(View.VISIBLE);

@@ -26,7 +26,7 @@ import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.ApiClient;
 import net.oschina.gitapp.bean.MoreMenuItem;
 import net.oschina.gitapp.bean.Project;
-import net.oschina.gitapp.bean.StarOptionResult;
+import net.oschina.gitapp.bean.StarWatchOptionResult;
 import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.StringUtils;
@@ -74,6 +74,12 @@ public class ProjectActivity extends BaseActionBarActivity implements
 	
 	private ImageView mStarStared;// 项目的star状态
 	
+	private TextView mWatchNum;
+	
+	private ImageView mWatchStared;// 项目的Watch状态
+	
+	private TextView mCreated;
+	
 	private TextView mForkNum;
 	
 	private TextView mLocked;
@@ -89,6 +95,7 @@ public class ProjectActivity extends BaseActionBarActivity implements
 	private AppContext mAppContext;
 	
 	private LinearLayout mLLStar;
+	private LinearLayout mLLWatch;
 	private LinearLayout mLLOwner;
 	private LinearLayout mLLReadMe;
 	private LinearLayout mLLCodes;
@@ -160,6 +167,9 @@ public class ProjectActivity extends BaseActionBarActivity implements
 		mDescription = (TextView) findViewById(R.id.project_description);
 		mStarNum = (TextView) findViewById(R.id.project_starnum);
 		mStarStared = (ImageView) findViewById(R.id.project_star_stared);
+		mWatchNum = (TextView) findViewById(R.id.project_watchnum);
+		mWatchStared = (ImageView) findViewById(R.id.project_watch_stared);
+		mCreated = (TextView) findViewById(R.id.project_createed);
 		mForkNum = (TextView) findViewById(R.id.project_forknum);
 		mLocked = (TextView) findViewById(R.id.project_locked);
 		mLanguage = (TextView) findViewById(R.id.project_language);
@@ -168,6 +178,7 @@ public class ProjectActivity extends BaseActionBarActivity implements
 		mForkMes = (TextView) findViewById(R.id.project_fork_form);
 		
 		mLLStar = (LinearLayout) findViewById(R.id.project_star);
+		mLLWatch = (LinearLayout) findViewById(R.id.project_watch);
 		mLLOwner = (LinearLayout) findViewById(R.id.project_owner);
 		mLLReadMe = (LinearLayout) findViewById(R.id.project_readme);
 		mLLCodes = (LinearLayout) findViewById(R.id.project_issues);
@@ -175,6 +186,7 @@ public class ProjectActivity extends BaseActionBarActivity implements
 		mLLIssues = (LinearLayout) findViewById(R.id.project_code);
 		
 		mLLStar.setOnClickListener(this);
+		mLLWatch.setOnClickListener(this);
 		mLLOwner.setOnClickListener(this);
 		mLLReadMe.setOnClickListener(this);
 		mLLCodes.setOnClickListener(this);
@@ -199,6 +211,9 @@ public class ProjectActivity extends BaseActionBarActivity implements
 		mDescription.setText(getDescription(mProject.getDescription()));
 		mStarNum.setText(mProject.getStars_count() + "");
 		setStared(mProject.isStared());
+		mWatchNum.setText(mProject.getWatches_count() + "");
+		setWatched(mProject.isWatched());
+		mCreated.setText(StringUtils.friendly_time(mProject.getCreatedAt()));
 		mForkNum.setText(mProject.getForks_count() + "");
 		mLocked.setText(getLocked());
 		mLanguage.setText(getLanguage());
@@ -224,9 +239,17 @@ public class ProjectActivity extends BaseActionBarActivity implements
 	
 	private void setStared(boolean stared) {
 		if (stared) {
-			mStarStared.setBackgroundResource(R.drawable.star);
+			mStarStared.setBackgroundResource(R.drawable.project_star);
 		} else {
-			mStarStared.setBackgroundResource(R.drawable.unstar);
+			mStarStared.setBackgroundResource(R.drawable.project_unstar);
+		}
+	}
+	
+	private void setWatched(boolean watched) {
+		if (watched) {
+			mWatchStared.setBackgroundResource(R.drawable.watch);
+		} else {
+			mWatchStared.setBackgroundResource(R.drawable.unwatch);
 		}
 	}
 	
@@ -405,6 +428,9 @@ public class ProjectActivity extends BaseActionBarActivity implements
 		case R.id.project_star:
 			starOption();
 			break;
+		case R.id.project_watch:
+			watchOption();
+			break;
 		case R.id.project_owner:
 			if (mProject.getOwner() != null) {
 				UIHelper.showUserInfoDetail(ProjectActivity.this, mProject.getOwner(), mProject.getOwner().getId());
@@ -427,9 +453,79 @@ public class ProjectActivity extends BaseActionBarActivity implements
 		case R.id.project_issues:
 			UIHelper.showProjectListActivity(ProjectActivity.this, mProject, ProjectSomeInfoListActivity.PROJECT_LIST_TYPE_ISSUES);
 			break;
-		default:
-			break;
 		}
+	}
+	
+	private void watchOption() {
+		if (mProject == null) {
+			return;
+		}
+		if (!mAppContext.isLogin()) {
+			UIHelper.showLoginActivity(ProjectActivity.this);
+			return;
+		}
+		
+		
+		final ProgressDialog loadingDialog = new ProgressDialog(this);
+		loadingDialog.setCanceledOnTouchOutside(false);
+		if (mProject.isStared()) {
+			loadingDialog.setMessage("正在unwatch该项目...");
+		} else {
+			loadingDialog.setMessage("正在watch该项目...");
+		}
+		
+		new AsyncTask<Void, Void, Message>() {
+
+			@Override
+			protected Message doInBackground(Void... params) {
+				Message msg = new Message();
+				try {
+					if (mProject.isWatched()) {
+						msg.obj = ApiClient.watchProject(mAppContext, mProject.getId(), "unwatch");
+					} else {
+						msg.obj = ApiClient.watchProject(mAppContext, mProject.getId(), "watch");
+					}
+					msg.what = 1;
+				} catch (AppException e) {
+					e.printStackTrace();
+					msg.what = -1;
+					msg.obj = e;
+				}
+				return msg;
+			}
+
+			@Override
+			protected void onPreExecute() {
+				super.onPreExecute();
+				if (loadingDialog != null) {
+					loadingDialog.show();
+				}
+			}
+
+			@Override
+			protected void onPostExecute(Message msg) {
+				super.onPostExecute(msg);
+				loadingDialog.hide();
+				if (msg.what == 1) {
+					String resMsg = "";
+					StarWatchOptionResult res = (StarWatchOptionResult) msg.obj;
+					if (res.getCount() > mProject.getWatches_count()) {
+						setWatched(true);
+						mProject.setWatched(true);
+						resMsg = "watch成功";
+					} else {
+						setWatched(false);
+						mProject.setWatched(false);
+						resMsg = "unwatch成功";
+					}
+					mProject.setWatches_count(res.getCount());
+					mWatchNum.setText(res.getCount() + "");
+					UIHelper.ToastMessage(mAppContext, resMsg);
+				} else {
+					((AppException)msg.obj).makeToast(mAppContext);
+				}
+			}
+		}.execute();
 	}
 	
 	private void starOption() {
@@ -482,7 +578,7 @@ public class ProjectActivity extends BaseActionBarActivity implements
 				loadingDialog.hide();
 				if (msg.what == 1) {
 					String resMsg = "";
-					StarOptionResult res = (StarOptionResult) msg.obj;
+					StarWatchOptionResult res = (StarWatchOptionResult) msg.obj;
 					if (res.getCount() > mProject.getStars_count()) {
 						setStared(true);
 						mProject.setStared(true);
