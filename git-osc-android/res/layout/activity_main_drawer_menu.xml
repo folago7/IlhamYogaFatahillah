@@ -9,14 +9,13 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-        <include 
+        <include
             android:id="@+id/menu_user_layout"
-            layout="@layout/activity_main_menu_head"/>
-        
+            layout="@layout/activity_main_menu_head" />
+
         <include layout="@layout/horizontal_divider_view" />
-        
+
         <include layout="@layout/activity_main_menu_items" />
-        
     </LinearLayout>
 
 </ScrollView>

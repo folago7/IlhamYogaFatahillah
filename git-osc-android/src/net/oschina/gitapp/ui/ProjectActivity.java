@@ -2,8 +2,9 @@ package net.oschina.gitapp.ui;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import android.app.ProgressDialog;
-import android.content.ClipboardManager;
+import android.text.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -44,6 +45,7 @@ import net.oschina.gitapp.widget.DropDownMenu;
  * @更新内容：
  * @更新者：
  */
+@SuppressWarnings("deprecation")
 public class ProjectActivity extends BaseActionBarActivity implements
 		OnClickListener {
 	
@@ -112,7 +114,6 @@ public class ProjectActivity extends BaseActionBarActivity implements
 	
 	private View.OnClickListener onMoreMenuItemClick = new OnClickListener() {
 		
-		@SuppressWarnings("deprecation")
 		@Override
 		public void onClick(View v) {
 			if (mMoreMenuWindow != null && mMoreMenuWindow.isShowing()) {
@@ -192,11 +193,11 @@ public class ProjectActivity extends BaseActionBarActivity implements
 		mLLCodes.setOnClickListener(this);
 		mLLCommits.setOnClickListener(this);
 		mLLIssues.setOnClickListener(this);
-		
 		if (null == mProject) {
 			loadProject(ACTION_LOAD_PROJECT, projectId);
 		} else {
 			initData();
+			initMoreMenu();
 		}
 	}
 
@@ -265,7 +266,7 @@ public class ProjectActivity extends BaseActionBarActivity implements
 	}
 	
 	private void initMoreMenu() {
-		mMoreMenuWindow = new DropDownMenu(mAppContext, onMoreMenuItemClick);
+		mMoreMenuWindow = new DropDownMenu(ProjectActivity.this, onMoreMenuItemClick);
 		MoreMenuItem share = new MoreMenuItem(MORE_MENU_SHARE, R.drawable.more_menu_icon_share, "分享项目");
 		mMoreItems.add(share);
 		

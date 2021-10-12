@@ -473,7 +473,8 @@ public class ProjectCodeActivity extends BaseActionBarActivity implements
 				".cs", ".groovy", ".scala", ".sql", ".bas", ".xml", ".vb",
 				".xsl", ".swift", ".ftl", ".yml", ".ru", ".jsp", ".markdown",
 				".cshap", ".apsx", ".sass", ".less", ".ftl", ".haml", ".log",
-				".tx", ".csproj", ".sln", ".clj", ".scm", ".xhml", ".xaml"
+				".tx", ".csproj", ".sln", ".clj", ".scm", ".xhml", ".xaml",
+				".lua"
 		};
 		for (String string : codeFileSuffix) {
 			if (fileName.equalsIgnoreCase(string)) {

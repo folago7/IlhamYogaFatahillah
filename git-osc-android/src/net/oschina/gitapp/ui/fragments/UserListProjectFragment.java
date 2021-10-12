@@ -66,6 +66,6 @@ public class UserListProjectFragment extends BaseSwipeRefreshFragment<Project, C
 	
 	@Override
 	public void onItemClick(int position, Project project) {
-		UIHelper.showProjectDetail(getActivity(), project, project.getId());
+		UIHelper.showProjectDetail(getActivity(), null, project.getId());
 	}
 }

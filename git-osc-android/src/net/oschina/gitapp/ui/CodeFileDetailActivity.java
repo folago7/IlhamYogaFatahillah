@@ -2,7 +2,7 @@ package net.oschina.gitapp.ui;
 
 import java.util.ArrayList;
 import java.util.List;
-import android.content.ClipboardManager;
+import android.text.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -40,6 +40,7 @@ import net.oschina.gitapp.widget.DropDownMenu;
  * @author 火蚁
  * 
  */
+@SuppressWarnings("deprecation")
 public class CodeFileDetailActivity extends BaseActionBarActivity implements
 		OnStatusListener {
 
@@ -79,7 +80,6 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 
 	private View.OnClickListener onMoreItemClickListener = new View.OnClickListener() {
 
-		@SuppressWarnings("deprecation")
 		@Override
 		public void onClick(View v) {
 			if (mMoreMenuWindow != null && mMoreMenuWindow.isShowing()) {
