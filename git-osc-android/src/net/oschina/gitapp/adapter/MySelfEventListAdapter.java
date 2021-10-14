@@ -121,7 +121,7 @@ public class MySelfEventListAdapter extends MyBaseAdapter<Event> {
 		if (event.getEvents().getNote() != null && event.getEvents().getNote().getNote() != null) {
 			listItemView.content.setText(HtmlRegexpUtils.filterHtml(event.getEvents().getNote().getNote()));
 			listItemView.content.setVisibility(View.VISIBLE);
-		}
+		} else
 		
 		// issue的title
 		if (event.getEvents().getIssue() != null && event.getEvents().getNote() == null) {
@@ -130,7 +130,7 @@ public class MySelfEventListAdapter extends MyBaseAdapter<Event> {
 		}
 		
 		// pr的title
-		if (event.getEvents().getPull_request() != null) {
+		if (event.getEvents().getPull_request() != null && event.getEvents().getNote() == null) {
 			listItemView.content.setText(event.getEvents().getPull_request().getTitle());
 			listItemView.content.setVisibility(View.VISIBLE);
 		}

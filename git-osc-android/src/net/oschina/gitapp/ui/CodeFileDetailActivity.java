@@ -89,10 +89,6 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 				return;
 			}
 
-			if (!mProject.isPublic()) {
-				UIHelper.ToastMessage(mContext, "私有项目的文件不支持该操作");
-				return;
-			}
 			int id = v.getId();
 			switch (id) {
 			case MORE_MENU_SHARE:

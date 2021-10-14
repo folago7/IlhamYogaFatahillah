@@ -4,9 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools" >
     
     <item 
-        android:id="@+id/codefile_pub"
+        android:id="@+id/issue_menu_comment"
         android:orderInCategory="100"
-        android:title="提交"
+        android:icon="@drawable/action_comment"
+        android:title="评论"
         app:showAsAction="always" />
 
 </menu>

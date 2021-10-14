@@ -122,10 +122,6 @@ public class ProjectActivity extends BaseActionBarActivity implements
 			if (mProject == null) {
 				return;
 			}
-			if (!mProject.isPublic()) {
-				UIHelper.ToastMessage(mAppContext, "私有项目不支持该操作");
-				return;
-			}
 			int id = v.getId();
 			switch (id) {
 			case MORE_MENU_SHARE:

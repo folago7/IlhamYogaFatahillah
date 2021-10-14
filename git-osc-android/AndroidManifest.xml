@@ -85,6 +85,9 @@
             android:name=".ui.IssueDetailActivity"
             android:launchMode="singleTask" />
         <activity
+            android:name=".ui.IssueCommentActivity"
+            android:launchMode="singleTask" />
+        <activity
             android:name=".ui.IssueEditActivity"
             android:configChanges="keyboardHidden|orientation"
             android:launchMode="singleTask"
