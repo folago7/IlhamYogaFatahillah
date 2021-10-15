@@ -27,7 +27,7 @@
     </LinearLayout>
 
     <View
-        style="@style/project_detail_h_line" />
+        style="@style/h_line" />
     
     <LinearLayout 
         android:id="@+id/project_code"
@@ -50,7 +50,7 @@
     </LinearLayout>
 
     <View
-        style="@style/project_detail_h_line" />
+        style="@style/h_line" />
 
     <LinearLayout 
         android:id="@+id/project_commits"
@@ -74,7 +74,7 @@
     </LinearLayout>
 
     <View
-        style="@style/project_detail_h_line"
+        style="@style/h_line"
         android:visibility="visible" />
 
     <LinearLayout 
@@ -98,6 +98,6 @@
     </LinearLayout>
 
     <View
-        style="@style/project_detail_h_line" />
+        style="@style/h_line" />
 
 </LinearLayout>

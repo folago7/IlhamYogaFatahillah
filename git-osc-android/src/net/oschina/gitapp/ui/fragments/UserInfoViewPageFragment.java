@@ -37,6 +37,8 @@ public class UserInfoViewPageFragment extends BaseViewPagerFragment {
 		
 		adapter.addTab(title[0], "user_events", UserListEventFragment.class, args);
 		adapter.addTab(title[1], "user_projects", UserListProjectFragment.class, args);
+		adapter.addTab(title[2], "user_star_projects", StarProjectListFragment.class, args);
+		adapter.addTab(title[3], "user_watch_projects", WatchProjectListFragment.class, args);
 	}
 	
 	@Override

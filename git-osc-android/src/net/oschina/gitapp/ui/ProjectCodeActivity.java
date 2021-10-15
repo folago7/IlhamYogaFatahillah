@@ -633,6 +633,9 @@ public class ProjectCodeActivity extends BaseActionBarActivity implements
 					final String baArrays[] = new String[mBranchList.size()];
 					for (int i = 0; i < mBranchList.size(); i++) {
 						baArrays[i] = mBranchList.get(i).getName();
+						if (baArrays[i].equals(mBranch)) {
+							mBranchIndex = i;
+						}
 					}
 					dialog.setSingleChoiceItems(baArrays, mBranchIndex,
 							new DialogInterface.OnClickListener() {

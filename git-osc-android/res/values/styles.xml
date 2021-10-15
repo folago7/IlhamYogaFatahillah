@@ -1,5 +1,18 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-
+	
+    <!-- 横向线条 -->
+    <style name="h_line">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">0.1dip</item>
+        <item name="android:background">@color/gray</item>
+    </style>
+    <!-- 纵向线条 -->
+    <style name="v_line">
+        <item name="android:layout_width">0.1dip</item>
+        <item name="android:layout_height">fill_parent</item>
+        <item name="android:background">@color/gray</item>
+    </style>
+    
     <!-- app main menu style start! -->
     <!-- 菜单layout的样式 -->
     <style name="MenuItemLayoutStyle">
@@ -40,6 +53,7 @@
 
     <!-- app main menu style end! -->
 
+
     <!-- app more menu style start -->
     <style name="app_more_menu_layout">
         <item name="android:layout_width">fill_parent</item>
@@ -67,6 +81,7 @@
     </style>
 
     <!-- app more menu style end -->
+
 
     <!-- project list text style bgein -->
     <style name="project_list_text_parent">
@@ -110,7 +125,6 @@
 
 
     <!-- events list style start -->
-
 
     <!-- events title -->
     <style name="events_list_title">
@@ -172,20 +186,7 @@
         <item name="android:textSize">@dimen/text_size_16</item>
     </style>
 
-    <!-- 横向线条 -->
-    <style name="project_detail_h_line">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">0.1dip</item>
-        <item name="android:background">@color/gray</item>
-    </style>
-    <!-- 纵向线条 -->
-    <style name="project_detail_v_line">
-        <item name="android:layout_width">0.1dip</item>
-        <item name="android:layout_height">fill_parent</item>
-        <item name="android:background">@color/gray</item>
-    </style>
-
-    <style name="project_detail_line_withtop" parent="project_detail_h_line">
+    <style name="project_detail_line_withtop" parent="h_line">
         <item name="android:layout_marginTop">25dip</item>
     </style>
 

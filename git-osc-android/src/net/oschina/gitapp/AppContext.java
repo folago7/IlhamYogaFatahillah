@@ -1384,4 +1384,70 @@ public class AppContext extends Application {
 	public String updateRepositoryFiles(String project_id, String ref, String file_path, String branch_name, String content, String commit_message) throws AppException {
 		return ApiClient.updateRepositoryFiles(this, project_id, ref, file_path, branch_name, content, commit_message);
 	}
+	
+	/**
+	 * 获得某个用户的star列表
+	 * @param user_id
+	 * @param page
+	 * @param isRefresh
+	 * @return
+	 * @throws AppException
+	 */
+	@SuppressWarnings("unchecked")
+	public CommonList<Project> getStarProjectList(String user_id,
+			int page, boolean isRefresh) throws AppException {
+		CommonList<Project> list = null;
+		String cacheKey = "StarProjectList_" + user_id;
+		if (!isReadDataCache(cacheKey) || isRefresh) {
+			try {
+				list = ApiClient.getStarProjectList(this, user_id, page, isRefresh);
+				if (list != null) {
+					list.setCacheKey(cacheKey);
+					saveObject(list, cacheKey);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				list = (CommonList<Project>) readObject(cacheKey);
+			}
+		} else {
+			// 从缓存中读取
+			list = (CommonList<Project>) readObject(cacheKey);
+			if (list == null)
+				list = new CommonList<Project>();
+		}
+		return list;
+	}
+	
+	/**
+	 * 获得某个用户的watch列表
+	 * @param user_id
+	 * @param page
+	 * @param isRefresh
+	 * @return
+	 * @throws AppException
+	 */
+	@SuppressWarnings("unchecked")
+	public CommonList<Project> getWatchProjectList(String user_id,
+			int page, boolean isRefresh) throws AppException {
+		CommonList<Project> list = null;
+		String cacheKey = "WatchProjectList_" + user_id;
+		if (!isReadDataCache(cacheKey) || isRefresh) {
+			try {
+				list = ApiClient.getWatchProjectList(this, user_id, page, isRefresh);
+				if (list != null) {
+					list.setCacheKey(cacheKey);
+					saveObject(list, cacheKey);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				list = (CommonList<Project>) readObject(cacheKey);
+			}
+		} else {
+			// 从缓存中读取
+			list = (CommonList<Project>) readObject(cacheKey);
+			if (list == null)
+				list = new CommonList<Project>();
+		}
+		return list;
+	}
 }

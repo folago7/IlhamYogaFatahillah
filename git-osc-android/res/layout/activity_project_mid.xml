@@ -12,7 +12,7 @@
         android:text="OSCHINA 的 Android 客户端源码，可在 Google Play 或者国内几个应用市场上搜索“开源中国”来安装此app" />
 
     <View
-        style="@style/project_detail_h_line" />
+        style="@style/h_line" />
     
     <LinearLayout
         android:layout_width="fill_parent"
@@ -36,7 +36,7 @@
         </LinearLayout>
 
         <View
-            style="@style/project_detail_v_line" />
+            style="@style/v_line" />
 
         <LinearLayout
             style="@style/project_detail_mid_grid_item" >
@@ -54,7 +54,7 @@
     </LinearLayout>
 
     <View
-        style="@style/project_detail_h_line" />
+        style="@style/h_line" />
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -77,7 +77,7 @@
         </LinearLayout>
 
         <View
-            style="@style/project_detail_v_line" />
+            style="@style/v_line" />
 
         <LinearLayout
             style="@style/project_detail_mid_grid_item" >
@@ -95,7 +95,7 @@
     </LinearLayout>
 
     <View
-        style="@style/project_detail_h_line" />
+        style="@style/h_line" />
 
     <LinearLayout
         android:id="@+id/project_owner"
@@ -124,7 +124,7 @@
     </LinearLayout>
 
     <View
-        style="@style/project_detail_h_line" />
+        style="@style/h_line" />
 
     <LinearLayout
         android:id="@+id/project_ll_fork"
@@ -154,7 +154,7 @@
 
     <View
         android:id="@+id/project_fork_ll_line"
-        style="@style/project_detail_h_line"
+        style="@style/h_line"
         android:visibility="gone" />
 
 </LinearLayout>

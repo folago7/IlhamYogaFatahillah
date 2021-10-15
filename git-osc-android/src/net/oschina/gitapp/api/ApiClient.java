@@ -933,4 +933,54 @@ public class ApiClient {
 				.with("commit_message", commit_message)
 				.getResponseBodyString();
 	}
+	
+	/**
+	 * 获得某个用户star的项目列表
+	 * @param appContext
+	 * @param user_id
+	 * @param page
+	 * @param isRefresh
+	 * @return
+	 * @throws AppException
+	 */
+	public static CommonList<Project> getStarProjectList(AppContext appContext, String user_id, int page, boolean isRefresh) throws AppException {
+		CommonList<Project> projects = new CommonList<Project>();
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(PRIVATE_TOKEN, getToken(appContext));
+		params.put("page", page);
+		// 拼接url地址
+		String url = makeURL(URLs.USER + URLs.URL_SPLITTER + user_id
+				+ URLs.URL_SPLITTER + "stared_projects", params);
+		List<Project> list = getHttpRequestor().init(appContext,
+				HTTPRequestor.GET_METHOD, url).getList(Project[].class);
+		projects.setList(list);
+		projects.setCount(list.size());
+		projects.setPageSize(list.size());
+		return projects;
+	}
+	
+	/**
+	 * 获得某个用户watched的项目列表
+	 * @param appContext
+	 * @param user_id
+	 * @param page
+	 * @param isRefresh
+	 * @return
+	 * @throws AppException
+	 */
+	public static CommonList<Project> getWatchProjectList(AppContext appContext, String user_id, int page, boolean isRefresh) throws AppException {
+		CommonList<Project> projects = new CommonList<Project>();
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(PRIVATE_TOKEN, getToken(appContext));
+		params.put("page", page);
+		// 拼接url地址
+		String url = makeURL(URLs.USER + URLs.URL_SPLITTER + user_id
+				+ URLs.URL_SPLITTER + "watched_projects", params);
+		List<Project> list = getHttpRequestor().init(appContext,
+				HTTPRequestor.GET_METHOD, url).getList(Project[].class);
+		projects.setList(list);
+		projects.setCount(list.size());
+		projects.setPageSize(list.size());
+		return projects;
+	}
 }

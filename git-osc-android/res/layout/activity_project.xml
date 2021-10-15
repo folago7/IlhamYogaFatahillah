@@ -10,11 +10,12 @@
         android:layout_gravity="center"
         android:visibility="gone" />
 
-    <ScrollView
+    <net.oschina.gitapp.widget.CustomerScrollView
         android:id="@+id/project_content"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:background="@color/graywhite"
+        android:scrollbars="none"
         android:visibility="visible" >
 
         <LinearLayout
@@ -57,7 +58,7 @@
                 
             </LinearLayout>
             
-            <View style="@style/project_detail_h_line" />
+            <View style="@style/h_line" />
             
             <include layout="@layout/activity_project_star_watch"/>
 
@@ -69,6 +70,6 @@
 
             <include layout="@layout/activity_project_footer" />
         </LinearLayout>
-    </ScrollView>
+    </net.oschina.gitapp.widget.CustomerScrollView>
 
 </FrameLayout>

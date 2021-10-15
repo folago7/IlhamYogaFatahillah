@@ -18,7 +18,7 @@
     <Button
         android:id="@+id/issue_comment_pub"
         android:layout_width="fill_parent"
-        android:layout_height="35dip"
+        android:layout_height="38dip"
         android:layout_margin="8dip"
         android:background="@drawable/btn_style_green"
         android:textColor="@color/white"

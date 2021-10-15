@@ -1,17 +1,10 @@
 package net.oschina.gitapp.ui.fragments;
 
+import android.os.Bundle;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.ViewPageFragmentAdapter;
-import net.oschina.gitapp.common.BroadcastController;
-import net.oschina.gitapp.ui.basefragment.BaseFragment;
+import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.ui.basefragment.BaseViewPagerFragment;
-import net.oschina.gitapp.ui.basefragment.BaseViewPagerFragment;
-import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
 
 /**
  * 用户主界面
@@ -29,6 +22,10 @@ public class MySelfViewPagerFragment extends BaseViewPagerFragment {
 	protected void onSetupTabAdapter(ViewPageFragmentAdapter adapter) {
 		String[] title = getResources().getStringArray(R.array.myself_title_array);
 		adapter.addTab(title[0], "event", MySelfListEventFragment.class, null);
-		adapter.addTab(title[1], "project", MySelfListProjectFragment.class, null);
+		adapter.addTab(title[1], "project", MySelfListProjectFragment.class, null); 
+		Bundle bundle = new Bundle();
+		bundle.putSerializable(Contanst.USER, getGitApplication().getLoginInfo());
+		adapter.addTab(title[2], "star_projects", StarProjectListFragment.class, bundle);
+		adapter.addTab(title[3], "watch_projects", WatchProjectListFragment.class, bundle);
 	}
 }
