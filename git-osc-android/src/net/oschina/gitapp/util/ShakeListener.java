@@ -13,7 +13,7 @@ import android.hardware.SensorManager;
  *
  */
 public class ShakeListener implements SensorEventListener {
-	private static final int SPEED_SHRESHOLD = 2000;
+	private static final int SPEED_SHRESHOLD = 5000;//这个值越大需要越大的力气来摇晃手机
 	private static final int UPTATE_INTERVAL_TIME = 70;
 	private SensorManager sensorManager;
 	private Sensor sensor;

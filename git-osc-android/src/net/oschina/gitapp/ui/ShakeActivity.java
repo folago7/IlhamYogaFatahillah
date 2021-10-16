@@ -2,7 +2,6 @@ package net.oschina.gitapp.ui;
 
 import java.io.IOException;
 import java.util.HashMap;
-
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
@@ -16,22 +15,18 @@ import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationSet;
 import android.view.animation.TranslateAnimation;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class ShakeActivity extends BaseActionBarActivity implements OnClickListener {
 	
@@ -264,9 +259,9 @@ public class ShakeActivity extends BaseActionBarActivity implements OnClickListe
 							mProjectLanguage.setVisibility(View.GONE);
 							findViewById(R.id.exploreproject_listitem_language_image).setVisibility(View.GONE);
 						}
-						
+						mProjectFace.setImageResource(R.drawable.widget_dface_loading);
 						if (mProject.getOwner().getPortrait() == null || mProject.getOwner().getPortrait().endsWith(".gif")) {
-							mProjectFace.setBackgroundResource(R.drawable.mini_avatar);
+							mProjectFace.setImageResource(R.drawable.mini_avatar);
 						} else {
 							String faceUrl = URLs.GITIMG + mProject.getOwner().getPortrait();
 							UIHelper.showUserFace(mProjectFace, faceUrl);

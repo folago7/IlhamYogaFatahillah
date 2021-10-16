@@ -13,7 +13,6 @@
     tools:context=".ui.fragments.ExploreLatestListProjectFragment" >
 
     <!-- 项目作者头像 -->
-
     <net.oschina.gitapp.widget.CircleImageView
         android:id="@+id/exploreproject_listitem_userface"
         style="@style/UserFaceImageStyle" />
