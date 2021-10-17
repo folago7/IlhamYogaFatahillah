@@ -158,6 +158,7 @@ public class LoginActivity extends BaseActionBarActivity
 			
 			@Override
 			protected void onPreExecute() {
+				super.onPreExecute();
 				if(mLoginProgressDialog != null) {
 					mLoginProgressDialog.show();
 				}
@@ -165,6 +166,7 @@ public class LoginActivity extends BaseActionBarActivity
 			
 			@Override
 			protected void onPostExecute(Message msg) {
+				super.onPostExecute(msg);
 				//如果程序已经关闭，则不再执行以下处理
 				if(isFinishing()) {
 					return;

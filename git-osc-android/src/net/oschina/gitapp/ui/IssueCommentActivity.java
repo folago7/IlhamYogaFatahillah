@@ -135,6 +135,7 @@ public class IssueCommentActivity extends BaseActionBarActivity implements OnCli
 			
 			@Override
 			protected void onPreExecute() {
+				super.onPreExecute();
 				if(mPubing != null) {
 					mPubing.show();
 				}
@@ -142,6 +143,7 @@ public class IssueCommentActivity extends BaseActionBarActivity implements OnCli
 			
 			@Override
 			protected void onPostExecute(Message msg) {
+				super.onPostExecute(msg);
 				//如果程序已经关闭，则不再执行以下处理
 				if(isFinishing()) {
 					return;

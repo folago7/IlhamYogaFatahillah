@@ -337,6 +337,7 @@ public class MySelfInfoActivity extends BaseActionBarActivity implements View.On
 
 			@Override
 			protected void onPostExecute(Message msg) {
+				super.onPostExecute(msg);
 				dialog.dismiss();
 				if (msg.what == 1) {
 					UpLoadFile file = (UpLoadFile) msg.obj;

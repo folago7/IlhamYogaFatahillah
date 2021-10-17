@@ -1,7 +1,6 @@
 package net.oschina.gitapp.api;
 
 import static net.oschina.gitapp.api.HTTPRequestor.*;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -9,10 +8,8 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
-
 import android.graphics.Bitmap;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
@@ -31,6 +28,7 @@ import net.oschina.gitapp.bean.Milestone;
 import net.oschina.gitapp.bean.NotificationReadResult;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.ProjectNotificationArray;
+import net.oschina.gitapp.bean.RandomProject;
 import net.oschina.gitapp.bean.ReadMe;
 import net.oschina.gitapp.bean.Session;
 import net.oschina.gitapp.bean.StarWatchOptionResult;
@@ -903,12 +901,13 @@ public class ApiClient {
 	 * @return
 	 * @throws AppException
 	 */
-	public static Project getRandomProject(AppContext appContext) throws AppException {
+	public static RandomProject getRandomProject(AppContext appContext) throws AppException {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put(PRIVATE_TOKEN, getToken(appContext));
+		params.put("luck", 1);
 		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + "random", params);
 		return getHttpRequestor().init(appContext, GET_METHOD, url)
-				.to(Project.class);
+				.to(RandomProject.class);
 	}
 	
 	/**

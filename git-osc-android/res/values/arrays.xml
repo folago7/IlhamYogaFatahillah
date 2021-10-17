@@ -13,7 +13,7 @@
 
     <!-- 个人页面 -->
     <string-array name="myself_title_array">
-        <item>动态</item>
+        <item>最新动态</item>
         <item>项目</item>
         <item>Star的项目</item>
         <item>Watch的项目</item>
@@ -29,7 +29,7 @@
 
     <!-- 用户信息页面 -->
     <string-array name="userinfo_title_array">
-        <item>动态</item>
+        <item>最近动态</item>
         <item>项目</item>
         <item>Star的项目</item>
         <item>Watch的项目</item>

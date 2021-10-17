@@ -154,11 +154,12 @@ public class CommitFileDetailActivity extends BaseActionBarActivity implements
 
 			@Override
 			protected void onPreExecute() {
-
+				super.onPreExecute();
 			}
 
 			@Override
 			protected void onPostExecute(Message msg) {
+				super.onPostExecute(msg);
 				if (msg.what == 1 && msg.obj != null) {
 					onStatus(STATUS_LOADED);
 					String body = (String) msg.obj;

@@ -184,6 +184,7 @@ public class IssueEditActivity extends BaseActionBarActivity implements OnClickL
 			
 			@Override
 			protected void onPreExecute() {
+				super.onPreExecute();
 				mLoadSome.setMessage("加载协作者...");
 				if (mAssigneesList == null) {
 					mLoadSome.show();
@@ -196,6 +197,7 @@ public class IssueEditActivity extends BaseActionBarActivity implements OnClickL
 			@SuppressWarnings("unchecked")
 			@Override
 			protected void onPostExecute(Message msg) {
+				super.onPostExecute(msg);
 				if (mLoadSome != null) mLoadSome.dismiss();
 				if (msg.what == 1) {
 					

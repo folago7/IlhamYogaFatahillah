@@ -56,26 +56,27 @@
         android:id="@+id/shake_loading"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:padding="10dip"
-        android:gravity="center"
-        android:layout_marginBottom="25dip"
-        android:orientation="horizontal"
         android:layout_alignBottom="@id/shake_content"
+        android:layout_marginBottom="25dip"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:padding="10dip"
         android:visibility="gone" >
 
         <ProgressBar
             android:layout_width="20dip"
             android:layout_height="20dip"
             android:layout_margin="5dip" />
-        <TextView 
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="正在为你准备项目，客官请稍候..."
-            android:textColor="@color/white"/>
+            android:textColor="@color/white" />
     </LinearLayout>
 
     <RelativeLayout
-        android:id="@+id/shakeres"
+        android:id="@+id/shakeres_paroject"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -85,6 +86,35 @@
         <include
             layout="@layout/exploreproject_listitem"
             android:visibility="visible" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/shakeres_award"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/corners_bg"
+        android:layout_margin="15dip"
+        android:orientation="horizontal"
+        android:visibility="gone" >
+
+        <ImageView
+            android:id="@+id/shake_award_img"
+            android:layout_width="88dip"
+            android:layout_height="88dip"
+            android:layout_margin="10dip"
+            android:contentDescription="@string/img_description"
+            android:src="@drawable/icon_logo" />
+
+        <TextView
+            android:id="@+id/shake_award_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/shake_award_img"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="10dip"
+            android:text="开源马克杯一个"
+            android:textSize="20sp" />
     </RelativeLayout>
 
 </RelativeLayout>

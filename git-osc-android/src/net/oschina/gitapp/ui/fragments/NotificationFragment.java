@@ -122,7 +122,9 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
 		mListView.setAdapter(adapter);
 		
 		mListView.setOnChildClickListener(this);
-		
+		TextView v = new TextView(mAppContext);
+		v.setText("空的数据");
+		mListView.setEmptyView(v);
 		mListView.setGroupIndicator(null);
 	}
 
@@ -236,7 +238,7 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
 							e.printStackTrace();
 						}
 					}
-				}.start();;
+				}.start();
 			}
 			if (notification.getTarget_type().equalsIgnoreCase("Issue")) {
 				UIHelper.showProjectDetail(mAppContext, null, notification.getProject_id());

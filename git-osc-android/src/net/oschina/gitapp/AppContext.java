@@ -32,6 +32,7 @@ import net.oschina.gitapp.bean.Milestone;
 import net.oschina.gitapp.bean.NotificationReadResult;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.ProjectNotificationArray;
+import net.oschina.gitapp.bean.RandomProject;
 import net.oschina.gitapp.bean.ReadMe;
 import net.oschina.gitapp.bean.UpLoadFile;
 import net.oschina.gitapp.bean.Update;
@@ -1367,7 +1368,7 @@ public class AppContext extends Application {
 	 * @return
 	 * @throws AppException
 	 */
-	public Project getRandomProject() throws AppException {
+	public RandomProject getRandomProject() throws AppException {
 		return ApiClient.getRandomProject(this);
 	}
 	

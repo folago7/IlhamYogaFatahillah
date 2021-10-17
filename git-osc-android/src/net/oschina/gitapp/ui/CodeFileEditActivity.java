@@ -128,11 +128,13 @@ public class CodeFileEditActivity extends BaseActionBarActivity implements OnCli
 
 			@Override
 			protected void onPreExecute() {
+				super.onPreExecute();
 				mPubing.show();
 			}
 
 			@Override
 			protected void onPostExecute(Message msg) {
+				super.onPostExecute(msg);
 				mPubing.dismiss();
 				if (msg.what == 1) {
 					String res = (String) msg.obj;
