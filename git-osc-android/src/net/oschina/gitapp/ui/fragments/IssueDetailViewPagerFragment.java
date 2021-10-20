@@ -1,7 +1,9 @@
 package net.oschina.gitapp.ui.fragments;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Message;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -44,8 +46,6 @@ public class IssueDetailViewPagerFragment extends BaseViewPagerFragment {
 		adapter.addTab("详情", "detail", IssueDetailFragment.class, args);
 		adapter.addTab("评论", "comments", IssueCommentFragment.class, args);
 	}
-	
-	
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {

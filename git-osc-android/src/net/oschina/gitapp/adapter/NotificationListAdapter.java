@@ -122,13 +122,20 @@ public class NotificationListAdapter extends BaseExpandableListAdapter {
         
 		ProjectNotification pn = mGroups.get(groupPosition);
 		
-        String portrait = pn.getOwner().getPortrait() == null ? "" : pn.getOwner().getPortrait();
+		// 加载头像
+		String portrait = pn.getOwner().getPortrait() == null ? "" : pn.getOwner().getPortrait();
 		if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
 			holder.mGroupFace.setImageResource(R.drawable.mini_avatar);
 		} else {
 			String portraitURL = URLs.GITIMG + pn.getOwner().getPortrait();
 			bmpManager.loadBitmap(portraitURL, holder.mGroupFace);
 		}
+//		String portraitURL = pn.getOwner().getNew_portrait();
+//		if (portraitURL.endsWith("portrait.gif")) {
+//			holder.mGroupFace.setImageResource(R.drawable.mini_avatar);
+//		} else {
+//			bmpManager.loadBitmap(portraitURL, holder.mGroupFace);
+//		}
         
         holder.mGroupUserName.setText(pn.getOwner().getName());
         
@@ -169,13 +176,20 @@ public class NotificationListAdapter extends BaseExpandableListAdapter {
         
         final Notification notification = getChild(groupPosition, childPosition);
         
-		String portrait = notification.getUserinfo().getPortrait() == null ? "" : notification.getUserinfo().getPortrait();
+        // 1.加载头像
+        String portrait = notification.getUserinfo().getPortrait() == null ? "" : notification.getUserinfo().getPortrait();
 		if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
 			holder.face.setImageResource(R.drawable.widget_dface);
 		} else {
 			String portraitURL = URLs.GITIMG + notification.getUserinfo().getPortrait();
 			bmpManager.loadBitmap(portraitURL, holder.face);
 		}
+//		String portraitURL = notification.getUserinfo().getNew_portrait();
+//		if (portraitURL.endsWith("portrait.gif")) {
+//			holder.face.setImageResource(R.drawable.mini_avatar);
+//		} else {
+//			bmpManager.loadBitmap(portraitURL, holder.face);
+//		}
 		
 		holder.face.setOnClickListener(new OnClickListener() {
 			
