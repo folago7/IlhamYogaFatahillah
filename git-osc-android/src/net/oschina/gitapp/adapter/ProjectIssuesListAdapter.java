@@ -73,12 +73,11 @@ public class ProjectIssuesListAdapter extends MyBaseAdapter<Issue> {
 		
 		final Issue issue = listData.get(position);
 		
-		// 1.加载项目作者头像
-		String portrait = issue.getAuthor() == null || issue.getAuthor().getPortrait() == null ? "" : issue.getAuthor().getPortrait();
-		if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
+		// 1.加载头像
+		String portraitURL = issue.getAuthor() == null ? "" : issue.getAuthor().getNew_portrait();
+		if (portraitURL.endsWith("portrait.gif") || StringUtils.isEmpty(portraitURL)) {
 			listItemView.face.setImageResource(R.drawable.mini_avatar);
 		} else {
-			String portraitURL = URLs.GITIMG + issue.getAuthor().getPortrait();
 			bmpManager.loadBitmap(portraitURL, listItemView.face);
 		}
 		listItemView.face.setOnClickListener(new OnClickListener() {

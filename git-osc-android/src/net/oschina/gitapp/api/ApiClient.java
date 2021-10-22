@@ -1,6 +1,7 @@
 package net.oschina.gitapp.api;
 
 import static net.oschina.gitapp.api.HTTPRequestor.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -8,9 +9,12 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
+
 import android.graphics.Bitmap;
+import android.util.Log;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.bean.Branch;
@@ -24,6 +28,7 @@ import net.oschina.gitapp.bean.Event;
 import net.oschina.gitapp.bean.GitNote;
 import net.oschina.gitapp.bean.Issue;
 import net.oschina.gitapp.bean.Language;
+import net.oschina.gitapp.bean.LuckMsg;
 import net.oschina.gitapp.bean.Milestone;
 import net.oschina.gitapp.bean.NotificationReadResult;
 import net.oschina.gitapp.bean.Project;
@@ -31,6 +36,7 @@ import net.oschina.gitapp.bean.ProjectNotificationArray;
 import net.oschina.gitapp.bean.RandomProject;
 import net.oschina.gitapp.bean.ReadMe;
 import net.oschina.gitapp.bean.Session;
+import net.oschina.gitapp.bean.ShippingAddress;
 import net.oschina.gitapp.bean.StarWatchOptionResult;
 import net.oschina.gitapp.bean.UpLoadFile;
 import net.oschina.gitapp.bean.Update;
@@ -981,5 +987,53 @@ public class ApiClient {
 		projects.setCount(list.size());
 		projects.setPageSize(list.size());
 		return projects;
+	}
+	
+	/**
+	 * 获取用户的收货信息
+	 * @param appContext
+	 * @param user_id
+	 * @return
+	 * @throws AppException
+	 */
+	public static ShippingAddress getUserShippingAddress(AppContext appContext, String user_id) throws AppException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(PRIVATE_TOKEN, getToken(appContext));
+		String url = makeURL(URLs.URL_API_HOST + "users" + URLs.URL_SPLITTER + user_id + URLs.URL_SPLITTER + "address", params);
+		return getHttpRequestor().init(appContext, GET_METHOD, url)
+				.to(ShippingAddress.class);
+	}
+	
+	/**
+	 * 更新用户的收货信息
+	 * @param appContext
+	 * @param user_id
+	 * @param shippingAddress
+	 * @return
+	 * @throws AppException
+	 */
+	public static ShippingAddress updateUserShippingAddress(AppContext appContext, String user_id, ShippingAddress shippingAddress) throws AppException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(PRIVATE_TOKEN, getToken(appContext));
+		String url = makeURL(URLs.URL_API_HOST + "users" + URLs.URL_SPLITTER + user_id + URLs.URL_SPLITTER + "address", params);
+		return getHttpRequestor().init(appContext, POST_METHOD, url)
+				.with("name", shippingAddress.getName())
+				.with("tel", shippingAddress.getTel())
+				.with("address", shippingAddress.getAddress())
+				.to(ShippingAddress.class);
+	}
+	
+	/**
+	 * 获得抽奖活动的信息
+	 * @param appContext
+	 * @return
+	 * @throws AppException
+	 */
+	public static LuckMsg getLuckMsg(AppContext appContext) throws AppException {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put(PRIVATE_TOKEN, getToken(appContext));
+		String url = makeURL(URLs.PROJECT + URLs.URL_SPLITTER + "luck_msg", params);
+		return getHttpRequestor().init(appContext, GET_METHOD, url)
+				.to(LuckMsg.class);
 	}
 }

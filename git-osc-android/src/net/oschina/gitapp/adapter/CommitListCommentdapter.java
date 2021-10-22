@@ -64,17 +64,13 @@ public class CommitListCommentdapter extends MyBaseAdapter<Comment> {
 		
 		Comment comment = listData.get(position);
 		
-		// 1.加载项目作者头像
-		String portrait = comment.getAuthor().getPortrait() == null ? "" : comment.getAuthor().getPortrait();
-		if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
-			listItemView.face.setImageResource(R.drawable.widget_dface);
+		// 1.加载头像
+		String portraitURL = comment.getAuthor().getNew_portrait();
+		if (portraitURL.endsWith("portrait.gif")) {
+			listItemView.face.setImageResource(R.drawable.mini_avatar);
 		} else {
-			String portraitURL = URLs.GITIMG + comment.getAuthor().getPortrait();
 			bmpManager.loadBitmap(portraitURL, listItemView.face);
 		}
-		/*if (faceClickEnable) {
-			listItemView.face.setOnClickListener(faceClickListener);
-		}*/
 		
 		// 2.显示相关信息
 		listItemView.name.setText(comment.getAuthor().getName());

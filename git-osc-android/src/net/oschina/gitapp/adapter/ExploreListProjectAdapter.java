@@ -73,12 +73,11 @@ public class ExploreListProjectAdapter extends MyBaseAdapter<Project> {
 		
 		final Project project = listData.get(position);
 		
-		// 1.加载项目作者头像
-		String portrait = project.getOwner().getPortrait() == null ? "" : project.getOwner().getPortrait();
-		if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
+		// 1.加载头像
+		String portraitURL = project.getOwner().getNew_portrait();
+		if (portraitURL.endsWith("portrait.gif")) {
 			listItemView.face.setImageResource(R.drawable.mini_avatar);
 		} else {
-			String portraitURL = URLs.GITIMG + project.getOwner().getPortrait();
 			bmpManager.loadBitmap(portraitURL, listItemView.face);
 		}
 		listItemView.face.setOnClickListener(new OnClickListener() {

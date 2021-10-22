@@ -2,6 +2,7 @@ package net.oschina.gitapp.adapter;
 
 import java.util.Date;
 import java.util.List;
+
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.URLs;
@@ -80,12 +81,11 @@ public class MySelfListProjectAdapter extends MyBaseAdapter<Project> {
 	private void initInfo(ListItemView listItemView, int position) {
 		final Project project = listData.get(position);
 		
-		// 加载项目作者头像
-		String portrait = project.getOwner().getPortrait() == null ? "" : project.getOwner().getPortrait();
-		if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
+		// 1.加载头像
+		String portraitURL = project.getOwner().getNew_portrait();
+		if (portraitURL.endsWith("portrait.gif")) {
 			listItemView.face.setImageResource(R.drawable.mini_avatar);
 		} else {
-			String portraitURL = URLs.GITIMG + project.getOwner().getPortrait();
 			bmpManager.loadBitmap(portraitURL, listItemView.face);
 		}
 		

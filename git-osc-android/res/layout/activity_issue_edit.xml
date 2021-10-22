@@ -5,7 +5,7 @@
 
     <ProgressBar
         android:id="@+id/issue_edit_loading"
-        style="@style/Spinner"
+        style="@style/ListSpinner"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:layout_centerInParent="true"
@@ -15,7 +15,7 @@
     <ScrollView
         android:id="@+id/issue_edit_sv_issue_content"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="wrap_content"
         android:visibility="visible" >
 
         <LinearLayout
@@ -92,7 +92,7 @@
                 android:id="@+id/issue_edit_body"
                 style="@style/FormalMultiLineEditText"
                 android:layout_width="match_parent"
-                android:minLines="5"
+                android:minLines="3"
                 android:scrollbars="horizontal|vertical" />
         </LinearLayout>
     </ScrollView>
@@ -101,8 +101,9 @@
         android:id="@+id/issue_edit_pub"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="15dip"
+        android:padding="10dip"
         android:layout_alignParentBottom="true"
+        android:layout_above="@id/issue_edit_sv_issue_content"
         android:background="@drawable/btn_style_green"
         android:enabled="false"
         android:layout_margin="5dip"

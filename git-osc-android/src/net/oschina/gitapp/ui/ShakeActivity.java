@@ -6,9 +6,12 @@ import java.util.HashMap;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
+import net.oschina.gitapp.api.ApiClient;
+import net.oschina.gitapp.bean.LuckMsg;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.RandomProject;
 import net.oschina.gitapp.bean.URLs;
+import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
 import net.oschina.gitapp.util.ShakeListener;
@@ -18,6 +21,7 @@ import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.AsyncTask;
@@ -46,6 +50,8 @@ public class ShakeActivity extends BaseActionBarActivity implements OnClickListe
 	private ShakeListener mShakeListener = null;
 	
 	private Vibrator mVibrator;
+	
+	private TextView mLuckMsg;
 	
 	private RelativeLayout mImgUp;
 	
@@ -84,6 +90,8 @@ public class ShakeActivity extends BaseActionBarActivity implements OnClickListe
 		setContentView(R.layout.activity_shake);
 		mAppContext = getGitApplication();
 		initView();
+		// 加载近期的活动信息
+		loadLuckMsg();
 		mVibrator = (Vibrator) getApplication().getSystemService(
 				VIBRATOR_SERVICE);
 
@@ -98,6 +106,9 @@ public class ShakeActivity extends BaseActionBarActivity implements OnClickListe
 	}
 	
 	private void initView() {
+		
+		mLuckMsg = (TextView) findViewById(R.id.shake_luck_msg);
+		
 		mImgUp = (RelativeLayout) findViewById(R.id.shakeImgUp);
 		mImgDn = (RelativeLayout) findViewById(R.id.shakeImgDown);
 		
@@ -287,10 +298,10 @@ public class ShakeActivity extends BaseActionBarActivity implements OnClickListe
 							findViewById(R.id.exploreproject_listitem_language_image).setVisibility(View.GONE);
 						}
 						mProjectFace.setImageResource(R.drawable.widget_dface_loading);
-						if (mProject.getOwner().getPortrait() == null || mProject.getOwner().getPortrait().endsWith(".gif")) {
+						String faceUrl = mProject.getOwner().getNew_portrait();
+						if (faceUrl.endsWith(".gif") || StringUtils.isEmpty(faceUrl)) {
 							mProjectFace.setImageResource(R.drawable.mini_avatar);
 						} else {
-							String faceUrl = URLs.GITIMG + mProject.getOwner().getPortrait();
 							UIHelper.showUserFace(mProjectFace, faceUrl);
 						}
 					} else if (mProject !=null) {
@@ -301,12 +312,13 @@ public class ShakeActivity extends BaseActionBarActivity implements OnClickListe
 						
 						AlertDialog.Builder dialog = new Builder(ShakeActivity.this);
 						dialog.setCancelable(false);
-						dialog.setTitle("恭喜您，中奖啦！！！");
-						dialog.setMessage(Html.fromHtml("获得：" + mProject.getMsg() + "<br><br>温馨提示：<br>请到git.oschina.net上完善您的收货信息，方便我们给您邮寄奖品"));
+						dialog.setTitle("恭喜您，摇到奖品啦！！！");
+						dialog.setMessage(Html.fromHtml("获得：" + mProject.getMsg() + "<br><br>温馨提示：<br>请完善您的收货信息，方便我们给您邮寄奖品"));
 						dialog.setNegativeButton("我知道了", new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
 								mShakeListener.start();
+								showShippingAddressActivity();
 							}
 						});
 						dialog.show();
@@ -314,6 +326,46 @@ public class ShakeActivity extends BaseActionBarActivity implements OnClickListe
 				} else {
 					UIHelper.ToastMessage(mAppContext, "红薯跟你开了个玩笑，没有为你找到项目");
 				}
+			}
+			
+		}.execute();
+	}
+	
+	/**
+	 * 显示编辑用户收货地址的操作
+	 */
+	private void showShippingAddressActivity() {
+		Intent intent = new Intent(ShakeActivity.this, ShippingAddressActivity.class);
+		startActivity(intent);
+	}
+	
+	private void loadLuckMsg() {
+		new AsyncTask<Void, Void, LuckMsg>() {
+
+			@Override
+			protected LuckMsg doInBackground(Void... params) {
+				LuckMsg res = null;
+				try {
+					res = ApiClient.getLuckMsg(mAppContext);
+				} catch (AppException e) {
+					e.printStackTrace();
+				}
+				
+				return res;
+			}
+
+			@Override
+			protected void onPostExecute(LuckMsg res) {
+				super.onPostExecute(res);
+				if (res != null) {
+					mLuckMsg.setVisibility(View.VISIBLE);
+					mLuckMsg.setText(res.getMessage());
+				}
+			}
+
+			@Override
+			protected void onPreExecute() {
+				super.onPreExecute();
 			}
 			
 		}.execute();

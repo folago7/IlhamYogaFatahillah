@@ -1,7 +1,6 @@
 package net.oschina.gitapp.adapter;
 
 import java.util.List;
-
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.Commit;
 import net.oschina.gitapp.bean.Event;
@@ -13,9 +12,6 @@ import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import android.content.Context;
 import android.graphics.BitmapFactory;
-import android.text.Html;
-import android.text.SpannableString;
-import android.text.Spanned;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
@@ -79,12 +75,11 @@ public class MySelfEventListAdapter extends MyBaseAdapter<Event> {
 	
 	private void displayContent(ListItemView listItemView, final Event event) {
 		
-		// 1.加载项目作者头像
-		String portrait = event.getAuthor().getPortrait() == null ? "" : event.getAuthor().getPortrait();
-		if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
+		// 1.加载头像
+		String portraitURL = event.getAuthor().getNew_portrait();
+		if (portraitURL.endsWith("portrait.gif")) {
 			listItemView.face.setImageResource(R.drawable.mini_avatar);
 		} else {
-			String portraitURL = URLs.GITIMG + portrait;
 			bmpManager.loadBitmap(portraitURL, listItemView.face);
 		}
 		

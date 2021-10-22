@@ -63,18 +63,13 @@ public class ProjectCommitListAdapter extends MyBaseAdapter<Commit> {
 		
 		Commit commit = listData.get(position);
 		
-		// 1.加载项目作者头像
-		String portrait = commit.getAuthor() == null || commit.getAuthor().getPortrait() == null ? "" : commit.getAuthor().getPortrait();
-		if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
+		// 1.加载头像
+		String portraitURL = commit.getAuthor() == null ? "" : commit.getAuthor().getNew_portrait();
+		if (portraitURL.endsWith("portrait.gif") || StringUtils.isEmpty(portraitURL)) {
 			listItemView.face.setImageResource(R.drawable.mini_avatar);
 		} else {
-			String portraitURL = URLs.GITIMG + commit.getAuthor().getPortrait();
 			bmpManager.loadBitmap(portraitURL, listItemView.face);
 		}
-		/*
-		if (faceClickEnable) {
-			listItemView.face.setOnClickListener(faceClickListener);
-		}*/
 		
 		// 2.显示相关信息
 		listItemView.username.setText(commit.getAuthor() == null ? commit.getAuthor_name() : commit.getAuthor().getName());

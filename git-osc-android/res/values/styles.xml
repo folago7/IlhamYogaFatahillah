@@ -19,7 +19,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:minHeight">55dip</item>
-        <item name="android:gravity">center_vertical</item>
+        <item name="android:gravity">center_vertical</item>I only have sixI only have six
         <item name="android:orientation">horizontal</item>
         <item name="android:paddingLeft">15dip</item>
         <item name="android:paddingRight">15dip</item>
@@ -52,7 +52,6 @@
     </style>
 
     <!-- app main menu style end! -->
-
 
     <!-- app more menu style start -->
     <style name="app_more_menu_layout">
@@ -234,6 +233,29 @@
         <item name="android:singleLine">true</item>
         <item name="android:textColor">@color/gray</item>
         <item name="android:textColor">@color/gray</item>
+    </style>
+    
+    <style name="project_detail_btn_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:background">@drawable/btn_style_green</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+    
+    <style name="project_detail_btn_img">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_margin">5dip</item>
+    </style>
+    
+    <style name="project_detail_btn_text">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:layout_marginRight">5dip</item>
+        <item name="android:layout_marginBottom">1dip</item>
     </style>
 
     <style name="project_detail_layout_style">

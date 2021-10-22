@@ -60,10 +60,6 @@
             
             <View style="@style/h_line" />
             
-            <include layout="@layout/activity_project_star_watch"/>
-
-            <View style="@style/project_detail_line_withtop" />
-
             <include layout="@layout/activity_project_mid" />
 
             <View style="@style/project_detail_line_withtop" />

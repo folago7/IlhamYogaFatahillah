@@ -464,9 +464,9 @@ public class ProjectCodeActivity extends BaseActionBarActivity implements
 			fileName = fileName.substring(index);
 		}
 		String codeFileSuffix[] = new String[]{
-				".java", ".confg", ".ini", ".xml", ".json", ".txt",
-				".php", ".php3", ".php4", ".php5", ".js", ".css",
-				".properties", ".c", ".hpp", ".h", ".cpp", ".cfg", ".html", ".go",
+				".java", ".confg", ".ini", ".xml", ".json", ".txt", ".go",
+				".php", ".php3", ".php4", ".php5", ".js", ".css", ".html", 
+				".properties", ".c", ".hpp", ".h", ".hh", ".cpp", ".cfg",
 				".rb", ".example", ".gitignore", ".project", ".classpath",
 				".m", ".md", ".rst", ".vm", ".cl", ".py", ".pl", ".haml",
 				".erb", ".scss", ".bat", ".coffee", ".as", ".sh", ".m", ".pas",

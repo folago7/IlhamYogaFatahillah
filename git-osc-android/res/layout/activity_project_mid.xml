@@ -4,6 +4,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
+    android:gravity="center"
     android:orientation="vertical" >
 
     <TextView
@@ -11,23 +12,24 @@
         style="@style/project_detail_description"
         android:text="OSCHINA 的 Android 客户端源码，可在 Google Play 或者国内几个应用市场上搜索“开源中国”来安装此app" />
 
-    <View
-        style="@style/h_line" />
-    
+    <include layout="@layout/activity_project_star_watch" />
+
+    <View style="@style/project_detail_line_withtop" />
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal" >
 
-        <LinearLayout
-            style="@style/project_detail_mid_grid_item" >
-			
+        <LinearLayout style="@style/project_detail_mid_grid_item" >
+
             <!-- 项目star的状态 -->
+
             <ImageView
                 style="@style/project_detail_mid_grid_item_img"
-                android:contentDescription="@string/img_description"
-                android:background="@drawable/time" />
+                android:background="@drawable/time"
+                android:contentDescription="@string/img_description" />
 
             <TextView
                 android:id="@+id/project_createed"
@@ -35,16 +37,14 @@
                 android:text="2014-08-21" />
         </LinearLayout>
 
-        <View
-            style="@style/v_line" />
+        <View style="@style/v_line" />
 
-        <LinearLayout
-            style="@style/project_detail_mid_grid_item" >
+        <LinearLayout style="@style/project_detail_mid_grid_item" >
 
             <ImageView
                 style="@style/project_detail_mid_grid_item_img"
-                android:contentDescription="@string/img_description"
-                android:background="@drawable/fork" />
+                android:background="@drawable/fork"
+                android:contentDescription="@string/img_description" />
 
             <TextView
                 android:id="@+id/project_forknum"
@@ -53,8 +53,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <View
-        style="@style/h_line" />
+    <View style="@style/h_line" />
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -62,13 +61,12 @@
         android:gravity="center"
         android:orientation="horizontal" >
 
-        <LinearLayout
-            style="@style/project_detail_mid_grid_item" >
+        <LinearLayout style="@style/project_detail_mid_grid_item" >
 
             <ImageView
                 style="@style/project_detail_mid_grid_item_img"
-                android:contentDescription="@string/img_description"
-                android:background="@drawable/locked" />
+                android:background="@drawable/locked"
+                android:contentDescription="@string/img_description" />
 
             <TextView
                 android:id="@+id/project_locked"
@@ -76,16 +74,14 @@
                 android:text="Public" />
         </LinearLayout>
 
-        <View
-            style="@style/v_line" />
+        <View style="@style/v_line" />
 
-        <LinearLayout
-            style="@style/project_detail_mid_grid_item" >
+        <LinearLayout style="@style/project_detail_mid_grid_item" >
 
             <ImageView
                 style="@style/project_detail_mid_grid_item_img"
-                android:contentDescription="@string/img_description"
-                android:background="@drawable/language" />
+                android:background="@drawable/language"
+                android:contentDescription="@string/img_description" />
 
             <TextView
                 android:id="@+id/project_language"
@@ -94,8 +90,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <View
-        style="@style/h_line" />
+    <View style="@style/h_line" />
 
     <LinearLayout
         android:id="@+id/project_owner"
@@ -123,8 +118,7 @@
             android:contentDescription="@string/img_description" />
     </LinearLayout>
 
-    <View
-        style="@style/h_line" />
+    <View style="@style/h_line" />
 
     <LinearLayout
         android:id="@+id/project_ll_fork"
@@ -133,8 +127,8 @@
 
         <ImageView
             style="@style/project_detail_mid_grid_item_img"
-            android:contentDescription="@string/img_description"
-            android:background="@drawable/fork" />
+            android:background="@drawable/fork"
+            android:contentDescription="@string/img_description" />
 
         <TextView
             android:layout_width="0dip"

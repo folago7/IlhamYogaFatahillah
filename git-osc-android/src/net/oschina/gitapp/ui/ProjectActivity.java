@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.app.ProgressDialog;
 import android.text.ClipboardManager;
+import android.util.Log;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -237,16 +238,20 @@ public class ProjectActivity extends BaseActionBarActivity implements
 	private void setStared(boolean stared) {
 		if (stared) {
 			mStarStared.setBackgroundResource(R.drawable.project_star);
+			((TextView)findViewById(R.id.project_star_text)).setText("unstar");
 		} else {
 			mStarStared.setBackgroundResource(R.drawable.project_unstar);
+			((TextView)findViewById(R.id.project_star_text)).setText("star");
 		}
 	}
 	
 	private void setWatched(boolean watched) {
 		if (watched) {
-			mWatchStared.setBackgroundResource(R.drawable.watch);
+			mWatchStared.setBackgroundResource(R.drawable.project_watch);
+			((TextView)findViewById(R.id.project_watch_text)).setText("unwatch");
 		} else {
-			mWatchStared.setBackgroundResource(R.drawable.unwatch);
+			mWatchStared.setBackgroundResource(R.drawable.project_unwatch);
+			((TextView)findViewById(R.id.project_watch_text)).setText("watch");
 		}
 	}
 	
@@ -465,7 +470,7 @@ public class ProjectActivity extends BaseActionBarActivity implements
 		
 		final ProgressDialog loadingDialog = new ProgressDialog(this);
 		loadingDialog.setCanceledOnTouchOutside(false);
-		if (mProject.isStared()) {
+		if (mProject.isWatched()) {
 			loadingDialog.setMessage("正在unwatch该项目...");
 		} else {
 			loadingDialog.setMessage("正在watch该项目...");

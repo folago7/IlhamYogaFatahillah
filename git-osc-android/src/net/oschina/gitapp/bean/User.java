@@ -37,7 +37,10 @@ public class User extends Entity  {
     @JsonProperty("portrait")
     private String _portrait;// 头像
     
-    @JsonProperty("is_admin")
+    @JsonProperty("new_portrait")
+    private String _new_portrait;// 新头像
+    
+	@JsonProperty("is_admin")
     private boolean _isAdmin;
     
     @JsonProperty("can_create_group")
@@ -130,6 +133,14 @@ public class User extends Entity  {
 
 	public void setPortrait(String _portrait) {
 		this._portrait = _portrait;
+	}
+	
+    public String getNew_portrait() {
+		return _new_portrait;
+	}
+
+	public void setNew_portrait(String new_portrait) {
+		this._new_portrait = new_portrait;
 	}
 
 	public boolean isIsAdmin() {

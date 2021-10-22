@@ -15,8 +15,8 @@
     <string-array name="myself_title_array">
         <item>最新动态</item>
         <item>项目</item>
-        <item>Star的项目</item>
-        <item>Watch的项目</item>
+        <item>Star</item>
+        <item>Watch</item>
     </string-array>
 
     <!-- 查看项目页面 -->
@@ -31,8 +31,8 @@
     <string-array name="userinfo_title_array">
         <item>最近动态</item>
         <item>项目</item>
-        <item>Star的项目</item>
-        <item>Watch的项目</item>
+        <item>Star</item>
+        <item>Watch</item>
     </string-array>
 
     <!-- 系统通知title -->
