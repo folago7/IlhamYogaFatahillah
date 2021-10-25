@@ -22,14 +22,18 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
 import android.text.Html;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
@@ -83,7 +87,9 @@ public class ShakeActivity extends BaseActionBarActivity implements OnClickListe
 	
 	private SoundPool sndPool;
 	private HashMap<Integer, Integer> soundPoolMap = new HashMap<Integer, Integer>();
-
+	
+	private Bitmap mBitmap;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -105,6 +111,40 @@ public class ShakeActivity extends BaseActionBarActivity implements OnClickListe
 		});
 	}
 	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.shake_menu, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+		switch (id) {
+		case R.id.shake_menu_share:
+			showShare();
+			break;
+		case R.id.shake_menu_edit_shippingaddress:
+			showShippingAddressActivity();
+			break;
+
+		default:
+			break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+	
+	private void showShare() {
+		if (mProject == null) {
+			UIHelper.getDialog(ShakeActivity.this, "温馨提示", "请先摇一摇再分享吧", "知道了").show();
+		} else {
+			String title = "摇项目，等你来！";
+			String url = URLs.URL_HOST + mProject.getNamespace() + URLs.URL_SPLITTER + mProject.getName();
+			String shareContent = "我在Git@OSC客户端中摇到《" + mProject.getOwner().getName() + "的项目" + mProject.getName() + "》你也来试试手气吧";
+			UIHelper.showShareOption(getActivity(), title, url, shareContent, mBitmap);
+		}
+	}
+
 	private void initView() {
 		
 		mLuckMsg = (TextView) findViewById(R.id.shake_luck_msg);
@@ -304,6 +344,15 @@ public class ShakeActivity extends BaseActionBarActivity implements OnClickListe
 						} else {
 							UIHelper.showUserFace(mProjectFace, faceUrl);
 						}
+						
+						Handler handle = new Handler();
+						handle.postDelayed(new Runnable() {
+							@Override
+							public void run() {
+								mBitmap = UIHelper.takeScreenShot(getActivity());
+							}
+						}, 500);
+						
 					} else if (mProject !=null) {
 						mShakeListener.stop();
 						mShakeResAward.setVisibility(View.VISIBLE);
@@ -321,6 +370,15 @@ public class ShakeActivity extends BaseActionBarActivity implements OnClickListe
 								showShippingAddressActivity();
 							}
 						});
+						dialog.setPositiveButton("分享", new DialogInterface.OnClickListener() {
+							
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								String url = "https://git.oschina.net";
+								Bitmap bitmap = UIHelper.takeScreenShot(getActivity());
+								UIHelper.showShareOption(getActivity(), "我要到奖品啦", url, mProject.getMsg(), bitmap);
+							}
+						});
 						dialog.show();
 					}
 				} else {
@@ -335,6 +393,10 @@ public class ShakeActivity extends BaseActionBarActivity implements OnClickListe
 	 * 显示编辑用户收货地址的操作
 	 */
 	private void showShippingAddressActivity() {
+		if (!mAppContext.isLogin()) {
+			UIHelper.showLoginActivity(getActivity());
+			return;
+		}
 		Intent intent = new Intent(ShakeActivity.this, ShippingAddressActivity.class);
 		startActivity(intent);
 	}
@@ -357,7 +419,7 @@ public class ShakeActivity extends BaseActionBarActivity implements OnClickListe
 			@Override
 			protected void onPostExecute(LuckMsg res) {
 				super.onPostExecute(res);
-				if (res != null) {
+				if (res != null && res.getMessage() != null) {
 					mLuckMsg.setVisibility(View.VISIBLE);
 					mLuckMsg.setText(res.getMessage());
 				}

@@ -1,10 +1,12 @@
 package net.oschina.gitapp.common;
 
 import static net.oschina.gitapp.common.Contanst.*;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.regex.Pattern;
+
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.controller.UMServiceFactory;
 import com.umeng.socialize.controller.UMSocialService;
@@ -16,6 +18,7 @@ import com.umeng.socialize.sso.UMQQSsoHandler;
 import com.umeng.socialize.weixin.controller.UMWXHandler;
 import com.umeng.socialize.weixin.media.CircleShareContent;
 import com.umeng.socialize.weixin.media.WeiXinShareContent;
+
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.AppManager;
@@ -42,9 +45,11 @@ import net.oschina.gitapp.ui.ProjectSomeInfoListActivity;
 import net.oschina.gitapp.ui.ProjectReadMeActivity;
 import net.oschina.gitapp.ui.SearchActivity;
 import net.oschina.gitapp.ui.MySelfInfoActivity;
+import net.oschina.gitapp.ui.ShakeActivity;
 import net.oschina.gitapp.ui.UserInfoActivity;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -55,6 +60,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.AbsoluteSizeSpan;
@@ -154,6 +160,21 @@ public class UIHelper {
 
 	public static void ToastMessage(Context cont, String msg, int time) {
 		Toast.makeText(cont, msg, time).show();
+	}
+	
+	public static AlertDialog.Builder getDialog(Context context, String title, String message, String... buttonStrs) {
+		AlertDialog.Builder dialog = new Builder(context);
+		dialog.setCancelable(false);
+		dialog.setTitle(title);
+		dialog.setMessage(message);
+		dialog.setPositiveButton(buttonStrs[0], new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.dismiss();
+			}
+		});
+		
+		return dialog;
 	}
 
 	/**

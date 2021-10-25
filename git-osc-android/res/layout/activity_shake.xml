@@ -11,9 +11,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_margin="10dip"
-        android:gravity="center"
+        android:gravity="center|left"
         android:textColor="@color/white"
-        android:visibility="gone" />
+        android:autoLink="web"
+        android:padding="2dip"
+        android:visibility="invisible" />
 
     <ImageView
         android:id="@+id/shakeBg"
@@ -28,12 +30,13 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:gravity="center"
         android:orientation="vertical" >
 
         <RelativeLayout
             android:id="@+id/shakeImgUp"
             android:layout_width="fill_parent"
-            android:layout_height="160dip"
+            android:layout_height="140dip"
             android:background="#111"
             android:visibility="visible" >
 
@@ -49,7 +52,7 @@
         <RelativeLayout
             android:id="@+id/shakeImgDown"
             android:layout_width="fill_parent"
-            android:layout_height="160dip"
+            android:layout_height="140dip"
             android:background="#111"
             android:visibility="visible" >
 
@@ -70,7 +73,6 @@
         android:layout_marginBottom="25dip"
         android:gravity="center"
         android:orientation="horizontal"
-        android:padding="10dip"
         android:visibility="gone" >
 
         <ProgressBar
