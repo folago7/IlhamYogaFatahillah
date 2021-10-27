@@ -2,13 +2,11 @@ package net.oschina.gitapp.ui;
 
 import java.io.IOException;
 import java.util.HashMap;
-
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.ApiClient;
 import net.oschina.gitapp.bean.LuckMsg;
-import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.RandomProject;
 import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.common.StringUtils;
@@ -18,8 +16,6 @@ import net.oschina.gitapp.util.ShakeListener;
 import net.oschina.gitapp.util.ShakeListener.OnShakeListener;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
-import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -31,7 +27,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
 import android.text.Html;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -139,7 +134,7 @@ public class ShakeActivity extends BaseActionBarActivity implements OnClickListe
 			UIHelper.getDialog(ShakeActivity.this, "温馨提示", "请先摇一摇再分享吧", "知道了").show();
 		} else {
 			String title = "摇项目，等你来！";
-			String url = URLs.URL_HOST + mProject.getNamespace() + URLs.URL_SPLITTER + mProject.getName();
+			String url = URLs.URL_HOST + mProject.getOwner().getUsername() + URLs.URL_SPLITTER + mProject.getName();
 			String shareContent = "我在Git@OSC客户端中摇到《" + mProject.getOwner().getName() + "的项目" + mProject.getName() + "》你也来试试手气吧";
 			UIHelper.showShareOption(getActivity(), title, url, shareContent, mBitmap);
 		}
@@ -272,7 +267,7 @@ public class ShakeActivity extends BaseActionBarActivity implements OnClickListe
 		switch (id) {
 		case R.id.shakeres_paroject:
 			if (mProject != null) {
-				UIHelper.showProjectDetail(ShakeActivity.this, mProject, mProject.getId());
+				UIHelper.showProjectDetail(ShakeActivity.this, null, mProject.getId());
 			}
 			break;
 
