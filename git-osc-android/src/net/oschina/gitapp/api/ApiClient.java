@@ -1020,6 +1020,7 @@ public class ApiClient {
 				.with("name", shippingAddress.getName())
 				.with("tel", shippingAddress.getTel())
 				.with("address", shippingAddress.getAddress())
+				.with("comment", shippingAddress.getComment())
 				.to(ShippingAddress.class);
 	}
 	

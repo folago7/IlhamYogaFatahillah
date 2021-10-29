@@ -2,10 +2,8 @@ package net.oschina.gitapp.ui;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import android.app.ProgressDialog;
 import android.text.ClipboardManager;
-import android.util.Log;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
