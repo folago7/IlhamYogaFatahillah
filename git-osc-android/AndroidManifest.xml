@@ -74,6 +74,7 @@
             android:label="编程语言" />
         <activity
             android:name=".ui.ShakeActivity"
+            android:screenOrientation="portrait"
             android:label="摇一摇" />
         <activity
             android:name=".ui.CodeFileDetailActivity"
