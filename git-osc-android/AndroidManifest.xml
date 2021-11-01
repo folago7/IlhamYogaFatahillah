@@ -7,7 +7,8 @@
     <!--
          1.Target SDK version must be 16, not 17, or JavaScript bridge for
          WebView widgets does not work on a 4.2 Nexus 7
-         2.也可以在js调用的方法加上注解@JavascriptInterface，不然是不用被js代码所调用的    -->
+         2.也可以在js调用的方法加上注解@JavascriptInterface，不然是不用被js代码所调用的
+    -->
     <uses-sdk
         android:minSdkVersion="10"
         android:targetSdkVersion="19" />
@@ -74,8 +75,8 @@
             android:label="编程语言" />
         <activity
             android:name=".ui.ShakeActivity"
-            android:screenOrientation="portrait"
-            android:label="摇一摇" />
+            android:label="摇一摇"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.CodeFileDetailActivity"
             android:launchMode="singleTask" />
@@ -93,8 +94,8 @@
             android:launchMode="singleTask" />
         <activity
             android:name=".ui.IssueEditActivity"
-            android:launchMode="singleTask"
             android:configChanges="keyboardHidden|orientation"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".ui.MySelfInfoActivity"
@@ -126,9 +127,9 @@
         </activity>
         <activity
             android:name=".ui.ShippingAddressActivity"
+            android:configChanges="keyboardHidden|orientation"
             android:label="收货信息"
-            android:launchMode="singleTask"
-            android:configChanges="keyboardHidden|orientation" >
+            android:launchMode="singleTask" >
         </activity>
 
         <!-- 注册app广播接收器 -->
