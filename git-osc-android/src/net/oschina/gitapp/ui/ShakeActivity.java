@@ -369,9 +369,9 @@ public class ShakeActivity extends BaseActionBarActivity implements OnClickListe
 							
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
-								String url = "https://git.oschina.net";
+								String url = "http://t.cn/RhLDd4k";
 								Bitmap bitmap = UIHelper.takeScreenShot(getActivity());
-								UIHelper.showShareOption(getActivity(), "我要到奖品啦", url, mProject.getMsg(), bitmap);
+								UIHelper.showShareOption(getActivity(), "我摇到奖品啦", url, mProject.getMsg(), bitmap);
 							}
 						});
 						dialog.show();
