@@ -30,7 +30,7 @@
             style="@style/events_list_content" />
 
         <LinearLayout
-            android:id="@+id/enent_listitem_commits_list"
+            android:id="@+id/event_listitem_commits_list"
             android:orientation="vertical"
             style="@style/events_list_commits" />
 
