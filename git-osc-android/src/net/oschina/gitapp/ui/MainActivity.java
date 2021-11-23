@@ -23,6 +23,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
 import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.ProjectNotificationArray;
 import net.oschina.gitapp.common.DoubleClickExitHelper;
