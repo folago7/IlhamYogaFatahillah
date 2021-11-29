@@ -1,17 +1,18 @@
 package net.oschina.gitapp.ui.fragments;
 
-import java.util.List;
-
 import android.os.Bundle;
-import android.widget.BaseAdapter;
+
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
-import net.oschina.gitapp.adapter.ExploreListProjectAdapter;
+import net.oschina.gitapp.adapter.CommonAdapter;
+import net.oschina.gitapp.adapter.ProjectAdapter;
 import net.oschina.gitapp.bean.CommonList;
-import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.MessageData;
+import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
+
+import java.util.List;
 
 /**
  * 发现页面推荐项目列表Fragment
@@ -49,8 +50,8 @@ public class ExploreListProjectFragment extends BaseSwipeRefreshFragment<Project
 	}
 
 	@Override
-	public BaseAdapter getAdapter(List<Project> list) {
-		return new ExploreListProjectAdapter(getActivity(), list, R.layout.exploreproject_listitem);
+	public CommonAdapter<Project> getAdapter(List<Project> list) {
+		return new ProjectAdapter(getActivity(), list, R.layout.exploreproject_listitem);
 	}
 
 	@Override

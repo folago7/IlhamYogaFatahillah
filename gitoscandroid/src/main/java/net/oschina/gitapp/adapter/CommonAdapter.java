@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,15 +14,15 @@ import java.util.List;
  * Created by 火蚁 on 15/4/8.
  */
 public abstract class CommonAdapter<T> extends BaseAdapter {
-    private LayoutInflater mInflater;
-    private Context mContext;
+    protected LayoutInflater mInflater;
+    protected Context mContext;
     private List<T> mDatas;
     private int mLayoutId;
 
-    public CommonAdapter(Context context, int layoutId) {
+    public CommonAdapter(Context context, List<T> datas, int layoutId) {
         this.mContext = context;
         this.mInflater = LayoutInflater.from(context);
-        this.mDatas = new ArrayList<T>();
+        this.mDatas = datas;
         this.mLayoutId = layoutId;
     }
 

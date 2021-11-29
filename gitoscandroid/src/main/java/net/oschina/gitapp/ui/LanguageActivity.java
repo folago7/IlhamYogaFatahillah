@@ -1,8 +1,5 @@
 package net.oschina.gitapp.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
@@ -14,11 +11,13 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
-import net.oschina.gitapp.adapter.ExploreListProjectAdapter;
-import net.oschina.gitapp.adapter.LanguageListAdapter;
+import net.oschina.gitapp.adapter.CommonAdapter;
+import net.oschina.gitapp.adapter.ProjectAdapter;
+import net.oschina.gitapp.adapter.ViewHolder;
 import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.Language;
 import net.oschina.gitapp.bean.MessageData;
@@ -26,6 +25,9 @@ import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.common.DataRequestThreadHandler;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class LanguageActivity extends BaseActionBarActivity implements  
 	android.support.v7.app.ActionBar.OnNavigationListener, OnItemClickListener{
@@ -48,11 +50,11 @@ public class LanguageActivity extends BaseActionBarActivity implements
 	
 	private List<Project> mProjects;
 	
-	private ExploreListProjectAdapter mProjectAdapter;
+	private ProjectAdapter mProjectAdapter;
 	
 	private List<Language> mLanguages;
 	
-	private LanguageListAdapter mLanguageAdapter;
+	private CommonAdapter<Language> mLanguageAdapter;
 	
 	private ProgressBar mLoading;
 	
@@ -100,10 +102,15 @@ public class LanguageActivity extends BaseActionBarActivity implements
 	
 	private void initData() {
 		mProjects = new ArrayList<Project>();
-		mProjectAdapter = new ExploreListProjectAdapter(mContext, mProjects, R.layout.exploreproject_listitem);
+		mProjectAdapter = new ProjectAdapter(mContext, mProjects, R.layout.exploreproject_listitem);
 		
 		mLanguages = new ArrayList<Language>();
-		mLanguageAdapter = new LanguageListAdapter(mContext, mLanguages, R.layout.languages);
+		mLanguageAdapter = new CommonAdapter<Language>(mContext, mLanguages, R.layout.languages) {
+            @Override
+            public void convert(ViewHolder vh, Language item) {
+                vh.setText(R.id.language_name, item.getName());
+            }
+        };
 		mActionBar.setListNavigationCallbacks(mLanguageAdapter, this);
 	}
 	

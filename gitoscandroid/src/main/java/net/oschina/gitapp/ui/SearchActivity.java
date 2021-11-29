@@ -1,15 +1,11 @@
 package net.oschina.gitapp.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -19,14 +15,18 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
-import net.oschina.gitapp.adapter.ExploreListProjectAdapter;
+import net.oschina.gitapp.adapter.ProjectAdapter;
 import net.oschina.gitapp.bean.MessageData;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 搜索项目界面
@@ -60,7 +60,7 @@ public class SearchActivity extends BaseActionBarActivity implements
 
 	private List<Project> mData;
 
-	private ExploreListProjectAdapter adapter;
+	private ProjectAdapter adapter;
 	
 	private String mKey;
 	
@@ -91,7 +91,7 @@ public class SearchActivity extends BaseActionBarActivity implements
 
 	private void steupList() {
 		mData = new ArrayList<Project>();
-		adapter = new ExploreListProjectAdapter(mAppContext, mData,
+		adapter = new ProjectAdapter(mAppContext, mData,
 				R.layout.exploreproject_listitem);
 		mFooterView = LayoutInflater.from(mAppContext).inflate(
 				R.layout.listview_footer, null);

@@ -36,4 +36,6 @@ dependencies {
     compile files('libs/jackson-core-asl-1.9.9.jar')
     compile files('libs/jackson-mapper-asl-1.9.9.jar')
     compile files('libs/umeng-analytics-v5.2.4.jar')
+    compile 'com.squareup.okhttp:okhttp:2.3.0'
+    compile 'com.android.support:support-v4:22.0.0'
 }
