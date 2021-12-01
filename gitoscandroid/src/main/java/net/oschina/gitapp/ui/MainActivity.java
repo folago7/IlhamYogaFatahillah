@@ -1,9 +1,5 @@
 package net.oschina.gitapp.ui;
 
-import net.oschina.gitapp.AppContext;
-import net.oschina.gitapp.AppException;
-import net.oschina.gitapp.AppManager;
-import net.oschina.gitapp.R;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -11,25 +7,29 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.WebView;
+
+import net.oschina.gitapp.AppContext;
+import net.oschina.gitapp.AppException;
+import net.oschina.gitapp.AppManager;
+import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.ProjectNotificationArray;
 import net.oschina.gitapp.common.DoubleClickExitHelper;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.common.UpdateManager;
-import net.oschina.gitapp.interfaces.*;
+import net.oschina.gitapp.interfaces.DrawerMenuCallBack;
 import net.oschina.gitapp.ui.fragments.ExploreViewPagerFragment;
 import net.oschina.gitapp.ui.fragments.MySelfViewPagerFragment;
 import net.oschina.gitapp.widget.BadgeView;
@@ -133,9 +133,8 @@ public class MainActivity extends ActionBarActivity implements
 		mDrawerLayout.setDrawerListener(new DrawerMenuListener());
 		// 设置滑出菜单的阴影效果
 		//mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,GravityCompat.START);
-
-		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-				R.drawable.ic_drawer, 0, 0);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+				null, 0, 0);
 
 		
 		mFragmentManager = getSupportFragmentManager();

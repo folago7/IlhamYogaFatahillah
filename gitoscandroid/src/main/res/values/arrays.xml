@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- 数组资源 -->
-
-
     <!-- 发现页面 -->
     <string-array name="explore_title_array">
         <item>推荐项目</item>

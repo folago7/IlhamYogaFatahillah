@@ -1,5 +1,19 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-	
+
+    <style name="FrameworkRoot.Theme" parent="Theme.AppCompat" />
+    <style name="FrameworkRoot.Widget" parent="Theme.AppCompat" />
+
+    <!-- Immediate parent theme to specify base values for custom attributes -->
+    <style name="Theme" parent="FrameworkRoot.Theme">
+        <!-- Only needed for pre-L
+        <item name="android:editTextBackground">@drawable/edit_text</item>
+        <item name="android:editTextStyle">@style/Widget.IOSched.EditText</item>-->
+    </style>
+
+    <style name="AppBaseTheme" parent="@style/Theme">
+
+    </style>
+
     <!-- 横向线条 -->
     <style name="h_line">
         <item name="android:layout_width">fill_parent</item>

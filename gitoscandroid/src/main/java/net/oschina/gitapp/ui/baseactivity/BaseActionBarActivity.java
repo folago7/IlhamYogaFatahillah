@@ -80,7 +80,6 @@ public class BaseActionBarActivity extends ActionBarActivity
 		int flags = ActionBar.DISPLAY_HOME_AS_UP;
 		int change = mActionBar.getDisplayOptions() ^ flags;
 		// 设置返回的图标
-		mActionBar.setHomeAsUpIndicator(R.drawable.ic_navigation_back);
 		mActionBar.setDisplayOptions(change, flags);
 	}
 

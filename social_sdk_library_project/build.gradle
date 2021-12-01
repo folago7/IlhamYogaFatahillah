@@ -57,5 +57,4 @@ dependencies {
     compile files('libs/SocialSDK_ynote.jar')
     compile files('libs/httpmime-4.1.3.jar')
     compile files('libs/umeng_social_sdk.jar')
-    compile 'com.android.support:support-v4:21.0.3'
 }

@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="5dp"
-        android:textColor="@color/listitem_blue"
+        android:textColor="@color/gray"
         android:text="@string/load_ing" />
 
 </LinearLayout>

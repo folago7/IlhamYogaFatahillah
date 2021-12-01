@@ -52,6 +52,5 @@ public class ProjectIssuesListAdapter extends CommonAdapter<Issue> {
         vh.setText(R.id.projectissues_listitem_description, issue.getDescription(), "暂无描述");
         vh.setText(R.id.projectissues_listitem_author, issue.getAuthor() == null ? "" : issue.getAuthor().getName());
         vh.setText(R.id.projectissues_listitem_date, StringUtils.friendly_time(issue.getCreatedAt()));
-
     }
 }

@@ -90,7 +90,6 @@ public class CommitFileDetailActivity extends BaseActionBarActivity implements
 				"刷新");
 
 		MenuItem moreOption = menu.add(0, MENU_MORE_ID, MENU_MORE_ID, "更多");
-		moreOption.setIcon(R.drawable.abc_ic_menu_moreoverflow_normal_holo_dark);
 		MenuItemCompat.setShowAsAction(refreshItem,
 				MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
 		/*MenuItemCompat.setShowAsAction(moreOption,

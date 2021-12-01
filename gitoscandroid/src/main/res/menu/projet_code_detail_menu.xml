@@ -12,7 +12,6 @@
     <item
         android:id="@+id/project_detail_menu_more"
        	android:orderInCategory="100"
-       	android:icon="@drawable/abc_ic_menu_moreoverflow_normal_holo_dark"
-       	android:title="更多操作" 
+       	android:title="更多"
        	app:showAsAction="always"/>
 </menu>
