@@ -11,7 +11,10 @@
     </style>
 
     <style name="AppBaseTheme" parent="@style/Theme">
-
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:windowBackground">@color/background</item>
     </style>
 
     <!-- 横向线条 -->
@@ -107,7 +110,6 @@
         <item name="android:includeFontPadding">false</item>
         <item name="android:textColor">@color/project_listitem_title</item>
         <item name="android:textSize">@dimen/text_size_15</item>
-        <item name="android:textStyle">bold</item>
     </style>
 
     <!-- description -->
@@ -121,10 +123,9 @@
 
     <!-- language starfork nums -->
     <style name="project_list_someinfo" parent="project_list_text_parent">
-        <item name="android:layout_marginLeft">3dip</item>
-        <item name="android:layout_marginRight">10dip</item>
+        <item name="android:layout_marginRight">15dip</item>
         <item name="android:textColor">@color/project_listitem_someinfo</item>
-        <item name="android:textSize">@dimen/text_size_10</item>
+        <item name="android:textSize">13sp</item>
     </style>
 
     <!-- language star fork nums icon -->

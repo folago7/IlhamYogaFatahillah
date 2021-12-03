@@ -48,7 +48,7 @@ public class WatchProjectListFragment extends BaseSwipeRefreshFragment<Project, 
 	
 	@Override
 	public BaseAdapter getAdapter(List<Project> list) {
-		return new ProjectAdapter(mApplication, list, R.layout.exploreproject_listitem);
+		return new ProjectAdapter(mApplication, list, R.layout.list_cell_project);
 	}
 
 	@Override

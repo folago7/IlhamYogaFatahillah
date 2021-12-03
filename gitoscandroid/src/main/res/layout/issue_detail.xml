@@ -27,7 +27,7 @@
         <ImageView
             android:id="@+id/issue_author_face"
             style="@style/AvatarMedium"
-            android:background="@drawable/widget_dface"
+            android:background="@drawable/mini_avatar"
             android:contentDescription="@string/avatar" />
 
         <LinearLayout

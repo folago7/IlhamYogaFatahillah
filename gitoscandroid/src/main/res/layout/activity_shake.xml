@@ -97,7 +97,7 @@
         android:visibility="gone" >
 
         <include
-            layout="@layout/exploreproject_listitem"
+            layout="@layout/list_cell_project"
             android:visibility="visible" />
     </RelativeLayout>
 

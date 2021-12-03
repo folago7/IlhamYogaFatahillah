@@ -102,7 +102,7 @@ public class LanguageActivity extends BaseActionBarActivity implements
 	
 	private void initData() {
 		mProjects = new ArrayList<Project>();
-		mProjectAdapter = new ProjectAdapter(mContext, mProjects, R.layout.exploreproject_listitem);
+		mProjectAdapter = new ProjectAdapter(mContext, mProjects, R.layout.list_cell_project);
 		
 		mLanguages = new ArrayList<Language>();
 		mLanguageAdapter = new CommonAdapter<Language>(mContext, mLanguages, R.layout.languages) {

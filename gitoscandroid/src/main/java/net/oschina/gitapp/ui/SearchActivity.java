@@ -92,7 +92,7 @@ public class SearchActivity extends BaseActionBarActivity implements
 	private void steupList() {
 		mData = new ArrayList<Project>();
 		adapter = new ProjectAdapter(mAppContext, mData,
-				R.layout.exploreproject_listitem);
+				R.layout.list_cell_project);
 		mFooterView = LayoutInflater.from(mAppContext).inflate(
 				R.layout.listview_footer, null);
 		mFooterLoading = (ProgressBar) mFooterView.findViewById(R.id.listview_foot_progress);

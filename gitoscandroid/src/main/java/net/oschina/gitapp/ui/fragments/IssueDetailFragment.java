@@ -102,7 +102,7 @@ public class IssueDetailFragment extends BaseFragment {
 		
 		String portrait = mIssue.getAuthor().getPortrait() == null ? "" : mIssue.getAuthor().getPortrait();
 		if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
-			mIssueUserFace.setImageResource(R.drawable.widget_dface);
+			mIssueUserFace.setImageResource(R.drawable.mini_avatar);
 		} else {
 			String portraitURL = URLs.GITIMG + mIssue.getAuthor().getPortrait();
 			UIHelper.showUserFace(mIssueUserFace, portraitURL);

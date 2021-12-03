@@ -174,6 +174,8 @@ public class TypefaceUtils {
 
     private static Typeface OCTICONS;
 
+    private static Typeface SEMANTIC;
+
     /**
      * Find the maximum number of digits in the given numbers
      *
@@ -215,6 +217,14 @@ public class TypefaceUtils {
         return OCTICONS;
     }
 
+    public static Typeface getSemantic(final Context context) {
+        if (SEMANTIC == null) {
+            SEMANTIC = getTypeface(context, "icons.ttf");
+        }
+
+        return SEMANTIC;
+    }
+
     /**
      * Set octicons typeface on given text view(s)
      *
@@ -225,6 +235,19 @@ public class TypefaceUtils {
             return;
 
         Typeface typeface = getOcticons(textViews[0].getContext());
+        for (TextView textView : textViews)
+            textView.setTypeface(typeface);
+    }
+
+    /**
+     * 设置semantic的字体图标
+     * @param textViews
+     */
+    public static void setSemantic(final TextView... textViews) {
+        if (textViews == null || textViews.length == 0)
+            return;
+
+        Typeface typeface = getSemantic(textViews[0].getContext());
         for (TextView textView : textViews)
             textView.setTypeface(typeface);
     }

@@ -1,19 +1,5 @@
 package net.oschina.gitapp.ui;
 
-import java.io.IOException;
-import java.util.HashMap;
-import net.oschina.gitapp.AppContext;
-import net.oschina.gitapp.AppException;
-import net.oschina.gitapp.R;
-import net.oschina.gitapp.api.ApiClient;
-import net.oschina.gitapp.bean.LuckMsg;
-import net.oschina.gitapp.bean.RandomProject;
-import net.oschina.gitapp.bean.URLs;
-import net.oschina.gitapp.common.StringUtils;
-import net.oschina.gitapp.common.UIHelper;
-import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
-import net.oschina.gitapp.util.ShakeListener;
-import net.oschina.gitapp.util.ShakeListener.OnShakeListener;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
@@ -39,6 +25,22 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import net.oschina.gitapp.AppContext;
+import net.oschina.gitapp.AppException;
+import net.oschina.gitapp.R;
+import net.oschina.gitapp.api.ApiClient;
+import net.oschina.gitapp.bean.LuckMsg;
+import net.oschina.gitapp.bean.RandomProject;
+import net.oschina.gitapp.bean.URLs;
+import net.oschina.gitapp.common.StringUtils;
+import net.oschina.gitapp.common.UIHelper;
+import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
+import net.oschina.gitapp.util.ShakeListener;
+import net.oschina.gitapp.util.ShakeListener.OnShakeListener;
+
+import java.io.IOException;
+import java.util.HashMap;
 
 public class ShakeActivity extends BaseActionBarActivity implements OnClickListener {
 	
@@ -151,17 +153,17 @@ public class ShakeActivity extends BaseActionBarActivity implements OnClickListe
 		
 		mShakeResProject = (RelativeLayout) findViewById(R.id.shakeres_paroject);
 		
-		mProjectFace = (ImageView) findViewById(R.id.exploreproject_listitem_userface);
+		mProjectFace = (ImageView) findViewById(R.id.iv_face);
 		
-		mProjectTitle = (TextView) findViewById(R.id.exploreproject_listitem_title);
+		mProjectTitle = (TextView) findViewById(R.id.tv_title);
 		
-		mProjectDescription = (TextView) findViewById(R.id.exploreproject_listitem_description);
+		mProjectDescription = (TextView) findViewById(R.id.tv_description);
 		
-		mProjectLanguage = (TextView) findViewById(R.id.exploreproject_listitem_language);
+		mProjectLanguage = (TextView) findViewById(R.id.tv_lanuage);
 		
-		mProjectStarNums = (TextView) findViewById(R.id.exploreproject_listitem_star);
+		mProjectStarNums = (TextView) findViewById(R.id.tv_star);
 		
-		mProjectForkNums = (TextView) findViewById(R.id.exploreproject_listitem_fork);
+		mProjectForkNums = (TextView) findViewById(R.id.tv_fork);
 		
 		mShakeResAward = (RelativeLayout) findViewById(R.id.shakeres_award);
 		
@@ -330,7 +332,6 @@ public class ShakeActivity extends BaseActionBarActivity implements OnClickListe
 							mProjectLanguage.setText(mProject.getLanguage());
 						} else {
 							mProjectLanguage.setVisibility(View.GONE);
-							findViewById(R.id.exploreproject_listitem_language_image).setVisibility(View.GONE);
 						}
 						mProjectFace.setImageResource(R.drawable.widget_dface_loading);
 						String faceUrl = mProject.getOwner().getNew_portrait();

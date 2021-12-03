@@ -157,7 +157,7 @@ public class MySelfInfoActivity extends BaseActionBarActivity implements View.On
 			
 			String portrait = mUser.getPortrait() == null || mUser.getPortrait().equals("null") ? "" : mUser.getPortrait();
 			if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
-				mUserFace.setImageResource(R.drawable.widget_dface);
+				mUserFace.setImageResource(R.drawable.mini_avatar);
 			} else {
 				// 加载用户头像
 				String faceUrl = URLs.HTTPS + URLs.HOST + URLs.URL_SPLITTER + mUser.getPortrait();

@@ -1,7 +1,5 @@
 package net.oschina.gitapp.ui;
 
-import net.oschina.gitapp.AppContext;
-import net.oschina.gitapp.R;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -12,17 +10,20 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import net.oschina.gitapp.AppContext;
+import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.BroadcastController;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
-import net.oschina.gitapp.interfaces.*;
+import net.oschina.gitapp.interfaces.DrawerMenuCallBack;
 import net.oschina.gitapp.widget.BadgeView;
 import net.oschina.gitapp.widget.CircleImageView;
 
@@ -127,7 +128,7 @@ public class DrawerNavigationMenu extends Fragment implements OnClickListener {
 				// 加载用户头像
 				String portrait = user.getPortrait() == null || user.getPortrait().equals("null") ? "" : user.getPortrait();
 				if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
-					mUser_info_userface.setImageResource(R.drawable.widget_dface);
+					mUser_info_userface.setImageResource(R.drawable.mini_avatar);
 				} else {
 					String faceUrl = URLs.HTTPS + URLs.HOST + URLs.URL_SPLITTER + user.getPortrait();
 					UIHelper.showUserFace(mUser_info_userface, faceUrl);

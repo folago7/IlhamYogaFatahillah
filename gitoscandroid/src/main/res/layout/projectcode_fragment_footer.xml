@@ -4,8 +4,7 @@
     android:layout_height="?attr/actionBarSize"
     android:layout_alignParentBottom="true"
     android:layout_alignParentLeft="true"
-    android:gravity="center_vertical"
-    android:background="@drawable/footer_selector" >
+    android:gravity="center_vertical" >
 
     <TextView
         android:id="@+id/projectcode_branch_icon"
@@ -25,7 +24,6 @@
         android:singleLine="true"
         android:text="master"
         android:layout_gravity="center"
-        android:textColor="@color/actionbar_text"
         android:textSize="15sp" />
 
 </LinearLayout>

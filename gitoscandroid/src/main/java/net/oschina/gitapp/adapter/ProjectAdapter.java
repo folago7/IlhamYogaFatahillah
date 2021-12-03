@@ -16,37 +16,36 @@ import java.util.List;
  */
 public class ProjectAdapter extends CommonAdapter<Project> {
 
-    public ProjectAdapter(Context context, List datas,int layoutId) {
+    public ProjectAdapter(Context context, List datas, int layoutId) {
         super(context, datas, layoutId);
     }
 
     @Override
     public void convert(ViewHolder vh, final Project project) {
         // 2.显示相关信息
-        vh.setText(R.id.exploreproject_listitem_title, project.getOwner().getName() + " / " + project.getName());
+        vh.setText(R.id.tv_title, project.getOwner().getName() + " / " + project.getName());
 
         // 判断是否有项目的介绍
-        String descriptionStr = project.getDescription();
-        vh.setText(R.id.exploreproject_listitem_description, project.getDescription(), R.string.msg_project_empty_description);
-
-        vh.setText(R.id.exploreproject_listitem_star, project.getStars_count().toString());
-        vh.setText(R.id.exploreproject_listitem_fork, project.getForks_count().toString());
+        vh.setText(R.id.tv_description, project.getDescription().replace(" ", ""), R.string.msg_project_empty_description);
         // 显示项目的star、fork、language信息
+        vh.setTextWithSemantic(R.id.tv_watch, project.getWatches_count().toString(), R.string.sem_watch);
+        vh.setTextWithSemantic(R.id.tv_star, project.getStars_count().toString(), R.string.sem_star);
+        vh.setTextWithSemantic(R.id.tv_fork, project.getForks_count().toString(), R.string.sem_fork);
+
         String language = project.getLanguage() != null ? project.getLanguage() : "";
         if (project.getLanguage() != null) {
-            vh.setText(R.id.exploreproject_listitem_language, language);
+            vh.setTextWithSemantic(R.id.tv_lanuage, language, R.string.sem_tag);
         } else {
-            vh.getView(R.id.exploreproject_listitem_language).setVisibility(View.GONE);
-            vh.getView(R.id.exploreproject_listitem_language_image).setVisibility(View.GONE);
+            vh.getView(R.id.tv_lanuage).setVisibility(View.GONE);
         }
 
         // 1.加载头像
-        ImageView face = vh.getView(R.id.exploreproject_listitem_userface);
+        ImageView face = vh.getView(R.id.iv_face);
         String portraitURL = project.getOwner().getNew_portrait();
         if (portraitURL.endsWith("portrait.gif")) {
             face.setImageResource(R.drawable.mini_avatar);
         } else {
-            vh.setImageForUrl(R.id.exploreproject_listitem_userface, portraitURL);
+            vh.setImageForUrl(R.id.iv_face, portraitURL);
         }
         face.setOnClickListener(new View.OnClickListener() {
 

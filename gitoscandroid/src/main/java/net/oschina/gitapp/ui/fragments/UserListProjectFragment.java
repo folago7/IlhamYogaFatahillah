@@ -47,7 +47,7 @@ public class UserListProjectFragment extends BaseSwipeRefreshFragment<Project, C
 
 	@Override
 	public BaseAdapter getAdapter(List<Project> list) {
-		return new ProjectAdapter(getActivity(), list, R.layout.exploreproject_listitem);
+		return new ProjectAdapter(getActivity(), list, R.layout.list_cell_project);
 	}
 
 	@Override

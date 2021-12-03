@@ -1,16 +1,5 @@
 package net.oschina.gitapp.ui;
 
-import java.io.File;
-import java.io.IOException;
-import net.oschina.gitapp.AppConfig;
-import net.oschina.gitapp.AppContext;
-import net.oschina.gitapp.AppException;
-import net.oschina.gitapp.R;
-import net.oschina.gitapp.api.ApiClient;
-import net.oschina.gitapp.common.FileUtils;
-import net.oschina.gitapp.common.ImageUtils;
-import net.oschina.gitapp.common.StringUtils;
-import net.oschina.gitapp.common.UIHelper;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -30,6 +19,19 @@ import android.view.View.OnTouchListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ViewSwitcher;
+
+import net.oschina.gitapp.AppConfig;
+import net.oschina.gitapp.AppContext;
+import net.oschina.gitapp.AppException;
+import net.oschina.gitapp.R;
+import net.oschina.gitapp.api.ApiClient;
+import net.oschina.gitapp.common.FileUtils;
+import net.oschina.gitapp.common.ImageUtils;
+import net.oschina.gitapp.common.StringUtils;
+import net.oschina.gitapp.common.UIHelper;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * 图片缩放对话框
@@ -150,7 +152,7 @@ public class ImageZoomActivity extends Activity implements OnTouchListener,
 							|| StringUtils.isEmpty(imgURL)) {
 						bmp = BitmapFactory
 								.decodeResource(imgView.getResources(),
-										R.drawable.widget_dface);
+										R.drawable.mini_avatar);
 					}
 					if (bmp == null) {
 						// 是否有缓存图片

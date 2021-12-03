@@ -13,6 +13,7 @@ import android.widget.TextView;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.common.BitmapManager;
 import net.oschina.gitapp.common.StringUtils;
+import net.oschina.gitapp.util.TypefaceUtils;
 
 /**
  * 通用性极高的ViewHolder
@@ -100,6 +101,19 @@ public class ViewHolder {
         } else {
             tv.setText(text);
         }
+    }
+
+    /**
+     *
+     * @param viewId
+     * @param text
+     * @param semanticRes
+     */
+    public void setTextWithSemantic(int viewId, String text, int semanticRes) {
+        TextView tv = getView(viewId);
+        String finalText = mContext.getResources().getString(semanticRes) + " " + text;
+        tv.setText(finalText);
+        TypefaceUtils.setSemantic(tv);
     }
 
     // 给ImageView设置图片资源

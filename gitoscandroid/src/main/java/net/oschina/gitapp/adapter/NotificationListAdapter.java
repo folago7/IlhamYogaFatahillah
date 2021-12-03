@@ -1,6 +1,14 @@
 package net.oschina.gitapp.adapter;
 
-import java.util.List;
+import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.Notification;
@@ -10,15 +18,8 @@ import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.BitmapManager;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
-import android.content.Context;
-import android.graphics.BitmapFactory;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.View.OnClickListener;
-import android.widget.BaseExpandableListAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
+
+import java.util.List;
 
 /**
  * 通知列表适配器
@@ -130,13 +131,7 @@ public class NotificationListAdapter extends BaseExpandableListAdapter {
 			String portraitURL = URLs.GITIMG + pn.getOwner().getPortrait();
 			bmpManager.loadBitmap(portraitURL, holder.mGroupFace);
 		}
-//		String portraitURL = pn.getOwner().getNew_portrait();
-//		if (portraitURL.endsWith("portrait.gif")) {
-//			holder.mGroupFace.setImageResource(R.drawable.mini_avatar);
-//		} else {
-//			bmpManager.loadBitmap(portraitURL, holder.mGroupFace);
-//		}
-        
+
         holder.mGroupUserName.setText(pn.getOwner().getName());
         
         holder.mGroupName.setText(pn.getName());  
@@ -179,7 +174,7 @@ public class NotificationListAdapter extends BaseExpandableListAdapter {
         // 1.加载头像
         String portrait = notification.getUserinfo().getPortrait() == null ? "" : notification.getUserinfo().getPortrait();
 		if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
-			holder.face.setImageResource(R.drawable.widget_dface);
+			holder.face.setImageResource(R.drawable.mini_avatar);
 		} else {
 			String portraitURL = URLs.GITIMG + notification.getUserinfo().getPortrait();
 			bmpManager.loadBitmap(portraitURL, holder.face);

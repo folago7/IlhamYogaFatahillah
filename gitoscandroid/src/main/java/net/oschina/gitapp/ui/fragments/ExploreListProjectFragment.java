@@ -51,7 +51,7 @@ public class ExploreListProjectFragment extends BaseSwipeRefreshFragment<Project
 
 	@Override
 	public CommonAdapter<Project> getAdapter(List<Project> list) {
-		return new ProjectAdapter(getActivity(), list, R.layout.exploreproject_listitem);
+		return new ProjectAdapter(getActivity(), list, R.layout.list_cell_project);
 	}
 
 	@Override
