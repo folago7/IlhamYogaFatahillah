@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,10 +20,10 @@ public abstract class CommonAdapter<T> extends BaseAdapter {
     private List<T> mDatas;
     private int mLayoutId;
 
-    public CommonAdapter(Context context, List<T> datas, int layoutId) {
+    public CommonAdapter(Context context, int layoutId) {
         this.mContext = context;
         this.mInflater = LayoutInflater.from(context);
-        this.mDatas = datas;
+        this.mDatas = new ArrayList<T>();
         this.mLayoutId = layoutId;
     }
 
@@ -56,4 +57,44 @@ public abstract class CommonAdapter<T> extends BaseAdapter {
 
     // 提供给外部填充实际的显示数据，以及可以一些其他的操作，如：隐藏＝＝
     public abstract void convert(ViewHolder vh, T item);
+
+    public void addItem(T item) {
+        checkListNull();
+        mDatas.add(item);
+        notifyDataSetChanged();
+    }
+
+    public void addItem(int location, T item) {
+        checkListNull();
+        mDatas.add(location, item);
+        notifyDataSetChanged();
+    }
+
+    public void addItem(List<T> items) {
+        checkListNull();
+        mDatas.addAll(items);
+        notifyDataSetChanged();
+    }
+
+    public void removeItem(int location) {
+        if (mDatas == null && mDatas.isEmpty()) {
+            return;
+        }
+        mDatas.remove(location);
+        notifyDataSetChanged();
+    }
+
+    public void clear() {
+        if (mDatas == null && mDatas.isEmpty()) {
+            return;
+        }
+        mDatas.clear();
+        notifyDataSetChanged();
+    }
+
+    public void checkListNull() {
+        if (mDatas == null) {
+            mDatas = new ArrayList<T>();
+        }
+    }
 }

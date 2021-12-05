@@ -22,7 +22,6 @@ import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.Language;
 import net.oschina.gitapp.bean.MessageData;
 import net.oschina.gitapp.bean.Project;
-import net.oschina.gitapp.common.DataRequestThreadHandler;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
 
@@ -58,8 +57,6 @@ public class LanguageActivity extends BaseActionBarActivity implements
 	
 	private ProgressBar mLoading;
 	
-	private DataRequestThreadHandler mRequestThreadHandler = new DataRequestThreadHandler();
-	
 	private int mMessageState = MessageData.MESSAGE_STATE_MORE;
 	
 	private String mLanguageId;
@@ -68,7 +65,7 @@ public class LanguageActivity extends BaseActionBarActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_language);
-		mContext = getGitApplication();
+		mContext = AppContext.getInstance();
 		mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 		initView();
 		initData();
@@ -79,15 +76,14 @@ public class LanguageActivity extends BaseActionBarActivity implements
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		mRequestThreadHandler.quit();
 	}
 
 	@Override
 	public void onRestoreInstanceState(Bundle savedInstanceState) {
 		// Restore the previously serialized current dropdown position.
 		if (savedInstanceState.containsKey(STATE_SELECTED_NAVIGATION_ITEM)) {
-			getActionBar().setSelectedNavigationItem(
-					savedInstanceState.getInt(STATE_SELECTED_NAVIGATION_ITEM));
+//			getActionBar().setSelectedNavigationItem(
+//					savedInstanceState.getInt(STATE_SELECTED_NAVIGATION_ITEM));
 		}
 	}
 	
@@ -102,10 +98,10 @@ public class LanguageActivity extends BaseActionBarActivity implements
 	
 	private void initData() {
 		mProjects = new ArrayList<Project>();
-		mProjectAdapter = new ProjectAdapter(mContext, mProjects, R.layout.list_cell_project);
+		mProjectAdapter = new ProjectAdapter(mContext, R.layout.list_item_project);
 		
 		mLanguages = new ArrayList<Language>();
-		mLanguageAdapter = new CommonAdapter<Language>(mContext, mLanguages, R.layout.languages) {
+		mLanguageAdapter = new CommonAdapter<Language>(mContext, R.layout.languages) {
             @Override
             public void convert(ViewHolder vh, Language item) {
                 vh.setText(R.id.language_name, item.getName());
@@ -149,7 +145,6 @@ public class LanguageActivity extends BaseActionBarActivity implements
 			setFooterNotLanguages();
 			return;
 		}
-		mRequestThreadHandler.request(page, new AsyncDataHandler(languageId, page));
 	}
 	
 	void setFooterNotLanguages() {
@@ -196,65 +191,6 @@ public class LanguageActivity extends BaseActionBarActivity implements
 		if(mFooterView != null) {
 			mFooterProgressBar.setVisibility(View.VISIBLE);
 			mFooterTextView.setText(R.string.load_ing);
-		}
-	}
-	
-	class AsyncDataHandler implements DataRequestThreadHandler.AsyncDataHandler<Message> {
-		
-		private int page;
-		
-		private String languageId;
-		
-		AsyncDataHandler(String languageId, int page) {
-			this.page = page;
-			this.languageId = languageId;
-		}
-		
-		@Override
-		public void onPreExecute() {
-			beforeLoading(page);
-		}
-
-		@Override
-		public Message execute() {
-			Message msg = new Message();
-			try {
-				msg.obj = mContext.getLanguageProjectList(languageId, page);
-				msg.what = 1;
-			} catch (AppException e) {
-				msg.what = -1;
-				msg.obj = e;
-				e.printStackTrace();
-			}
-			return msg;
-		}
-
-		@SuppressWarnings("unchecked")
-		@Override
-		public void onPostExecute(Message msg) {
-			afterLoading(false);
-			if (msg.what == 1) {
-				List<Project> projects = (List<Project>) msg.obj;
-				if (projects != null) {
-					
-					if (projects.size() < 20) {
-						mMessageState = MessageData.MESSAGE_STATE_FULL;
-						if (page == 1 && projects.size() == 0) {
-							setFooterNoMoreState();
-						} else {
-							setFooterFullState();
-						}
-						
-					} else {
-						setFooterHasMoreState();
-					}
-					mProjects.addAll(projects);
-					mProjectAdapter.notifyDataSetChanged();
-				}
-			} else {
-				setFooterErrorState();
-				((AppException)msg.obj).makeToast(mContext);
-			}
 		}
 	}
 	

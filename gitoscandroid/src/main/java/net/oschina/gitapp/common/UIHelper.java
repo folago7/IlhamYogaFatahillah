@@ -1,11 +1,26 @@
 package net.oschina.gitapp.common;
 
-import static net.oschina.gitapp.common.Contanst.*;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.util.regex.Pattern;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.controller.UMServiceFactory;
@@ -38,37 +53,21 @@ import net.oschina.gitapp.ui.IssueDetailActivity;
 import net.oschina.gitapp.ui.IssueEditActivity;
 import net.oschina.gitapp.ui.LoginActivity;
 import net.oschina.gitapp.ui.MainActivity;
+import net.oschina.gitapp.ui.MySelfInfoActivity;
 import net.oschina.gitapp.ui.NotificationActivity;
 import net.oschina.gitapp.ui.ProjectActivity;
 import net.oschina.gitapp.ui.ProjectCodeActivity;
-import net.oschina.gitapp.ui.ProjectSomeInfoListActivity;
 import net.oschina.gitapp.ui.ProjectReadMeActivity;
+import net.oschina.gitapp.ui.ProjectSomeInfoListActivity;
 import net.oschina.gitapp.ui.SearchActivity;
-import net.oschina.gitapp.ui.MySelfInfoActivity;
-import net.oschina.gitapp.ui.ShakeActivity;
 import net.oschina.gitapp.ui.UserInfoActivity;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.text.Html;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.AbsoluteSizeSpan;
-import android.text.style.ForegroundColorSpan;
-import android.text.style.StyleSpan;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.Toast;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+
+import static net.oschina.gitapp.common.Contanst.PROJECT;
+import static net.oschina.gitapp.common.Contanst.PROJECTID;
 
 /**
  * 应用程序UI工具包：封装UI相关的一些操作
@@ -79,10 +78,6 @@ import android.widget.Toast;
  */
 public class UIHelper {
 
-	/** 表情图片匹配 */
-	private static Pattern facePattern = Pattern
-			.compile("\\[{1}([0-9]\\d*)\\]{1}");
-
 	/** 全局web样式 */
 	public final static String WEB_STYLE = "<style>* {font-size:14px;line-height:20px;} p {color:#333;} a {color:#3E62A6;} img {max-width:310px;} "
 			+ "img.alignleft {float:left;max-width:120px;margin:0 10px 5px 0;border:1px solid #ccc;background:#fff;padding:2px;} "
@@ -91,8 +86,8 @@ public class UIHelper {
 	/**
 	 * 发送App异常崩溃报告
 	 * 
-	 * @param cont
-	 * @param crashReport
+	 * @param context context
+	 * @param crashReport 奔溃的详细信息
 	 */
 	public static void sendAppCrashReport(final Context context,
 			final String crashReport) {
@@ -134,8 +129,8 @@ public class UIHelper {
 	/**
 	 * 点击返回监听事件
 	 * 
-	 * @param activity
-	 * @return
+	 * @param activity activity
+	 * @return 点击事件
 	 */
 	public static View.OnClickListener finish(final Activity activity) {
 		return new View.OnClickListener() {
@@ -184,7 +179,7 @@ public class UIHelper {
 	 *            动态作者的名称
 	 * @param pAuthor_And_pName
 	 *            项目的作者和项目名
-	 * @param eventTitle
+	 * @param event
 	 *            事件的title（Issue或者pr或分支）
 	 * @return
 	 */
@@ -248,7 +243,7 @@ public class UIHelper {
 				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		sps.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), 0,
 				author_name.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		sps.setSpan(new ForegroundColorSpan(Color.parseColor("#0e5986")), 0,
+		sps.setSpan(new ForegroundColorSpan(Color.parseColor("#4183C4")), 0,
 				author_name.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 		// 设置项目名字体大小和高亮
@@ -256,7 +251,7 @@ public class UIHelper {
 		int end = start + pAuthor_And_pName.length();
 		sps.setSpan(new AbsoluteSizeSpan(14, true), start, end,
 				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		sps.setSpan(new ForegroundColorSpan(Color.parseColor("#0e5986")),
+		sps.setSpan(new ForegroundColorSpan(Color.parseColor("#4183C4")),
 				start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 		// 设置动态的title字体大小和高亮
@@ -267,7 +262,7 @@ public class UIHelper {
 				sps.setSpan(new AbsoluteSizeSpan(14, true), start, end,
 						Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 				sps.setSpan(
-						new ForegroundColorSpan(Color.parseColor("#0e5986")),
+						new ForegroundColorSpan(Color.parseColor("#4183C4")),
 						start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 			}
 		}
@@ -301,8 +296,8 @@ public class UIHelper {
 	/**
 	 * 加载显示图片
 	 * 
-	 * @param imgFace
-	 * @param faceURL
+	 * @param imgView
+	 * @param imgURL
 	 * @param errMsg
 	 */
 	public static void showLoadImage(final ImageView imgView,

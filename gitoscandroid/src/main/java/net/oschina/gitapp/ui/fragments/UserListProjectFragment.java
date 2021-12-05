@@ -12,7 +12,7 @@ import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.UIHelper;
-import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
+import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragmentOld;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ import java.util.List;
  * 最后更新
  * 更新者
  */
-public class UserListProjectFragment extends BaseSwipeRefreshFragment<Project, CommonList<Project>> {
+public class UserListProjectFragment extends BaseSwipeRefreshFragmentOld<Project, CommonList<Project>> {
 	
 	private User mUser;
 	
@@ -47,7 +47,7 @@ public class UserListProjectFragment extends BaseSwipeRefreshFragment<Project, C
 
 	@Override
 	public BaseAdapter getAdapter(List<Project> list) {
-		return new ProjectAdapter(getActivity(), list, R.layout.list_cell_project);
+		return new ProjectAdapter(getActivity(), R.layout.list_item_project);
 	}
 
 	@Override

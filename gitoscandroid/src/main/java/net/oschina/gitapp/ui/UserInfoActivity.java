@@ -42,7 +42,7 @@ public class UserInfoActivity extends BaseActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_userinfo_detail);
-		mAppContext = getGitApplication();
+		mAppContext = AppContext.getInstance();
 		this.mSavedInstanceState = savedInstanceState;
 		initView();
 	}

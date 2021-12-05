@@ -96,7 +96,7 @@ public class MainActivity extends ActionBarActivity implements
 		}
 		// 启动轮询获取通知信息
 		if (mContext.isReceiveNotice()) {
-			foreachUserNotice();
+			//foreachUserNotice();
 		}
 	}
 	

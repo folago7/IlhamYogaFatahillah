@@ -1,20 +1,20 @@
 package net.oschina.gitapp.ui.fragments;
 
-import java.util.List;
-
 import android.os.Bundle;
 import android.widget.BaseAdapter;
+
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
-import net.oschina.gitapp.adapter.MySelfEventListAdapter;
+import net.oschina.gitapp.adapter.EventAdapter;
 import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.Event;
 import net.oschina.gitapp.bean.MessageData;
-import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.UIHelper;
-import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
+import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragmentOld;
+
+import java.util.List;
 
 /**
  * 用户最新动态列表Fragment
@@ -24,7 +24,7 @@ import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
  * 最后更新
  * 更新者
  */
-public class UserListEventFragment extends BaseSwipeRefreshFragment<Event, CommonList<Event>> {
+public class UserListEventFragment extends BaseSwipeRefreshFragmentOld<Event, CommonList<Event>> {
 	
 	private User mUser;
 	
@@ -47,7 +47,7 @@ public class UserListEventFragment extends BaseSwipeRefreshFragment<Event, Commo
 	
 	@Override
 	public BaseAdapter getAdapter(List<Event> list) {
-		return new MySelfEventListAdapter(getActivity(), list, R.layout.myselfevent_listitem);
+		return new EventAdapter(getActivity(), R.layout.list_item_event);
 	}
 
 	@Override

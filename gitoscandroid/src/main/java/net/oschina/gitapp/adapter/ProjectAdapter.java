@@ -2,22 +2,19 @@ package net.oschina.gitapp.adapter;
 
 import android.content.Context;
 import android.view.View;
-import android.widget.ImageView;
 
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.UIHelper;
 
-import java.util.List;
-
 /**
  * Created by 火蚁 on 15/4/9.
  */
 public class ProjectAdapter extends CommonAdapter<Project> {
 
-    public ProjectAdapter(Context context, List datas, int layoutId) {
-        super(context, datas, layoutId);
+    public ProjectAdapter(Context context, int layoutId) {
+        super(context, layoutId);
     }
 
     @Override
@@ -40,14 +37,13 @@ public class ProjectAdapter extends CommonAdapter<Project> {
         }
 
         // 1.加载头像
-        ImageView face = vh.getView(R.id.iv_face);
         String portraitURL = project.getOwner().getNew_portrait();
         if (portraitURL.endsWith("portrait.gif")) {
-            face.setImageResource(R.drawable.mini_avatar);
+            vh.setImageResource(R.id.iv_portrait, R.drawable.mini_avatar);
         } else {
-            vh.setImageForUrl(R.id.iv_face, portraitURL);
+            vh.setImageForUrl(R.id.iv_portrait, portraitURL);
         }
-        face.setOnClickListener(new View.OnClickListener() {
+        vh.getView(R.id.iv_portrait).setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {

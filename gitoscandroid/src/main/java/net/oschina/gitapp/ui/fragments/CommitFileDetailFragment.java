@@ -12,7 +12,7 @@ import android.widget.TextView;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
-import net.oschina.gitapp.adapter.CommitDiffListAdapter;
+import net.oschina.gitapp.adapter.CommitDiffAdapter;
 import net.oschina.gitapp.bean.Commit;
 import net.oschina.gitapp.bean.CommitDiff;
 import net.oschina.gitapp.bean.CommonList;
@@ -55,7 +55,7 @@ public class CommitFileDetailFragment extends BaseFragment implements
 	
 	private CommonList<CommitDiff> mCommitDiffList = new CommonList<CommitDiff>();
 	
-	private CommitDiffListAdapter adapter;
+	private CommitDiffAdapter adapter;
 	
     public static CommitFileDetailFragment newInstance(Project project, Commit commit) {
     	CommitFileDetailFragment fragment = new CommitFileDetailFragment();
@@ -164,7 +164,7 @@ public class CommitFileDetailFragment extends BaseFragment implements
 					onStatus(STATUS_LOADED);
 					mCommitDiffList = (CommonList<CommitDiff>) msg.obj;
 					mCommitFileSum.setText(mCommitDiffList.getCount() + " 个文件发生了变化");
-					adapter = new CommitDiffListAdapter(mAppContext, mCommitDiffList.getList(), R.layout.commit_diff_listitem, mCommitDiffll);
+					adapter = new CommitDiffAdapter(mAppContext, mCommitDiffList.getList(), R.layout.commit_diff_listitem, mCommitDiffll);
 					adapter.setData(mProject, mCommit);
 					mCommitDiffll.setVisibility(View.VISIBLE);
 					adapter.notifyDataSetChanged();

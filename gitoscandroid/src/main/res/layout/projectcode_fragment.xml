@@ -24,7 +24,7 @@
 		
         <include 
                 android:id="@+id/projectcode_tree_prefolder"
-                layout="@layout/projectcodetree_listitem_head"
+                layout="@layout/list_item_projectcodetree_head"
                 android:visibility="gone"/>
 
         <ListView

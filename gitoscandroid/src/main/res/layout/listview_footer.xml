@@ -4,7 +4,6 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:orientation="horizontal"
-    android:background="@drawable/list_layout_item_selector"
     android:padding="10dp" >
 
     <ProgressBar

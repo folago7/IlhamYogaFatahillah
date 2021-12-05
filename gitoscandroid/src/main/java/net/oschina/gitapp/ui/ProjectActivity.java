@@ -1,9 +1,6 @@
 package net.oschina.gitapp.ui;
 
-import java.util.ArrayList;
-import java.util.List;
 import android.app.ProgressDialog;
-import android.text.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.ClipboardManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
@@ -33,6 +32,9 @@ import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
 import net.oschina.gitapp.widget.DropDownMenu;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 项目详情界面
@@ -145,7 +147,7 @@ public class ProjectActivity extends BaseActionBarActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_project);
-		mAppContext = getGitApplication();
+		mAppContext = AppContext.getInstance();
 		initView();
 	}
 
@@ -296,7 +298,7 @@ public class ProjectActivity extends BaseActionBarActivity implements
 			break;
 		case R.id.project_menu_create_issue:
 			// 新增issue
-			UIHelper.showIssueEditOrCreate(getGitApplication(), mProject, null);
+			UIHelper.showIssueEditOrCreate(AppContext.getInstance(), mProject, null);
 			break;
 		}
 		return super.onOptionsItemSelected(item);

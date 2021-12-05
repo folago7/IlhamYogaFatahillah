@@ -91,7 +91,7 @@ public class ShakeActivity extends BaseActionBarActivity implements OnClickListe
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_shake);
-		mAppContext = getGitApplication();
+		mAppContext = AppContext.getInstance();
 		initView();
 		// 加载近期的活动信息
 		loadLuckMsg();
@@ -138,7 +138,7 @@ public class ShakeActivity extends BaseActionBarActivity implements OnClickListe
 			String title = "摇项目，等你来！";
 			String url = URLs.URL_HOST + mProject.getOwner().getUsername() + URLs.URL_SPLITTER + mProject.getName();
 			String shareContent = "我在Git@OSC客户端中摇到《" + mProject.getOwner().getName() + "的项目" + mProject.getName() + "》你也来试试手气吧";
-			UIHelper.showShareOption(getActivity(), title, url, shareContent, mBitmap);
+			UIHelper.showShareOption(ShakeActivity.this, title, url, shareContent, mBitmap);
 		}
 	}
 
@@ -153,7 +153,7 @@ public class ShakeActivity extends BaseActionBarActivity implements OnClickListe
 		
 		mShakeResProject = (RelativeLayout) findViewById(R.id.shakeres_paroject);
 		
-		mProjectFace = (ImageView) findViewById(R.id.iv_face);
+		mProjectFace = (ImageView) findViewById(R.id.iv_portrait);
 		
 		mProjectTitle = (TextView) findViewById(R.id.tv_title);
 		
@@ -345,7 +345,7 @@ public class ShakeActivity extends BaseActionBarActivity implements OnClickListe
 						handle.postDelayed(new Runnable() {
 							@Override
 							public void run() {
-								mBitmap = UIHelper.takeScreenShot(getActivity());
+								mBitmap = UIHelper.takeScreenShot(ShakeActivity.this);
 							}
 						}, 500);
 						
@@ -371,8 +371,8 @@ public class ShakeActivity extends BaseActionBarActivity implements OnClickListe
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
 								String url = "http://t.cn/RhLDd4k";
-								Bitmap bitmap = UIHelper.takeScreenShot(getActivity());
-								UIHelper.showShareOption(getActivity(), "我摇到奖品啦", url, mProject.getMsg(), bitmap);
+								Bitmap bitmap = UIHelper.takeScreenShot(ShakeActivity.this);
+								UIHelper.showShareOption(ShakeActivity.this, "我摇到奖品啦", url, mProject.getMsg(), bitmap);
 							}
 						});
 						dialog.show();
@@ -390,7 +390,7 @@ public class ShakeActivity extends BaseActionBarActivity implements OnClickListe
 	 */
 	private void showShippingAddressActivity() {
 		if (!mAppContext.isLogin()) {
-			UIHelper.showLoginActivity(getActivity());
+			UIHelper.showLoginActivity(ShakeActivity.this);
 			return;
 		}
 		Intent intent = new Intent(ShakeActivity.this, ShippingAddressActivity.class);

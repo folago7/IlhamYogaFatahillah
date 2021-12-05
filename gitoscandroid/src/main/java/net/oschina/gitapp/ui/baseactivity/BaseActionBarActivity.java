@@ -1,23 +1,15 @@
 package net.oschina.gitapp.ui.baseactivity;
 
 import java.lang.reflect.Field;
-import com.umeng.analytics.MobclickAgent;
-import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppManager;
-import net.oschina.gitapp.R;
 import net.oschina.gitapp.common.StringUtils;
-import net.oschina.gitapp.interfaces.ActivityHelperInterface;
-import net.oschina.gitapp.ui.ActivityHelper;
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.ViewConfiguration;
 
-public class BaseActionBarActivity extends ActionBarActivity 
-	implements ActivityHelperInterface{
+public class BaseActionBarActivity extends ActionBarActivity {
 
-	ActivityHelper mHelper = new ActivityHelper(this);
 	// 是否可以返回
 	protected static boolean isCanBack;
 	
@@ -30,7 +22,6 @@ public class BaseActionBarActivity extends ActionBarActivity
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mHelper.onCreate(savedInstanceState);
 		initActionBar();
 		//将activity加入到AppManager堆栈中
 		AppManager.getAppManager().addActivity(this);
@@ -39,23 +30,8 @@ public class BaseActionBarActivity extends ActionBarActivity
 	// 关闭该Activity
 	@Override
 	public boolean onSupportNavigateUp() {
-		AppManager.getAppManager().finishActivity(getActivity());
+		finish();
 		return super.onSupportNavigateUp();
-	}
-	
-	@Override
-	public void onResume() {
-		super.onResume();
-		setActionBarTitle();
-	}
-	
-	protected void setActionBarTitle() {
-		if (mTitle != null && !StringUtils.isEmpty(mTitle)) {
-			mActionBar.setTitle(mTitle);
-		}
-		if (mSubTitle != null && !StringUtils.isEmpty(mSubTitle)) {
-			mActionBar.setSubtitle(mSubTitle);
-		}
 	}
 	
 	@Override
@@ -66,7 +42,6 @@ public class BaseActionBarActivity extends ActionBarActivity
 	@Override
 	public void onAttachedToWindow() {
 		super.onAttachedToWindow();
-		mHelper.onAttachedToWindow();
 	}
 	
 	@Override
@@ -81,13 +56,22 @@ public class BaseActionBarActivity extends ActionBarActivity
 		int change = mActionBar.getDisplayOptions() ^ flags;
 		// 设置返回的图标
 		mActionBar.setDisplayOptions(change, flags);
+        if (mTitle != null && !StringUtils.isEmpty(mTitle)) {
+            mActionBar.setTitle(mTitle);
+        }
+        if (mSubTitle != null && !StringUtils.isEmpty(mSubTitle)) {
+            mActionBar.setSubtitle(mSubTitle);
+        }
 	}
 
-	@Override
-	public Activity getActivity() {
-		return mHelper.getActivity();
-	}
-	
+    public void setActionBarTitle(String title) {
+        mActionBar.setTitle(title);
+    }
+
+    public void setActionBarSubTitle(String subTitle) {
+        mActionBar.setSubtitle(subTitle);
+    }
+
 	/** 将菜单显示在actionbar上，而不是在底部*/
 	protected void requestActionBarMenu() {
 		try {
@@ -102,10 +86,5 @@ public class BaseActionBarActivity extends ActionBarActivity
 		} catch (Exception e) {
 			// presumably, not relevant
 		}
-	}
-
-	@Override
-	public AppContext getGitApplication() {
-		return mHelper.getGitApplication();
 	}
 }

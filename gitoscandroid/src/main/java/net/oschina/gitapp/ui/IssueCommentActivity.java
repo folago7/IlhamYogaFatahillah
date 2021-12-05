@@ -47,7 +47,7 @@ public class IssueCommentActivity extends BaseActionBarActivity implements OnCli
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_issue_comment);
-		mAppContext = getGitApplication();
+		mAppContext = AppContext.getInstance();
 		initView();
 		initData();
 	}
@@ -152,10 +152,10 @@ public class IssueCommentActivity extends BaseActionBarActivity implements OnCli
 					mPubing.dismiss();
 				}
 				if (msg.what == 1) {
-					UIHelper.ToastMessage(getGitApplication(), "评论成功");
+					UIHelper.ToastMessage(AppContext.getInstance(), "评论成功");
 					finish();
 				} else {
-					((AppException)(msg.obj)).makeToast(getGitApplication());
+					((AppException)(msg.obj)).makeToast(AppContext.getInstance());
 				}
 			}
 		}.execute();

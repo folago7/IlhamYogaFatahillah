@@ -1,9 +1,5 @@
 package net.oschina.gitapp.ui;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -20,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
@@ -32,6 +29,10 @@ import net.oschina.gitapp.common.ImageUtils;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * 用户信息详情页面
@@ -91,7 +92,7 @@ public class MySelfInfoActivity extends BaseActionBarActivity implements View.On
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_myselfinfo_detail);
-		mAppContext = getGitApplication();
+		mAppContext = AppContext.getInstance();
 		initView();
 		initData();
 	}
@@ -133,7 +134,7 @@ public class MySelfInfoActivity extends BaseActionBarActivity implements View.On
 	}
 	
 	private void initData() {
-		mUser = getGitApplication().getLoginInfo();
+		mUser = AppContext.getInstance().getLoginInfo();
 		if (mUser != null) {
 			mUserName.setText(mUser.getName());
 			
@@ -190,8 +191,8 @@ public class MySelfInfoActivity extends BaseActionBarActivity implements View.On
 	}
 	
 	private void loginOut() {
-		getGitApplication().loginout();
-		BroadcastController.sendUserChangeBroadcase(getGitApplication());
+        AppContext.getInstance().loginout();
+		BroadcastController.sendUserChangeBroadcase(AppContext.getInstance());
 		this.finish();
 	}
 	
@@ -217,7 +218,6 @@ public class MySelfInfoActivity extends BaseActionBarActivity implements View.On
 	/**
 	 * 选择图片裁剪
 	 * 
-	 * @param output
 	 */
 	private void startImagePick() {
 		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -230,7 +230,6 @@ public class MySelfInfoActivity extends BaseActionBarActivity implements View.On
 	/**
 	 * 相机拍照
 	 * 
-	 * @param output
 	 */
 	private void startActionCamera() {
 		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -248,7 +247,7 @@ public class MySelfInfoActivity extends BaseActionBarActivity implements View.On
 				savedir.mkdirs();
 			}
 		} else {
-			UIHelper.ToastMessage(getGitApplication(), "无法保存上传的头像，请检查SD卡是否挂载");
+			UIHelper.ToastMessage(AppContext.getInstance(), "无法保存上传的头像，请检查SD卡是否挂载");
 			return null;
 		}
 		String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss")
@@ -272,7 +271,7 @@ public class MySelfInfoActivity extends BaseActionBarActivity implements View.On
 				savedir.mkdirs();
 			}
 		} else {
-			UIHelper.ToastMessage(getGitApplication(), "无法保存上传的头像，请检查SD卡是否挂载");
+			UIHelper.ToastMessage(AppContext.getInstance(), "无法保存上传的头像，请检查SD卡是否挂载");
 			return null;
 		}
 		String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss")
@@ -300,7 +299,6 @@ public class MySelfInfoActivity extends BaseActionBarActivity implements View.On
 	 * 
 	 * @param data
 	 *            原始图片
-	 * @param output
 	 *            裁剪后图片
 	 */
 	private void startActionCrop(Uri data) {
@@ -323,7 +321,7 @@ public class MySelfInfoActivity extends BaseActionBarActivity implements View.On
 	 */
 	private void uploadNewPhoto() {
 		
-		final ProgressDialog dialog = new ProgressDialog(getActivity());
+		final ProgressDialog dialog = new ProgressDialog(this);
 		dialog.setCanceledOnTouchOutside(false);
 		dialog.setMessage("正在上传头像...");
 		
@@ -347,7 +345,7 @@ public class MySelfInfoActivity extends BaseActionBarActivity implements View.On
 					//UIHelper.ToastMessage(mAppContext, file.getMsg());
 					mUserFace.setImageBitmap(protraitBitmap);
 				} else {
-					UIHelper.ToastMessage(getGitApplication(), "上次头像失败");
+					UIHelper.ToastMessage(AppContext.getInstance(), "上次头像失败");
 				}
 			}
 
@@ -359,7 +357,7 @@ public class MySelfInfoActivity extends BaseActionBarActivity implements View.On
 					protraitBitmap = ImageUtils.loadImgThumbnail(protraitPath,
 							200, 200);
 				} else {
-					UIHelper.ToastMessage(getActivity(), "图像不存在");
+					UIHelper.ToastMessage(MySelfInfoActivity.this, "图像不存在");
 				}
 				if (protraitBitmap != null && protraitFile != null) {
 					try {

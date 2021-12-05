@@ -1,7 +1,6 @@
 package net.oschina.gitapp.adapter;
 
 import android.content.Context;
-import android.graphics.BitmapFactory;
 import android.text.SpannableString;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -10,8 +9,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 import net.oschina.gitapp.R;
-import net.oschina.gitapp.common.BitmapManager;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.util.TypefaceUtils;
 
@@ -124,8 +125,12 @@ public class ViewHolder {
 
     public void setImageForUrl(int viewId, String imgUrl) {
         ImageView iv = getView(viewId);
-        BitmapManager bitmapManager = new BitmapManager(BitmapFactory.decodeResource(
-                this.mContext.getResources(), R.drawable.widget_dface_loading));
-        bitmapManager.loadBitmap(imgUrl, iv);
+        // 使用DisplayImageOptions.Builder()创建DisplayImageOptions
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                .showImageForEmptyUri(R.drawable.mini_avatar)  // 设置图片Uri为空或是错误的时候显示的图片
+                .cacheInMemory(true)                        // 设置下载的图片是否缓存在内存中
+                .cacheOnDisk(true)                          // 设置下载的图片是否缓存在SD卡中
+                .build();                                   // 创建配置过得DisplayImageOption对象                                        // 创建配置过的DisplayImageOption对象
+        ImageLoader.getInstance().displayImage(imgUrl, iv, options);
     }
 }

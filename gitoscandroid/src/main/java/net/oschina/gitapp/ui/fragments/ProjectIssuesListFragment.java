@@ -1,27 +1,21 @@
 package net.oschina.gitapp.ui.fragments;
 
-import java.util.List;
-
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.BaseAdapter;
+
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
-import net.oschina.gitapp.adapter.ProjectIssuesListAdapter;
+import net.oschina.gitapp.adapter.ProjectIssuesAdapter;
 import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.Issue;
-import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.MessageData;
+import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
-import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
+import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragmentOld;
+
+import java.util.List;
 
 /**
  * 项目commits列表Fragment
@@ -31,7 +25,7 @@ import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
  * 最后更新
  * 更新者
  */
-public class ProjectIssuesListFragment extends BaseSwipeRefreshFragment<Issue, CommonList<Issue>> {
+public class ProjectIssuesListFragment extends BaseSwipeRefreshFragmentOld<Issue, CommonList<Issue>> {
 	
 	public final int MENU_CREATE_ID = 01;
 	
@@ -58,7 +52,7 @@ public class ProjectIssuesListFragment extends BaseSwipeRefreshFragment<Issue, C
 
 	@Override
 	public BaseAdapter getAdapter(List<Issue> list) {
-		return new ProjectIssuesListAdapter(getActivity(), list, R.layout.projectissues_listitem);
+		return new ProjectIssuesAdapter(getActivity(), R.layout.list_item_projectissues);
 	}
 
 	@Override

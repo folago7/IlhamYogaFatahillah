@@ -21,8 +21,8 @@ public class MySelfViewPagerFragment extends BaseViewPagerFragment {
 	@Override
 	protected void onSetupTabAdapter(ViewPageFragmentAdapter adapter) {
 		String[] title = getResources().getStringArray(R.array.myself_title_array);
-		adapter.addTab(title[0], "event", MySelfListEventFragment.class, null);
-		adapter.addTab(title[1], "project", MySelfListProjectFragment.class, null); 
+		adapter.addTab(title[0], "event", MySelfEventsFragment.class, null);
+		adapter.addTab(title[1], "project", MySelfProjectsFragment.class, null);
 		Bundle bundle = new Bundle();
 		bundle.putSerializable(Contanst.USER, getGitApplication().getLoginInfo());
 		adapter.addTab(title[2], "star_projects", StarProjectListFragment.class, bundle);

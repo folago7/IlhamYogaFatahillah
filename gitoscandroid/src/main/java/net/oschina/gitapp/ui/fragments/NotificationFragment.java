@@ -5,7 +5,7 @@ import java.util.List;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
-import net.oschina.gitapp.adapter.NotificationListAdapter;
+import net.oschina.gitapp.adapter.NotificationAdapter;
 import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.Notification;
 import net.oschina.gitapp.bean.ProjectNotification;
@@ -61,7 +61,7 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
 	
 	private AppContext mAppContext;
 	
-	private NotificationListAdapter adapter;
+	private NotificationAdapter adapter;
 	
 	private ImageView mEmptyImage;
 	
@@ -118,7 +118,7 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
 	private void steupList() {
 		mData = new ArrayList<List<Notification>>();
 		mGroups = new ArrayList<ProjectNotification>();
-		adapter = new NotificationListAdapter(mAppContext, mData, mGroups);
+		adapter = new NotificationAdapter(mAppContext, mData, mGroups);
 		mListView.setAdapter(adapter);
 		
 		mListView.setOnChildClickListener(this);

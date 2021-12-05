@@ -58,7 +58,7 @@ public class CommitFileDetailActivity extends BaseActionBarActivity implements
 		super.onCreate(savedInstanceState);
 		// 设置actionbar加载动态
 		setContentView(R.layout.activity_code_file_view);
-		appContext = getGitApplication();
+		appContext = AppContext.getInstance();
 		Intent intent = getIntent();
 		mProject = (Project) intent.getSerializableExtra(Contanst.PROJECT);
 		mCommitDiff = (CommitDiff) intent.getSerializableExtra(Contanst.COMMITDIFF);
@@ -139,7 +139,7 @@ public class CommitFileDetailActivity extends BaseActionBarActivity implements
 			protected Message doInBackground(Void... params) {
 				Message msg = new Message();
 				try {
-					AppContext ac = getGitApplication();
+					AppContext ac = AppContext.getInstance();
 					String body = ac.getCommitFileDetail(projectId, commitId, filePath);
 					msg.what = 1;
 					msg.obj = body;

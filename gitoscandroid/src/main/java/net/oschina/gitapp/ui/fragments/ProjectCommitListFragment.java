@@ -1,21 +1,21 @@
 package net.oschina.gitapp.ui.fragments;
 
-import java.util.List;
-
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.BaseAdapter;
+
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
-import net.oschina.gitapp.adapter.ProjectCommitListAdapter;
+import net.oschina.gitapp.adapter.ProjectCommitAdapter;
 import net.oschina.gitapp.bean.Commit;
 import net.oschina.gitapp.bean.CommonList;
-import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.MessageData;
+import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
-import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
+import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragmentOld;
+
+import java.util.List;
 
 /**
  * 项目commits列表Fragment
@@ -25,7 +25,7 @@ import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
  * 最后更新
  * 更新者
  */
-public class ProjectCommitListFragment extends BaseSwipeRefreshFragment<Commit, CommonList<Commit>> {
+public class ProjectCommitListFragment extends BaseSwipeRefreshFragmentOld<Commit, CommonList<Commit>> {
 	
 	private Project mProject;
 	
@@ -50,7 +50,7 @@ public class ProjectCommitListFragment extends BaseSwipeRefreshFragment<Commit, 
 
 	@Override
 	public BaseAdapter getAdapter(List<Commit> list) {
-		return new ProjectCommitListAdapter(getActivity(), list, R.layout.projectcommit_listitem);
+		return new ProjectCommitAdapter(getActivity(), R.layout.list_item_projectcommit);
 	}
 
 	@Override

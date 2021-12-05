@@ -43,7 +43,7 @@ public class LoginActivity extends BaseActionBarActivity
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		mAppContext = getGitApplication();
+		mAppContext = AppContext.getInstance();
 		initView();
 	}
 
@@ -183,7 +183,7 @@ public class LoginActivity extends BaseActionBarActivity
 						//返回标识，成功登录
 						setResult(RESULT_OK);
 						// 发送用户登录成功的广播
-						BroadcastController.sendUserChangeBroadcase(getActivity());
+						BroadcastController.sendUserChangeBroadcase(LoginActivity.this);
 						finish();
 					}
 				} else if(msg.what == 0){

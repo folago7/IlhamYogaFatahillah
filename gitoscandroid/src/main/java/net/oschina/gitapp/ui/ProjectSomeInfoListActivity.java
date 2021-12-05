@@ -47,7 +47,7 @@ public class ProjectSomeInfoListActivity extends BaseActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.base_activity_fragment);
-		mAppContext = getGitApplication();
+		mAppContext = AppContext.getInstance();
 		this.mSavedInstanceState = savedInstanceState;
 		initView();
 	}
@@ -101,7 +101,7 @@ public class ProjectSomeInfoListActivity extends BaseActionBarActivity {
 		switch (id) {
 		case MENU_CREATE_ID:
 			// 新增issue
-			UIHelper.showIssueEditOrCreate(getGitApplication(), mProject, null);
+			UIHelper.showIssueEditOrCreate(AppContext.getInstance(), mProject, null);
 			break;
 		}
 		return super.onOptionsItemSelected(item); 

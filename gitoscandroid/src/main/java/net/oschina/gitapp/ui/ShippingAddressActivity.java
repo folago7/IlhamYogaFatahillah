@@ -53,7 +53,7 @@ public class ShippingAddressActivity extends BaseActionBarActivity implements Vi
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_shipping_address);
-		mContext = getGitApplication();
+		mContext = AppContext.getInstance();
 		initView();
 		initData();
 	}

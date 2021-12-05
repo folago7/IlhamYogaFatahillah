@@ -72,7 +72,7 @@ public class SearchActivity extends BaseActionBarActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search);
-		mAppContext = getGitApplication();
+		mAppContext = AppContext.getInstance();
 		initView();
 		steupList();
 	}
@@ -91,8 +91,8 @@ public class SearchActivity extends BaseActionBarActivity implements
 
 	private void steupList() {
 		mData = new ArrayList<Project>();
-		adapter = new ProjectAdapter(mAppContext, mData,
-				R.layout.list_cell_project);
+		adapter = new ProjectAdapter(mAppContext,
+				R.layout.list_item_project);
 		mFooterView = LayoutInflater.from(mAppContext).inflate(
 				R.layout.listview_footer, null);
 		mFooterLoading = (ProgressBar) mFooterView.findViewById(R.id.listview_foot_progress);

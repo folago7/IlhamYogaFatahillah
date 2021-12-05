@@ -1,8 +1,5 @@
 package net.oschina.gitapp.ui;
 
-import java.util.ArrayList;
-import java.util.List;
-import android.text.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,11 +7,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.ClipboardManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
+
 import net.oschina.gitapp.AppConfig;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
@@ -32,6 +31,9 @@ import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
 import net.oschina.gitapp.util.MarkdownUtils;
 import net.oschina.gitapp.util.SourceEditor;
 import net.oschina.gitapp.widget.DropDownMenu;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 代码文件详情
@@ -152,7 +154,7 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 		super.onCreate(savedInstanceState);
 		// 设置actionbar加载动态
 		setContentView(R.layout.activity_code_file_view);
-		mContext = getGitApplication();
+		mContext = AppContext.getInstance();
 		Intent intent = getIntent();
 		mProject = (Project) intent.getSerializableExtra(Contanst.PROJECT);
 		mFileName = intent.getStringExtra("fileName");
@@ -266,7 +268,7 @@ public class CodeFileDetailActivity extends BaseActionBarActivity implements
 			protected Message doInBackground(Void... params) {
 				Message msg = new Message();
 				try {
-					AppContext ac = getGitApplication();
+					AppContext ac = AppContext.getInstance();
 					CodeFile codeFile = ac.getCodeFile(projectId, path,
 							ref_name);
 					msg.what = 1;

@@ -9,6 +9,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ProgressBar;
+
+import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.Issue;
@@ -80,8 +82,8 @@ public class IssueDetailActivity extends BaseActionBarActivity {
 			protected Message doInBackground(Void... params) {
 				Message msg = new Message();
 				try {
-					mProject = getGitApplication().getProject(projectId);
-					mIssue = getGitApplication().getIssue(projectId, issueId);
+					mProject = AppContext.getInstance().getProject(projectId);
+					mIssue = AppContext.getInstance().getIssue(projectId, issueId);
 					msg.what = 1;
 				} catch (AppException e) {
 					msg.what = -1;
@@ -98,7 +100,7 @@ public class IssueDetailActivity extends BaseActionBarActivity {
 					initData();
 				} else {
 					if (msg.obj instanceof AppException) {
-						((AppException)msg.obj).makeToast(getGitApplication());
+						((AppException)msg.obj).makeToast(AppContext.getInstance());
 					}
 				}
 			}

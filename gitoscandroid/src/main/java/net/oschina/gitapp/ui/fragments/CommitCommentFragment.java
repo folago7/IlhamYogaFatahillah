@@ -5,14 +5,14 @@ import android.widget.BaseAdapter;
 
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
-import net.oschina.gitapp.adapter.CommitListCommentdapter;
+import net.oschina.gitapp.adapter.CommitCommentdapter;
 import net.oschina.gitapp.bean.Comment;
 import net.oschina.gitapp.bean.Commit;
 import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.MessageData;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.common.Contanst;
-import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
+import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragmentOld;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ import java.util.List;
  * 最后更新
  * 更新者
  */
-public class CommitCommentFragment extends BaseSwipeRefreshFragment<Comment, CommonList<Comment>> {
+public class CommitCommentFragment extends BaseSwipeRefreshFragmentOld<Comment, CommonList<Comment>> {
 	
 	private Project mProject;
 	
@@ -48,10 +48,10 @@ public class CommitCommentFragment extends BaseSwipeRefreshFragment<Comment, Com
 			mCommit = (Commit) args.getSerializable(Contanst.COMMIT);
 		}
 	}
-	
+
 	@Override
 	public BaseAdapter getAdapter(List<Comment> list) {
-		return new CommitListCommentdapter(getActivity(), list, R.layout.commit_comment_listitem);
+		return new CommitCommentdapter(getActivity(), R.layout.list_item_commit_comment);
 	}
 
 	@Override

@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.os.Message;
 import android.view.View;
 import android.webkit.WebView;
+
+import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.HTTPRequestor;
@@ -62,7 +64,7 @@ public class ProjectReadMeActivity extends BaseActionBarActivity {
 			protected Message doInBackground(Void... params) {
 				Message msg = new Message();
 				try {
-					msg.obj = getGitApplication().getReadMeFile(mProject.getId());
+					msg.obj = AppContext.getInstance().getReadMeFile(mProject.getId());
 					msg.what = 1;
 				} catch (Exception e) {
 					msg.what = -1;
@@ -74,7 +76,7 @@ public class ProjectReadMeActivity extends BaseActionBarActivity {
 			
 			@Override
 			protected void onPostExecute(Message msg) {
-				if (getActivity().isFinishing()) {
+				if (isFinishing()) {
 					return;
 				}
 				mLoading.setVisibility(View.GONE);
@@ -86,16 +88,16 @@ public class ProjectReadMeActivity extends BaseActionBarActivity {
 						String body = linkCss + "<div class='markdown-body'>" + readMe.getContent() + "</div>";
 						mWebView.loadDataWithBaseURL(null, body, "text/html", HTTPRequestor.UTF_8, null);
 					} else {
-						getActivity().findViewById(R.id.project_readme_empty).setVisibility(View.VISIBLE);
+						findViewById(R.id.project_readme_empty).setVisibility(View.VISIBLE);
 					}
 					
 				} else {
 					if (msg.obj instanceof AppException) {
 						AppException e = (AppException)msg.obj;
 						if (e.getCode() == 404) {
-							getActivity().findViewById(R.id.project_readme_empty).setVisibility(View.VISIBLE);
+							findViewById(R.id.project_readme_empty).setVisibility(View.VISIBLE);
 						} else {
-							((AppException)msg.obj).makeToast(getGitApplication());
+							((AppException)msg.obj).makeToast(AppContext.getInstance());
 						}
 					}
 				}

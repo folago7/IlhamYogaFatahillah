@@ -1,20 +1,16 @@
 package net.oschina.gitapp;
 
-import static net.oschina.gitapp.common.Contanst.*;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InvalidClassException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Properties;
-import java.util.UUID;
-import net.oschina.gitapp.AppException;
+import android.app.Application;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
+import android.media.AudioManager;
+
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
+
 import net.oschina.gitapp.api.ApiClient;
 import net.oschina.gitapp.bean.Branch;
 import net.oschina.gitapp.bean.CodeFile;
@@ -40,16 +36,42 @@ import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.BroadcastController;
 import net.oschina.gitapp.common.MethodsCompat;
 import net.oschina.gitapp.common.StringUtils;
-import net.oschina.gitapp.common.UIHelper;
-import android.app.Application;
-import android.content.Context;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
-import android.media.AudioManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.Handler;
-import android.os.Message;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InvalidClassException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.List;
+import java.util.Properties;
+import java.util.UUID;
+
+import static net.oschina.gitapp.common.Contanst.ACCOUNT_EMAIL;
+import static net.oschina.gitapp.common.Contanst.ACCOUNT_PWD;
+import static net.oschina.gitapp.common.Contanst.PROP_KEY_BIO;
+import static net.oschina.gitapp.common.Contanst.PROP_KEY_BLOG;
+import static net.oschina.gitapp.common.Contanst.PROP_KEY_CAN_CREATE_GROUP;
+import static net.oschina.gitapp.common.Contanst.PROP_KEY_CAN_CREATE_PROJECT;
+import static net.oschina.gitapp.common.Contanst.PROP_KEY_CAN_CREATE_TEAM;
+import static net.oschina.gitapp.common.Contanst.PROP_KEY_CREATED_AT;
+import static net.oschina.gitapp.common.Contanst.PROP_KEY_EMAIL;
+import static net.oschina.gitapp.common.Contanst.PROP_KEY_IS_ADMIN;
+import static net.oschina.gitapp.common.Contanst.PROP_KEY_NAME;
+import static net.oschina.gitapp.common.Contanst.PROP_KEY_PORTRAIT;
+import static net.oschina.gitapp.common.Contanst.PROP_KEY_PRIVATE_TOKEN;
+import static net.oschina.gitapp.common.Contanst.PROP_KEY_STATE;
+import static net.oschina.gitapp.common.Contanst.PROP_KEY_THEME_ID;
+import static net.oschina.gitapp.common.Contanst.PROP_KEY_UID;
+import static net.oschina.gitapp.common.Contanst.PROP_KEY_USERNAME;
+import static net.oschina.gitapp.common.Contanst.PROP_KEY_WEIBO;
+import static net.oschina.gitapp.common.Contanst.ROP_KEY_FOLLOWERS;
+import static net.oschina.gitapp.common.Contanst.ROP_KEY_FOLLOWING;
+import static net.oschina.gitapp.common.Contanst.ROP_KEY_STARRED;
+import static net.oschina.gitapp.common.Contanst.ROP_KEY_WATCHED;
 
 /**
  * 全局应用程序类：用于保存和调用全局应用配置及访问网络数据
@@ -60,26 +82,12 @@ import android.os.Message;
  */
 public class AppContext extends Application {
 
-	// 手机网络类型
-	public static final int NETTYPE_WIFI = 0x01;
-	public static final int NETTYPE_CMWAP = 0x02;
-	public static final int NETTYPE_CMNET = 0x03;
-
 	public static final int PAGE_SIZE = 20;// 默认分页大小
-	private static final int CACHE_TIME = 60 * 60000;// 缓存失效时间
-	
+
 	private boolean login = false; // 登录状态
 	private int loginUid = 0; // 登录用户的id
-	private Hashtable<String, Object> memCacheRegion = new Hashtable<String, Object>();
 
-	private Handler unLoginHandler = new Handler() {
-		public void handleMessage(Message msg) {
-			if (msg.what == 1) {
-				UIHelper.ToastMessage(AppContext.this, getString(R.string.msg_login_error));
-				UIHelper.showLoginActivity(AppContext.this);
-			}
-		}
-	};
+    private static AppContext appContext;
 
 	@Override
 	public void onCreate() {
@@ -88,23 +96,13 @@ public class AppContext extends Application {
 		Thread.setDefaultUncaughtExceptionHandler(AppException
 				.getAppExceptionHandler(this));
 		init();
+        initImageLoader();
+        appContext = this;
 	}
-	
-	/**
-	 * 获得未登录的handle
-	 * @return
-	 */
-	public Handler getUnLoginHandler(final Context context) {
-		Handler unLoginHandler = new Handler() {
-			public void handleMessage(Message msg) {
-				if (msg.what == 1) {
-					UIHelper.ToastMessage(AppContext.this, getString(R.string.msg_login_error));
-					UIHelper.showLoginActivity(context);
-				}
-			}
-		};
-		return unLoginHandler;
-	}
+
+    public static AppContext getInstance() {
+        return appContext;
+    }
 
 	/**
 	 * 初始化Application
@@ -120,10 +118,20 @@ public class AppContext extends Application {
 		}
 	}
 
-	public boolean containsProperty(String key) {
-		Properties props = getProperties();
-		return props.containsKey(key);
-	}
+    private void initImageLoader() {
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
+                .threadPriority(Thread.NORM_PRIORITY - 2)
+                .denyCacheImageMultipleSizesInMemory()
+                .diskCacheFileNameGenerator(new Md5FileNameGenerator())
+                .diskCacheSize(50 * 1024 * 1024) // 50 Mb
+                .diskCacheFileCount(300)
+                .imageDownloader(new BaseImageDownloader(this, 5 * 1000, 3 * 1000))
+                .tasksProcessingOrder(QueueProcessingType.LIFO)
+                .writeDebugLogs() // Remove for release app
+                .build();
+
+        ImageLoader.getInstance().init(config);
+    }
 
 	public void setProperties(Properties ps) {
 		AppConfig.getAppConfig(this).set(ps);
@@ -146,29 +154,7 @@ public class AppContext extends Application {
 		AppConfig.getAppConfig(this).remove(key);
 	}
 
-	/**
-	 * 是否Https登录
-	 * 
-	 * @return
-	 */
-	public boolean isHttpsLogin() {
-		String perf_httpslogin = getProperty(AppConfig.CONF_HTTPS_LOGIN);
-		// 默认是http
-		if (StringUtils.isEmpty(perf_httpslogin))
-			return false;
-		else
-			return StringUtils.toBool(perf_httpslogin);
-	}
 
-	/**
-	 * 设置是是否Https登录
-	 * 
-	 * @param b
-	 */
-	public void setConfigHttpsLogin(boolean b) {
-		setProperty(AppConfig.CONF_HTTPS_LOGIN, String.valueOf(b));
-	}
-	
 	/**
 	 * 是否是第一次启动App
 	 * @return
@@ -183,29 +169,6 @@ public class AppContext extends Application {
 		}
 		
 		return res;
-	}
-
-	/**
-	 * 是否加载显示文章图片
-	 * 
-	 * @return
-	 */
-	public boolean isLoadImage() {
-		String perf_loadimage = getProperty(AppConfig.CONF_LOAD_IMAGE);
-		// 默认是加载的
-		if (StringUtils.isEmpty(perf_loadimage))
-			return true;
-		else
-			return StringUtils.toBool(perf_loadimage);
-	}
-
-	/**
-	 * 设置是否加载文章图片
-	 * 
-	 * @param b
-	 */
-	public void setConfigLoadimage(boolean b) {
-		setProperty(AppConfig.CONF_LOAD_IMAGE, String.valueOf(b));
 	}
 
 	/**
@@ -293,45 +256,6 @@ public class AppContext extends Application {
 		} else {
 			return StringUtils.toBool(perf_voice);
 		}
-	}
-
-	/**
-	 * 检测网络是否可用
-	 * 
-	 * @return
-	 */
-	public boolean isNetworkConnected() {
-		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo ni = cm.getActiveNetworkInfo();
-		return ni != null && ni.isConnectedOrConnecting();
-	}
-
-	/**
-	 * 获取当前网络类型
-	 * 
-	 * @return 0：没有网络 1：WIFI网络 2：WAP网络 3：NET网络
-	 */
-	public int getNetworkType() {
-		int netType = 0;
-		ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-		if (networkInfo == null) {
-			return netType;
-		}
-		int nType = networkInfo.getType();
-		if (nType == ConnectivityManager.TYPE_MOBILE) {
-			String extraInfo = networkInfo.getExtraInfo();
-			if (!StringUtils.isEmpty(extraInfo)) {
-				if (extraInfo.toLowerCase().equals("cmnet")) {
-					netType = NETTYPE_CMNET;
-				} else {
-					netType = NETTYPE_CMWAP;
-				}
-			}
-		} else if (nType == ConnectivityManager.TYPE_WIFI) {
-			netType = NETTYPE_WIFI;
-		}
-		return netType;
 	}
 
 	/**
@@ -466,23 +390,6 @@ public class AppContext extends Application {
 		if (data.exists())
 			exist = true;
 		return exist;
-	}
-
-	/**
-	 * 判断缓存是否失效
-	 * 
-	 * @param cachefile
-	 * @return
-	 */
-	public boolean isCacheDataFailure(String cachefile) {
-		boolean failure = false;
-		File data = getFileStreamPath(cachefile);
-		if (data.exists()
-				&& (System.currentTimeMillis() - data.lastModified()) > CACHE_TIME)
-			failure = true;
-		else if (!data.exists())
-			failure = true;
-		return failure;
 	}
 
 	/**
@@ -661,7 +568,7 @@ public class AppContext extends Application {
 	 * 
 	 * @param dir
 	 *            目录
-	 * @param numDays
+	 * @param curTime
 	 *            当前系统时间
 	 * @return
 	 */
@@ -708,108 +615,6 @@ public class AppContext extends Application {
 	}
 
 	/**
-	 * 获得最近更新的项目
-	 * 
-	 * @param page
-	 * @return
-	 * @throws AppException
-	 */
-	@SuppressWarnings("unchecked")
-	public CommonList<Project> getExploreLatestProject(int page,
-			boolean isRefresh) throws AppException {
-		CommonList<Project> list = null;
-		String cacheKey = "latestProjectList_" + page + "_" + PAGE_SIZE;
-		if (!isReadDataCache(cacheKey) || isRefresh) {
-			try {
-				list = ApiClient.getExploreLatestProject(this, page);
-				if (list != null && page == 1) {
-					list.setCacheKey(cacheKey);
-					saveObject(list, cacheKey);
-				}
-			} catch (AppException e) {
-				e.printStackTrace();
-				list = (CommonList<Project>) readObject(cacheKey);
-				if (list == null)
-					throw e;
-			}
-		} else {
-			// 从缓存中读取
-			list = (CommonList<Project>) readObject(cacheKey);
-			if (list == null)
-				list = new CommonList<Project>();
-		}
-		return list;
-	}
-
-	/**
-	 * 获取热门项目
-	 * 
-	 * @param page
-	 * @return
-	 * @throws AppException
-	 */
-	@SuppressWarnings("unchecked")
-	public CommonList<Project> getExplorePopularProject(int page,
-			boolean isRefresh) throws AppException {
-		CommonList<Project> list = null;
-		String cacheKey = "popularProjectList_" + page + "_" + PAGE_SIZE;
-		if (!isReadDataCache(cacheKey) || isRefresh) {
-			try {
-				list = ApiClient.getExplorePopularProject(this, page);
-				if (list != null && page == 1) {
-					list.setCacheKey(cacheKey);
-					saveObject(list, cacheKey);
-				}
-			} catch (AppException e) {
-				e.printStackTrace();
-				list = (CommonList<Project>) readObject(cacheKey);
-				if (list == null)
-					throw e;
-			}
-		} else {
-			// 从缓存中读取
-			list = (CommonList<Project>) readObject(cacheKey);
-			if (list == null)
-				list = new CommonList<Project>();
-		}
-		return list;
-	}
-
-	/**
-	 * 获取推荐项目
-	 * 
-	 * @param page
-	 * @return
-	 * @throws AppException
-	 */
-	@SuppressWarnings("unchecked")
-	public CommonList<Project> getExploreFeaturedProject(int page,
-			boolean isRefresh) throws AppException {
-		CommonList<Project> list = null;
-		String cacheKey = "faturedProjectList_" + page + "_" + PAGE_SIZE;
-		if (!isReadDataCache(cacheKey) || isRefresh) {
-			try {
-				list = ApiClient.getExploreFeaturedProject(this, page);
-				if (list != null && page == 1) {
-					list.setCacheKey(cacheKey);
-					saveObject(list, cacheKey);
-				}
-			} catch (AppException e) {
-				e.printStackTrace();
-				list = (CommonList<Project>) readObject(cacheKey);
-				if (list == null)
-					throw e;
-			}
-		} else {
-			// 从缓存中读取
-			list = (CommonList<Project>) readObject(cacheKey);
-			if (list == null)
-				list = new CommonList<Project>();
-		}
-		return list;
-	}
-	
-	/**
 	 * 获得查询项目的结果
 	 * @param page
 	 * @return
@@ -819,80 +624,12 @@ public class AppContext extends Application {
 		return ApiClient.getSearcheProject(this, query, page);
 	}
 
-	/**
-	 * 获得个人动态列表
-	 * 
-	 * @param pageIndex
-	 * @param isRefresh
-	 * @return
-	 * @throws AppException
-	 */
-	@SuppressWarnings("unchecked")
-	public CommonList<Event> getMySelfEvents(int page, boolean isRefresh)
-			throws AppException {
-		CommonList<Event> list = null;
-		String cacheKey = "myselfEventsList_" + +page + "_" + PAGE_SIZE;
-		if (!isReadDataCache(cacheKey) || isRefresh) {
-			try {
-				list = ApiClient.getMySelfEvents(this, page);
-				if (list != null && page == 1) {
-					list.setCacheKey(cacheKey);
-					saveObject(list, cacheKey);
-				}
-			} catch (AppException e) {
-				e.printStackTrace();
-				list = (CommonList<Event>) readObject(cacheKey);
-				if (list == null)
-					throw e;
-			}
-		} else {
-			// 从缓存中读取
-			list = (CommonList<Event>) readObject(cacheKey);
-			if (list == null)
-				list = new CommonList<Event>();
-		}
-		return list;
-	}
 
-	/**
-	 * 获得个人的所有项目
-	 * 
-	 * @param page
-	 * @return
-	 * @throws AppException
-	 */
-	@SuppressWarnings("unchecked")
-	public CommonList<Project> getMySelfProjectList(int page, boolean isRefresh)
-			throws AppException {
-		CommonList<Project> list = null;
-		String cacheKey = "myselfProjectList_" + page + "_" + PAGE_SIZE;
-		if (!isReadDataCache(cacheKey) || isRefresh) {
-			try {
-				list = ApiClient.getMySelfProjectList(this, page);
-				if (list != null && page == 1) {
-					list.setCacheKey(cacheKey);
-					saveObject(list, cacheKey);
-				}
-			} catch (AppException e) {
-				e.printStackTrace();
-				list = (CommonList<Project>) readObject(cacheKey);
-				if (list == null)
-					throw e;
-			}
-		} else {
-			// 从缓存中读取
-			list = (CommonList<Project>) readObject(cacheKey);
-			if (list == null)
-				list = new CommonList<Project>();
-		}
-		return list;
-	}
-	
 	/**
 	 * 获得一个项目的commit列表
 	 * 
 	 * @param projectId
-	 * @param pageIndex
+	 * @param page
 	 * @param isRefresh
 	 * @param ref_name
 	 *            分支（optional）
@@ -942,7 +679,6 @@ public class AppContext extends Application {
 	/**
 	 * 获得项目的代码树列表
 	 * 
-	 * @param appContext
 	 * @param projectId
 	 *            项目的id
 	 * @param path
@@ -990,9 +726,8 @@ public class AppContext extends Application {
 	/**
 	 * 获得一个项目issues列表
 	 * 
-	 * @param appContext
 	 * @param projectId
-	 * @param pageIndex
+	 * @param page
 	 * @param isRefresh
 	 * @return
 	 * @throws AppException
@@ -1039,9 +774,8 @@ public class AppContext extends Application {
 	/**
 	 * 获得issue的评论列表
 	 * 
-	 * @param appContext
 	 * @param projectId
-	 * @param noteId
+	 * @param issueId
 	 * @param page
 	 * @param isRefresh
 	 * @return
@@ -1221,7 +955,6 @@ public class AppContext extends Application {
 	/**
 	 * 通过commits获取代码文件的内容
 	 * 
-	 * @param appContext
 	 * @param projectId
 	 * @param commitId
 	 * @param filePath
@@ -1283,7 +1016,7 @@ public class AppContext extends Application {
 	/**
 	 * 上传文件
 	 * 
-	 * @param files
+	 * @param file
 	 * @return
 	 * @throws AppException
 	 */
@@ -1306,7 +1039,6 @@ public class AppContext extends Application {
 	
 	/**
 	 * 设置通知为已读
-	 * @param appContext
 	 * @param notificationId
 	 * @return
 	 * @throws AppException
@@ -1374,7 +1106,6 @@ public class AppContext extends Application {
 	
 	/**
 	 * 更新代码库中的代码文件
-	 * @param appContext
 	 * @param project_id
 	 * @param branch_name
 	 * @param content
@@ -1384,71 +1115,5 @@ public class AppContext extends Application {
 	 */
 	public String updateRepositoryFiles(String project_id, String ref, String file_path, String branch_name, String content, String commit_message) throws AppException {
 		return ApiClient.updateRepositoryFiles(this, project_id, ref, file_path, branch_name, content, commit_message);
-	}
-	
-	/**
-	 * 获得某个用户的star列表
-	 * @param user_id
-	 * @param page
-	 * @param isRefresh
-	 * @return
-	 * @throws AppException
-	 */
-	@SuppressWarnings("unchecked")
-	public CommonList<Project> getStarProjectList(String user_id,
-			int page, boolean isRefresh) throws AppException {
-		CommonList<Project> list = null;
-		String cacheKey = "StarProjectList_" + user_id;
-		if (!isReadDataCache(cacheKey) || isRefresh) {
-			try {
-				list = ApiClient.getStarProjectList(this, user_id, page, isRefresh);
-				if (list != null) {
-					list.setCacheKey(cacheKey);
-					saveObject(list, cacheKey);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				list = (CommonList<Project>) readObject(cacheKey);
-			}
-		} else {
-			// 从缓存中读取
-			list = (CommonList<Project>) readObject(cacheKey);
-			if (list == null)
-				list = new CommonList<Project>();
-		}
-		return list;
-	}
-	
-	/**
-	 * 获得某个用户的watch列表
-	 * @param user_id
-	 * @param page
-	 * @param isRefresh
-	 * @return
-	 * @throws AppException
-	 */
-	@SuppressWarnings("unchecked")
-	public CommonList<Project> getWatchProjectList(String user_id,
-			int page, boolean isRefresh) throws AppException {
-		CommonList<Project> list = null;
-		String cacheKey = "WatchProjectList_" + user_id;
-		if (!isReadDataCache(cacheKey) || isRefresh) {
-			try {
-				list = ApiClient.getWatchProjectList(this, user_id, page, isRefresh);
-				if (list != null) {
-					list.setCacheKey(cacheKey);
-					saveObject(list, cacheKey);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				list = (CommonList<Project>) readObject(cacheKey);
-			}
-		} else {
-			// 从缓存中读取
-			list = (CommonList<Project>) readObject(cacheKey);
-			if (list == null)
-				list = new CommonList<Project>();
-		}
-		return list;
 	}
 }

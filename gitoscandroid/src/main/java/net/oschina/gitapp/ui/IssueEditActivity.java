@@ -1,6 +1,5 @@
 package net.oschina.gitapp.ui;
 
-import java.util.ArrayList;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -19,6 +18,8 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.Issue;
@@ -29,6 +30,8 @@ import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
+
+import java.util.ArrayList;
 
 public class IssueEditActivity extends BaseActionBarActivity implements OnClickListener {
 
@@ -121,7 +124,7 @@ public class IssueEditActivity extends BaseActionBarActivity implements OnClickL
 		mIssueTitle.addTextChangedListener(mTextWatcher);
 		mIssueBody.addTextChangedListener(mTextWatcher);
 		
-		mLoadSome = new ProgressDialog(getActivity());
+		mLoadSome = new ProgressDialog(this);
 		mLoadSome.setCancelable(true);
 		mLoadSome.setCanceledOnTouchOutside(false);
 	}
@@ -171,7 +174,7 @@ public class IssueEditActivity extends BaseActionBarActivity implements OnClickL
 				try {
 					msg.what = 1;
 					if (mAssigneesList == null) {
-						msg.obj = getGitApplication().getProjectMembers(mProject.getId());
+						msg.obj = AppContext.getInstance().getProjectMembers(mProject.getId());
 					} else {
 						msg.obj = mAssigneesList;
 					}
@@ -190,7 +193,7 @@ public class IssueEditActivity extends BaseActionBarActivity implements OnClickL
 					mLoadSome.show();
 				}
 				if (mAssigneeDialog == null) {
-					mAssigneeDialog = new AlertDialog.Builder(getActivity()).setTitle("选择被指派人");
+					mAssigneeDialog = new AlertDialog.Builder(AppContext.getInstance()).setTitle("选择被指派人");
 				}
 			}
 			
@@ -227,9 +230,9 @@ public class IssueEditActivity extends BaseActionBarActivity implements OnClickL
 					mAssigneeDialog.show();
 				} else {
 					if (msg.obj instanceof AppException) {
-						((AppException)msg.obj).makeToast(getActivity());
+						((AppException)msg.obj).makeToast(AppContext.getInstance());
 					} else {
-						UIHelper.ToastMessage(getGitApplication(), "加载协作者失败");
+						UIHelper.ToastMessage(AppContext.getInstance(), "加载协作者失败");
 					}
 				}
 			}
@@ -246,7 +249,7 @@ public class IssueEditActivity extends BaseActionBarActivity implements OnClickL
 				try {
 					msg.what = 1;
 					if (mMilestonesList == null) {
-						msg.obj = getGitApplication().getProjectMilestone(mProject.getId());
+						msg.obj = AppContext.getInstance().getProjectMilestone(mProject.getId());
 					} else {
 						msg.obj = mMilestonesList;
 					}
@@ -264,7 +267,7 @@ public class IssueEditActivity extends BaseActionBarActivity implements OnClickL
 					mLoadSome.show();
 				}
 				if (mMilestoneDialog == null) {
-					mMilestoneDialog = new AlertDialog.Builder(getActivity()).setTitle("选择里程碑");
+					mMilestoneDialog = new AlertDialog.Builder(IssueEditActivity.this).setTitle("选择里程碑");
 				}
 			}
 			
@@ -300,9 +303,9 @@ public class IssueEditActivity extends BaseActionBarActivity implements OnClickL
 					mMilestoneDialog.show(); 
 				} else {
 					if (msg.obj instanceof AppException) {
-						((AppException)msg.obj).makeToast(getActivity());
+						((AppException)msg.obj).makeToast(IssueEditActivity.this);
 					} else {
-						UIHelper.ToastMessage(getGitApplication(), "加载里程碑失败");
+						UIHelper.ToastMessage(AppContext.getInstance(), "加载里程碑失败");
 					}
 				}
 			}
@@ -310,7 +313,7 @@ public class IssueEditActivity extends BaseActionBarActivity implements OnClickL
 	}
 	
 	private void pubCreateIssue() {
-		if (!getGitApplication().isLogin()) {
+		if (!AppContext.getInstance().isLogin()) {
 			UIHelper.showLoginActivity(IssueEditActivity.this);
 			return;
 		}
@@ -325,7 +328,7 @@ public class IssueEditActivity extends BaseActionBarActivity implements OnClickL
 					String description = mIssueBody.getText().toString();
 					String  assignee_id = (String) mIssueAssigneeName.getTag();
 					String  milestone_id = (String) mIssueMilestone.getTag();
-					msg.obj = getGitApplication().pubCreateIssue(mProject.getId(), title, description, assignee_id, milestone_id);
+					msg.obj = AppContext.getInstance().pubCreateIssue(mProject.getId(), title, description, assignee_id, milestone_id);
 	            } catch (Exception e) {
 			    	msg.what = -1;
 			    	msg.obj = e;
@@ -345,15 +348,15 @@ public class IssueEditActivity extends BaseActionBarActivity implements OnClickL
 				if (msg.what == 1) {
 					Issue issue = (Issue) msg.obj;
 					if (issue != null) {
-						UIHelper.showIssueDetail(getGitApplication(), mProject, issue, null, null);
-						UIHelper.ToastMessage(getGitApplication(), "创建成功");
-						getActivity().finish();
+						UIHelper.showIssueDetail(AppContext.getInstance(), mProject, issue, null, null);
+						UIHelper.ToastMessage(AppContext.getInstance(), "创建成功");
+						IssueEditActivity.this.finish();
 					}
 				} else {
 					if (msg.obj instanceof AppException) {
-						((AppException)msg.obj).makeToast(getActivity());
+						((AppException)msg.obj).makeToast(IssueEditActivity.this);
 					} else {
-						UIHelper.ToastMessage(getGitApplication(), "创建issue失败");
+						UIHelper.ToastMessage(AppContext.getInstance(), "创建issue失败");
 					}
 				}
 			}

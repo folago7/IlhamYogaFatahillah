@@ -1,20 +1,18 @@
 package net.oschina.gitapp.ui.fragments;
 
 import android.os.Bundle;
-import android.widget.BaseAdapter;
 
-import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
+import net.oschina.gitapp.adapter.CommonAdapter;
 import net.oschina.gitapp.adapter.ProjectAdapter;
+import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.CommonList;
-import net.oschina.gitapp.bean.MessageData;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
-
-import java.util.List;
+import net.oschina.gitapp.util.JsonUtils;
 
 /**
  * 用户watch项目列表
@@ -24,7 +22,7 @@ import java.util.List;
  * 最后更新
  * 更新者
  */
-public class WatchProjectListFragment extends BaseSwipeRefreshFragment<Project, CommonList<Project>> {
+public class WatchProjectListFragment extends BaseSwipeRefreshFragment<Project> {
 	
 	private User mUser;
 	
@@ -45,26 +43,23 @@ public class WatchProjectListFragment extends BaseSwipeRefreshFragment<Project, 
 		}
 		setUserVisibleHint(true);
 	}
-	
-	@Override
-	public BaseAdapter getAdapter(List<Project> list) {
-		return new ProjectAdapter(mApplication, list, R.layout.list_cell_project);
-	}
 
-	@Override
-	public MessageData<CommonList<Project>> asyncLoadList(int page,
-			boolean refresh) {
-		MessageData<CommonList<Project>> msg = null;
-		try {
-			CommonList<Project> list = mApplication.getWatchProjectList(mUser.getId(), page, refresh);
-			msg = new MessageData<CommonList<Project>>(list);
-		} catch (AppException e) {
-			e.makeToast(mApplication);
-			e.printStackTrace();
-			msg = new MessageData<CommonList<Project>>(e);
-		}
-		return msg;
-	}
+    @Override
+    public CommonAdapter<Project> getAdapter() {
+        return new ProjectAdapter(mApplication, R.layout.list_item_project);
+    }
+
+    @Override
+    public CommonList<Project> getDatas(byte[] responeString) {
+        CommonList<Project> list = new CommonList<Project>();
+        list.setList(JsonUtils.getList(Project[].class, responeString));
+        return list;
+    }
+
+    @Override
+    public void requestData() {
+        GitOSCApi.getWatchProjects(mUser.getId(), mCurrentPage, mHandler);
+    }
 
 	@Override
 	public void onItemClick(int position, Project project) {
