@@ -20,11 +20,12 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.CommonAdapter;
-import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.Entity;
 import net.oschina.gitapp.bean.MessageData;
 
 import org.apache.http.Header;
+
+import java.util.List;
 
 /**
  * 说明 下拉刷新界面的基类
@@ -262,19 +263,19 @@ public abstract class BaseSwipeRefreshFragment<T extends Entity>
     }
 
     public abstract CommonAdapter<T> getAdapter();
-    public abstract CommonList<T> getDatas(byte[] responeString);
+    public abstract List<T> getDatas(byte[] responeString);
     public abstract void requestData();
     public abstract void onItemClick(int position, T data);
 
-    public void loadDataSuccess(CommonList<T> datas) {
+    public void loadDataSuccess(List<T> datas) {
         if (datas == null) return;
-        if (datas.getList().size() < 20) {
+        if (datas.size() < 20) {
             dataState = MessageData.MESSAGE_STATE_FULL;
             setFooterFullState();
         }
         if (mCurrentPage == 1) {
             mAdapter.clear();
         }
-        mAdapter.addItem(datas.getList());
+        mAdapter.addItem(datas);
     }
 }

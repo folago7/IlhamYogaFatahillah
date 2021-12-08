@@ -13,9 +13,9 @@ import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.UIHelper;
-import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
-import net.oschina.gitapp.ui.fragments.ProjectCommitListFragment;
-import net.oschina.gitapp.ui.fragments.ProjectIssuesListFragment;
+import net.oschina.gitapp.ui.baseactivity.BaseActivity;
+import net.oschina.gitapp.ui.fragments.ProjectCommitsFragment;
+import net.oschina.gitapp.ui.fragments.ProjectIssuesFragment;
 
 /**
  * 显示项目的一些列表信息
@@ -24,7 +24,7 @@ import net.oschina.gitapp.ui.fragments.ProjectIssuesListFragment;
  * @author 火蚁（http://my.oschina.net/LittleDY）
  *
  */
-public class ProjectSomeInfoListActivity extends BaseActionBarActivity {
+public class ProjectSomeInfoListActivity extends BaseActivity {
 	
 	public final static int PROJECT_LIST_TYPE_ISSUES = 0;
 	public final static int PROJECT_LIST_TYPE_COMMITS = 1;
@@ -111,10 +111,10 @@ public class ProjectSomeInfoListActivity extends BaseActionBarActivity {
 		FragmentTransaction ft = mFragmentManager.beginTransaction();
 		switch (type) {
 		case PROJECT_LIST_TYPE_ISSUES:
-			ft.replace(R.id.content, ProjectIssuesListFragment.newInstance(mProject)).commit();
+			ft.replace(R.id.content, ProjectIssuesFragment.newInstance(mProject)).commit();
 			break;
 		case PROJECT_LIST_TYPE_COMMITS:
-			ft.replace(R.id.content, ProjectCommitListFragment.newInstance(mProject)).commit();
+			ft.replace(R.id.content, ProjectCommitsFragment.newInstance(mProject)).commit();
 			break;
 		}
 	}

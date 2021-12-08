@@ -28,7 +28,7 @@ import net.oschina.gitapp.common.FileUtils;
 import net.oschina.gitapp.common.ImageUtils;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
-import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
+import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -40,7 +40,7 @@ import java.util.Date;
  * @author 火蚁(http://my.oschina.net/LittleDY)
  *
  */
-public class MySelfInfoActivity extends BaseActionBarActivity implements View.OnClickListener {
+public class MySelfInfoActivity extends BaseActivity implements View.OnClickListener {
 	
 	private final static String FILE_SAVEPATH = Environment
 			.getExternalStorageDirectory().getAbsolutePath()

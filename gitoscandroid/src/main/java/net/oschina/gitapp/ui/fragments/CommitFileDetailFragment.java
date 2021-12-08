@@ -25,7 +25,7 @@ import net.oschina.gitapp.interfaces.OnStatusListener;
 import net.oschina.gitapp.ui.basefragment.BaseFragment;
 
 /**
- * 发现页面
+ * commit文件详情
  * 
  * @author 火蚁（http://my.oschina.net/LittleDY）
  * @created 2014-04-29

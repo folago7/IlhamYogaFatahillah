@@ -20,7 +20,7 @@ import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.interfaces.OnStatusListener;
-import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
+import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 import net.oschina.gitapp.util.SourceEditor;
 
 /**
@@ -31,7 +31,7 @@ import net.oschina.gitapp.util.SourceEditor;
  *
  */
 @SuppressLint("SetJavaScriptEnabled")
-public class CommitFileDetailActivity extends BaseActionBarActivity implements
+public class CommitFileDetailActivity extends BaseActivity implements
 		OnStatusListener {
 
 	private final int MENU_REFRESH_ID = 0;

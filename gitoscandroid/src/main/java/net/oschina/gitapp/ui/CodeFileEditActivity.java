@@ -19,9 +19,9 @@ import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
-import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
+import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 
-public class CodeFileEditActivity extends BaseActionBarActivity implements OnClickListener {
+public class CodeFileEditActivity extends BaseActivity implements OnClickListener {
 	
 	private AppContext mAppContext;
 	

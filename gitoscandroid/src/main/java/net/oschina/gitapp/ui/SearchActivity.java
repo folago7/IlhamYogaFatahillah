@@ -23,7 +23,7 @@ import net.oschina.gitapp.adapter.ProjectAdapter;
 import net.oschina.gitapp.bean.MessageData;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.common.UIHelper;
-import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
+import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,7 @@ import java.util.List;
  * @author 火蚁（http://my.oschina.net/LittleDY）
  *
  */
-public class SearchActivity extends BaseActionBarActivity implements
+public class SearchActivity extends BaseActivity implements
 		OnQueryTextListener, OnItemClickListener {
 
 	private final int MESSAGESTATEFULL = 0;//已加载全部状态

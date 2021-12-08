@@ -27,7 +27,7 @@ import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.FileUtils;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.interfaces.OnStatusListener;
-import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
+import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 import net.oschina.gitapp.util.MarkdownUtils;
 import net.oschina.gitapp.util.SourceEditor;
 import net.oschina.gitapp.widget.DropDownMenu;
@@ -43,7 +43,7 @@ import java.util.List;
  * 
  */
 @SuppressWarnings("deprecation")
-public class CodeFileDetailActivity extends BaseActionBarActivity implements
+public class CodeFileDetailActivity extends BaseActivity implements
 		OnStatusListener {
 
 	private final int MORE_MENU_SHARE = 00;// 分享

@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
@@ -26,9 +27,9 @@ import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.CyptoUtils;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
-import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
+import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 
-public class LoginActivity extends BaseActionBarActivity 
+public class LoginActivity extends BaseActivity
 	implements OnClickListener, OnEditorActionListener {
 	
 	private AppContext mAppContext;

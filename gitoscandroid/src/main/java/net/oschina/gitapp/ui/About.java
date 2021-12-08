@@ -1,7 +1,8 @@
 package net.oschina.gitapp.ui;
 
 import net.oschina.gitapp.R;
-import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
+import net.oschina.gitapp.ui.baseactivity.BaseActivity;
+
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
@@ -13,7 +14,7 @@ import android.widget.TextView;
  * @version 1.0
  * @created 2012-3-21
  */
-public class About extends BaseActionBarActivity {
+public class About extends BaseActivity {
 	
 	private TextView mVersion;
 	

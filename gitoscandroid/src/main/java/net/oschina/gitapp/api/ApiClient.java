@@ -145,21 +145,6 @@ public class ApiClient {
 	}
 
 	/**
-	 * 获得一个用户的信息
-	 * 
-	 * @param appContext
-	 * @param userId
-	 * @return
-	 * @throws AppException
-	 */
-	public static User getUser(AppContext appContext, int userId)
-			throws AppException {
-		String url = URLs.USER + URLs.URL_SPLITTER + userId;
-		return getHttpRequestor().init(appContext, HTTPRequestor.GET_METHOD,
-				url).to(User.class);
-	}
-
-	/**
 	 * 获取网络图片
 	 * 
 	 * @param url
@@ -230,55 +215,6 @@ public class ApiClient {
 				.getList(Project[].class);
 	}
 
-	/**
-	 * 获得个人动态列表
-	 * 
-	 * @param appContext
-	 * @param page
-	 * @return
-	 * @throws AppException
-	 */
-	@SuppressWarnings("serial")
-	public static CommonList<Event> getMySelfEvents(
-			final AppContext appContext, final int page) throws AppException {
-		CommonList<Event> events = new CommonList<Event>();
-		String url = makeURL(URLs.EVENTS, new HashMap<String, Object>() {
-			{
-				put("page", page);
-				put(PRIVATE_TOKEN, getToken(appContext));
-			}
-		});
-		final List<Event> list = getHttpRequestor().init(appContext,
-				HTTPRequestor.GET_METHOD, url).getList(Event[].class);
-		events.setList(list);
-		events.setCount(list.size());
-		events.setPageSize(list.size());
-		return events;
-	}
-
-	/**
-	 * 获得个人的所有项目
-	 * 
-	 * @param appContext
-	 * @param page
-	 * @return
-	 * @throws AppException
-	 */
-	public static CommonList<Project> getMySelfProjectList(
-			AppContext appContext, int page) throws AppException {
-		CommonList<Project> msProjects = new CommonList<Project>();
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put(PRIVATE_TOKEN, getToken(appContext));
-		params.put("page", page);
-		String url = makeURL(URLs.PROJECT, params);
-		List<Project> list = getHttpRequestor().init(appContext,
-				HTTPRequestor.GET_METHOD, url).getList(Project[].class);
-		msProjects.setList(list);
-		msProjects.setCount(list.size());
-		msProjects.setPageSize(list.size());
-		return msProjects;
-	}
-	
 	/**
 	 * 获取具体用户的最近动态列表
 	 * @param appContext

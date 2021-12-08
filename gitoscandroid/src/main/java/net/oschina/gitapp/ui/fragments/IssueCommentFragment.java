@@ -1,17 +1,17 @@
 package net.oschina.gitapp.ui.fragments;
 
 import android.os.Bundle;
-import android.widget.BaseAdapter;
 
 import net.oschina.gitapp.R;
+import net.oschina.gitapp.adapter.CommonAdapter;
 import net.oschina.gitapp.adapter.IssueCommentAdapter;
-import net.oschina.gitapp.bean.CommonList;
+import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.GitNote;
 import net.oschina.gitapp.bean.Issue;
-import net.oschina.gitapp.bean.MessageData;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.common.Contanst;
-import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragmentOld;
+import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
+import net.oschina.gitapp.util.JsonUtils;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ import java.util.List;
  *         更新者
  * @created 2014-05-14 下午16:57
  */
-public class IssueCommentFragment extends BaseSwipeRefreshFragmentOld<GitNote, CommonList<GitNote>> {
+public class IssueCommentFragment extends BaseSwipeRefreshFragment<GitNote> {
 
     private Project mProject;
 
@@ -50,21 +50,22 @@ public class IssueCommentFragment extends BaseSwipeRefreshFragmentOld<GitNote, C
     }
 
     @Override
-    public BaseAdapter getAdapter(List<GitNote> list) {
+    public CommonAdapter<GitNote> getAdapter() {
         return new IssueCommentAdapter(getActivity(), R.layout.list_item_issue_commtent);
     }
 
     @Override
-    public MessageData<CommonList<GitNote>> asyncLoadList(int page,
-                                                          boolean refresh) {
-        MessageData<CommonList<GitNote>> msg = null;
-        try {
-            CommonList<GitNote> list = mApplication.getIssueCommentList(mProject.getId(), mIssue.getId(), page, refresh);
-            msg = new MessageData<CommonList<GitNote>>(list);
-        } catch (Exception e) {
-            e.printStackTrace();
-            msg = new MessageData<CommonList<GitNote>>(e);
-        }
-        return msg;
+    public List<GitNote> getDatas(byte[] responeString) {
+        return JsonUtils.getList(GitNote[].class, responeString);
+    }
+
+    @Override
+    public void requestData() {
+        GitOSCApi.getIssueComments(mProject.getId(), mIssue.getId(), mCurrentPage, mHandler);
+    }
+
+    @Override
+    public void onItemClick(int position, GitNote data) {
+
     }
 }

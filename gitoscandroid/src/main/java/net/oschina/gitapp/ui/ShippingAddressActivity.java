@@ -17,7 +17,7 @@ import net.oschina.gitapp.api.ApiClient;
 import net.oschina.gitapp.bean.ShippingAddress;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
-import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
+import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 
 /**
  * 用户收货地址界面
@@ -25,7 +25,7 @@ import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
  * @author 火蚁（http://my.oschina.net/LittleDY）
  *
  */
-public class ShippingAddressActivity extends BaseActionBarActivity implements View.OnClickListener {
+public class ShippingAddressActivity extends BaseActivity implements View.OnClickListener {
 	
 	private AppContext mContext;
 	

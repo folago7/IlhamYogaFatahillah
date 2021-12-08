@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import net.oschina.gitapp.R;
-import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
+import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 import net.oschina.gitapp.ui.fragments.NotificaiontViewPagerFragment;
 
 /**
@@ -13,7 +13,7 @@ import net.oschina.gitapp.ui.fragments.NotificaiontViewPagerFragment;
  * @author 火蚁（http://my.oschina.net/LittleDY）
  *
  */
-public class NotificationActivity extends BaseActionBarActivity {
+public class NotificationActivity extends BaseActivity {
 	
 	private FragmentManager mFragmentManager;
 	

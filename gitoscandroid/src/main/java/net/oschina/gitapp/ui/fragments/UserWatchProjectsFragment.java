@@ -6,13 +6,14 @@ import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.CommonAdapter;
 import net.oschina.gitapp.adapter.ProjectAdapter;
 import net.oschina.gitapp.api.GitOSCApi;
-import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
 import net.oschina.gitapp.util.JsonUtils;
+
+import java.util.List;
 
 /**
  * 用户watch项目列表
@@ -22,12 +23,12 @@ import net.oschina.gitapp.util.JsonUtils;
  * 最后更新
  * 更新者
  */
-public class WatchProjectListFragment extends BaseSwipeRefreshFragment<Project> {
+public class UserWatchProjectsFragment extends BaseSwipeRefreshFragment<Project> {
 	
 	private User mUser;
 	
-	public static WatchProjectListFragment newInstance(User user) {
-		WatchProjectListFragment fragment = new WatchProjectListFragment();
+	public static UserWatchProjectsFragment newInstance(User user) {
+		UserWatchProjectsFragment fragment = new UserWatchProjectsFragment();
 		Bundle bundle = new Bundle();
 		bundle.putSerializable(Contanst.USER, user);
 		fragment.setArguments(bundle);
@@ -50,10 +51,8 @@ public class WatchProjectListFragment extends BaseSwipeRefreshFragment<Project> 
     }
 
     @Override
-    public CommonList<Project> getDatas(byte[] responeString) {
-        CommonList<Project> list = new CommonList<Project>();
-        list.setList(JsonUtils.getList(Project[].class, responeString));
-        return list;
+    public List<Project> getDatas(byte[] responeString) {
+        return JsonUtils.getList(Project[].class, responeString);
     }
 
     @Override

@@ -19,7 +19,7 @@ import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
-import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
+import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 
 /**
  * 评论issue界面
@@ -27,7 +27,7 @@ import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
  * @author 火蚁（http://my.oschina.net/LittleDY）
  *
  */
-public class IssueCommentActivity extends BaseActionBarActivity implements OnClickListener {
+public class IssueCommentActivity extends BaseActivity implements OnClickListener {
 	
 	private AppContext mAppContext;
 	

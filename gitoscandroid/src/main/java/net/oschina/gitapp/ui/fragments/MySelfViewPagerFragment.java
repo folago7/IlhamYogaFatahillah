@@ -25,7 +25,7 @@ public class MySelfViewPagerFragment extends BaseViewPagerFragment {
 		adapter.addTab(title[1], "project", MySelfProjectsFragment.class, null);
 		Bundle bundle = new Bundle();
 		bundle.putSerializable(Contanst.USER, getGitApplication().getLoginInfo());
-		adapter.addTab(title[2], "star_projects", StarProjectListFragment.class, bundle);
-		adapter.addTab(title[3], "watch_projects", WatchProjectListFragment.class, bundle);
+		adapter.addTab(title[2], "star_projects", UserStarProjectFragment.class, bundle);
+		adapter.addTab(title[3], "watch_projects", UserWatchProjectsFragment.class, bundle);
 	}
 }

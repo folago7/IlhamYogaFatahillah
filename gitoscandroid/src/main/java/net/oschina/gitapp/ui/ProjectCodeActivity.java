@@ -42,7 +42,7 @@ import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
-import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
+import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 import net.oschina.gitapp.util.TypefaceUtils;
 import net.oschina.gitapp.widget.DropDownMenu;
 
@@ -58,7 +58,7 @@ import java.util.Stack;
  * @author 火蚁（http://my.oschina.net/LittleDY）
  * @created 2014-07-18
  */
-public class ProjectCodeActivity extends BaseActionBarActivity implements OnItemClickListener, OnItemLongClickListener, OnClickListener {
+public class ProjectCodeActivity extends BaseActivity implements OnItemClickListener, OnItemLongClickListener, OnClickListener {
 
     private final int MORE_MENU_OPENDEFAULT = 00;                                // 分享
     private final int MORE_MENU_OPEN_WITH_BROWS = 01;                                // 在浏览器中打开

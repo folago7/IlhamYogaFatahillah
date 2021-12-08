@@ -14,7 +14,7 @@ import net.oschina.gitapp.api.HTTPRequestor;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.ReadMe;
 import net.oschina.gitapp.common.Contanst;
-import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
+import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 
 /**
  * 项目ReadMe文件详情
@@ -22,7 +22,7 @@ import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
  * @author 火蚁（http://my.oschina.net/LittleDY）
  *
  */
-public class ProjectReadMeActivity extends BaseActionBarActivity {
+public class ProjectReadMeActivity extends BaseActivity {
 	
 	private Project mProject;
 	

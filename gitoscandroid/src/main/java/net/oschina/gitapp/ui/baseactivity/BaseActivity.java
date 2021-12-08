@@ -1,20 +1,24 @@
 package net.oschina.gitapp.ui.baseactivity;
 
-import java.lang.reflect.Field;
-import net.oschina.gitapp.AppManager;
-import net.oschina.gitapp.common.StringUtils;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.ViewConfiguration;
 
-public class BaseActionBarActivity extends ActionBarActivity {
+import net.oschina.gitapp.AppManager;
+import net.oschina.gitapp.R;
+import net.oschina.gitapp.common.StringUtils;
+
+import java.lang.reflect.Field;
+
+public class BaseActivity extends ActionBarActivity {
 
 	// 是否可以返回
 	protected static boolean isCanBack;
 	
 	protected ActionBar mActionBar;
-	
+
 	protected String mTitle;
 	
 	protected String mSubTitle;
@@ -26,7 +30,7 @@ public class BaseActionBarActivity extends ActionBarActivity {
 		//将activity加入到AppManager堆栈中
 		AppManager.getAppManager().addActivity(this);
 	}
-	
+
 	// 关闭该Activity
 	@Override
 	public boolean onSupportNavigateUp() {
@@ -72,19 +76,4 @@ public class BaseActionBarActivity extends ActionBarActivity {
         mActionBar.setSubtitle(subTitle);
     }
 
-	/** 将菜单显示在actionbar上，而不是在底部*/
-	protected void requestActionBarMenu() {
-		try {
-			ViewConfiguration config = ViewConfiguration.get(this);
-			Field menuKeyField = ViewConfiguration.class
-					.getDeclaredField("sHasPermanentMenuKey");
-
-			if (menuKeyField != null) {
-				menuKeyField.setAccessible(true);
-				menuKeyField.setBoolean(config, false);
-			}
-		} catch (Exception e) {
-			// presumably, not relevant
-		}
-	}
 }

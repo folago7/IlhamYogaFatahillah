@@ -9,7 +9,7 @@ import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.Commit;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.common.Contanst;
-import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
+import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 import net.oschina.gitapp.ui.fragments.CommitDetailViewPagerFragment;
 
 /**
@@ -19,7 +19,7 @@ import net.oschina.gitapp.ui.fragments.CommitDetailViewPagerFragment;
  * @author 火蚁
  *
  */
-public class CommitDetailActivity extends BaseActionBarActivity {
+public class CommitDetailActivity extends BaseActivity {
 	
 	private FragmentManager mFragmentManager;
 

@@ -16,7 +16,7 @@ import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.Issue;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.common.Contanst;
-import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
+import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 import net.oschina.gitapp.ui.fragments.IssueDetailViewPagerFragment;
 
 /**
@@ -25,7 +25,7 @@ import net.oschina.gitapp.ui.fragments.IssueDetailViewPagerFragment;
  * @author 火蚁(http://my.oschina.net/LittleDY)
  *
  */
-public class IssueDetailActivity extends BaseActionBarActivity {
+public class IssueDetailActivity extends BaseActivity {
 
 	private FragmentManager mFragmentManager;
 	

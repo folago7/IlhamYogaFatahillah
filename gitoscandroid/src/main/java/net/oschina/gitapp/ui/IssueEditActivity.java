@@ -29,11 +29,11 @@ import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
-import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
+import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 
 import java.util.ArrayList;
 
-public class IssueEditActivity extends BaseActionBarActivity implements OnClickListener {
+public class IssueEditActivity extends BaseActivity implements OnClickListener {
 
 	private InputMethodManager imm;
 	

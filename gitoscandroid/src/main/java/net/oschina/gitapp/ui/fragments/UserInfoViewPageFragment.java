@@ -1,18 +1,14 @@
 package net.oschina.gitapp.ui.fragments;
 
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.ViewPageFragmentAdapter;
-import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.Contanst;
-import net.oschina.gitapp.common.UIHelper;
-import net.oschina.gitapp.ui.basefragment.BaseFragment;
 import net.oschina.gitapp.ui.basefragment.BaseViewPagerFragment;
 
 public class UserInfoViewPageFragment extends BaseViewPagerFragment {
@@ -35,10 +31,10 @@ public class UserInfoViewPageFragment extends BaseViewPagerFragment {
 		}
 		String[] title = getResources().getStringArray(R.array.userinfo_title_array);
 		
-		adapter.addTab(title[0], "user_events", UserListEventFragment.class, args);
-		adapter.addTab(title[1], "user_projects", UserListProjectFragment.class, args);
-		adapter.addTab(title[2], "user_star_projects", StarProjectListFragment.class, args);
-		adapter.addTab(title[3], "user_watch_projects", WatchProjectListFragment.class, args);
+		adapter.addTab(title[0], "user_events", UserEventsFragment.class, args);
+		adapter.addTab(title[1], "user_projects", UserProjectsFragment.class, args);
+		adapter.addTab(title[2], "user_star_projects", UserStarProjectFragment.class, args);
+		adapter.addTab(title[3], "user_watch_projects", UserWatchProjectsFragment.class, args);
 	}
 	
 	@Override

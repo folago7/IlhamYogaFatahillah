@@ -32,7 +32,6 @@ import net.oschina.gitapp.common.UpdateManager;
 import net.oschina.gitapp.interfaces.DrawerMenuCallBack;
 import net.oschina.gitapp.ui.fragments.ExploreViewPagerFragment;
 import net.oschina.gitapp.ui.fragments.MySelfViewPagerFragment;
-import net.oschina.gitapp.widget.BadgeView;
 
 /**
  * 程序主界面
@@ -81,8 +80,6 @@ public class MainActivity extends ActionBarActivity implements
 	
 	private static String mTitle;// actionbar标题
 	
-	public static BadgeView mNotificationBadgeView;
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -90,17 +87,10 @@ public class MainActivity extends ActionBarActivity implements
 		mContext = (AppContext) getApplicationContext();
 		initView(savedInstanceState);
 		AppManager.getAppManager().addActivity(this);
-		// 检查新版本
-		if (mContext.isCheckUp()) {
-			UpdateManager.getUpdateManager().checkAppUpdate(this, false);
-		}
-		// 启动轮询获取通知信息
-		if (mContext.isReceiveNotice()) {
-			//foreachUserNotice();
-		}
+
 	}
-	
-	@Override
+
+    @Override
 	protected void onDestroy() {
 		super.onDestroy();
 	}
@@ -202,6 +192,22 @@ public class MainActivity extends ActionBarActivity implements
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
 		mDrawerToggle.syncState();
+        View mainContent = findViewById(R.id.main_content);
+        if (mainContent != null) {
+            mainContent.setAlpha(0);
+            mainContent.animate().alpha(1).setDuration(200);
+        } else {
+
+        }
+
+        // 检查新版本
+        if (mContext.isCheckUp()) {
+            UpdateManager.getUpdateManager().checkAppUpdate(this, false);
+        }
+        // 启动轮询获取通知信息
+        if (mContext.isReceiveNotice()) {
+            foreachUserNotice();
+        }
 	}
 
 	@Override

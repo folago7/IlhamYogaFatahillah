@@ -1,10 +1,26 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="AppBaseTheme" parent="Theme.AppCompat.Light">
+    <!-- Root styles that vary by API level -->
+    <!-- Disable RTL support on older devices -->
+    <!-- Prevents crash on certain devices to namespace conflict -->
+    <style name="FrameworkRoot.Theme" parent="Theme.AppCompat.Light" />
+    <style name="FrameworkRoot.Widget" parent="Theme.AppCompat" />
+
+    <!-- Immediate parent theme to specify base values for custom attributes -->
+    <style name="Theme" parent="FrameworkRoot.Theme">
+        <!-- Only needed for pre-L -->
+    </style>
+
+    <style name="AppBaseTheme" parent="Theme">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:windowBackground">@color/background</item>
+    </style>
+
+    <style name="ActionBar.TitleText" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">#fff</item>
+        <item name="android:textSize">18sp</item>
     </style>
 
     <!-- 横向线条 -->

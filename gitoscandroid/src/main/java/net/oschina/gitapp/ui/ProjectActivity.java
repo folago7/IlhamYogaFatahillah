@@ -30,7 +30,7 @@ import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
-import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
+import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 import net.oschina.gitapp.widget.DropDownMenu;
 
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ import java.util.List;
  * @更新者：
  */
 @SuppressWarnings("deprecation")
-public class ProjectActivity extends BaseActionBarActivity implements
+public class ProjectActivity extends BaseActivity implements
 		OnClickListener {
 	
 	private final int MORE_MENU_SHARE = 00;// 分享

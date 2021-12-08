@@ -35,14 +35,14 @@ import net.oschina.gitapp.bean.RandomProject;
 import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
-import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
+import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 import net.oschina.gitapp.util.ShakeListener;
 import net.oschina.gitapp.util.ShakeListener.OnShakeListener;
 
 import java.io.IOException;
 import java.util.HashMap;
 
-public class ShakeActivity extends BaseActionBarActivity implements OnClickListener {
+public class ShakeActivity extends BaseActivity implements OnClickListener {
 	
 	private final int DURATION_TIME = 600;
 	

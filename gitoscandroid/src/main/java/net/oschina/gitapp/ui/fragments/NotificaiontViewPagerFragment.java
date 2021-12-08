@@ -6,7 +6,7 @@ import net.oschina.gitapp.adapter.ViewPageFragmentAdapter;
 import net.oschina.gitapp.ui.basefragment.BaseViewPagerFragment;
 
 /**
- * 发现页面
+ * 通知
  * 
  * @author 火蚁（http://my.oschina.net/LittleDY）
  * @created 2014-04-29

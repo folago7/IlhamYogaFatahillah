@@ -23,12 +23,12 @@ import net.oschina.gitapp.bean.Language;
 import net.oschina.gitapp.bean.MessageData;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.common.UIHelper;
-import net.oschina.gitapp.ui.baseactivity.BaseActionBarActivity;
+import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LanguageActivity extends BaseActionBarActivity implements  
+public class LanguageActivity extends BaseActivity implements
 	android.support.v7.app.ActionBar.OnNavigationListener, OnItemClickListener{
 	
 	/**
