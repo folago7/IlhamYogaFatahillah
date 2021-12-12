@@ -10,9 +10,7 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -22,6 +20,8 @@ import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.CommonAdapter;
 import net.oschina.gitapp.bean.Entity;
 import net.oschina.gitapp.bean.MessageData;
+import net.oschina.gitapp.util.GitViewUtils;
+import net.oschina.gitapp.widget.TipInfoLayout;
 
 import org.apache.http.Header;
 
@@ -53,10 +53,6 @@ public abstract class BaseSwipeRefreshFragment<T extends Entity>
     protected ListView mListView;
     private View mFooterView;
     private CommonAdapter<T> mAdapter;
-    private ProgressBar mLoading;
-    private View mEmpty;
-    private ImageView mEmptyImage;// 图像
-    private TextView mEmptyMessage;// 消息文字
 
     private View mFooterProgressBar;
     private TextView mFooterTextView;
@@ -71,28 +67,37 @@ public abstract class BaseSwipeRefreshFragment<T extends Entity>
 
     protected int mCurrentPage = 1;
 
+    protected TipInfoLayout mTipInfo;
+
+    private boolean isFrist = true;
+
     protected AsyncHttpResponseHandler mHandler = new AsyncHttpResponseHandler() {
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            mTipInfo.setHiden();
+            setSwipeRefreshLoadedState();
+            mSwipeRefreshLayout.setVisibility(View.VISIBLE);
             loadDataSuccess(getDatas(responseBody));
+            isFrist = false;
         }
 
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-
+            mTipInfo.setLoadError();
         }
 
         @Override
         public void onStart() {
+            if (isFrist || mAdapter.getCount() == 0) {
+                mTipInfo.setLoading();
+            }
+
             super.onStart();
         }
 
         @Override
         public void onFinish() {
             super.onFinish();
-            mLoading.setVisibility(View.GONE);
-            setSwipeRefreshLoadedState();
-            mSwipeRefreshLayout.setVisibility(View.VISIBLE);
         }
     };
 
@@ -134,20 +139,20 @@ public abstract class BaseSwipeRefreshFragment<T extends Entity>
     }
 
     private void initView(View view) {
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view
-                .findViewById(R.id.fragment_swiperefreshlayout);
-        mListView = (ListView) view.findViewById(R.id.fragment_listview);
+        mSwipeRefreshLayout = GitViewUtils.findViewById(view, R.id.swiperefreshlayout);
+        mListView = GitViewUtils.findViewById(view, R.id.listView);
 
         mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setColorScheme(R.color.swiperefresh_color1,
+        mSwipeRefreshLayout.setColorSchemeResources(R.color.swiperefresh_color1,
                 R.color.swiperefresh_color2, R.color.swiperefresh_color3,
                 R.color.swiperefresh_color4);
-
-        mLoading = (ProgressBar) view
-                .findViewById(R.id.fragment_swiperefresh_loading);
-        mEmpty = view.findViewById(R.id.fragment_swiperefresh_empty);
-        mEmptyImage = (ImageView) mEmpty.findViewById(R.id.data_empty_image);
-        mEmptyMessage = (TextView) mEmpty.findViewById(R.id.data_empty_message);
+        mTipInfo = GitViewUtils.findViewById(view, R.id.tip_info);
+        mTipInfo.setOnClick(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requestData();
+            }
+        });
     }
 
     /**
@@ -277,5 +282,15 @@ public abstract class BaseSwipeRefreshFragment<T extends Entity>
             mAdapter.clear();
         }
         mAdapter.addItem(datas);
+        // 整个列表为空
+        if (mAdapter.getCount() == 0) {
+            mSwipeRefreshLayout.setVisibility(View.GONE);
+            mTipInfo.setVisibility(View.VISIBLE);
+            mTipInfo.setEmptyData(getEmptyTip());
+        }
+    }
+
+    protected String getEmptyTip() {
+        return "暂无数据";
     }
 }

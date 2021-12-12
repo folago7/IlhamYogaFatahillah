@@ -68,6 +68,7 @@ public class DrawerNavigationMenu extends Fragment implements OnClickListener {
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		if (activity instanceof DrawerMenuCallBack) {
+
 			mCallBack = (DrawerMenuCallBack) activity;
 		}
 		// 注册一个用户发生变化的广播

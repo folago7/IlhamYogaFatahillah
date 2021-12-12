@@ -64,4 +64,8 @@ public class UserEventsFragment extends BaseSwipeRefreshFragment<Event> {
 		UIHelper.showEventDetail(mApplication, event);
 	}
 
+    @Override
+    protected String getEmptyTip() {
+        return "暂无动态";
+    }
 }

@@ -27,151 +27,6 @@ import java.util.Arrays;
  */
 public class TypefaceUtils {
 
-    /**
-     * Private repository icon
-     */
-    public static final String ICON_PRIVATE = "\uf26a";
-
-    /**
-     * Public repository icon
-     */
-    public static final String ICON_PUBLIC = "\uf201";
-
-    /**
-     * Fork icon
-     */
-    public static final String ICON_FORK = "\uf202";
-
-    /**
-     * Create icon
-     */
-    public static final String ICON_CREATE = "\uf203";
-
-    /**
-     * Delete icon
-     */
-    public static final String ICON_DELETE = "\uf204";
-
-    /**
-     * Push icon
-     */
-    public static final String ICON_PUSH = "\uf205";
-
-    /**
-     * Wiki icon
-     */
-    public static final String ICON_WIKI = "\uf207";
-
-    /**
-     * Upload icon
-     */
-    public static final String ICON_UPLOAD = "\uf20C";
-
-    /**
-     * Gist icon
-     */
-    public static final String ICON_GIST = "\uf20E";
-
-    /**
-     * Add member icon
-     */
-    public static final String ICON_ADD_MEMBER = "\uf21A";
-
-    /**
-     * Public mirror repository icon
-     */
-    public static final String ICON_MIRROR_PUBLIC = "\uf224";
-
-    /**
-     * Public mirror repository icon
-     */
-    public static final String ICON_MIRROR_PRIVATE = "\uf225";
-
-    /**
-     * Follow icon
-     */
-    public static final String ICON_FOLLOW = "\uf21C";
-
-    /**
-     * Star icon
-     */
-    public static final String ICON_STAR = "\uf02A";
-
-    /**
-     * Pull request icon
-     */
-    public static final String ICON_PULL_REQUEST = "\uf222";
-
-    /**
-     * Issue open icon
-     */
-    public static final String ICON_ISSUE_OPEN = "\uf226";
-
-    /**
-     * Issue reopen icon
-     */
-    public static final String ICON_ISSUE_REOPEN = "\uf227";
-
-    /**
-     * Issue close icon
-     */
-    public static final String ICON_ISSUE_CLOSE = "\uf228";
-
-    /**
-     * Issue comment icon
-     */
-    public static final String ICON_ISSUE_COMMENT = "\uf229";
-
-    /**
-     * Comment icon
-     */
-    public static final String ICON_COMMENT = "\uf22b";
-
-    /**
-     * News icon
-     */
-    public static final String ICON_NEWS = "\uf234";
-
-    /**
-     * Watch icon
-     */
-    public static final String ICON_WATCH = "\uf04e";
-
-    /**
-     * Team icon
-     */
-    public static final String ICON_TEAM = "\uf019";
-
-    /**
-     * Code icon
-     */
-    public static final String ICON_CODE = "\uf010";
-
-    /**
-     * Commit icon
-     */
-    public static final String ICON_COMMIT = "\uf01f";
-
-    /**
-     * Person icon
-     */
-    public static final String ICON_PERSON = "\uf218";
-
-    /**
-     * Add icon
-     */
-    public static final String ICON_ADD = "\uf05d";
-
-    /**
-     * Broadcast icon
-     */
-    public static final String ICON_BROADCAST = "\uf030";
-
-    /**
-     * Edit icon
-     */
-    public static final String ICON_EDIT = "\uf058";
-
     private static Typeface OCTICONS;
 
     private static Typeface SEMANTIC;
@@ -225,6 +80,10 @@ public class TypefaceUtils {
         return SEMANTIC;
     }
 
+    public static Typeface getFontAwsome(final Context context) {
+        return getTypeface(context, "fontawesome-webfont.ttf");
+    }
+
     /**
      * Set octicons typeface on given text view(s)
      *
@@ -248,6 +107,18 @@ public class TypefaceUtils {
             return;
 
         Typeface typeface = getSemantic(textViews[0].getContext());
+        for (TextView textView : textViews)
+            textView.setTypeface(typeface);
+    }
+
+    /**
+     * 设置fontAwsome的字体图标
+     * @param textViews
+     */
+    public static void setFontAwsome(final TextView... textViews) {
+        if (textViews == null || textViews.length == 0)
+            return;
+        Typeface typeface = getFontAwsome(textViews[0].getContext());
         for (TextView textView : textViews)
             textView.setTypeface(typeface);
     }

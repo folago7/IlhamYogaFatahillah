@@ -64,5 +64,9 @@ public class UserStarProjectFragment extends BaseSwipeRefreshFragment<Project> {
 	public void onItemClick(int position, Project project) {
 		UIHelper.showProjectDetail(mApplication, null, project.getId());
 	}
-	
+
+    @Override
+    protected String getEmptyTip() {
+        return "暂无star";
+    }
 }

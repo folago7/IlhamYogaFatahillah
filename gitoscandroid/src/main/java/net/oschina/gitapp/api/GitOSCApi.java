@@ -88,7 +88,7 @@ public class GitOSCApi {
     public static void getUserProjects(String uid, int page, AsyncHttpResponseHandler handler) {
         RequestParams params = getPrivateTokenWithParams();
         params.put("page", page);
-        get(USER + uid + "/" + PROJECTS, params, handler);
+        get(USER + uid + "/" + "projects", params, handler);
     }
 
     public static void getUserEvents(String uid, int page, AsyncHttpResponseHandler handler) {

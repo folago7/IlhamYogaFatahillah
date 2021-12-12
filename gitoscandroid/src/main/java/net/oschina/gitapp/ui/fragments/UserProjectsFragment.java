@@ -63,4 +63,9 @@ public class UserProjectsFragment extends BaseSwipeRefreshFragment<Project> {
 	public void onItemClick(int position, Project project) {
 		UIHelper.showProjectDetail(getActivity(), null, project.getId());
 	}
+
+    @Override
+    protected String getEmptyTip() {
+        return "暂无项目";
+    }
 }

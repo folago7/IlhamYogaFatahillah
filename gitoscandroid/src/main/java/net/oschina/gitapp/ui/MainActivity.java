@@ -77,7 +77,7 @@ public class MainActivity extends ActionBarActivity implements
 	private String mCurrentContentTag;
 	private ActionBar mActionBar;
 	private AppContext mContext;
-	
+
 	private static String mTitle;// actionbar标题
 	
 	@Override
@@ -87,7 +87,6 @@ public class MainActivity extends ActionBarActivity implements
 		mContext = (AppContext) getApplicationContext();
 		initView(savedInstanceState);
 		AppManager.getAppManager().addActivity(this);
-
 	}
 
     @Override
