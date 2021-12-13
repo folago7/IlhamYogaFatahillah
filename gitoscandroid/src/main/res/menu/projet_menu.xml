@@ -8,11 +8,20 @@
         android:icon="@drawable/action_create"
         android:title="创建Issue"
         app:showAsAction="always" />
-    
-    <item
-        android:id="@+id/project_menu_more"
-       	android:orderInCategory="100"
-       	android:title="更多"
-       	app:showAsAction="always"/>
 
+    <item
+        android:id="@+id/share"
+        android:title="分享项目"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/copy"
+        android:title="复制项目链接"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/open_browser"
+        android:title="在浏览器中打开"
+        app:showAsAction="never"/>
+    
 </menu>

@@ -15,7 +15,7 @@
 
         <TextView
             android:id="@+id/projectcode_pre_img"
-            android:text="@string/icon_folders"
+            android:text="@string/oct_folders"
             android:textColor="#BEBEBE"
             android:gravity="center"
             android:layout_marginTop="5dip"

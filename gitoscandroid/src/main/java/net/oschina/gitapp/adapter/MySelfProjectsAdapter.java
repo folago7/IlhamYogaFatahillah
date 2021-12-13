@@ -3,6 +3,7 @@ package net.oschina.gitapp.adapter;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ImageView;
 
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.Project;
@@ -59,5 +60,14 @@ public class MySelfProjectsAdapter extends CommonAdapter<Project> {
         vh.setTextWithSemantic(R.id.tv_watch, project.getWatches_count().toString(), R.string.sem_watch);
         vh.setTextWithSemantic(R.id.tv_star, project.getStars_count().toString(), R.string.sem_star);
         vh.setTextWithSemantic(R.id.tv_fork, project.getForks_count().toString(), R.string.sem_fork);
+
+        ImageView flag = vh.getView(R.id.iv_flag);
+        if (project.getParent_id() != null) {
+            flag.setBackgroundResource(R.drawable.project_flag_fork);
+        } else if (project.isPublic()) {
+            flag.setBackgroundResource(R.drawable.project_flag_public);
+        } else {
+            flag.setBackgroundResource(R.drawable.project_flag_private);
+        }
     }
 }

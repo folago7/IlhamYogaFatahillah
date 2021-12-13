@@ -337,11 +337,6 @@ public class MainActivity extends ActionBarActivity implements
 		startActivity(intent);
 	}
 
-	@Override
-	public void onClickExit() {
-		this.finish();
-	}
-	
 	private class DrawerMenuListener implements DrawerLayout.DrawerListener {
 		@Override
 		public void onDrawerOpened(View drawerView) {

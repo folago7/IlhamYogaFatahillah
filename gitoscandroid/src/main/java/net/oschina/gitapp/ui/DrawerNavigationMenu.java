@@ -51,8 +51,7 @@ public class DrawerNavigationMenu extends Fragment implements OnClickListener {
 	private LinearLayout mMenu_item_language;
 	private LinearLayout mMenu_item_shake;
 	private LinearLayout mMenu_item_setting;
-	private View mMenu_item_exit;
-	
+
 	private DrawerMenuCallBack mCallBack;
 	private AppContext mApplication;
 	
@@ -168,8 +167,7 @@ public class DrawerNavigationMenu extends Fragment implements OnClickListener {
 		mMenu_item_language = (LinearLayout) view.findViewById(R.id.menu_item_language);
 		mMenu_item_shake = (LinearLayout) view.findViewById(R.id.menu_item_shake);
 		mMenu_item_setting = (LinearLayout) view.findViewById(R.id.menu_item_setting);
-		mMenu_item_exit = view.findViewById(R.id.menu_item_exit);
-		
+
 		// 绑定点击事件
 		mMenu_user_layout.setOnClickListener(this);
 		mMenu_item_explore.setOnClickListener(this);
@@ -177,7 +175,6 @@ public class DrawerNavigationMenu extends Fragment implements OnClickListener {
 		mMenu_item_language.setOnClickListener(this);
 		mMenu_item_shake.setOnClickListener(this);
 		mMenu_item_setting.setOnClickListener(this);
-		mMenu_item_exit.setOnClickListener(this);
 
 		// 高亮发现菜单栏
 		highlightSelectedItem(mMenu_item_explore);
@@ -245,9 +242,8 @@ public class DrawerNavigationMenu extends Fragment implements OnClickListener {
 		case R.id.menu_item_setting:
 			onClickSetting();
 			break;
-		case R.id.menu_item_exit:
-			onClickExit();
-			break;
+        default:
+            break;
 		}
 	}
 	
@@ -284,12 +280,6 @@ public class DrawerNavigationMenu extends Fragment implements OnClickListener {
 	private void onClickmShake() {
 		if (mCallBack != null) {
 			mCallBack.onClickShake();
-		}
-	}
-
-	private void onClickExit() {
-		if (mCallBack != null) {
-			mCallBack.onClickExit();
 		}
 	}
 }

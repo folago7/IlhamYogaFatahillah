@@ -84,20 +84,4 @@
 
     <include layout="@layout/horizontal_divider_view" />
 
-    <LinearLayout
-        android:id="@+id/menu_item_exit"
-        style="@style/MenuItemLayoutStyle" >
-
-        <ImageView
-            style="@style/MenuItemImageViewStyle"
-            android:contentDescription="@string/img_description"
-            android:background="@drawable/menu_icon_qiut" />
-
-        <TextView
-            style="@style/MenuItemTextViewStyle"
-            android:text="@string/main_menu_title_exit" />
-    </LinearLayout>
-
-    <include layout="@layout/horizontal_divider_view" />
-
 </LinearLayout>

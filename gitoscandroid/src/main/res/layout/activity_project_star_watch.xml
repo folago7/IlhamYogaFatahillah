@@ -7,13 +7,14 @@
     android:orientation="horizontal" >
 
     <LinearLayout
-        android:id="@+id/project_star"
+        android:id="@+id/ll_star"
         style="@style/project_detail_btn_style" >
 
-        <ImageView
+        <TextView
             android:id="@+id/project_star_stared"
-            style="@style/project_detail_btn_img"
-            android:background="@drawable/project_unstar" />
+            android:text="@string/sem_star"
+            android:textColor="@color/white"
+            style="@style/project_detail_btn_img" />
 
         <TextView
             android:id="@+id/project_star_text"
@@ -27,14 +28,15 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/project_watch"
+        android:id="@+id/ll_watch"
         style="@style/project_detail_btn_style"
         android:layout_marginLeft="15dip" >
 
-        <ImageView
+        <TextView
             android:id="@+id/project_watch_stared"
-            style="@style/project_detail_btn_img"
-            android:background="@drawable/project_unwatch" />
+            android:text="@string/sem_watch"
+            android:textColor="@color/white"
+            style="@style/project_detail_btn_img" />
 
         <TextView
             android:id="@+id/project_watch_text"

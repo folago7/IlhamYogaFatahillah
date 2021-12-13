@@ -3,16 +3,16 @@ package net.oschina.gitapp.ui.baseactivity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.ViewConfiguration;
+import android.view.Menu;
+import android.view.View;
+import android.view.Window;
 
 import net.oschina.gitapp.AppManager;
-import net.oschina.gitapp.R;
 import net.oschina.gitapp.common.StringUtils;
 
-import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
-public class BaseActivity extends ActionBarActivity {
+public abstract class BaseActivity extends ActionBarActivity {
 
 	// 是否可以返回
 	protected static boolean isCanBack;
@@ -38,21 +38,6 @@ public class BaseActivity extends ActionBarActivity {
 		return super.onSupportNavigateUp();
 	}
 	
-	@Override
-	public void onPause() {
-		super.onPause();
-	}
-	
-	@Override
-	public void onAttachedToWindow() {
-		super.onAttachedToWindow();
-	}
-	
-	@Override
-	public void onDetachedFromWindow() {
-		super.onDetachedFromWindow();
-	}
-	
 	// 初始化ActionBar
 	private void initActionBar() {
 		mActionBar = getSupportActionBar();
@@ -76,4 +61,28 @@ public class BaseActivity extends ActionBarActivity {
         mActionBar.setSubtitle(subTitle);
     }
 
+    protected <T extends View> T findView(int id) {
+        return (T)findViewById(id);
+    }
+
+    @Override
+    public boolean onMenuOpened(int featureId, Menu menu) {
+        //setOverflowIconVisible(featureId, menu);
+        return super.onMenuOpened(featureId, menu);
+    }
+
+    // 显示出菜单的icon
+    protected void setOverflowIconVisible(int featureId, Menu menu) {
+        if (featureId == Window.FEATURE_ACTION_BAR && menu != null) {
+            if (menu.getClass().getSimpleName().equals("MenuBuilder")) {
+                try {
+                    Method m = menu.getClass().getDeclaredMethod("setOptionalIconsVisible", Boolean.TYPE);
+                    m.setAccessible(true);
+                    m.invoke(menu, true);
+                } catch (Exception e) {
+
+                }
+            }
+        }
+    }
 }

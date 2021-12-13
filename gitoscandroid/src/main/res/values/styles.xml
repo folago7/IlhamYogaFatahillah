@@ -16,10 +16,12 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="android:textColorPrimary">@color/white</item>
         <item name="android:windowBackground">@color/background</item>
+        <item name="actionMenuTextColor">@color/white</item>
+        <item name="editTextColor">@color/black</item>
     </style>
 
     <style name="ActionBar.TitleText" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
-        <item name="android:textColor">#fff</item>
+        <item name="android:textColor">@color/white</item>
         <item name="android:textSize">18sp</item>
     </style>
 
@@ -103,7 +105,6 @@
     </style>
 
     <!-- app more menu style end -->
-
 
     <!-- project list text style bgein -->
     <style name="project_list_text_parent">
@@ -226,10 +227,13 @@
         <item name="android:layout_width">0dip</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:gravity">center|left</item>
+        <item name="android:gravity">center_horizontal</item>
         <item name="android:orientation">horizontal</item>
         <item name="android:background">@drawable/project_layout_item_selector</item>
-        <item name="android:padding">10dip</item>
+        <item name="android:paddingLeft">10dip</item>
+        <item name="android:paddingRight">10dip</item>
+        <item name="android:paddingTop">12dip</item>
+        <item name="android:paddingBottom">12dip</item>
     </style>
 
     <style name="project_detail_mid_grid_item_img">
@@ -283,15 +287,11 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@drawable/project_layout_item_selector</item>
         <item name="android:orientation">horizontal</item>
-        <item name="android:padding">10dip</item>
+        <item name="android:paddingLeft">10dip</item>
+        <item name="android:paddingRight">10dip</item>
+        <item name="android:paddingTop">14dip</item>
+        <item name="android:paddingBottom">14dip</item>
         <item name="android:gravity">center_vertical</item>
-    </style>
-
-    <style name="project_detail_sorrow_img">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginRight">15.0dip</item>
-        <item name="android:src">@drawable/widget_right_icon</item>
     </style>
 
     <!-- 项目详情页面 style end -->
@@ -374,8 +374,8 @@
     </style>
 
     <style name="ListSpinner" parent = "Spinner">
-        <item name="android:layout_width">52dip</item>
-        <item name="android:layout_height">52dip</item>
+        <item name="android:layout_width">35dip</item>
+        <item name="android:layout_height">35dip</item>
     </style>
 
     <style name="EditText">

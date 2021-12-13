@@ -270,12 +270,12 @@ public class GitOSCApi {
         post(PROJECTS + projectId + "/unstar", params, handler);
     }
 
-    public static void watchProject(String projectId, String type, AsyncHttpResponseHandler handler) {
+    public static void watchProject(String projectId, AsyncHttpResponseHandler handler) {
         RequestParams params = getPrivateTokenWithParams();
         post(PROJECTS + projectId + "/watch", params, handler);
     }
 
-    public static void unWatchProject(String projectId, String type, AsyncHttpResponseHandler handler) {
+    public static void unWatchProject(String projectId, AsyncHttpResponseHandler handler) {
         RequestParams params = getPrivateTokenWithParams();
         post(PROJECTS + projectId + "/unwatch", params, handler);
     }

@@ -4,16 +4,18 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
+    android:paddingBottom="15dp"
     android:orientation="vertical" >
 
     <LinearLayout 
-        android:id="@+id/project_readme"
+        android:id="@+id/ll_readme"
         style="@style/project_detail_layout_style" >
 
-        <ImageView
+        <TextView
+            android:id="@+id/fi_readme"
             style="@style/project_detail_mid_grid_item_img"
-            android:contentDescription="@string/img_description"
-            android:background="@drawable/project_detail_icon_readme" />
+            android:layout_marginTop="2dp"
+            android:text="@string/oct_book" />
 
         <TextView
             android:layout_width="0dip"
@@ -21,56 +23,49 @@
             android:layout_weight="1"
             android:text="Readme" />
 
-        <ImageView
-            style="@style/project_detail_sorrow_img"
-            android:contentDescription="@string/img_description" />
     </LinearLayout>
 
     <View
         style="@style/h_line" />
     
     <LinearLayout 
-        android:id="@+id/project_code"
+        android:id="@+id/ll_code"
         style="@style/project_detail_layout_style" >
 
-        <ImageView
+        <TextView
+            android:id="@+id/fi_code"
+            android:layout_marginTop="2dp"
             style="@style/project_detail_mid_grid_item_img"
-            android:contentDescription="@string/img_description"
-            android:background="@drawable/project_detail_icon_code" />
+            android:text="@string/oct_gist" />
 
         <TextView
             android:layout_width="0dip"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:text="代码" />
 
-        <ImageView
-            style="@style/project_detail_sorrow_img"
-            android:contentDescription="@string/img_description" />
     </LinearLayout>
 
     <View
         style="@style/h_line" />
 
     <LinearLayout 
-        android:id="@+id/project_commits"
+        android:id="@+id/ll_commits"
         style="@style/project_detail_layout_style"
         android:visibility="visible" >
 
-        <ImageView
+        <TextView
+            android:id="@+id/fi_commit"
+            android:layout_marginTop="1dp"
             style="@style/project_detail_mid_grid_item_img"
-            android:contentDescription="@string/img_description"
-            android:background="@drawable/project_detail_icon_commit" />
+            android:text="@string/oct_commit" />
 
         <TextView
             android:layout_width="0dip"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:text="提交" />
 
-        <ImageView
-            style="@style/project_detail_sorrow_img"
-            android:contentDescription="@string/img_description" />
     </LinearLayout>
 
     <View
@@ -78,23 +73,21 @@
         android:visibility="visible" />
 
     <LinearLayout 
-        android:id="@+id/project_issues"
+        android:id="@+id/ll_issues"
         style="@style/project_detail_layout_style" >
 
-        <ImageView
+        <TextView
+            android:id="@+id/fi_issue"
+            android:layout_marginTop="1dp"
             style="@style/project_detail_mid_grid_item_img"
-            android:contentDescription="@string/img_description"
-            android:background="@drawable/project_detail_icon_issue" />
+            android:text="@string/oct_issues" />
 
         <TextView
             android:layout_width="0dip"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:text="问题" />
 
-        <ImageView
-            style="@style/project_detail_sorrow_img"
-            android:contentDescription="@string/img_description" />
     </LinearLayout>
 
     <View

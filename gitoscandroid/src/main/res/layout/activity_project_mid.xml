@@ -5,10 +5,10 @@
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:gravity="center"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <TextView
-        android:id="@+id/project_description"
+        android:id="@+id/tv_description"
         style="@style/project_detail_description"
         android:text="OSCHINA 的 Android 客户端源码，可在 Google Play 或者国内几个应用市场上搜索“开源中国”来安装此app" />
 
@@ -20,34 +20,35 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
-        <LinearLayout style="@style/project_detail_mid_grid_item" >
+        <LinearLayout style="@style/project_detail_mid_grid_item">
 
             <!-- 项目star的状态 -->
 
-            <ImageView
+            <TextView
                 style="@style/project_detail_mid_grid_item_img"
-                android:background="@drawable/time"
+                android:id="@+id/fi_time"
+                android:text="@string/fa_clock_o"
                 android:contentDescription="@string/img_description" />
 
             <TextView
-                android:id="@+id/project_createed"
+                android:id="@+id/tv_createed"
                 style="@style/project_detail_mid_grid_item_text"
                 android:text="2014-08-21" />
         </LinearLayout>
 
         <View style="@style/v_line" />
 
-        <LinearLayout style="@style/project_detail_mid_grid_item" >
-
-            <ImageView
-                style="@style/project_detail_mid_grid_item_img"
-                android:background="@drawable/fork"
-                android:contentDescription="@string/img_description" />
+        <LinearLayout style="@style/project_detail_mid_grid_item">
 
             <TextView
-                android:id="@+id/project_forknum"
+                style="@style/project_detail_mid_grid_item_img"
+                android:text="@string/sem_fork"
+                android:id="@+id/fi_fork" />
+
+            <TextView
+                android:id="@+id/tv_forknum"
                 style="@style/project_detail_mid_grid_item_text"
                 android:text="50" />
         </LinearLayout>
@@ -59,32 +60,32 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
-        <LinearLayout style="@style/project_detail_mid_grid_item" >
-
-            <ImageView
-                style="@style/project_detail_mid_grid_item_img"
-                android:background="@drawable/locked"
-                android:contentDescription="@string/img_description" />
+        <LinearLayout style="@style/project_detail_mid_grid_item">
 
             <TextView
-                android:id="@+id/project_locked"
+                style="@style/project_detail_mid_grid_item_img"
+                android:text="@string/sem_lock"
+                android:id="@+id/fi_lock" />
+
+            <TextView
+                android:id="@+id/tv_locked"
                 style="@style/project_detail_mid_grid_item_text"
                 android:text="Public" />
         </LinearLayout>
 
         <View style="@style/v_line" />
 
-        <LinearLayout style="@style/project_detail_mid_grid_item" >
-
-            <ImageView
-                style="@style/project_detail_mid_grid_item_img"
-                android:background="@drawable/language"
-                android:contentDescription="@string/img_description" />
+        <LinearLayout style="@style/project_detail_mid_grid_item">
 
             <TextView
-                android:id="@+id/project_language"
+                style="@style/project_detail_mid_grid_item_img"
+                android:text="@string/sem_tag"
+                android:id="@+id/fi_language" />
+
+            <TextView
+                android:id="@+id/tv_language"
                 style="@style/project_detail_mid_grid_item_text"
                 android:text="Java" />
         </LinearLayout>
@@ -93,14 +94,14 @@
     <View style="@style/h_line" />
 
     <LinearLayout
-        android:id="@+id/project_owner"
+        android:id="@+id/ll_owner"
         style="@style/project_detail_layout_style"
-        android:layout_gravity="center" >
+        android:layout_gravity="center">
 
-        <ImageView
+        <TextView
             style="@style/project_detail_mid_grid_item_img"
-            android:background="@drawable/project_detail_icon_owner"
-            android:contentDescription="@string/img_description" />
+            android:text="@string/sem_user"
+            android:id="@+id/fi_ower" />
 
         <TextView
             android:layout_width="0dip"
@@ -109,26 +110,23 @@
             android:text="Owner" />
 
         <TextView
-            android:id="@+id/project_ownername"
+            android:id="@+id/tv_ownername"
             style="@style/project_detail_mid_info_text"
             android:text="火蚁" />
 
-        <ImageView
-            style="@style/project_detail_sorrow_img"
-            android:contentDescription="@string/img_description" />
     </LinearLayout>
 
     <View style="@style/h_line" />
 
     <LinearLayout
-        android:id="@+id/project_ll_fork"
+        android:id="@+id/ll_fork_from"
         style="@style/project_detail_layout_style"
-        android:visibility="gone" >
+        android:visibility="gone">
 
-        <ImageView
+        <TextView
             style="@style/project_detail_mid_grid_item_img"
-            android:background="@drawable/fork"
-            android:contentDescription="@string/img_description" />
+            android:text="@string/sem_fork"
+            android:id="@+id/fi_ll_fork" />
 
         <TextView
             android:layout_width="0dip"
@@ -141,9 +139,6 @@
             android:id="@+id/project_fork_form"
             style="@style/project_detail_mid_info_text" />
 
-        <ImageView
-            style="@style/project_detail_sorrow_img"
-            android:contentDescription="@string/img_description" />
     </LinearLayout>
 
     <View

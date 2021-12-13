@@ -16,13 +16,19 @@
 -->
 <resources>
 
-    <string name="icon_pull_request">\uf20E</string>
-    <string name="icon_comment">\uf04f</string>
-    <string name="icon_file">\uf011</string>
-    <string name="icon_tag">\uf215</string>
-    <string name="icon_folder">\uf216</string>
-    <string name="icon_folders">\uf217</string>
-    <string name="icon_star">\uf02a</string>
-    <string name="icon_fork">\uf020</string>
+    <string name="oct_pull_request">\uf20E</string>
+    <string name="oct_comment">\uf04f</string>
+    <string name="oct_file">\uf011</string>
+    <string name="oct_tag">\uf215</string>
+    <string name="oct_folder">\uf216</string>
+    <string name="oct_folders">\uf217</string>
+    <string name="oct_star">\uf02a</string>
+    <string name="oct_fork">\uf020</string>
+    <string name="oct_book">\uf007</string>
+    <string name="oct_gist">\uf00e</string>
+    <string name="oct_issues">\uf026</string>
+    <string name="oct_commit">\uf01f</string>
+    <string name="oct_repo">\uf001</string>
+    <string name="oct_lock">\uf06a</string>
 
 </resources>

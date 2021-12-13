@@ -4,26 +4,22 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.text.ClipboardManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
 import net.oschina.gitapp.AppContext;
-import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
-import net.oschina.gitapp.api.ApiClient;
-import net.oschina.gitapp.bean.MoreMenuItem;
+import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.StarWatchOptionResult;
 import net.oschina.gitapp.bean.URLs;
@@ -31,572 +27,448 @@ import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
-import net.oschina.gitapp.widget.DropDownMenu;
+import net.oschina.gitapp.util.JsonUtils;
+import net.oschina.gitapp.util.TypefaceUtils;
+import net.oschina.gitapp.widget.TipInfoLayout;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.apache.http.Header;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
 
 /**
  * 项目详情界面
- * 
- * @created 2014-05-26 上午10：26
+ *
  * @author 火蚁（http://my.oschina.net/LittleDY）
- * 
+ * @created 2014-05-26 上午10：26
  * @最后更新：
  * @更新内容：
  * @更新者：
  */
 @SuppressWarnings("deprecation")
 public class ProjectActivity extends BaseActivity implements
-		OnClickListener {
-	
-	private final int MORE_MENU_SHARE = 00;// 分享
-	private final int MORE_MENU_COPY_LINK = 01;// 复制链接
-	private final int MORE_MENU_OPEN_WITH_BROWS = 02;// 在浏览器中打开
-	
-	private final int ACTION_LOAD_PROJECT = 0;// 加载项目
-	private final int ACTION_LOAD_PARENT_PROJECT = 1;// 加载项目的父项目信息
-	
-	private Project mProject;
-	
-	private String projectId;
+        OnClickListener {
 
-	private ProgressBar mLoading;
-	
-	private ScrollView mContent;
-	
-	private TextView mProjectName;
-	
-	private TextView mUpdateTime;
-	
-	private ImageView mFlag;
-	
-	private TextView mDescription;
-	
-	private TextView mStarNum;
-	
-	private ImageView mStarStared;// 项目的star状态
-	
-	private TextView mWatchNum;
-	
-	private ImageView mWatchStared;// 项目的Watch状态
-	
-	private TextView mCreated;
-	
-	private TextView mForkNum;
-	
-	private TextView mLocked;
-	
-	private TextView mLanguage;
-	
-	private TextView mOwnerName;
-	
-	private View mForkView;
-	
-	private TextView mForkMes;
-	
-	private AppContext mAppContext;
-	
-	private LinearLayout mLLStar;
-	private LinearLayout mLLWatch;
-	private LinearLayout mLLOwner;
-	private LinearLayout mLLReadMe;
-	private LinearLayout mLLCodes;
-	private LinearLayout mLLCommits;
-	private LinearLayout mLLIssues;
-	
-	private DropDownMenu mMoreMenuWindow;
-	
-	private List<MoreMenuItem> mMoreItems = new ArrayList<MoreMenuItem>();
-	
-	private String url_link = null;
-	
-	private Bitmap bitmap;
-	
-	private View.OnClickListener onMoreMenuItemClick = new OnClickListener() {
-		
-		@Override
-		public void onClick(View v) {
-			if (mMoreMenuWindow != null && mMoreMenuWindow.isShowing()) {
-				mMoreMenuWindow.dismiss();
-			}
-			if (mProject == null) {
-				return;
-			}
-			int id = v.getId();
-			switch (id) {
-			case MORE_MENU_SHARE:
-				UIHelper.showShareOption(ProjectActivity.this, mProject.getName(), url_link , 
-						"我在关注《" + mProject.getOwner().getName() + "的项目" + mProject.getName() + "》" + "，你也来瞧瞧呗！", bitmap);
-				break;
-			case MORE_MENU_COPY_LINK:
-				ClipboardManager cbm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-				cbm.setText(url_link);
-				UIHelper.ToastMessage(mAppContext, "已复制到剪贴板");
-				break;
-			case MORE_MENU_OPEN_WITH_BROWS:
-				UIHelper.openBrowser(ProjectActivity.this, url_link);
-				break;
-			default:
-				break;
-			}
-		}
-	};
-	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_project);
-		mAppContext = AppContext.getInstance();
-		initView();
-	}
+    private final int ACTION_LOAD_PROJECT = 0;// 加载项目
+    private final int ACTION_LOAD_PARENT_PROJECT = 1;// 加载项目的父项目信息
+    @InjectView(R.id.tip_info)
+    TipInfoLayout tipInfo;
+    @InjectView(R.id.tv_name)
+    TextView tvName;
+    @InjectView(R.id.tv_update)
+    TextView tvUpdate;
+    @InjectView(R.id.project_flag)
+    TextView projectFlag;
+    @InjectView(R.id.tv_description)
+    TextView tvDescription;
+    @InjectView(R.id.project_star_stared)
+    TextView projectStarStared;
+    @InjectView(R.id.project_starnum)
+    TextView projectStarnum;
+    @InjectView(R.id.project_watch_stared)
+    TextView projectWatchStared;
+    @InjectView(R.id.project_watchnum)
+    TextView projectWatchnum;
+    @InjectView(R.id.tv_createed)
+    TextView tvCreateed;
+    @InjectView(R.id.tv_forknum)
+    TextView tvForknum;
+    @InjectView(R.id.tv_locked)
+    TextView tvLocked;
+    @InjectView(R.id.tv_language)
+    TextView tvLanguage;
+    @InjectView(R.id.tv_ownername)
+    TextView tvOwnername;
+    @InjectView(R.id.project_fork_form)
+    TextView projectForkForm;
+    @InjectView(R.id.content)
+    ScrollView content;
+    @InjectView(R.id.ll_fork_from)
+    LinearLayout forkFrom;
 
-	private void initView() {
-		// 拿到传过来的project对象
-		Intent intent = getIntent();
-		mProject = (Project) intent.getSerializableExtra(Contanst.PROJECT);
-		projectId = intent.getStringExtra(Contanst.PROJECTID);
+    private Project mProject;
 
-		mLoading = (ProgressBar) findViewById(R.id.project_detail_loading);
-		mContent = (ScrollView) findViewById(R.id.project_content);
-		mProjectName = (TextView) findViewById(R.id.project_name);
-		mUpdateTime = (TextView) findViewById(R.id.project_update);
-		mFlag = (ImageView) findViewById(R.id.project_flag);
-		mDescription = (TextView) findViewById(R.id.project_description);
-		mStarNum = (TextView) findViewById(R.id.project_starnum);
-		mStarStared = (ImageView) findViewById(R.id.project_star_stared);
-		mWatchNum = (TextView) findViewById(R.id.project_watchnum);
-		mWatchStared = (ImageView) findViewById(R.id.project_watch_stared);
-		mCreated = (TextView) findViewById(R.id.project_createed);
-		mForkNum = (TextView) findViewById(R.id.project_forknum);
-		mLocked = (TextView) findViewById(R.id.project_locked);
-		mLanguage = (TextView) findViewById(R.id.project_language);
-		mOwnerName = (TextView) findViewById(R.id.project_ownername);
-		mForkView = findViewById(R.id.project_ll_fork);
-		mForkMes = (TextView) findViewById(R.id.project_fork_form);
-		
-		mLLStar = (LinearLayout) findViewById(R.id.project_star);
-		mLLWatch = (LinearLayout) findViewById(R.id.project_watch);
-		mLLOwner = (LinearLayout) findViewById(R.id.project_owner);
-		mLLReadMe = (LinearLayout) findViewById(R.id.project_readme);
-		mLLCodes = (LinearLayout) findViewById(R.id.project_issues);
-		mLLCommits = (LinearLayout) findViewById(R.id.project_commits);
-		mLLIssues = (LinearLayout) findViewById(R.id.project_code);
-		
-		mLLStar.setOnClickListener(this);
-		mLLWatch.setOnClickListener(this);
-		mLLOwner.setOnClickListener(this);
-		mLLReadMe.setOnClickListener(this);
-		mLLCodes.setOnClickListener(this);
-		mLLCommits.setOnClickListener(this);
-		mLLIssues.setOnClickListener(this);
-		if (null == mProject) {
-			loadProject(ACTION_LOAD_PROJECT, projectId);
-		} else {
-			initData();
-			initMoreMenu();
-		}
-	}
+    private String projectId;
 
-	private void initData() {
-		mActionBar.setTitle(mProject.getName());
-		mActionBar.setSubtitle(mProject.getOwner().getName());
-		
-		mProjectName.setText(mProject.getName());
-		mUpdateTime.setText("更新于 " + getUpdateTime());
-		setFlag();
-		
-		mDescription.setText(getDescription(mProject.getDescription()));
-		mStarNum.setText(mProject.getStars_count() + "");
-		setStared(mProject.isStared());
-		mWatchNum.setText(mProject.getWatches_count() + "");
-		setWatched(mProject.isWatched());
-		mCreated.setText(StringUtils.friendly_time(mProject.getCreatedAt()));
-		mForkNum.setText(mProject.getForks_count() + "");
-		mLocked.setText(getLocked());
-		mLanguage.setText(getLanguage());
-		mOwnerName.setText(mProject.getOwner().getName());
-		
-		// 显示是否有fork信息
-		initForkMess();
-		
-		// 记录项目的地址链接：
-		url_link = URLs.URL_HOST + mProject.getOwner().getUsername() + URLs.URL_SPLITTER + mProject.getPath();
-		// 截取屏幕
-		Handler mHandler = new Handler();
-		mHandler.postDelayed(new Runnable() {
-			
-			@Override
-			public void run() {
-				if (bitmap == null) {
-					bitmap = UIHelper.takeScreenShot(ProjectActivity.this);
-				}
-			}
-		}, 500);
-	}
-	
-	private void setStared(boolean stared) {
-		if (stared) {
-			mStarStared.setBackgroundResource(R.drawable.project_star);
-			((TextView)findViewById(R.id.project_star_text)).setText("unstar");
-		} else {
-			mStarStared.setBackgroundResource(R.drawable.project_unstar);
-			((TextView)findViewById(R.id.project_star_text)).setText("star");
-		}
-	}
-	
-	private void setWatched(boolean watched) {
-		if (watched) {
-			mWatchStared.setBackgroundResource(R.drawable.project_watch);
-			((TextView)findViewById(R.id.project_watch_text)).setText("unwatch");
-		} else {
-			mWatchStared.setBackgroundResource(R.drawable.project_unwatch);
-			((TextView)findViewById(R.id.project_watch_text)).setText("watch");
-		}
-	}
-	
-	private void setFlag() {
-		// 判断项目的类型，显示不同的图标（私有项目、公有项目、fork项目）   
-		if (mProject.getParent_id() != null) {
-			mFlag.setBackgroundResource(R.drawable.project_flag_fork);
-		} else if (mProject.isPublic()) {
-			mFlag.setBackgroundResource(R.drawable.project_flag_public);
-		} else {
-			mFlag.setBackgroundResource(R.drawable.project_flag_private);
-		}
-	}
-	
-	private void initMoreMenu() {
-		mMoreMenuWindow = new DropDownMenu(ProjectActivity.this, onMoreMenuItemClick);
-		MoreMenuItem share = new MoreMenuItem(MORE_MENU_SHARE, R.drawable.more_menu_icon_share, "分享项目");
-		mMoreItems.add(share);
-		
-		MoreMenuItem copy_link = new MoreMenuItem(MORE_MENU_COPY_LINK, R.drawable.more_menu_icon_copy, "复制项目链接");
-		mMoreItems.add(copy_link);
-		
-		MoreMenuItem open_with_brows = new MoreMenuItem(MORE_MENU_OPEN_WITH_BROWS, R.drawable.more_menu_icon_browser, "在浏览器中打开");
-		mMoreItems.add(open_with_brows);
-		
-		mMoreMenuWindow.addItems(mMoreItems);
-	}
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.projet_menu, menu);
-		return super.onCreateOptionsMenu(menu);
-	}
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (mProject == null) {
-			return false;
-		}
-		int id = item.getItemId();
-		switch (id) {
-		case R.id.project_menu_more:
-			showMoreOptionMenu();
-			break;
-		case R.id.project_menu_create_issue:
-			// 新增issue
-			UIHelper.showIssueEditOrCreate(AppContext.getInstance(), mProject, null);
-			break;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-	
-	private void showMoreOptionMenu() {
-		if (mMoreMenuWindow == null) {
-			return;
-		}
-		View v = findViewById(R.id.project_menu_more);
-		int x = mMoreMenuWindow.getWidth() - v.getWidth() + 20;
-		
-		mMoreMenuWindow.showAsDropDown(v, -x, 0);
-	}
+    private AppContext mAppContext;
 
-	private String getUpdateTime() {
-		if (mProject.getLast_push_at() !=null) {
-			return StringUtils.friendly_time(mProject.getLast_push_at());
-		} else {
-			return StringUtils.friendly_time(mProject.getCreatedAt());
-		}
-	}
-	
-	private String getDescription(String description) {
-		if (description == null || StringUtils.isEmpty(description)) {
-			return "该项目暂无简介！";
-		} else {
-			return description;
-		}
-	}
-	
-	private String getLocked() {
-		if (mProject.isPublic()) {
-			return "Public";
-		} else {
-			return "Private";
-		}
-	}
-	
-	private String getLanguage() {
-		if (mProject.getLanguage() == null) {
-			return "未指定";
-		} else {
-			return mProject.getLanguage();
-		}
-	}
-	
-	private void initForkMess() {
-		if (mProject.getParent_id() == null) {
-			return;
-		} else {
-			mForkView.setVisibility(View.VISIBLE);
-			findViewById(R.id.project_fork_ll_line).setVisibility(View.VISIBLE);
-			loadProject(ACTION_LOAD_PARENT_PROJECT, mProject.getParent_id() + "");
-			mForkView.setOnClickListener(this);
-		}
-	}
+    private String url_link = null;
 
-	private void loadProject(final int action, final String projectId) {
-		new AsyncTask<Void, Void, Message>() {
+    private Bitmap bitmap;
 
-			@Override
-			protected Message doInBackground(Void... params) {
-				Message msg = new Message();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_project);
+        ButterKnife.inject(this);
+        mAppContext = AppContext.getInstance();
+        initView();
+    }
 
-				try {
-					msg.obj = mAppContext.getProject(projectId);
-					msg.what = 1;
-				} catch (AppException e) {
-					mLoading.setVisibility(View.GONE);
-					msg.what = -1;
-					msg.obj = e;
-					e.printStackTrace();
-				}
-				return msg;
-			}
+    private void initView() {
+        // 拿到传过来的project对象
+        Intent intent = getIntent();
+        mProject = (Project) intent.getSerializableExtra(Contanst.PROJECT);
+        projectId = intent.getStringExtra(Contanst.PROJECTID);
 
-			@Override
-			protected void onPreExecute() {
-				super.onPreExecute();
-				if (action == ACTION_LOAD_PROJECT) {
-					mLoading.setVisibility(View.VISIBLE);
-					mContent.setVisibility(View.GONE);
-				}
-			}
+        if (null == mProject) {
+            loadProject(ACTION_LOAD_PROJECT, projectId);
+        } else {
+            initData();
+        }
 
-			@Override
-			protected void onPostExecute(Message msg) {
-				super.onPostExecute(msg);
-				if (action == ACTION_LOAD_PROJECT) {
-					mLoading.setVisibility(View.GONE);
-					mContent.setVisibility(View.VISIBLE);
-				}
-				if (msg != null) {
-					if (msg.what == 1) {
-						if (action == ACTION_LOAD_PROJECT) {
-							mProject = (Project) msg.obj;
-							initData();
-							if (mMoreMenuWindow == null) {
-								initMoreMenu();
-							}
-						} else {
-							Project p = (Project) msg.obj;
-							if (p != null) {
-								mForkMes.setText(p.getOwner().getName() + " / " + p.getName());
-							}
-						}
-					} else {
-						if (action == ACTION_LOAD_PROJECT) {
-							if (msg.obj instanceof AppException) {
-								((AppException) msg.obj).makeToast(mAppContext);
-							}
-						}
-					}
-				}
-			}
+        // set font icon
+        TypefaceUtils.setFontAwsome((TextView)findView(R.id.fi_time));
+        TypefaceUtils.setSemantic((TextView)findView(R.id.fi_ower), (TextView)findView(R.id.fi_language),
+                (TextView)findView(R.id.fi_lock), (TextView)findView(R.id.fi_fork), (TextView)findView(R.id.fi_ll_fork));
+        TypefaceUtils.setOcticons((TextView) findView(R.id.fi_readme), (TextView) findView(R.id.fi_code),
+                (TextView) findView(R.id.fi_commit), (TextView) findView(R.id.fi_issue));
 
-		}.execute();
-	}
+        tipInfo.setOnClick(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadProject(ACTION_LOAD_PROJECT, projectId);
+            }
+        });
+    }
 
-	@Override
-	public void onClick(View v) {
-		
-		if (mProject == null ) {
-			return;
-		}
-		int id = v.getId();
-		switch (id) {
-		case R.id.project_star:
-			starOption();
-			break;
-		case R.id.project_watch:
-			watchOption();
-			break;
-		case R.id.project_owner:
-			if (mProject.getOwner() != null) {
-				UIHelper.showUserInfoDetail(ProjectActivity.this, mProject.getOwner(), mProject.getOwner().getId());
-			}
-			break;
-		case R.id.project_ll_fork:
-			if (mProject.getParent_id() != null) {
-				UIHelper.showProjectDetail(ProjectActivity.this, null, mProject.getParent_id() + "");
-			}
-			break;
-		case R.id.project_readme:
-			UIHelper.showProjectReadMeActivity(ProjectActivity.this, mProject);
-			break;
-		case R.id.project_code:
-			UIHelper.showProjectCodeActivity(ProjectActivity.this, mProject);
-			break;
-		case R.id.project_commits:
-			UIHelper.showProjectListActivity(ProjectActivity.this, mProject, ProjectSomeInfoListActivity.PROJECT_LIST_TYPE_COMMITS);
-			break;
-		case R.id.project_issues:
-			UIHelper.showProjectListActivity(ProjectActivity.this, mProject, ProjectSomeInfoListActivity.PROJECT_LIST_TYPE_ISSUES);
-			break;
-		}
-	}
-	
-	private void watchOption() {
-		if (mProject == null) {
-			return;
-		}
-		if (!mAppContext.isLogin()) {
-			UIHelper.showLoginActivity(ProjectActivity.this);
-			return;
-		}
-		
-		
-		final ProgressDialog loadingDialog = new ProgressDialog(this);
-		loadingDialog.setCanceledOnTouchOutside(false);
-		if (mProject.isWatched()) {
-			loadingDialog.setMessage("正在unwatch该项目...");
-		} else {
-			loadingDialog.setMessage("正在watch该项目...");
-		}
-		
-		new AsyncTask<Void, Void, Message>() {
+    private void initData() {
+        mActionBar.setTitle(mProject.getName());
+        mActionBar.setSubtitle(mProject.getOwner().getName());
 
-			@Override
-			protected Message doInBackground(Void... params) {
-				Message msg = new Message();
-				try {
-					if (mProject.isWatched()) {
-						msg.obj = ApiClient.watchProject(mAppContext, mProject.getId(), "unwatch");
-					} else {
-						msg.obj = ApiClient.watchProject(mAppContext, mProject.getId(), "watch");
-					}
-					msg.what = 1;
-				} catch (AppException e) {
-					e.printStackTrace();
-					msg.what = -1;
-					msg.obj = e;
-				}
-				return msg;
-			}
+        tvName.setText(mProject.getName());
+        tvUpdate.setText("更新于 " + getUpdateTime());
+        setFlag();
 
-			@Override
-			protected void onPreExecute() {
-				super.onPreExecute();
-				if (loadingDialog != null) {
-					loadingDialog.show();
-				}
-			}
+        tvDescription.setText(getDescription(mProject.getDescription()));
+        projectStarnum.setText(mProject.getStars_count() + "");
+        setStared(mProject.isStared());
+        projectWatchnum.setText(mProject.getWatches_count() + "");
+        setWatched(mProject.isWatched());
+        tvCreateed.setText(StringUtils.friendly_time(mProject.getCreatedAt()));
+        tvForknum.setText(mProject.getForks_count() + "");
+        tvLocked.setText(getLocked());
+        tvLanguage.setText(getLanguage());
+        tvOwnername.setText(mProject.getOwner().getName());
 
-			@Override
-			protected void onPostExecute(Message msg) {
-				super.onPostExecute(msg);
-				loadingDialog.hide();
-				if (msg.what == 1) {
-					String resMsg = "";
-					StarWatchOptionResult res = (StarWatchOptionResult) msg.obj;
-					if (res.getCount() > mProject.getWatches_count()) {
-						setWatched(true);
-						mProject.setWatched(true);
-						resMsg = "watch成功";
-					} else {
-						setWatched(false);
-						mProject.setWatched(false);
-						resMsg = "unwatch成功";
-					}
-					mProject.setWatches_count(res.getCount());
-					mWatchNum.setText(res.getCount() + "");
-					UIHelper.ToastMessage(mAppContext, resMsg);
-				} else {
-					((AppException)msg.obj).makeToast(mAppContext);
-				}
-			}
-		}.execute();
-	}
-	
-	private void starOption() {
-		if (mProject == null) {
-			return;
-		}
-		if (!mAppContext.isLogin()) {
-			UIHelper.showLoginActivity(ProjectActivity.this);
-			return;
-		}
-		final ProgressDialog loadingDialog = new ProgressDialog(this);
-		loadingDialog.setCanceledOnTouchOutside(false);
-		if (mProject.isStared()) {
-			loadingDialog.setMessage("正在unstar该项目...");
-		} else {
-			loadingDialog.setMessage("正在star该项目...");
-		}
-		
-		new AsyncTask<Void, Void, Message>() {
+        // 显示是否有fork信息
+        initForkMess();
 
-			@Override
-			protected Message doInBackground(Void... params) {
-				Message msg = new Message();
-				try {
-					if (mProject.isStared()) {
-						msg.obj = ApiClient.starProject(mAppContext, mProject.getId(), "unstar");
-					} else {
-						msg.obj = ApiClient.starProject(mAppContext, mProject.getId(), "star");
-					}
-					msg.what = 1;
-				} catch (AppException e) {
-					e.printStackTrace();
-					msg.what = -1;
-					msg.obj = e;
-				}
-				return msg;
-			}
+        // 记录项目的地址链接：
+        url_link = URLs.URL_HOST + mProject.getOwner().getUsername() + URLs.URL_SPLITTER + mProject.getPath();
+        // 截取屏幕
+        Handler mHandler = new Handler();
+        mHandler.postDelayed(new Runnable() {
 
-			@Override
-			protected void onPreExecute() {
-				super.onPreExecute();
-				if (loadingDialog != null) {
-					loadingDialog.show();
-				}
-			}
+            @Override
+            public void run() {
+                if (bitmap == null) {
+                    bitmap = UIHelper.takeScreenShot(ProjectActivity.this);
+                }
+            }
+        }, 500);
+    }
 
-			@Override
-			protected void onPostExecute(Message msg) {
-				super.onPostExecute(msg);
-				loadingDialog.hide();
-				if (msg.what == 1) {
-					String resMsg = "";
-					StarWatchOptionResult res = (StarWatchOptionResult) msg.obj;
-					if (res.getCount() > mProject.getStars_count()) {
-						setStared(true);
-						mProject.setStared(true);
-						resMsg = "star成功";
-					} else {
-						setStared(false);
-						mProject.setStared(false);
-						resMsg = "unstar成功";
-					}
-					mProject.setStars_count(res.getCount());
-					mStarNum.setText(res.getCount() + "");
-					UIHelper.ToastMessage(mAppContext, resMsg);
-				} else {
-					((AppException)msg.obj).makeToast(mAppContext);
-				}
-			}
-		}.execute();
-	}
+    private void setStared(boolean stared) {
+        int textRes = R.string.sem_star;
+        if (stared) {
+            textRes = R.string.sem_star;
+            ((TextView) findViewById(R.id.project_star_text)).setText("unstar");
+        } else {
+            textRes = R.string.sem_empty_star;
+            ((TextView) findViewById(R.id.project_star_text)).setText("star");
+        }
+        projectStarStared.setText(textRes);
+        TypefaceUtils.setSemantic(projectStarStared);
+    }
+
+    private void setWatched(boolean watched) {
+        int textRes = R.string.sem_watch;
+        if (watched) {
+            textRes = R.string.sem_empty_watch;
+            ((TextView) findViewById(R.id.project_watch_text)).setText("unwatch");
+        } else {
+            textRes = R.string.sem_watch;
+            ((TextView) findViewById(R.id.project_watch_text)).setText("watch");
+        }
+        projectWatchStared.setText(textRes);
+        TypefaceUtils.setSemantic(projectWatchStared);
+    }
+
+    private void setFlag() {
+        // 判断项目的类型，显示不同的图标（私有项目、公有项目、fork项目）
+        int textRes = R.string.oct_fork;
+        if (mProject.getParent_id() != null) {
+            textRes = R.string.oct_fork;
+        } else if (mProject.isPublic()) {
+            textRes = R.string.oct_repo;
+        } else {
+            textRes = R.string.oct_lock;
+        }
+        projectFlag.setText(textRes);
+        TypefaceUtils.setOcticons(projectFlag);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.projet_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (mProject == null) {
+            return false;
+        }
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.share:
+                UIHelper.showShareOption(ProjectActivity.this, mProject.getName(), url_link,
+                        "我在关注《" + mProject.getOwner().getName() + "的项目" + mProject.getName() + "》" + "，你也来瞧瞧呗！", bitmap);
+                break;
+            case R.id.copy:
+                ClipboardManager cbm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                cbm.setText(url_link);
+                UIHelper.ToastMessage(mAppContext, "已复制到剪贴板");
+                break;
+            case R.id.open_browser:
+                UIHelper.openBrowser(ProjectActivity.this, url_link);
+                break;
+            case R.id.project_menu_create_issue:
+                // 新增issue
+                UIHelper.showIssueEditOrCreate(AppContext.getInstance(), mProject, null);
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private String getUpdateTime() {
+        if (mProject.getLast_push_at() != null) {
+            return StringUtils.friendly_time(mProject.getLast_push_at());
+        } else {
+            return StringUtils.friendly_time(mProject.getCreatedAt());
+        }
+    }
+
+    private String getDescription(String description) {
+        if (description == null || StringUtils.isEmpty(description)) {
+            return "该项目暂无简介！";
+        } else {
+            return description.replaceAll(" ", "");
+        }
+    }
+
+    private String getLocked() {
+        if (mProject.isPublic()) {
+            return "Public";
+        } else {
+            return "Private";
+        }
+    }
+
+    private String getLanguage() {
+        if (mProject.getLanguage() == null) {
+            return "未指定";
+        } else {
+            return mProject.getLanguage();
+        }
+    }
+
+    private void initForkMess() {
+        if (mProject.getParent_id() == null) {
+            return;
+        } else {
+            forkFrom.setVisibility(View.VISIBLE);
+            findViewById(R.id.project_fork_ll_line).setVisibility(View.VISIBLE);
+            loadProject(ACTION_LOAD_PARENT_PROJECT, mProject.getParent_id() + "");
+            forkFrom.setOnClickListener(this);
+        }
+    }
+
+    private void loadProject(final int action, final String projectId) {
+        GitOSCApi.getProject(projectId, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                content.setVisibility(View.VISIBLE);
+                tipInfo.setHiden();
+                Project p = JsonUtils.toBean(Project.class, responseBody);
+                if (p != null) {
+
+                    if (action == ACTION_LOAD_PROJECT) {
+                        mProject = p;
+                        initData();
+                    } else {
+                        projectForkForm.setText(p.getOwner().getName() + " / " + p.getName());
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                if (action == ACTION_LOAD_PROJECT) {
+                    tipInfo.setLoadError();
+                }
+            }
+        });
+    }
+
+    @Override
+    @OnClick({R.id.ll_star, R.id.ll_watch, R.id.ll_owner, R.id.ll_fork_from,
+            R.id.ll_readme, R.id.ll_code, R.id.ll_commits, R.id.ll_issues})
+    public void onClick(View v) {
+
+        if (mProject == null) {
+            return;
+        }
+        int id = v.getId();
+        switch (id) {
+            case R.id.ll_star:
+                starOption();
+                break;
+            case R.id.ll_watch:
+                watchOption();
+                break;
+            case R.id.ll_owner:
+                if (mProject.getOwner() != null) {
+                    UIHelper.showUserInfoDetail(ProjectActivity.this, mProject.getOwner(), mProject.getOwner().getId());
+                }
+                break;
+            case R.id.ll_fork_from:
+                if (mProject.getParent_id() != null) {
+                    UIHelper.showProjectDetail(ProjectActivity.this, null, mProject.getParent_id() + "");
+                }
+                break;
+            case R.id.ll_readme:
+                UIHelper.showProjectReadMeActivity(ProjectActivity.this, mProject);
+                break;
+            case R.id.ll_code:
+                UIHelper.showProjectCodeActivity(ProjectActivity.this, mProject);
+                break;
+            case R.id.ll_commits:
+                UIHelper.showProjectListActivity(ProjectActivity.this, mProject, ProjectSomeInfoListActivity.PROJECT_LIST_TYPE_COMMITS);
+                break;
+            case R.id.ll_issues:
+                UIHelper.showProjectListActivity(ProjectActivity.this, mProject, ProjectSomeInfoListActivity.PROJECT_LIST_TYPE_ISSUES);
+                break;
+        }
+    }
+
+    private void watchOption() {
+        if (mProject == null) {
+            return;
+        }
+        if (!mAppContext.isLogin()) {
+            UIHelper.showLoginActivity(ProjectActivity.this);
+            return;
+        }
+
+        final ProgressDialog loadingDialog = new ProgressDialog(this);
+        loadingDialog.setCanceledOnTouchOutside(false);
+        if (mProject.isWatched()) {
+            loadingDialog.setMessage("正在unwatch该项目...");
+        } else {
+            loadingDialog.setMessage("正在watch该项目...");
+        }
+        AsyncHttpResponseHandler handler = new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                String resMsg = "";
+                StarWatchOptionResult res = JsonUtils.toBean(StarWatchOptionResult.class, responseBody);
+                if (res.getCount() > mProject.getWatches_count()) {
+                    setWatched(true);
+                    mProject.setWatched(true);
+                    resMsg = "watch成功";
+                } else {
+                    setWatched(false);
+                    mProject.setWatched(false);
+                    resMsg = "unwatch成功";
+                }
+                mProject.setWatches_count(res.getCount());
+                projectWatchnum.setText(res.getCount() + "");
+                UIHelper.ToastMessage(mAppContext, resMsg);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                UIHelper.ToastMessage(mAppContext, "操作失败");
+            }
+
+            @Override
+            public void onStart() {
+                super.onStart();
+                loadingDialog.show();
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                loadingDialog.dismiss();
+            }
+        };
+        if (mProject.isWatched()) {
+            GitOSCApi.unWatchProject(mProject.getId(), handler);
+        } else {
+            GitOSCApi.watchProject(mProject.getId(), handler);
+        }
+    }
+
+    private void starOption() {
+        if (mProject == null) {
+            return;
+        }
+        if (!mAppContext.isLogin()) {
+            UIHelper.showLoginActivity(ProjectActivity.this);
+            return;
+        }
+        final ProgressDialog loadingDialog = new ProgressDialog(this);
+        loadingDialog.setCanceledOnTouchOutside(false);
+        if (mProject.isStared()) {
+            loadingDialog.setMessage("正在unstar该项目...");
+        } else {
+            loadingDialog.setMessage("正在star该项目...");
+        }
+
+        AsyncHttpResponseHandler handler = new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                String resMsg = "";
+                StarWatchOptionResult res = JsonUtils.toBean(StarWatchOptionResult.class, responseBody);
+                if (res.getCount() > mProject.getStars_count()) {
+                    setStared(true);
+                    mProject.setStared(true);
+                    resMsg = "star成功";
+                } else {
+                    setStared(false);
+                    mProject.setStared(false);
+                    resMsg = "unstar成功";
+                }
+                mProject.setStars_count(res.getCount());
+                projectStarnum.setText(res.getCount() + "");
+                UIHelper.ToastMessage(mAppContext, resMsg);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+            }
+
+            @Override
+            public void onStart() {
+                super.onStart();
+                loadingDialog.show();
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                loadingDialog.dismiss();
+            }
+        };
+        if (mProject.isStared()) {
+            GitOSCApi.unStarProject(mProject.getId(), handler);
+        } else {
+            GitOSCApi.starProject(mProject.getId(), handler);
+        }
+    }
 }
