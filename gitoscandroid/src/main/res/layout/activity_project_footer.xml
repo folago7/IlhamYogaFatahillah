@@ -78,7 +78,7 @@
 
         <TextView
             android:id="@+id/fi_issue"
-            android:layout_marginTop="1dp"
+            android:layout_marginTop="2dp"
             style="@style/project_detail_mid_grid_item_img"
             android:text="@string/oct_issues" />
 

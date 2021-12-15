@@ -471,4 +471,12 @@ public class ProjectActivity extends BaseActivity implements
             GitOSCApi.starProject(mProject.getId(), handler);
         }
     }
+
+    @Override
+    public boolean onMenuOpened(int featureId, Menu menu) {
+        if (mProject == null) {
+            return false;
+        }
+        return super.onMenuOpened(featureId, menu);
+    }
 }
