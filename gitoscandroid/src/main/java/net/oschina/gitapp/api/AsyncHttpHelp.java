@@ -16,8 +16,8 @@ import org.apache.http.protocol.HTTP;
  * Created by 火蚁 on 15/4/13.
  */
 public class AsyncHttpHelp {
-    private final static String PRIVATE_TOKEN = "private_token";
-    private final static String GITOSC_PRIVATE_TOKEN = "git@osc_token";
+    public final static String PRIVATE_TOKEN = "private_token";
+    public final static String GITOSC_PRIVATE_TOKEN = "git@osc_token";
 
     public final static int TIMEOUT_CONNECTION = 20000;// 连接超时时间
     public final static int TIMEOUT_SOCKET = 20000;// socket超时

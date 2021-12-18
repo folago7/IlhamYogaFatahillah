@@ -32,6 +32,13 @@ public class GitOSCApi {
     public final static String NOTIFICATION = USER + "notifications/";
     public final static String VERSION = BASE_URL + "app_version/new/android";
 
+    public static void login(String account, String passwod, AsyncHttpResponseHandler handler) {
+        RequestParams params = new RequestParams();
+        params.put("email", account);
+        params.put("password", passwod);
+        AsyncHttpHelp.post(BASE_URL + "session", params, handler);
+    }
+
     public static void getExploreLatestProject(int page, AsyncHttpResponseHandler handler) {
         RequestParams params = new RequestParams();
         params.put("page", page);
@@ -101,7 +108,7 @@ public class GitOSCApi {
         RequestParams params = getPrivateTokenWithParams();
         params.put("page", page);
         params.put("ref_name", refName);
-        get(PROJECTS + pId + "/" + "/repository/commit", params, handler);
+        get(PROJECTS + pId + "/" + "/repository/commits", params, handler);
     }
 
     public static void getProjectCodeTree(String pId, String path, String refName, AsyncHttpResponseHandler handler) {

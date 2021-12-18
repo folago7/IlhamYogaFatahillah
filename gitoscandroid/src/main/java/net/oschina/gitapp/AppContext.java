@@ -459,7 +459,7 @@ public class AppContext extends Application {
 	 * @param user
 	 */
 	@SuppressWarnings("serial")
-	private void saveLoginInfo(final User user) {
+	public void saveLoginInfo(final User user) {
 		if (null == user) {
 			return;
 		}

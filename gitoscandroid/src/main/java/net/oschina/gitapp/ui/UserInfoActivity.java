@@ -16,7 +16,7 @@ import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 import net.oschina.gitapp.ui.fragments.UserInfoViewPageFragment;
 
 /**
- * 项目详情界面
+ * 用户界面
  * @created 2014-05-26 上午10：26
  * @author 火蚁（http://my.oschina.net/LittleDY）
  * 
@@ -68,6 +68,7 @@ public class UserInfoActivity extends BaseActivity {
 	
 	private void initViewPage() {
 		mTitle = mUser.getName();
+        mActionBar.setTitle(mTitle);
 		if (null == mSavedInstanceState) {
         	FragmentTransaction ft = mFragmentManager.beginTransaction();
         	ft.replace(R.id.userinfo_content, UserInfoViewPageFragment.newInstance(mUser)).commit();

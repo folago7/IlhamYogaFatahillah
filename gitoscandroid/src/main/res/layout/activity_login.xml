@@ -19,7 +19,7 @@
         android:padding="25dip" >
 
         <AutoCompleteTextView
-            android:id="@+id/login_account"
+            android:id="@+id/et_account"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:drawableLeft="@drawable/icon_login_account"
@@ -31,7 +31,7 @@
             android:singleLine="true" />
 
         <EditText
-            android:id="@+id/login_password"
+            android:id="@+id/et_password"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dip"
@@ -43,7 +43,7 @@
             android:singleLine="true" />
 
         <Button
-            android:id="@+id/login_btn_login"
+            android:id="@+id/bt_login"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="35dip"

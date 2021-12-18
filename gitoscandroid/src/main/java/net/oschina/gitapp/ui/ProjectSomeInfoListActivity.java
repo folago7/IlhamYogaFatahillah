@@ -61,7 +61,9 @@ public class ProjectSomeInfoListActivity extends BaseActivity {
 			mListType = intent.getIntExtra("project_list_type", 0);
 			
 			mTitle = getTitle(mListType);
+            setActionBarTitle(mTitle);
 			mSubTitle = mProject.getOwner().getName() + "/" + mProject.getName();
+            setActionBarSubTitle(mSubTitle);
 		}
 		
 		mLoading = (ProgressBar) findViewById(R.id.content_loading);

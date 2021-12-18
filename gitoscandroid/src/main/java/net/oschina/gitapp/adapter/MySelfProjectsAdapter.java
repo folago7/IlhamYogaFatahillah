@@ -3,13 +3,14 @@ package net.oschina.gitapp.adapter;
 import android.content.Context;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageView;
+import android.widget.TextView;
 
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
+import net.oschina.gitapp.util.TypefaceUtils;
 
 import java.util.Date;
 
@@ -49,7 +50,7 @@ public class MySelfProjectsAdapter extends CommonAdapter<Project> {
             }
         });
 
-        vh.setText(R.id.tv_name, project.getOwner().getName() + " / " + project.getName());
+        vh.setText(R.id.tv_title, project.getOwner().getName() + " / " + project.getName());
 
         Date last_push_at = project.getLast_push_at() != null ? project.getLast_push_at() : project.getCreatedAt();
         vh.setText(R.id.tv_date, "更新于: " + StringUtils.friendly_time(last_push_at));
@@ -61,13 +62,16 @@ public class MySelfProjectsAdapter extends CommonAdapter<Project> {
         vh.setTextWithSemantic(R.id.tv_star, project.getStars_count().toString(), R.string.sem_star);
         vh.setTextWithSemantic(R.id.tv_fork, project.getForks_count().toString(), R.string.sem_fork);
 
-        ImageView flag = vh.getView(R.id.iv_flag);
+        TextView flag = vh.getView(R.id.tv_flag);
+        int flagRes = R.string.oct_lock;
         if (project.getParent_id() != null) {
-            flag.setBackgroundResource(R.drawable.project_flag_fork);
+            flagRes = R.string.oct_fork;
         } else if (project.isPublic()) {
-            flag.setBackgroundResource(R.drawable.project_flag_public);
+            flagRes = R.string.oct_repo;
         } else {
-            flag.setBackgroundResource(R.drawable.project_flag_private);
+            flagRes = R.string.oct_lock;
         }
+        flag.setText(flagRes);
+        TypefaceUtils.setOcticons(flag);
     }
 }

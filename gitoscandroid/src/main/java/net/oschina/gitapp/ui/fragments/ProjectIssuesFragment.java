@@ -67,4 +67,9 @@ public class ProjectIssuesFragment extends BaseSwipeRefreshFragment<Issue> {
 	public void onItemClick(int position, Issue issue) {
 		UIHelper.showIssueDetail(mApplication, mProject, issue, null, null);
 	}
+
+    @Override
+    protected String getEmptyTip() {
+        return "暂无issue";
+    }
 }

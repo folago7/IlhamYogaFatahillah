@@ -53,7 +53,7 @@ import java.util.List;
 import java.util.Stack;
 
 /**
- * 项目代码列表
+ * 项目代码
  *
  * @author 火蚁（http://my.oschina.net/LittleDY）
  * @created 2014-07-18
@@ -153,8 +153,10 @@ public class ProjectCodeActivity extends BaseActivity implements OnItemClickList
         Intent intent = getIntent();
         if (intent != null) {
             mProject = (Project) intent.getSerializableExtra(Contanst.PROJECT);
-            mTitle = "代码列表";
+            mTitle = "代码";
+            setActionBarTitle(mTitle);
             mSubTitle = mProject.getOwner().getName() + "/" + mProject.getName();
+            setActionBarSubTitle(mSubTitle);
         }
         mBranch = "master";
         initView();
