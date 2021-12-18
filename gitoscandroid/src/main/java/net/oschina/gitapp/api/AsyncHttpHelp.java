@@ -27,6 +27,9 @@ public class AsyncHttpHelp {
         client.addHeader(HTTP.USER_AGENT, getUserAgent());
         client.setTimeout(TIMEOUT_CONNECTION);
         client.setResponseTimeout(TIMEOUT_SOCKET);
+        String private_token = AppContext.getInstance().getProperty(PRIVATE_TOKEN);
+        private_token = CyptoUtils.decode(GITOSC_PRIVATE_TOKEN, private_token);
+        client.addHeader("private-token", private_token);
         return client;
     }
 

@@ -1,243 +1,252 @@
 package net.oschina.gitapp.ui;
 
 import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import net.oschina.gitapp.AppContext;
-import net.oschina.gitapp.AppException;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.ProjectAdapter;
+import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.MessageData;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
+import net.oschina.gitapp.util.JsonUtils;
+import net.oschina.gitapp.widget.TipInfoLayout;
 
-import java.util.ArrayList;
+import org.apache.http.Header;
+
 import java.util.List;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 /**
  * 搜索项目界面
- * @created 2014-07-10
- * @author 火蚁（http://my.oschina.net/LittleDY）
  *
+ * @author 火蚁（http://my.oschina.net/LittleDY）
+ * @created 2014-07-10
  */
 public class SearchActivity extends BaseActivity implements
-		OnQueryTextListener, OnItemClickListener {
+        OnQueryTextListener, OnItemClickListener, AbsListView.OnScrollListener {
 
-	private final int MESSAGESTATEFULL = 0;//已加载全部状态
-	private final int MESSAGESTATEMORE = 1;//可以加载更多状态
-	
-	private SearchView mSearchView;
+    private final int MESSAGESTATEFULL = 0;//已加载全部状态
+    private final int MESSAGESTATEMORE = 1;//可以加载更多状态
+    @InjectView(R.id.search_view)
+    SearchView searchView;
+    @InjectView(R.id.listView)
+    ListView listView;
+    @InjectView(R.id.tip_info)
+    TipInfoLayout tipInfo;
 
-	private AppContext mAppContext;
-	
-	private InputMethodManager imm;
+    private InputMethodManager imm;
 
-	private ProgressBar mLoading;
+    private View mFooterView;
 
-	private ListView mListView;
+    private ProgressBar mFooterLoading;
 
-	private View mEmpty;
+    private TextView mFooterMsg;
 
-	private View mFooterView;
-	
-	private ProgressBar mFooterLoading;
-	
-	private TextView mFooterMsg;
+    private ProjectAdapter adapter;
 
-	private List<Project> mData;
+    private String mKey;
 
-	private ProjectAdapter adapter;
-	
-	private String mKey;
-	
-	private int mMessageState = MESSAGESTATEMORE;
-	
-	private boolean isLoading = false;
-	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_search);
-		mAppContext = AppContext.getInstance();
-		initView();
-		steupList();
-	}
+    private int mMessageState = MESSAGESTATEMORE;
 
-	private void initView() {
-		mSearchView = (SearchView) findViewById(R.id.search_view);
-		mLoading = (ProgressBar) findViewById(R.id.search_loading);
-		mListView = (ListView) findViewById(R.id.search_list);
-		mEmpty = findViewById(R.id.search_empty);
-		
-		imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+    private boolean isLoading = false;
 
-		mSearchView.setOnQueryTextListener(this);
-		mSearchView.setIconifiedByDefault(false);
-	}
+    private int mCurrentPage = 1;
 
-	private void steupList() {
-		mData = new ArrayList<Project>();
-		adapter = new ProjectAdapter(mAppContext,
-				R.layout.list_item_project);
-		mFooterView = LayoutInflater.from(mAppContext).inflate(
-				R.layout.listview_footer, null);
-		mFooterLoading = (ProgressBar) mFooterView.findViewById(R.id.listview_foot_progress);
-		mFooterMsg = (TextView) mFooterView.findViewById(R.id.listview_foot_more);
-		mFooterLoading.setVisibility(View.GONE);
-		mFooterMsg.setText(R.string.load_more);
-		mListView.addFooterView(mFooterView);
-		mListView.setAdapter(adapter);
-		mListView.setOnItemClickListener(this);
-	}
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_search);
+        ButterKnife.inject(this);
+        initView();
+        steupList();
+    }
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		return super.onCreateOptionsMenu(menu);
-	}
+    private void initView() {
+        imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 
-	@Override
-	public boolean onQueryTextChange(String arg0) {
-		return true;
-	}
+        searchView.setOnQueryTextListener(this);
+        searchView.setIconifiedByDefault(false);
+        tipInfo.setHiden();
+        tipInfo.setOnClick(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                load(mKey, 1);
+            }
+        });
+    }
 
-	@Override
-	public boolean onQueryTextSubmit(String arg0) {
-		mKey = arg0;
-		load(arg0, 1);
-		imm.hideSoftInputFromWindow(mListView.getWindowToken(), 0);
-		return true;
-	}
+    private void steupList() {
+        adapter = new ProjectAdapter(this,
+                R.layout.list_item_project);
+        mFooterView = LayoutInflater.from(this).inflate(
+                R.layout.listview_footer, null);
+        mFooterLoading = (ProgressBar) mFooterView.findViewById(R.id.listview_foot_progress);
+        mFooterMsg = (TextView) mFooterView.findViewById(R.id.listview_foot_more);
+        mFooterLoading.setVisibility(View.VISIBLE);
+        mFooterMsg.setText(R.string.load_ing);
+        listView.addFooterView(mFooterView);
+        listView.setAdapter(adapter);
+        listView.setOnItemClickListener(this);
+        listView.setOnScrollListener(this);
+    }
 
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position,
-			long id) {
-		if (adapter == null || mData == null || mData.isEmpty()) {
-			return;
-		}
-		
-		//点击了底部
-		if(view == mFooterView) {
-			//数据已经全部加载，或数据为空时，或正在加载，不处理滚动事件
-			if(mMessageState == MessageData.MESSAGE_STATE_FULL
-					|| mMessageState == MessageData.MESSAGE_STATE_EMPTY
-					|| isLoading) {
-				return;	
-			}
-			onLoadNextPage();
-			return;
-		}
-		UIHelper.showProjectDetail(mAppContext, mData.get(position), null);
-	}
-		
-	/** 加载下一页*/
-	protected void onLoadNextPage() {
-		// 当前pageIndex
-		int pageIndex = mData.size() / 15 + 1;
-		load(mKey, pageIndex);
-	}
-	
-	/** 设置底部有更多数据的状态*/
-	private void setFooterHasMoreState() {
-		if(mFooterView != null) {
-			mFooterLoading.setVisibility(View.GONE);
-			mFooterMsg.setText(R.string.load_more);
-		}
-	}
-	
-	/** 设置底部已加载全部的状态*/
-	private void setFooterFullState() {
-		if(mFooterView != null) {
-			mMessageState = MESSAGESTATEFULL;
-			mFooterLoading.setVisibility(View.GONE);
-			mFooterMsg.setText(R.string.load_full);
-		}
-	}
-	
-	/** 设置底部加载中的状态*/
-	private void setFooterLoadingState() {
-		if(mFooterView != null) {
-			mFooterLoading.setVisibility(View.VISIBLE);
-			mFooterMsg.setText(R.string.load_ing);
-			mEmpty.setVisibility(View.GONE);
-		}
-	}
-	
-	private void load(final String key, final int page) {
-		new AsyncTask<Void, Void, Message>() {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return super.onCreateOptionsMenu(menu);
+    }
 
-			@Override
-			protected Message doInBackground(Void... params) {
-				Message msg = new Message();
-				try {
-					msg.obj = mAppContext.getSearcheProject(key, page);
-					msg.what = 1;
-				} catch (AppException e) {
-					isLoading = false;
-					msg.what = -1;
-					msg.obj = e;
-					e.printStackTrace();
-				}
-				return msg;
-			}
+    @Override
+    public boolean onQueryTextChange(String arg0) {
+        return true;
+    }
 
-			@Override
-			protected void onPreExecute() {
-				super.onPreExecute();
-				isLoading = true;
-				mEmpty.setVisibility(View.GONE);
-				if (page != 0 && page != 1) {
-					setFooterLoadingState();
-				} else {
-					mLoading.setVisibility(View.VISIBLE);
-					mListView.setVisibility(View.GONE);
-				}
-			}
+    @Override
+    public boolean onQueryTextSubmit(String arg0) {
+        mKey = arg0;
+        adapter.clear();
+        load(arg0, 1);
+        listView.setSelection(0);
+        imm.hideSoftInputFromWindow(listView.getWindowToken(), 0);
+        return true;
+    }
 
-			@SuppressWarnings("unchecked")
-			@Override
-			protected void onPostExecute(Message msg) {
-				super.onPostExecute(msg);
-				mLoading.setVisibility(View.GONE);
-				isLoading = false;
-				if (msg.what == 1) {
-					if (page == 1 || page == 0)
-						mData.clear();
-					List<Project> resuleData = (List<Project>) msg.obj;
-					if (resuleData.size() > 0) {
-						mEmpty.setVisibility(View.GONE);
-						mData.addAll(resuleData);
-						if (resuleData.size() != 15) {
-							setFooterFullState();
-						} else {
-							setFooterHasMoreState();
-						}
-						adapter.notifyDataSetChanged();
-						mListView.setVisibility(View.VISIBLE);
-					} else {
-						if (page == 1 || page == 0) {
-							mListView.setVisibility(View.GONE);
-							mEmpty.setVisibility(View.VISIBLE);
-						}
-					}
-				} else {
-					((AppException) msg.obj).makeToast(mAppContext);
-				}
-			}
-		}.execute();
-	}
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position,
+                            long id) {
+        // 点击了底部
+        if (view == mFooterView) {
+            return;
+        }
+        Project p = adapter.getItem(position);
+        if (p != null) {
+            UIHelper.showProjectDetail(this, p, null);
+        }
+    }
 
+    /**
+     * 设置底部有更多数据的状态
+     */
+    private void setFooterHasMoreState() {
+        if (mFooterView != null) {
+            mFooterLoading.setVisibility(View.GONE);
+            mFooterMsg.setText(R.string.load_more);
+        }
+    }
+
+    /**
+     * 设置底部已加载全部的状态
+     */
+    private void setFooterFullState() {
+        if (mFooterView != null) {
+            mMessageState = MESSAGESTATEFULL;
+            mFooterLoading.setVisibility(View.GONE);
+            mFooterMsg.setText(R.string.load_full);
+        }
+    }
+
+    /**
+     * 设置底部加载中的状态
+     */
+    private void setFooterLoadingState() {
+        if (mFooterView != null) {
+            mFooterLoading.setVisibility(View.VISIBLE);
+            mFooterMsg.setText(R.string.load_ing);
+        }
+    }
+
+    private void load(final String key, final int page) {
+        GitOSCApi.searchProjects(key, page, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                List<Project> projects = JsonUtils.getList(Project[].class, responseBody);
+                tipInfo.setHiden();
+                if (projects.size() > 0) {
+                    adapter.addItem(projects);
+                    if (projects.size() < 15) {
+                        setFooterFullState();
+                    }
+                    listView.setVisibility(View.VISIBLE);
+                } else {
+                    if (page == 1 || page == 0) {
+                        listView.setVisibility(View.GONE);
+                        tipInfo.setEmptyData("未找到相关的项目");
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                tipInfo.setLoadError();
+            }
+
+            @Override
+            public void onStart() {
+                super.onStart();
+                isLoading = true;
+                if (page != 0 && page != 1) {
+                    setFooterLoadingState();
+                } else {
+                    tipInfo.setLoading();
+                    listView.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                isLoading = false;
+            }
+        });
+    }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+        if (adapter == null || adapter.getCount() == 0) {
+            return;
+        }
+        // 数据已经全部加载，或数据为空时，或正在加载，不处理滚动事件
+        if (mMessageState == MessageData.MESSAGE_STATE_FULL
+                || mMessageState == MessageData.MESSAGE_STATE_EMPTY
+                || isLoading) {
+            return;
+        }
+        // 判断是否滚动到底部
+        boolean scrollEnd = false;
+        try {
+            if (view.getPositionForView(mFooterView) == view
+                    .getLastVisiblePosition())
+                scrollEnd = true;
+        } catch (Exception e) {
+            scrollEnd = false;
+        }
+
+        if (scrollEnd) {
+            ++mCurrentPage;
+            load(mKey, mCurrentPage);
+            setFooterLoadingState();
+        }
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+    }
 }

@@ -8,6 +8,7 @@ import net.oschina.gitapp.bean.ShippingAddress;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.net.URLEncoder;
 
 import static net.oschina.gitapp.api.AsyncHttpHelp.get;
 import static net.oschina.gitapp.api.AsyncHttpHelp.getPrivateTokenWithParams;
@@ -89,7 +90,7 @@ public class GitOSCApi {
     public static void searchProjects(String query, int page, AsyncHttpResponseHandler handler) {
         RequestParams params = new RequestParams();
         params.put("page", page);
-        get(PROJECTS + "search", params, handler);
+        get(PROJECTS + "search/" + URLEncoder.encode(query), params, handler);
     }
 
     public static void getUserProjects(String uid, int page, AsyncHttpResponseHandler handler) {

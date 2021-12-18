@@ -65,6 +65,7 @@ public class TipInfoLayout extends FrameLayout {
     }
 
     public void setLoading() {
+        this.setVisibility(VISIBLE);
         this.mPbProgressBar.setVisibility(View.VISIBLE);
         this.mTipContainer.setVisibility(View.GONE);
     }
@@ -78,6 +79,7 @@ public class TipInfoLayout extends FrameLayout {
     }
 
     public void setEmptyData(String emptyTip) {
+        this.setVisibility(VISIBLE);
         String tip = empty;
         if (emptyTip != null && StringUtils.isEmpty(emptyTip))
             tip = emptyTip;

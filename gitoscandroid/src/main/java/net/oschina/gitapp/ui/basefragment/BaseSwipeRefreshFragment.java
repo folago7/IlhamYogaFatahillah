@@ -84,6 +84,7 @@ public abstract class BaseSwipeRefreshFragment<T extends Entity>
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
             mTipInfo.setLoadError();
+            GitViewUtils.showToast("网络错误码 " + statusCode);
         }
 
         @Override
@@ -189,17 +190,6 @@ public abstract class BaseSwipeRefreshFragment<T extends Entity>
         if (mSwipeRefreshLayout != null) {
             mSwipeRefreshLayout.setRefreshing(false);
             mSwipeRefreshLayout.setEnabled(true);
-        }
-    }
-
-
-    /**
-     * 设置底部有更多数据的状态
-     */
-    void setFooterHasMoreState() {
-        if (mFooterView != null) {
-            mFooterProgressBar.setVisibility(View.GONE);
-            mFooterTextView.setText(R.string.load_more);
         }
     }
 
