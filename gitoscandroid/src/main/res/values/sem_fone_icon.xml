@@ -10,4 +10,6 @@
     <string name="sem_user">\uf007</string>
     <string name="sem_wait">\uf017</string>
     <string name="sem_loading">\uf110</string>
+    <string name="sem_folder">\uf07b</string>
+    <string name="sem_file_text">\uf0f6</string>
 </resources>

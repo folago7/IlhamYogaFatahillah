@@ -15,12 +15,13 @@
  */
 package net.oschina.gitapp.bean;
 
-import static java.lang.String.CASE_INSENSITIVE_ORDER;
 import android.text.TextUtils;
 
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
+import static java.lang.String.CASE_INSENSITIVE_ORDER;
 
 /**
  * 代码树结构
@@ -38,8 +39,6 @@ public class FullTree {
     /**
      * Create tree with branch
      *
-     * @param tree
-     * @param reference
      */
     public FullTree(List<CodeTree> entries) {
         root = new Folder();

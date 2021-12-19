@@ -51,6 +51,8 @@
         <activity android:name=".ui.ProjectActivity" />
         <activity android:name=".ui.ProjectReadMeActivity" />
         <activity android:name=".ui.ProjectCodeActivity" />
+        <activity android:name=".ui.RepCodeActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name=".ui.ProjectSomeInfoListActivity" />
         <activity android:name=".ui.NotificationActivity" >
         </activity>

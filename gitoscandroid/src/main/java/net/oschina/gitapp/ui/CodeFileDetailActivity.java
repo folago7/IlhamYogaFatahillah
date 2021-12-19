@@ -3,10 +3,8 @@ package net.oschina.gitapp.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.text.ClipboardManager;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,11 +12,13 @@ import android.view.View;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
 import net.oschina.gitapp.AppConfig;
 import net.oschina.gitapp.AppContext;
-import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.ApiClient;
+import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.CodeFile;
 import net.oschina.gitapp.bean.MoreMenuItem;
 import net.oschina.gitapp.bean.Project;
@@ -28,9 +28,13 @@ import net.oschina.gitapp.common.FileUtils;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.interfaces.OnStatusListener;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
+import net.oschina.gitapp.util.GitViewUtils;
+import net.oschina.gitapp.util.JsonUtils;
 import net.oschina.gitapp.util.MarkdownUtils;
 import net.oschina.gitapp.util.SourceEditor;
 import net.oschina.gitapp.widget.DropDownMenu;
+
+import org.apache.http.Header;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -263,64 +267,38 @@ public class CodeFileDetailActivity extends BaseActivity implements
 	private void loadDatasCode(final String projectId, final String path,
 			final String ref_name) {
 		onStatus(STATUS_LOADING);
-		new AsyncTask<Void, Void, Message>() {
-			@Override
-			protected Message doInBackground(Void... params) {
-				Message msg = new Message();
-				try {
-					AppContext ac = AppContext.getInstance();
-					CodeFile codeFile = ac.getCodeFile(projectId, path,
-							ref_name);
-					msg.what = 1;
-					msg.obj = codeFile;
-				} catch (Exception e) {
-					msg.what = -1;
-					msg.obj = e;
-				}
-				return msg;
-			}
+        GitOSCApi.getCodeFileDetail(projectId, path, ref_name, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                CodeFile codeFile = JsonUtils.toBean(CodeFile.class, responseBody);
+                if (mMoreMenuWindow == null) {
+                    initMoreMenu();
+                }
+                mCodeFile = codeFile;
+                editor.setMarkdown(MarkdownUtils.isMarkdown(mPath));
+                editor.setSource(mPath, mCodeFile);
 
-			@Override
-			protected void onPreExecute() {
-				super.onPreExecute();
-			}
+                onStatus(STATUS_LOADED);
 
-			@Override
-			protected void onPostExecute(Message msg) {
-				super.onPostExecute(msg);
-				if (msg.what == 1 && msg.obj != null) {
-					if (mMoreMenuWindow == null) {
-						initMoreMenu();
-					}
-					mCodeFile = (CodeFile) msg.obj;
-					editor.setMarkdown(MarkdownUtils.isMarkdown(mPath));
-					editor.setSource(mPath, mCodeFile);
+                // 截取屏幕
+                Handler mHandler = new Handler();
+                mHandler.postDelayed(new Runnable() {
 
-					onStatus(STATUS_LOADED);
+                    @Override
+                    public void run() {
+                        if (bitmap == null) {
+                            bitmap = UIHelper
+                                    .takeScreenShot(CodeFileDetailActivity.this);
+                        }
+                    }
+                }, 500);
+            }
 
-					// 截取屏幕
-					Handler mHandler = new Handler();
-					mHandler.postDelayed(new Runnable() {
-
-						@Override
-						public void run() {
-							if (bitmap == null) {
-								bitmap = UIHelper
-										.takeScreenShot(CodeFileDetailActivity.this);
-							}
-						}
-					}, 500);
-				} else {
-					onStatus(STATUS_NONE);
-					if (msg.obj instanceof AppException) {
-						AppException appException = (AppException) msg.obj;
-						appException.makeToast(mContext);
-					} else {
-						UIHelper.ToastMessage(mContext,
-								((Exception) msg.obj).getMessage());
-					}
-				}
-			}
-		}.execute();
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                onStatus(STATUS_NONE);
+                GitViewUtils.showToast("网络错误" + statusCode);
+            }
+        });
 	}
 }

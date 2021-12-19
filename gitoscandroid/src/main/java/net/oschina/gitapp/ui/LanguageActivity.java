@@ -1,265 +1,190 @@
 package net.oschina.gitapp.ui;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.v7.app.ActionBar;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
-import net.oschina.gitapp.AppContext;
-import net.oschina.gitapp.AppException;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.CommonAdapter;
 import net.oschina.gitapp.adapter.ProjectAdapter;
 import net.oschina.gitapp.adapter.ViewHolder;
-import net.oschina.gitapp.bean.CommonList;
+import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.Language;
-import net.oschina.gitapp.bean.MessageData;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
+import net.oschina.gitapp.util.JsonUtils;
+import net.oschina.gitapp.widget.EnhanceListView;
+import net.oschina.gitapp.widget.TipInfoLayout;
 
-import java.util.ArrayList;
+import org.apache.http.Header;
+
 import java.util.List;
 
-public class LanguageActivity extends BaseActivity implements
-	android.support.v7.app.ActionBar.OnNavigationListener, OnItemClickListener{
-	
-	/**
-	 * The serialization (saved instance state) Bundle key representing the
-	 * current dropdown position.
-	 */
-	private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
-	
-	private AppContext mContext;
-	
-	private ListView mListView;
-	
-	private View mFooterView;
-	
-	private TextView mFooterTextView;
-	
-	private ProgressBar mFooterProgressBar;
-	
-	private List<Project> mProjects;
-	
-	private ProjectAdapter mProjectAdapter;
-	
-	private List<Language> mLanguages;
-	
-	private CommonAdapter<Language> mLanguageAdapter;
-	
-	private ProgressBar mLoading;
-	
-	private int mMessageState = MessageData.MESSAGE_STATE_MORE;
-	
-	private String mLanguageId;
-	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_language);
-		mContext = AppContext.getInstance();
-		mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-		initView();
-		initData();
-		steupList();
-		loadLanguagesList();
-	}
-	
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-	}
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
-	@Override
-	public void onRestoreInstanceState(Bundle savedInstanceState) {
-		// Restore the previously serialized current dropdown position.
-		if (savedInstanceState.containsKey(STATE_SELECTED_NAVIGATION_ITEM)) {
-//			getActionBar().setSelectedNavigationItem(
-//					savedInstanceState.getInt(STATE_SELECTED_NAVIGATION_ITEM));
-		}
-	}
-	
-	private void initView() {
-		mLoading = (ProgressBar) findViewById(R.id.loading);
-		mListView = (ListView) findViewById(R.id.project_list);
-		
-		mFooterView = LayoutInflater.from(mContext).inflate(R.layout.listview_footer, null);
-		mFooterProgressBar = (ProgressBar) mFooterView.findViewById(R.id.listview_foot_progress);
-		mFooterTextView = (TextView) mFooterView.findViewById(R.id.listview_foot_more);
-	}
-	
-	private void initData() {
-		mProjects = new ArrayList<Project>();
-		mProjectAdapter = new ProjectAdapter(mContext, R.layout.list_item_project);
-		
-		mLanguages = new ArrayList<Language>();
-		mLanguageAdapter = new CommonAdapter<Language>(mContext, R.layout.languages) {
+public class LanguageActivity extends BaseActivity implements
+        ActionBar.OnNavigationListener, OnItemClickListener {
+
+    /**
+     * The serialization (saved instance state) Bundle key representing the
+     * current dropdown position.
+     */
+    private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
+    @InjectView(R.id.tip_info)
+    TipInfoLayout tipInfo;
+    @InjectView(R.id.listView)
+    EnhanceListView listView;
+
+    private ProjectAdapter mProjectAdapter;
+
+    private CommonAdapter<Language> mLanguageAdapter;
+
+    private String mLanguageId;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_language);
+        ButterKnife.inject(this);
+        mActionBar.setDisplayShowTitleEnabled(false);
+        mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+        mProjectAdapter = new ProjectAdapter(this, R.layout.list_item_project);
+
+        mLanguageAdapter = new CommonAdapter<Language>(getApplicationContext(), R.layout.languages) {
             @Override
             public void convert(ViewHolder vh, Language item) {
                 vh.setText(R.id.language_name, item.getName());
             }
         };
-		mActionBar.setListNavigationCallbacks(mLanguageAdapter, this);
-	}
-	
-	private void steupList() {
-		mListView.addFooterView(mFooterView);
-		mListView.setAdapter(mProjectAdapter);
-		mListView.setOnItemClickListener(this);
-	}
+        mActionBar.setListNavigationCallbacks(mLanguageAdapter, this);
+        listView.setAdapter(mProjectAdapter);
+        listView.setOnItemClickListener(this);
+        listView.setOnLoadMoreListener(new EnhanceListView.OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(int pageNum, int pageSize) {
+                loadProjects(mLanguageId, pageNum);
+            }
+        });
+        tipInfo.setOnClick(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mLanguageAdapter.getCount() == 0) {
+                    loadLanguagesList();
+                } else {
+                    loadProjects(mLanguageId, 1);
+                }
+            }
+        });
+        loadLanguagesList();
+    }
 
-	@Override
-	public void onResume() {
-		super.onResume();
-	}
-	
-	private void beforeLoading(int page) {
-		if (page == 1 || page == 0) {
-			mLoading.setVisibility(View.VISIBLE);
-			mListView.setVisibility(View.GONE);
-			mProjects.clear();
-		} else {
-			setFooterLoadingState();
-		}
-	}
-	
-	private void afterLoading(boolean isEmpty) {
-		mLoading.setVisibility(View.GONE);
-		if (isEmpty) {
-			
-		} else {
-			mListView.setVisibility(View.VISIBLE);
-		}
-	}
-	
-	private void loadProjects(final String languageId, final int page) {
-		if (mLanguages.isEmpty()) {
-			setFooterNotLanguages();
-			return;
-		}
-	}
-	
-	void setFooterNotLanguages() {
-		if(mFooterView != null) {
-			mFooterProgressBar.setVisibility(View.GONE);
-			mFooterTextView.setText("没有加载到语言列表");
-		}
-	}
-	
-	/** 设置底部有错误的状态*/
-	void setFooterErrorState() {
-		if(mFooterView != null) {
-			mFooterProgressBar.setVisibility(View.GONE);
-			mFooterTextView.setText(R.string.load_error);
-		}
-	}
-	
-	/** 设置底部有更多数据的状态*/
-	void setFooterHasMoreState() {
-		if(mFooterView != null) {
-			mFooterProgressBar.setVisibility(View.GONE);
-			mFooterTextView.setText(R.string.load_more);
-		}
-	}
-	
-	/** 设置底部已加载全部的状态*/
-	void setFooterFullState() {
-		if(mFooterView != null) {
-			mFooterProgressBar.setVisibility(View.GONE);
-			mFooterTextView.setText(R.string.load_full);
-		}
-	}
-	
-	/** 设置底部无数据的状态*/
-	void setFooterNoMoreState() {
-		if(mFooterView != null) {
-			mFooterProgressBar.setVisibility(View.GONE);
-			mFooterTextView.setText(R.string.load_empty);
-		}
-	}
-	
-	/** 设置底部加载中的状态*/
-	void setFooterLoadingState() {
-		if(mFooterView != null) {
-			mFooterProgressBar.setVisibility(View.VISIBLE);
-			mFooterTextView.setText(R.string.load_ing);
-		}
-	}
-	
-	// 加载语言列表
-	private void loadLanguagesList() {
-		new AsyncTask<Void, Void, Message>() {
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 
-			@Override
-			protected Message doInBackground(Void... params) {
-				Message msg = new Message();
-				try {
-					msg.obj = mContext.getLanguageList();
-					msg.what = 1;
-				} catch (AppException e) {
-					msg.what = -1;
-					msg.obj = e;
-					e.printStackTrace();
-				}
-				return msg;
-			}
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        // Restore the previously serialized current dropdown position.
+        if (savedInstanceState.containsKey(STATE_SELECTED_NAVIGATION_ITEM)) {
+            getSupportActionBar().setSelectedNavigationItem(
+                    savedInstanceState.getInt(STATE_SELECTED_NAVIGATION_ITEM));
+        }
+    }
 
-			@Override
-			protected void onPreExecute() {
-				super.onPreExecute();
-				beforeLoading(0);
-			}
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 
-			@SuppressWarnings("unchecked")
-			@Override
-			protected void onPostExecute(Message msg) {
-				super.onPostExecute(msg);
-				afterLoading(false);
-				if (msg.what == 1) {
-					CommonList<Language> languages = (CommonList<Language>) msg.obj;
-					if (languages != null && languages.getCount() > 0) {
-						mLanguages.addAll(languages.getList());
-						mLanguageAdapter.notifyDataSetChanged();
-					} else {
-						setFooterNotLanguages();
-					}
-				} else {
-					
-				}
-			}
-			
-		}.execute();
-	}
+    private void loadProjects(final String languageId, final int page) {
+        GitOSCApi.getLanguageProjectList(languageId, page, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                tipInfo.setHiden();
+                List<Project> projects = JsonUtils.getList(Project[].class, responseBody);
+                if (projects != null && !projects.isEmpty()) {
+                    listView.setVisibility(View.VISIBLE);
+                    mProjectAdapter.addItem(projects);
+                } else {
+                    if (page == 1) {
+                        tipInfo.setEmptyData("暂无该语言相关的项目");
+                    }
+                }
+            }
 
-	@Override
-	public boolean onNavigationItemSelected(int arg0, long arg1) {
-		Language language = mLanguages.get(arg0);
-		mLanguageId = language.getId();
-		mMessageState = MessageData.MESSAGE_STATE_MORE;
-		loadProjects(mLanguageId, 1);
-		return true;
-	}
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                tipInfo.setLoadError();
+            }
 
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position,
-			long id) {
-		if (view == mFooterView) {
-			if (mMessageState != MessageData.MESSAGE_STATE_FULL) {
-				// 当前pageIndex
-				int pageIndex = mProjects.size() / AppContext.PAGE_SIZE + 1;
-				loadProjects(mLanguageId, pageIndex);
-			}
-			return;
-		}
-		Project p = mProjects.get(position);
-		UIHelper.showProjectDetail(mContext, p, p.getId());
-	}
+            @Override
+            public void onStart() {
+                super.onStart();
+                if (page == 1) {
+                    tipInfo.setLoading();
+                    listView.setVisibility(View.GONE);
+                }
+            }
+        });
+    }
+
+    void setFooterNotLanguages() {
+        listView.setVisibility(View.GONE);
+        tipInfo.setEmptyData("加载语言列表失败");
+    }
+
+    // 加载语言列表
+    private void loadLanguagesList() {
+        GitOSCApi.getLanguageList(new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                List<Language> languageList = JsonUtils.getList(Language[].class, responseBody);
+                if (languageList != null && !languageList.isEmpty()) {
+                    mLanguageAdapter.addItem(languageList);
+                } else {
+                    setFooterNotLanguages();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                setFooterNotLanguages();
+            }
+
+            @Override
+            public void onStart() {
+                super.onStart();
+                tipInfo.setLoading();
+            }
+        });
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(int arg0, long arg1) {
+        Language language = mLanguageAdapter.getItem(arg0);
+        if (language != null) {
+            mProjectAdapter.clear();
+            mLanguageId = language.getId();
+            loadProjects(mLanguageId, 1);
+            return true;
+        }
+
+        return false;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position,
+                            long id) {
+        Project p = mProjectAdapter.getItem(position);
+        if (p != null) {
+            UIHelper.showProjectDetail(this, p, p.getId());
+        }
+    }
 }

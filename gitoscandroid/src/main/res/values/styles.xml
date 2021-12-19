@@ -297,21 +297,11 @@
 
     <!-- 项目详情页面 style end -->
 
-
-    <!-- project code tree style start -->
-
-    <style name="project_codetree_list_img">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:gravity">center</item>
-        <item name="android:textSize">25sp</item>
-    </style>
-
     <style name="project_codetree_list_name">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:includeFontPadding">false</item>
-        <item name="android:layout_marginLeft">8dip</item>
+        <item name="android:layout_marginLeft">10dip</item>
         <item name="android:textSize">14sp</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:textColor">@color/black</item>

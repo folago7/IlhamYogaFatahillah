@@ -5,7 +5,7 @@
 
     <include
         android:id="@+id/projectcode_switch_branch"
-        layout="@layout/projectcode_fragment_footer"
+        layout="@layout/activity_projectcode_footer"
         android:visibility="gone" />
 
     <ProgressBar

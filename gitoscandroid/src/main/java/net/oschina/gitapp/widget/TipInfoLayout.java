@@ -71,17 +71,24 @@ public class TipInfoLayout extends FrameLayout {
     }
 
     public void setLoadError() {
+        setLoadError("");
+    }
+
+    public void setLoadError(String errorTip) {
+        String tip = netWorkError;
+        if (errorTip != null && !StringUtils.isEmpty(errorTip))
+            tip = errorTip;
         this.mPbProgressBar.setVisibility(View.GONE);
         this.mTipContainer.setVisibility(View.VISIBLE);
         this.mTvTipState.setText(R.string.fa_wifi);
         TypefaceUtils.setFontAwsome(this.mTvTipState);
-        this.mTvTipMsg.setText(netWorkError);
+        this.mTvTipMsg.setText(tip);
     }
 
     public void setEmptyData(String emptyTip) {
         this.setVisibility(VISIBLE);
         String tip = empty;
-        if (emptyTip != null && StringUtils.isEmpty(emptyTip))
+        if (emptyTip != null && !StringUtils.isEmpty(emptyTip))
             tip = emptyTip;
         this.mPbProgressBar.setVisibility(View.GONE);
         this.mTipContainer.setVisibility(View.VISIBLE);

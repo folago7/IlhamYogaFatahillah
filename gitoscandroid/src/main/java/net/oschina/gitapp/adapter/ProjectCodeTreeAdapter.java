@@ -25,11 +25,16 @@ public class ProjectCodeTreeAdapter extends CommonAdapter<CodeTree> {
     public void convert(ViewHolder vh, CodeTree code) {
         // 1.显示相关的信息
         String type = code.getType();
-        int tagRes = R.string.oct_folder;
+        int tagRes = R.string.sem_folder;
+        TextView name = vh.getView(R.id.tv_name);
+        TextView flag = vh.getView(R.id.tv_flag);
+        flag.setTextSize(20);
         if (type.equalsIgnoreCase(CodeTree.TYPE_BLOB)) {
-            tagRes = R.string.oct_file;
+            tagRes = R.string.sem_file_text;
+            flag.setTextSize(24);
         }
-        TypefaceUtils.setOcticons((TextView)vh.getView(R.id.projectcodetree_listitem_tag));
-        vh.setText(R.id.projectcodetree_listitem_name, code.getName());
+        vh.setText(R.id.tv_flag, tagRes);
+        TypefaceUtils.setSemantic((TextView) vh.getView(R.id.tv_flag));
+        name.setText(code.getName());
     }
 }

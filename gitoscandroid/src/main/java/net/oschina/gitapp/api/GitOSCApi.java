@@ -116,7 +116,7 @@ public class GitOSCApi {
         RequestParams params = getPrivateTokenWithParams();
         params.put("path", path);
         params.put("ref_name", refName);
-        get(PROJECTS + pId + "/" + "/repository/tree", params, handler);
+        get(PROJECTS + pId + "/repository/tree", params, handler);
     }
 
     public static void getProjectIssues(String pId, int page, AsyncHttpResponseHandler handler) {
@@ -150,7 +150,7 @@ public class GitOSCApi {
         RequestParams params = getPrivateTokenWithParams();
         params.put("file_path", file_path);
         params.put("ref", ref);
-        get(PROJECTS + projectId + "/epository/files", params, handler);
+        get(PROJECTS + projectId + "/repository/files", params, handler);
     }
 
     public static void getReadMeFile(String projectId, AsyncHttpResponseHandler handler) {
@@ -258,7 +258,7 @@ public class GitOSCApi {
     public static void getLanguageProjectList(String languageId, int page, AsyncHttpResponseHandler handler) {
         RequestParams params = getPrivateTokenWithParams();
         params.put("page", page);
-        get(PROJECTS + "languages/" + languageId, handler);
+        get(PROJECTS + "languages/" + languageId, params, handler);
     }
 
     /**

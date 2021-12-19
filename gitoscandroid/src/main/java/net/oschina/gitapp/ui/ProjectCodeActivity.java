@@ -148,7 +148,7 @@ public class ProjectCodeActivity extends BaseActivity implements OnItemClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.projectcode_fragment);
+        setContentView(R.layout.activity_projectcode_);
         mAppContext = AppContext.getInstance();
         Intent intent = getIntent();
         if (intent != null) {
@@ -232,8 +232,8 @@ public class ProjectCodeActivity extends BaseActivity implements OnItemClickList
 
         mCodeTree = (ListView) findViewById(R.id.projectcode_tree);
         mSwitch_branch = (LinearLayout) findViewById(R.id.projectcode_switch_branch);
-        mBranchIcon = (TextView) findViewById(R.id.projectcode_branch_icon);
-        mBranchName = (TextView) findViewById(R.id.projectcode_branch_name);
+        mBranchIcon = (TextView) findViewById(R.id.tv_branch_icon);
+        mBranchName = (TextView) findViewById(R.id.tv_branch_name);
     }
 
     private void setupListView() {

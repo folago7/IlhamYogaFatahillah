@@ -62,4 +62,8 @@
     <dimen name="space_3">3.0dip</dimen>
     <dimen name="space_2">2.0dip</dimen>
     <dimen name="space_1">1.0dip</dimen>
+
+    <dimen name="enhance_list_header_release_min_distance">20dp</dimen>
+    <dimen name="enhance_list_empty_text_size">12sp</dimen>
+    <dimen name="enhance_list_empty_text_padding">120dp</dimen>
 </resources>

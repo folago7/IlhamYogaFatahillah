@@ -15,11 +15,12 @@
 
         <TextView
             android:id="@+id/projectcode_pre_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="@string/oct_folders"
             android:textColor="#BEBEBE"
             android:gravity="center"
-            android:layout_marginTop="5dip"
-            style="@style/project_codetree_list_img" />
+            android:layout_marginTop="5dip" />
 
         <LinearLayout
             android:layout_width="wrap_content"

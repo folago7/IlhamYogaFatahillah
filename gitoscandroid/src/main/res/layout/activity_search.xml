@@ -17,10 +17,11 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             app:queryHint="@string/search_hint" />
-        <ListView
+        <net.oschina.gitapp.widget.EnhanceListView
             android:id="@+id/listView"
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
+            app:isRefreshStyle="false"
             android:visibility="gone" />
     </LinearLayout>
 

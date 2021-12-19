@@ -11,4 +11,9 @@
         <attr name="disableViewPager" format="boolean"/>
     </declare-styleable>
 
+    <declare-styleable name="EnhanceListView">
+        <attr name="isRefreshStyle" format="boolean" />
+        <attr name="isLoadMoreStyle" format="boolean" />
+    </declare-styleable>
+
 </resources>
