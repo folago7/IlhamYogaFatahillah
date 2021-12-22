@@ -11,7 +11,7 @@
          2.也可以在js调用的方法加上注解@JavascriptInterface，不然是不用被js代码所调用的
     -->
     <uses-sdk
-        android:minSdkVersion="10"
+        android:minSdkVersion="11"
         android:targetSdkVersion="19" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -51,7 +51,7 @@
         <activity android:name=".ui.ProjectActivity" />
         <activity android:name=".ui.ProjectReadMeActivity" />
         <activity android:name=".ui.ProjectCodeActivity" />
-        <activity android:name=".ui.RepCodeActivity"
+        <activity android:name=".ui.ProjectCodeActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".ui.ProjectSomeInfoListActivity" />
         <activity android:name=".ui.NotificationActivity" >

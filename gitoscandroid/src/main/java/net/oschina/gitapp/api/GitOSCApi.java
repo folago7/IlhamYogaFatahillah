@@ -125,9 +125,13 @@ public class GitOSCApi {
         get(PROJECTS + pId + "/" + "issues", params, handler);
     }
 
-    public static void getProjectBranchsOrTags(String pId, String branchOrTag, AsyncHttpResponseHandler handler) {
+    public static void getProjectBranchs(String pId, AsyncHttpResponseHandler handler) {
+        get(PROJECTS + pId + "/repository/branches", handler);
+    }
+
+    public static void getProjectTags(String pId, AsyncHttpResponseHandler handler) {
         RequestParams params = getPrivateTokenWithParams();
-        get(PROJECTS + pId + "/" + "/repository/" + branchOrTag, params, handler);
+        get(PROJECTS + pId + "/" + "/repository/tags", params, handler);
     }
 
     public static void getIssueDetail(String pId, String issueId, AsyncHttpResponseHandler handler) {

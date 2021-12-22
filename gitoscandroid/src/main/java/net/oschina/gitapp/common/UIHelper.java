@@ -56,9 +56,9 @@ import net.oschina.gitapp.ui.MainActivity;
 import net.oschina.gitapp.ui.MySelfInfoActivity;
 import net.oschina.gitapp.ui.NotificationActivity;
 import net.oschina.gitapp.ui.ProjectActivity;
+import net.oschina.gitapp.ui.ProjectCodeActivity;
 import net.oschina.gitapp.ui.ProjectReadMeActivity;
 import net.oschina.gitapp.ui.ProjectSomeInfoListActivity;
-import net.oschina.gitapp.ui.RepCodeActivity;
 import net.oschina.gitapp.ui.SearchActivity;
 import net.oschina.gitapp.ui.UserInfoActivity;
 
@@ -602,7 +602,7 @@ public class UIHelper {
 	 * @param project
 	 */
 	public static void showProjectCodeActivity(Context context, Project project) {
-		Intent intent = new Intent(context, RepCodeActivity.class);
+		Intent intent = new Intent(context, ProjectCodeActivity.class);
 		Bundle bundle = new Bundle();
 		bundle.putSerializable(Contanst.PROJECT, project);
 		intent.putExtras(bundle);

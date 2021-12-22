@@ -29,11 +29,14 @@ public class ViewHolder {
 
     private Context mContext;
 
+    private int position;
+
     public ViewHolder(Context context, ViewGroup parent, int layoutId, int position) {
         this.mViews = new SparseArray<View>();
         this.mConvertView = LayoutInflater.from(context).inflate(layoutId, parent, false);
         this.mConvertView.setTag(this);
         this.mContext = context;
+        this.position = position;
     }
 
     /***
@@ -47,9 +50,13 @@ public class ViewHolder {
      */
     public  static ViewHolder getViewHolder(Context context, View convertView, ViewGroup parent, int layoutId, int position) {
         if (convertView == null) {
-            return new ViewHolder(context,parent,layoutId,position);
+            return new ViewHolder(context, parent, layoutId, position);
         }
         return (ViewHolder)convertView.getTag();
+    }
+
+    public int getPosition() {
+        return this.position;
     }
 
     // 通过一个viewId来获取一个view
