@@ -4,14 +4,14 @@
     android:layout_height="wrap_content"
     android:descendantFocusability="blocksDescendants"
     android:orientation="horizontal"
-    android:paddingBottom="7dip"
-    android:paddingLeft="6dip"
-    android:paddingRight="6dip"
-    android:paddingTop="8dip" >
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp" >
 
     <!-- 项目作者头像 -->
     <net.oschina.gitapp.widget.CircleImageView
-        android:id="@+id/projectcommit_listitem_userface"
+        android:id="@+id/iv_portrait"
         style="@style/UserFaceImageStyle" />
 
     <LinearLayout
@@ -22,7 +22,7 @@
 
         <!-- 用户昵称 -->
         <TextView
-            android:id="@+id/projectcommit_listitem_username"
+            android:id="@+id/tv_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
@@ -32,7 +32,7 @@
 
         <!-- commit内容-->
         <TextView
-            android:id="@+id/projectcommit_listitem_content"
+            android:id="@+id/tv_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dip"
@@ -49,7 +49,7 @@
             
             <!-- 时间 -->			
             <TextView
-                android:id="@+id/projectcommit_listitem_date"
+                android:id="@+id/tv_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/listitem_gray"

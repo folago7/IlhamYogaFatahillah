@@ -29,11 +29,11 @@ public class ProjectIssuesAdapter extends CommonAdapter<Issue> {
         // 1.加载头像
         String portraitURL = issue.getAuthor() == null ? "" : issue.getAuthor().getNew_portrait();
         if (portraitURL.endsWith("portrait.gif") || StringUtils.isEmpty(portraitURL)) {
-            vh.setImageResource(R.id.projectissues_listitem_userface, R.drawable.mini_avatar);
+            vh.setImageResource(R.id.iv_portrait, R.drawable.mini_avatar);
         } else {
-            vh.setImageForUrl(R.id.projectissues_listitem_userface, portraitURL);
+            vh.setImageForUrl(R.id.iv_portrait, portraitURL);
         }
-        vh.getView(R.id.projectissues_listitem_userface).setOnClickListener(new OnClickListener() {
+        vh.getView(R.id.iv_portrait).setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -46,9 +46,9 @@ public class ProjectIssuesAdapter extends CommonAdapter<Issue> {
         });
 
         // 2.显示相关信息
-        vh.setText(R.id.projectissues_listitem_title, issue.getTitle());
-        vh.setText(R.id.projectissues_listitem_description, issue.getDescription(), "暂无描述");
-        vh.setText(R.id.projectissues_listitem_author, issue.getAuthor() == null ? "" : issue.getAuthor().getName());
-        vh.setText(R.id.projectissues_listitem_date, StringUtils.friendly_time(issue.getCreatedAt()));
+        vh.setText(R.id.tv_title, issue.getTitle());
+        vh.setText(R.id.tv_description, issue.getDescription(), "暂无描述");
+        vh.setText(R.id.tv_author, issue.getAuthor() == null ? "" : issue.getAuthor().getName());
+        vh.setText(R.id.tv_date, StringUtils.friendly_time(issue.getCreatedAt()));
     }
 }

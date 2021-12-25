@@ -2,14 +2,12 @@ package net.oschina.gitapp.ui.fragments;
 
 import android.os.Bundle;
 
-import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.CommitCommentdapter;
 import net.oschina.gitapp.adapter.CommonAdapter;
+import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.Comment;
 import net.oschina.gitapp.bean.Commit;
-import net.oschina.gitapp.bean.CommonList;
-import net.oschina.gitapp.bean.MessageData;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
@@ -62,7 +60,7 @@ public class CommitCommentFragment extends BaseSwipeRefreshFragment<Comment> {
 
     @Override
     public void requestData() {
-
+        GitOSCApi.getCommitCommentList(mProject.getId(), mCommit.getId(), mHandler);
     }
 
     @Override
@@ -70,18 +68,8 @@ public class CommitCommentFragment extends BaseSwipeRefreshFragment<Comment> {
 
     }
 
-
-	public MessageData<CommonList<Comment>> asyncLoadList(int page,
-			boolean refresh) {
-		MessageData<CommonList<Comment>> msg = null;
-		try {
-			CommonList<Comment> list = mApplication.getCommitCommentList(mProject.getId(), mCommit.getId(), refresh);
-			msg = new MessageData<CommonList<Comment>>(list);
-		} catch (AppException e) {
-			e.makeToast(mApplication);
-			e.printStackTrace();
-			msg = new MessageData<CommonList<Comment>>(e);
-		}
-		return msg;
-	}
+    @Override
+    protected String getEmptyTip() {
+        return "暂无评论";
+    }
 }

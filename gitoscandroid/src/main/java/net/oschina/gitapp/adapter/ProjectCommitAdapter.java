@@ -26,15 +26,15 @@ public class ProjectCommitAdapter extends CommonAdapter<Commit> {
 
         String portraitURL = commit.getAuthor() == null ? "" : commit.getAuthor().getNew_portrait();
         if (portraitURL.endsWith("portrait.gif") || StringUtils.isEmpty(portraitURL)) {
-            vh.setImageResource(R.id.projectcommit_listitem_userface, R.drawable.mini_avatar);
+            vh.setImageResource(R.id.iv_portrait, R.drawable.mini_avatar);
         } else {
-            vh.setImageForUrl(R.id.projectcommit_listitem_userface, portraitURL);
+            vh.setImageForUrl(R.id.iv_portrait, portraitURL);
         }
 
         // 2.显示相关信息
         String name = commit.getAuthor() == null ? commit.getAuthor_name() : commit.getAuthor().getName();
-        vh.setText(R.id.projectcommit_listitem_username, name);
-        vh.setText(R.id.projectcommit_listitem_content, commit.getTitle());
-        vh.setText(R.id.projectcommit_listitem_date, StringUtils.friendly_time(commit.getCreatedAt()));
+        vh.setText(R.id.tv_name, name);
+        vh.setText(R.id.tv_content, commit.getTitle());
+        vh.setText(R.id.tv_date, StringUtils.friendly_time(commit.getCreatedAt()));
     }
 }

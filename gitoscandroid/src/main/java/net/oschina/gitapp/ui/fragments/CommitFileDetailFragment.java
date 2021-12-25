@@ -1,21 +1,21 @@
 package net.oschina.gitapp.ui.fragments;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
 import net.oschina.gitapp.AppContext;
-import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.CommitDiffAdapter;
+import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.Commit;
 import net.oschina.gitapp.bean.CommitDiff;
-import net.oschina.gitapp.bean.CommonList;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.common.Contanst;
@@ -23,6 +23,13 @@ import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.interfaces.OnStatusListener;
 import net.oschina.gitapp.ui.basefragment.BaseFragment;
+import net.oschina.gitapp.util.GitViewUtils;
+import net.oschina.gitapp.util.JsonUtils;
+
+import org.apache.http.Header;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * commit文件详情
@@ -53,7 +60,7 @@ public class CommitFileDetailFragment extends BaseFragment implements
 	
 	private LinearLayout mCommitDiffll;
 	
-	private CommonList<CommitDiff> mCommitDiffList = new CommonList<CommitDiff>();
+	private List<CommitDiff> mCommitDiffList = new ArrayList<>();
 	
 	private CommitDiffAdapter adapter;
 	
@@ -134,47 +141,31 @@ public class CommitFileDetailFragment extends BaseFragment implements
 	
 	private void loadDatasCode(final boolean isRefresh) {
 		onStatus(STATUS_LOADING);
-		new AsyncTask<Void, Void, Message>() {
-			@Override
-			protected Message doInBackground(Void... params) {
-				Message msg = new Message();
-				try {
-					AppContext ac = getGitApplication();
-					CommonList<CommitDiff> commitDiffList = ac.getCommitDiffList(mProject.getId(), mCommit.getId(), isRefresh);
-					msg.what = 1;
-					msg.obj = commitDiffList;
-				} catch (Exception e) {
-					msg.what = -1;
-					msg.obj = e;
-				}
-				return msg;
-			}
 
-			@Override
-			protected void onPreExecute() {
-				
-			}
+        GitOSCApi.getCommitDiffList(mProject.getId(), mCommit.getId(), new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                List<CommitDiff> commitDiffList = JsonUtils.getList(CommitDiff[].class, responseBody);
+                if (commitDiffList != null) {
+                    mLoading.setVisibility(View.GONE);
+                    onStatus(STATUS_LOADED);
+                    mCommitDiffList = commitDiffList;
+                    mCommitFileSum.setText(mCommitDiffList.size() + " 个文件发生了变化");
+                    adapter = new CommitDiffAdapter(mAppContext, mCommitDiffList, R.layout.commit_diff_listitem, mCommitDiffll);
+                    adapter.setData(mProject, mCommit);
+                    mCommitDiffll.setVisibility(View.VISIBLE);
+                    adapter.notifyDataSetChanged();
+                } else {
+                    mLoading.setVisibility(View.GONE);
+                    GitViewUtils.showToast("获取commit详情失败");
+                    onStatus(STATUS_NONE);
+                }
+            }
 
-			@SuppressWarnings("unchecked")
-			@Override
-			protected void onPostExecute(Message msg) {
-				
-				if (msg.what == 1 && msg.obj != null) {
-					mLoading.setVisibility(View.GONE);
-					onStatus(STATUS_LOADED);
-					mCommitDiffList = (CommonList<CommitDiff>) msg.obj;
-					mCommitFileSum.setText(mCommitDiffList.getCount() + " 个文件发生了变化");
-					adapter = new CommitDiffAdapter(mAppContext, mCommitDiffList.getList(), R.layout.commit_diff_listitem, mCommitDiffll);
-					adapter.setData(mProject, mCommit);
-					mCommitDiffll.setVisibility(View.VISIBLE);
-					adapter.notifyDataSetChanged();
-				} else {
-					mLoading.setVisibility(View.GONE);
-					((AppException)msg.obj).makeToast(getActivity());
-					onStatus(STATUS_NONE);
-				}
-			}
-		}.execute();
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                GitViewUtils.showToast("获取commit详情失败");
+            }
+        });
 	}
-
 }

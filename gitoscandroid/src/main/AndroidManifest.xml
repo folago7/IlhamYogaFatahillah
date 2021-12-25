@@ -50,7 +50,6 @@
         </activity>
         <activity android:name=".ui.ProjectActivity" />
         <activity android:name=".ui.ProjectReadMeActivity" />
-        <activity android:name=".ui.ProjectCodeActivity" />
         <activity android:name=".ui.ProjectCodeActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".ui.ProjectSomeInfoListActivity" />
@@ -83,7 +82,7 @@
             android:name=".ui.IssueCommentActivity"
             android:launchMode="singleTask" />
         <activity
-            android:name=".ui.IssueEditActivity"
+            android:name=".ui.NewIssueActivity"
             android:configChanges="keyboardHidden|orientation"
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan|stateHidden" />

@@ -36,7 +36,7 @@ public class ProjectRefSelectDialog {
 
     private AlertDialog.Builder dialog;
 
-    private RefBranchAdapter adapter;
+    private CommonAdapter<Branch> adapter;
 
     private List<Branch> branches = new ArrayList<>();
 
@@ -110,7 +110,14 @@ public class ProjectRefSelectDialog {
             return;
         }
         if (adapter == null || dialog == null) {
-            adapter = new RefBranchAdapter(context);
+            adapter = new CommonAdapter<Branch>(context, R.layout.list_item_ref) {
+                @Override
+                public void convert(ViewHolder vh, Branch item) {
+                    vh.setText(R.id.tv_flag, item.getIconRes());
+                    TypefaceUtils.setOcticons((TextView) vh.getView(R.id.tv_flag));
+                    vh.setText(R.id.tv_name, item.getName());
+                }
+            };
             adapter.addItem(branches);
         }
         int index = 0;
@@ -132,21 +139,5 @@ public class ProjectRefSelectDialog {
             }
         });
         dialog.show();
-    }
-
-
-    class RefBranchAdapter extends CommonAdapter<Branch> {
-
-        public RefBranchAdapter(Context context) {
-            super(context, R.layout.list_item_ref);
-        }
-
-        @Override
-        public void convert(ViewHolder vh, Branch item) {
-
-            vh.setText(R.id.tv_flag, item.getIconRes());
-            TypefaceUtils.setOcticons((TextView) vh.getView(R.id.tv_flag));
-            vh.setText(R.id.tv_name, item.getName());
-        }
     }
 }

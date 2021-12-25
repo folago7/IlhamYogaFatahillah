@@ -26,6 +26,7 @@ public class NotificationActivity extends BaseActivity {
 	
 	private void initView() {
 		mTitle = "我的通知";
+        mActionBar.setTitle(mTitle);
 		mFragmentManager = getSupportFragmentManager();
 		FragmentTransaction ft = mFragmentManager.beginTransaction();
 		ft.replace(R.id.notification_content, NotificaiontViewPagerFragment.newInstance()).commit();

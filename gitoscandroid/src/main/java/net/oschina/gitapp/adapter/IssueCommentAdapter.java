@@ -30,11 +30,11 @@ public class IssueCommentAdapter extends CommonAdapter<GitNote> {
         // 1.加载头像
         String portraitURL = note.getAuthor().getNew_portrait();
         if (portraitURL.endsWith("portrait.gif")) {
-            vh.setImageResource(R.id.issue_comment_listitem_userface, R.drawable.mini_avatar);
+            vh.setImageResource(R.id.iv_portrait, R.drawable.mini_avatar);
         } else {
-            vh.setImageForUrl(R.id.issue_comment_listitem_userface, portraitURL);
+            vh.setImageForUrl(R.id.iv_portrait, portraitURL);
         }
-        vh.getView(R.id.issue_comment_listitem_userface).setOnClickListener(new OnClickListener() {
+        vh.getView(R.id.iv_portrait).setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -47,8 +47,8 @@ public class IssueCommentAdapter extends CommonAdapter<GitNote> {
         });
 
         // 2.显示相关信息
-        vh.setText(R.id.issue_comment_listitem_username, note.getAuthor().getName());
-        vh.setText(R.id.issue_comment_listitem_body, HtmlRegexpUtils.filterHtml(note.getBody()));
-        vh.setText(R.id.issue_comment_listitem_data, StringUtils.friendly_time(note.getCreated_at()));
+        vh.setText(R.id.tv_name, note.getAuthor().getName());
+        vh.setText(R.id.tv_content, HtmlRegexpUtils.filterHtml(note.getBody()));
+        vh.setText(R.id.tv_date, StringUtils.friendly_time(note.getCreated_at()));
     }
 }

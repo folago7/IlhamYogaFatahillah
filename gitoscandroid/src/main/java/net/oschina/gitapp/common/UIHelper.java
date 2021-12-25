@@ -50,10 +50,10 @@ import net.oschina.gitapp.ui.CommitDetailActivity;
 import net.oschina.gitapp.ui.CommitFileDetailActivity;
 import net.oschina.gitapp.ui.ImageZoomActivity;
 import net.oschina.gitapp.ui.IssueDetailActivity;
-import net.oschina.gitapp.ui.IssueEditActivity;
 import net.oschina.gitapp.ui.LoginActivity;
 import net.oschina.gitapp.ui.MainActivity;
 import net.oschina.gitapp.ui.MySelfInfoActivity;
+import net.oschina.gitapp.ui.NewIssueActivity;
 import net.oschina.gitapp.ui.NotificationActivity;
 import net.oschina.gitapp.ui.ProjectActivity;
 import net.oschina.gitapp.ui.ProjectCodeActivity;
@@ -487,7 +487,7 @@ public class UIHelper {
 	 */
 	public static void showIssueEditOrCreate(Context context, Project project,
 			Issue issue) {
-		Intent intent = new Intent(context, IssueEditActivity.class);
+		Intent intent = new Intent(context, NewIssueActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		Bundle bundle = new Bundle();
 		bundle.putSerializable(Contanst.PROJECT, project);

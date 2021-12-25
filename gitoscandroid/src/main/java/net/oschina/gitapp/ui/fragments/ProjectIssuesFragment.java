@@ -25,10 +25,8 @@ import java.util.List;
  */
 public class ProjectIssuesFragment extends BaseSwipeRefreshFragment<Issue> {
 	
-	public final int MENU_CREATE_ID = 01;
-	
 	private Project mProject;
-	
+
 	public static ProjectIssuesFragment newInstance(Project project) {
 		ProjectIssuesFragment fragment = new ProjectIssuesFragment();
 		Bundle args = new Bundle();
@@ -40,12 +38,10 @@ public class ProjectIssuesFragment extends BaseSwipeRefreshFragment<Issue> {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setHasOptionsMenu(true);
 		Bundle args = getArguments();
 		if (args != null) {
 			mProject = (Project) args.getSerializable(Contanst.PROJECT);
 		}
-		super.setUserVisibleHint(true);
 	}
 
     @Override
@@ -72,4 +68,5 @@ public class ProjectIssuesFragment extends BaseSwipeRefreshFragment<Issue> {
     protected String getEmptyTip() {
         return "暂无issue";
     }
+
 }

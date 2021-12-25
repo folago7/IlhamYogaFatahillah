@@ -178,7 +178,7 @@ public class GitOSCApi {
         get(PROJECTS + projectId + "/repository/commits/" + commitId + "/blob", params, handler);
     }
 
-    public static void getProjectMembers(String projectId, AsyncHttpResponseHandler handler) throws AppException {
+    public static void getProjectMembers(String projectId, AsyncHttpResponseHandler handler) {
         RequestParams params = getPrivateTokenWithParams();
         get(PROJECTS + projectId + "/members", params, handler);
     }

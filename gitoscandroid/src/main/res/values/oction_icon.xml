@@ -30,5 +30,6 @@
     <string name="oct_commit">\uf01f</string>
     <string name="oct_repo">\uf001</string>
     <string name="oct_lock">\uf06a</string>
+    <string name="oct_milestone">\uf075</string>
 
 </resources>

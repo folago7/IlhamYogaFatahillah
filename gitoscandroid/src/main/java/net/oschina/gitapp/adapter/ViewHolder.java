@@ -39,8 +39,9 @@ public class ViewHolder {
         this.position = position;
     }
 
-    /***
+    /**
      * 获取一个viewHolder
+     *
      * @param context
      * @param convertView
      * @param parent
@@ -48,11 +49,12 @@ public class ViewHolder {
      * @param position
      * @return
      */
-    public  static ViewHolder getViewHolder(Context context, View convertView, ViewGroup parent, int layoutId, int position) {
+    public static ViewHolder getViewHolder(Context context, View convertView, ViewGroup parent, int layoutId, int position) {
         if (convertView == null) {
             return new ViewHolder(context, parent, layoutId, position);
         }
-        return (ViewHolder)convertView.getTag();
+
+        return (ViewHolder) convertView.getTag();
     }
 
     public int getPosition() {
@@ -67,7 +69,7 @@ public class ViewHolder {
             view = mConvertView.findViewById(viewId);
             mViews.put(viewId, view);
         }
-        return (T)view;
+        return (T) view;
     }
 
     // 返回viewHolder的容器类
@@ -112,7 +114,6 @@ public class ViewHolder {
     }
 
     /**
-     *
      * @param viewId
      * @param text
      * @param semanticRes
@@ -131,7 +132,11 @@ public class ViewHolder {
     }
 
     public void setImageForUrl(int viewId, String imgUrl) {
+
         ImageView iv = getView(viewId);
+        if (iv.getTag() == null || !((String)iv.getTag()).equals(imgUrl)) {
+            iv.setImageResource(R.drawable.mini_avatar);
+        }
         // 使用DisplayImageOptions.Builder()创建DisplayImageOptions
         DisplayImageOptions options = new DisplayImageOptions.Builder()
                 .showImageForEmptyUri(R.drawable.mini_avatar)  // 设置图片Uri为空或是错误的时候显示的图片
@@ -139,5 +144,6 @@ public class ViewHolder {
                 .cacheOnDisk(true)                          // 设置下载的图片是否缓存在SD卡中
                 .build();                                   // 创建配置过得DisplayImageOption对象                                        // 创建配置过的DisplayImageOption对象
         ImageLoader.getInstance().displayImage(imgUrl, iv, options);
+        iv.setTag(imgUrl);
     }
 }
