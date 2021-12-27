@@ -2,7 +2,6 @@ package net.oschina.gitapp.ui.fragments;
 
 import android.os.Bundle;
 
-import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.CommonAdapter;
 import net.oschina.gitapp.adapter.ProjectIssuesAdapter;
 import net.oschina.gitapp.api.GitOSCApi;
@@ -46,7 +45,7 @@ public class ProjectIssuesFragment extends BaseSwipeRefreshFragment<Issue> {
 
     @Override
     public CommonAdapter<Issue> getAdapter() {
-        return new ProjectIssuesAdapter(getActivity(), R.layout.list_item_projectissues);
+        return new ProjectIssuesAdapter(getActivity());
     }
 
     @Override

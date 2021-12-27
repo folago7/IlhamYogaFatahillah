@@ -120,9 +120,12 @@ public class ViewHolder {
      */
     public void setTextWithSemantic(int viewId, String text, int semanticRes) {
         TextView tv = getView(viewId);
-        String finalText = mContext.getResources().getString(semanticRes) + " " + text;
-        tv.setText(finalText);
-        TypefaceUtils.setSemantic(tv);
+        TypefaceUtils.setSemantic(tv, text, semanticRes);
+    }
+
+    public void setTextWithOcticon(int viewId, String text, int iconRes) {
+        TextView tv = getView(viewId);
+        TypefaceUtils.setOcticons(tv, text, iconRes);
     }
 
     // 给ImageView设置图片资源

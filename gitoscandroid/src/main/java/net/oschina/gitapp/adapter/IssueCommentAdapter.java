@@ -49,6 +49,6 @@ public class IssueCommentAdapter extends CommonAdapter<GitNote> {
         // 2.显示相关信息
         vh.setText(R.id.tv_name, note.getAuthor().getName());
         vh.setText(R.id.tv_content, HtmlRegexpUtils.filterHtml(note.getBody()));
-        vh.setText(R.id.tv_date, StringUtils.friendly_time(note.getCreated_at()));
+        vh.setTextWithSemantic(R.id.tv_date, StringUtils.friendly_time(note.getCreated_at()), R.string.sem_wait);
     }
 }

@@ -16,7 +16,7 @@
     <color name="lemonyellow">#FFFACD</color>
     <color name="graywhite">#F5F5F5</color>
     <color name="grayslate">#708090</color>
-    <color name="lightblue">#0083FF</color>
+    <color name="lightblue">#4183c4</color>
     <color name="pressed_gitlab">#CC30A1BA</color>
     <color name="slidingmenu_bg">#212121</color>
 
@@ -39,7 +39,7 @@
     <color name="listitem_transparent">#00000000</color>
     <color name="listitem_black">#515151</color>
     <color name="listitem_white">#ffffffff</color>
-    <color name="listitem_blue">#294fa1</color>
+    <color name="listitem_blue">#4183c4</color>
     <color name="listitem_gray">#515151</color>
     <color name="listitem_green">#ffe3ffc6</color>
     

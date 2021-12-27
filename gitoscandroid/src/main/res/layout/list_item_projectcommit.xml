@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:descendantFocusability="blocksDescendants"
@@ -7,7 +8,7 @@
     android:paddingTop="8dp"
     android:paddingBottom="8dp"
     android:paddingLeft="12dp"
-    android:paddingRight="12dp" >
+    android:paddingRight="12dp">
 
     <!-- 项目作者头像 -->
     <net.oschina.gitapp.widget.CircleImageView
@@ -27,7 +28,7 @@
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
             android:textColor="@color/listitem_blue"
-            android:text="火蚁"
+            tools:text="火蚁"
             android:textSize="@dimen/text_size_14" />
 
         <!-- commit内容-->
@@ -38,7 +39,7 @@
             android:layout_marginTop="8dip"
             android:textColor="@color/listitem_black"
             android:textColorLink="@color/listitem_blue"
-            android:text="2014-05-23工作提交报告：个人动态列表内容显示"
+            tools:text="2014-05-23工作提交报告：个人动态列表内容显示"
             android:textSize="@dimen/text_size_14" />
 
         <LinearLayout
@@ -50,11 +51,7 @@
             <!-- 时间 -->			
             <TextView
                 android:id="@+id/tv_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/listitem_gray"
-                android:text="3个月前"
-                android:textSize="@dimen/text_size_10" />
+                style="@style/list_tip_info" />
 				
         </LinearLayout>
     </LinearLayout>

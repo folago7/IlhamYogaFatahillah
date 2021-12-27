@@ -1,14 +1,12 @@
 package net.oschina.gitapp.adapter;
 
 import android.content.Context;
-import android.view.View;
-import android.view.View.OnClickListener;
+import android.widget.TextView;
 
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.Issue;
-import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.StringUtils;
-import net.oschina.gitapp.common.UIHelper;
+import net.oschina.gitapp.util.TypefaceUtils;
 
 /**
  * 项目Issues列表适配器
@@ -20,35 +18,21 @@ import net.oschina.gitapp.common.UIHelper;
  */
 public class ProjectIssuesAdapter extends CommonAdapter<Issue> {
 	
-	public ProjectIssuesAdapter(Context context, int resource) {
-		super(context, resource);
+	public ProjectIssuesAdapter(Context context) {
+		super(context, R.layout.list_item_project_issue);
 	}
 
     @Override
     public void convert(ViewHolder vh, final Issue issue) {
-        // 1.加载头像
-        String portraitURL = issue.getAuthor() == null ? "" : issue.getAuthor().getNew_portrait();
-        if (portraitURL.endsWith("portrait.gif") || StringUtils.isEmpty(portraitURL)) {
-            vh.setImageResource(R.id.iv_portrait, R.drawable.mini_avatar);
-        } else {
-            vh.setImageForUrl(R.id.iv_portrait, portraitURL);
-        }
-        vh.getView(R.id.iv_portrait).setOnClickListener(new OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                User user = issue.getAuthor();
-                if (user == null) {
-                    return;
-                }
-                UIHelper.showUserInfoDetail(mContext, user, null);
-            }
-        });
-
-        // 2.显示相关信息
         vh.setText(R.id.tv_title, issue.getTitle());
-        vh.setText(R.id.tv_description, issue.getDescription(), "暂无描述");
-        vh.setText(R.id.tv_author, issue.getAuthor() == null ? "" : issue.getAuthor().getName());
-        vh.setText(R.id.tv_date, StringUtils.friendly_time(issue.getCreatedAt()));
+        TextView state = vh.getView(R.id.tv_state);
+        state.setText(issue.getStateRes());
+        TypefaceUtils.setOcticons(state);
+        vh.setText(R.id.tv_issue_num, "#" + issue.getIid());
+        //vh.setText(R.id.tv_description, issue.getDescription(), "暂无描述");
+        vh.setText(R.id.tv_author, issue.getAuthor() == null ? "" : "by " + issue.getAuthor().getName());
+
+        vh.setTextWithSemantic(R.id.tv_date, StringUtils.friendly_time(issue.getCreatedAt()), R.string.sem_wait);
     }
 }

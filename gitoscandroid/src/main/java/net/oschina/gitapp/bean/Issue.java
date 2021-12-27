@@ -1,8 +1,10 @@
 package net.oschina.gitapp.bean;
 
-import java.util.Date;
+import net.oschina.gitapp.R;
 
 import org.codehaus.jackson.annotate.JsonProperty;
+
+import java.util.Date;
 
 /**
  * issue实体类
@@ -138,5 +140,12 @@ public class Issue extends Entity {
 	public void setCreatedAt(Date createdAt) {
 		_createdAt = createdAt;
 	}
+
+    public int getStateRes() {
+        if (_state.equals(StateClosed)) {
+            return R.string.oct_issues_closed;
+        }
+        return R.string.oct_issues;
+    }
 
 }

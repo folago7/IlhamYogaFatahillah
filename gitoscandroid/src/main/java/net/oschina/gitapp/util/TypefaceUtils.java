@@ -20,6 +20,8 @@ import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.widget.TextView;
 
+import net.oschina.gitapp.AppContext;
+
 import java.util.Arrays;
 
 /**
@@ -99,6 +101,21 @@ public class TypefaceUtils {
     }
 
     /**
+     *
+     * @param tv
+     * @param text
+     * @param iconRes
+     */
+    public static void setOcticons(final TextView tv, String text, int iconRes) {
+        if (tv == null)
+            return;
+        Typeface typeface = getOcticons(tv.getContext());
+        text = AppContext.getInstance().getResources().getString(iconRes) + " " + text;
+        tv.setText(text);
+        tv.setTypeface(typeface);
+    }
+
+    /**
      * 设置semantic的字体图标
      * @param textViews
      */
@@ -112,6 +129,21 @@ public class TypefaceUtils {
     }
 
     /**
+     *
+     * @param tv
+     * @param text
+     * @param iconRes
+     */
+    public static void setSemantic(final TextView tv, String text, int iconRes) {
+        if (tv == null)
+            return;
+        Typeface typeface = getSemantic(tv.getContext());
+        text = AppContext.getInstance().getResources().getString(iconRes) + " " + text;
+        tv.setText(text);
+        tv.setTypeface(typeface);
+    }
+
+    /**
      * 设置fontAwsome的字体图标
      * @param textViews
      */
@@ -121,6 +153,21 @@ public class TypefaceUtils {
         Typeface typeface = getFontAwsome(textViews[0].getContext());
         for (TextView textView : textViews)
             textView.setTypeface(typeface);
+    }
+
+    /**
+     *
+     * @param tv
+     * @param text
+     * @param iconRes
+     */
+    public static void setFontAwsome(final TextView tv, String text, int iconRes) {
+        if (tv == null)
+            return;
+        Typeface typeface = getFontAwsome(tv.getContext());
+        text = AppContext.getInstance().getResources().getString(iconRes) + " " + text;
+        tv.setText(text);
+        tv.setTypeface(typeface);
     }
 
     /**

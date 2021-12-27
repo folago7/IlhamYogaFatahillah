@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:descendantFocusability="blocksDescendants"
@@ -7,7 +8,7 @@
     android:paddingTop="8dp"
     android:paddingBottom="8dp"
     android:paddingLeft="12dp"
-    android:paddingRight="12dp" >
+    android:paddingRight="12dp">
 
     <!-- 评论作者头像 -->
     <net.oschina.gitapp.widget.CircleImageView
@@ -45,11 +46,8 @@
 			
             <TextView
                 android:id="@+id/tv_date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="3dip"
-                android:textColor="@color/listitem_gray"
-                android:textSize="@dimen/text_size_10" />
+                tools:text="前天"
+                style="@style/list_tip_info" />
             
         </LinearLayout>
     </LinearLayout>

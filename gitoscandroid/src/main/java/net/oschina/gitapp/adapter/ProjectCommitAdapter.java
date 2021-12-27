@@ -35,6 +35,6 @@ public class ProjectCommitAdapter extends CommonAdapter<Commit> {
         String name = commit.getAuthor() == null ? commit.getAuthor_name() : commit.getAuthor().getName();
         vh.setText(R.id.tv_name, name);
         vh.setText(R.id.tv_content, commit.getTitle());
-        vh.setText(R.id.tv_date, StringUtils.friendly_time(commit.getCreatedAt()));
+        vh.setTextWithSemantic(R.id.tv_date, StringUtils.friendly_time(commit.getCreatedAt()), R.string.sem_wait    );
     }
 }
