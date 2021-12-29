@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto" >
     
     <item 
-        android:id="@+id/project_menu_create_issue"
+        android:id="@+id/new_issue"
         android:orderInCategory="100"
         android:icon="@drawable/action_create"
         android:title="创建Issue"
@@ -11,16 +11,19 @@
 
     <item
         android:id="@+id/share"
+        android:icon="@drawable/more_menu_icon_share"
         android:title="分享项目"
         app:showAsAction="never"/>
 
     <item
         android:id="@+id/copy"
         android:title="复制项目链接"
+        android:icon="@drawable/more_menu_icon_copy"
         app:showAsAction="never"/>
 
     <item
         android:id="@+id/open_browser"
+        android:icon="@drawable/more_menu_icon_browser"
         android:title="在浏览器中打开"
         app:showAsAction="never"/>
     

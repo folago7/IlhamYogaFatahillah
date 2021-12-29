@@ -1,7 +1,5 @@
 package net.oschina.gitapp.ui;
 
-import net.oschina.gitapp.AppContext;
-import net.oschina.gitapp.R;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -10,13 +8,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
+import net.oschina.gitapp.AppContext;
+import net.oschina.gitapp.R;
+
 /**
  * 通知信息广播接收器
  * @author liux (http://my.oschina.net/liux)
  * @version 1.0
  * @created 2012-4-16
  */
-public class BroadCast extends BroadcastReceiver {
+public class NotificationBroadCast extends BroadcastReceiver {
 
 	private final static int NOTIFICATION_ID = R.layout.activity_main;
 	
@@ -65,7 +66,7 @@ public class BroadCast extends BroadcastReceiver {
 		if(noticeCount > _lastNoticeCount) 
 		{
 			String noticeTitle = "您有 " + (noticeCount-_lastNoticeCount) + " 条最新信息";
-			notification = new Notification(R.drawable.icon_logo, noticeTitle, System.currentTimeMillis());
+			notification = new Notification(R.drawable.icon_notifaction, noticeTitle, System.currentTimeMillis());
 		}
 		else
 		{

@@ -122,7 +122,7 @@
         </activity>
 
         <!-- 注册app广播接收器 -->
-        <receiver android:name=".ui.BroadCast" >
+        <receiver android:name=".ui.NotificationBroadCast" >
             <intent-filter>
                 <action android:name="net.oschina.gitapp.action.APPWIDGET_UPDATE" />
             </intent-filter>

@@ -75,7 +75,6 @@ public abstract class BaseSwipeRefreshFragment<T extends Entity>
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
             mTipInfo.setHiden();
-            setSwipeRefreshLoadedState();
             mSwipeRefreshLayout.setVisibility(View.VISIBLE);
             loadDataSuccess(getDatas(responseBody));
             isFrist = false;
@@ -84,7 +83,7 @@ public abstract class BaseSwipeRefreshFragment<T extends Entity>
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
             mTipInfo.setLoadError();
-            GitViewUtils.showToast("网络错误码 " + statusCode);
+            GitViewUtils.showToast("网络错误");
         }
 
         @Override
@@ -99,6 +98,7 @@ public abstract class BaseSwipeRefreshFragment<T extends Entity>
         @Override
         public void onFinish() {
             super.onFinish();
+            setSwipeRefreshLoadedState();
         }
     };
 

@@ -274,7 +274,7 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
         optionsMenu = menu;
         // 刷新按钮
         MenuItem refreshItem = menu.add(0, 0, 0, "刷新");
-        refreshItem.setIcon(R.drawable.abc_ic_menu_refresh);
+        refreshItem.setIcon(R.drawable.action_refresh);
         MenuItemCompat.setShowAsAction(refreshItem, MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
         return super.onCreateOptionsMenu(menu);
     }

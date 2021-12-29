@@ -1,6 +1,6 @@
 package net.oschina.gitapp.ui;
 
-import android.app.ProgressDialog;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -26,6 +26,7 @@ import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
+import net.oschina.gitapp.dialog.LightProgressDialog;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 import net.oschina.gitapp.util.JsonUtils;
 import net.oschina.gitapp.util.TypefaceUtils;
@@ -86,6 +87,8 @@ public class ProjectActivity extends BaseActivity implements
     ScrollView content;
     @InjectView(R.id.ll_fork_from)
     LinearLayout forkFrom;
+
+    private Menu menu;
 
     private Project mProject;
 
@@ -168,6 +171,8 @@ public class ProjectActivity extends BaseActivity implements
                 }
             }
         }, 500);
+
+        updateMenuState(true);
     }
 
     private void setStared(boolean stared) {
@@ -213,7 +218,26 @@ public class ProjectActivity extends BaseActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.projet_menu, menu);
-        return super.onCreateOptionsMenu(menu);
+        this.menu = menu;
+        updateMenuState(false);
+        return true;
+    }
+
+    private void updateMenuState(boolean isShow) {
+//        if (isShow) {
+//
+//            menu.findItem(R.id.new_issue).setVisible(true);
+//            menu.findItem(R.id.share).setVisible(true);
+//            menu.findItem(R.id.copy).setVisible(true);
+//            menu.findItem(R.id.open_browser).setVisible(true);
+//
+//        } else {
+//
+//            menu.findItem(R.id.new_issue).setVisible(false);
+//            menu.findItem(R.id.share).setVisible(false);
+//            menu.findItem(R.id.copy).setVisible(false);
+//            menu.findItem(R.id.open_browser).setVisible(false);
+//        }
     }
 
     @Override
@@ -235,7 +259,7 @@ public class ProjectActivity extends BaseActivity implements
             case R.id.open_browser:
                 UIHelper.openBrowser(ProjectActivity.this, url_link);
                 break;
-            case R.id.project_menu_create_issue:
+            case R.id.new_issue:
                 // 新增issue
                 UIHelper.showIssueEditOrCreate(AppContext.getInstance(), mProject, null);
                 break;
@@ -310,6 +334,12 @@ public class ProjectActivity extends BaseActivity implements
                     tipInfo.setLoadError();
                 }
             }
+
+            @Override
+            public void onStart() {
+                super.onStart();
+                tipInfo.setLoading();
+            }
         });
     }
 
@@ -363,13 +393,14 @@ public class ProjectActivity extends BaseActivity implements
             return;
         }
 
-        final ProgressDialog loadingDialog = new ProgressDialog(this);
-        loadingDialog.setCanceledOnTouchOutside(false);
+        String message = "";
         if (mProject.isWatched()) {
-            loadingDialog.setMessage("正在unwatch该项目...");
+            message = "正在unwatch该项目...";
         } else {
-            loadingDialog.setMessage("正在watch该项目...");
+            message = "正在watch该项目...";
         }
+        final AlertDialog loadingDialog = LightProgressDialog.create(this, message);
+
         AsyncHttpResponseHandler handler = new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
@@ -421,14 +452,13 @@ public class ProjectActivity extends BaseActivity implements
             UIHelper.showLoginActivity(ProjectActivity.this);
             return;
         }
-        final ProgressDialog loadingDialog = new ProgressDialog(this);
-        loadingDialog.setCanceledOnTouchOutside(false);
+        String message = "";
         if (mProject.isStared()) {
-            loadingDialog.setMessage("正在unstar该项目...");
+            message = "正在unstar该项目...";
         } else {
-            loadingDialog.setMessage("正在star该项目...");
+            message = "正在star该项目...";
         }
-
+        final AlertDialog loadingDialog = LightProgressDialog.create(this, message);
         AsyncHttpResponseHandler handler = new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
