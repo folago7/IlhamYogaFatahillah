@@ -22,12 +22,12 @@ import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.StarWatchOptionResult;
-import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.dialog.LightProgressDialog;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
+import net.oschina.gitapp.util.GitViewUtils;
 import net.oschina.gitapp.util.JsonUtils;
 import net.oschina.gitapp.util.TypefaceUtils;
 import net.oschina.gitapp.widget.TipInfoLayout;
@@ -114,11 +114,17 @@ public class ProjectActivity extends BaseActivity implements
         Intent intent = getIntent();
         mProject = (Project) intent.getSerializableExtra(Contanst.PROJECT);
         projectId = intent.getStringExtra(Contanst.PROJECTID);
-
-        if (null == mProject) {
-            loadProject(ACTION_LOAD_PROJECT, projectId);
+        if (intent.getAction() != null && intent.getAction().equals(Intent.ACTION_VIEW)) {
+            GitViewUtils.showToast(intent.getDataString());
+            loadProjectForName();
         } else {
-            initData();
+
+            if (null == mProject) {
+                loadProject(ACTION_LOAD_PROJECT, projectId);
+
+            } else {
+                initData();
+            }
         }
 
         // set font icon
@@ -159,7 +165,7 @@ public class ProjectActivity extends BaseActivity implements
         initForkMess();
 
         // 记录项目的地址链接：
-        url_link = URLs.URL_HOST + mProject.getOwner().getUsername() + URLs.URL_SPLITTER + mProject.getPath();
+        url_link = GitOSCApi.NO_API_BASE_URL + mProject.getOwner().getUsername() + "/" + mProject.getPath();
         // 截取屏幕
         Handler mHandler = new Handler();
         mHandler.postDelayed(new Runnable() {
@@ -339,6 +345,38 @@ public class ProjectActivity extends BaseActivity implements
             public void onStart() {
                 super.onStart();
                 tipInfo.setLoading();
+            }
+        });
+    }
+
+    private void loadProjectForName() {
+        GitOSCApi.getProject("oschina", "android-app", new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                content.setVisibility(View.VISIBLE);
+                tipInfo.setHiden();
+                Project p = JsonUtils.toBean(Project.class, responseBody);
+                if (p != null) {
+                    mProject = p;
+                    initData();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                tipInfo.setLoadError();
+            }
+
+            @Override
+            public void onStart() {
+                super.onStart();
+                tipInfo.setLoading();
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                tipInfo.setHiden();
             }
         });
     }

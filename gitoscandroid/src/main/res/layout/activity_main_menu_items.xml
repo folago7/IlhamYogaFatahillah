@@ -69,6 +69,22 @@
     <include layout="@layout/horizontal_divider_view" />
 
     <LinearLayout
+        android:id="@+id/menu_item_scan"
+        style="@style/MenuItemLayoutStyle" >
+
+        <ImageView
+            style="@style/MenuItemImageViewStyle"
+            android:contentDescription="@string/img_description"
+            android:background="@drawable/menu_icon_shark" />
+
+        <TextView
+            style="@style/MenuItemTextViewStyle"
+            android:text="@string/main_menu_title_scan" />
+    </LinearLayout>
+
+    <include layout="@layout/horizontal_divider_view" />
+
+    <LinearLayout
         android:id="@+id/menu_item_setting"
         style="@style/MenuItemLayoutStyle" >
 

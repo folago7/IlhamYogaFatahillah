@@ -7,17 +7,21 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
-import net.oschina.gitapp.api.HTTPRequestor;
+import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.Commit;
 import net.oschina.gitapp.bean.Issue;
 import net.oschina.gitapp.bean.Project;
-import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.basefragment.BaseFragment;
+
+import org.apache.http.protocol.HTTP;
 
 /**
  * issue详情fragment
@@ -98,14 +102,14 @@ public class IssueDetailFragment extends BaseFragment {
 		mIssueData.setText("创建于"
 				+ StringUtils.friendly_time(mIssue.getCreatedAt()));
 		mWebView.loadDataWithBaseURL(null, UIHelper.WEB_STYLE + mIssue.getDescription(),
-				"text/html", HTTPRequestor.UTF_8, null);
+				"text/html", HTTP.UTF_8, null);
 		
 		String portrait = mIssue.getAuthor().getPortrait() == null ? "" : mIssue.getAuthor().getPortrait();
 		if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
 			mIssueUserFace.setImageResource(R.drawable.mini_avatar);
 		} else {
-			String portraitURL = URLs.GITIMG + mIssue.getAuthor().getPortrait();
-			UIHelper.showUserFace(mIssueUserFace, portraitURL);
+			String portraitURL = GitOSCApi.NO_API_BASE_URL + mIssue.getAuthor().getPortrait();
+            ImageLoader.getInstance().displayImage(portraitURL, mIssueUserFace);
 		}
 	}
 }

@@ -1,20 +1,8 @@
 package net.oschina.gitapp.widget;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.xml.sax.SAXNotRecognizedException;
-import org.xml.sax.SAXNotSupportedException;
-import org.xml.sax.XMLReader;
-
-import net.oschina.gitapp.bean.URLs;
-import net.oschina.gitapp.common.StringUtils;
-import net.oschina.gitapp.common.UIHelper;
 import android.content.Context;
 import android.graphics.Color;
-import android.text.Editable;
 import android.text.Html;
-import android.text.Html.TagHandler;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -25,6 +13,9 @@ import android.text.style.URLSpan;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 超链接文本控件

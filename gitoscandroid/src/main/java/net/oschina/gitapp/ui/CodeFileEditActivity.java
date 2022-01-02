@@ -1,25 +1,30 @@
 package net.oschina.gitapp.ui;
 
-import android.app.ProgressDialog;
+import android.app.AlertDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
 import net.oschina.gitapp.AppContext;
-import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
+import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.CodeFile;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
+import net.oschina.gitapp.dialog.LightProgressDialog;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
+import net.oschina.gitapp.util.GitViewUtils;
+
+import org.apache.http.Header;
 
 public class CodeFileEditActivity extends BaseActivity implements OnClickListener {
 	
@@ -38,8 +43,6 @@ public class CodeFileEditActivity extends BaseActivity implements OnClickListene
 	private EditText mCommitMsg;
 	
 	private Button mCodeFilePub;
-	
-	private ProgressDialog mPubing;
 	
 	private TextWatcher mTextWatcher = new TextWatcher() {
 		
@@ -107,49 +110,38 @@ public class CodeFileEditActivity extends BaseActivity implements OnClickListene
 			UIHelper.ToastMessage(mAppContext, "文件内容没有改变");
 			return;
 		}
-		if (mPubing == null) {
-			mPubing = new ProgressDialog(CodeFileEditActivity.this);
-			mPubing.setMessage("正在提交...");
-		}
-		new AsyncTask<Void, Void, Message>() {
+        final AlertDialog pubing = LightProgressDialog.create(this, "正在提交...");
 
-			@Override
-			protected Message doInBackground(Void... params) {
-				Message msg = new Message();
-				try {
-					msg.obj = mAppContext.updateRepositoryFiles(mProject.getId(), mBranch, mPath, mBranch, content, commit_message);
-					msg.what = 1;
-				} catch (AppException e) {
-					msg.what = -1;
-					msg.obj = e;
-				}
-				return msg;
-			}
 
-			@Override
-			protected void onPreExecute() {
-				super.onPreExecute();
-				mPubing.show();
-			}
+        GitOSCApi.updateRepositoryFiles(mProject.getId(), mBranch, mPath, mBranch, content, commit_message, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                String msg = new String(responseBody);
+                if (msg != null) {
+                    GitViewUtils.showToast("提交成功");
+                    CodeFileEditActivity.this.finish();
+                } else {
+                    GitViewUtils.showToast("提交失败");
+                }
+            }
 
-			@Override
-			protected void onPostExecute(Message msg) {
-				super.onPostExecute(msg);
-				mPubing.dismiss();
-				if (msg.what == 1) {
-					String res = (String) msg.obj;
-					if (res != null) {
-						finish();
-						UIHelper.ToastMessage(mAppContext, "提交成功");
-					}
-				} else {
-					if (msg.obj instanceof AppException) {
-						((AppException)msg.obj).makeToast(mAppContext);
-					}
-				}
-			}
-			
-		}.execute();
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                GitViewUtils.showToast("提交失败");
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                pubing.dismiss();
+            }
+
+            @Override
+            public void onStart() {
+                super.onStart();
+                pubing.show();
+            }
+        });
 	}
 
 	@Override

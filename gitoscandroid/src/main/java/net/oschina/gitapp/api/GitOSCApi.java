@@ -21,11 +21,12 @@ import static net.oschina.gitapp.api.AsyncHttpHelp.post;
  */
 public class GitOSCApi {
 
-    public final static String HOST = "git.oschina.net";
-    private static final String API_VERSION = "/api/v3/";// API版本
+    public final static String HOST = "git.oschina.net/";
+    private static final String API_VERSION = "api/v3/";// API版本
     public final static String HTTPS = "https://";
     public final static String HTTP = "http://";
     public final static String BASE_URL = HTTP + HOST + API_VERSION;
+    public final static String NO_API_BASE_URL = HTTP + HOST;
     public final static String PROJECTS = BASE_URL + "projects/";
     public final static String USER = BASE_URL + "user/";
     public final static String EVENT = BASE_URL + "events/";
@@ -87,6 +88,11 @@ public class GitOSCApi {
         get(PROJECTS + pId, params, handler);
     }
 
+    public static void getProject(String userName, String projectName, AsyncHttpResponseHandler handler) {
+        RequestParams params = AsyncHttpHelp.getPrivateTokenWithParams();
+        get(PROJECTS + userName + "%2F" + projectName, params, handler);
+    }
+
     public static void searchProjects(String query, int page, AsyncHttpResponseHandler handler) {
         RequestParams params = new RequestParams();
         params.put("page", page);
@@ -131,7 +137,7 @@ public class GitOSCApi {
 
     public static void getProjectTags(String pId, AsyncHttpResponseHandler handler) {
         RequestParams params = getPrivateTokenWithParams();
-        get(PROJECTS + pId + "/" + "/repository/tags", params, handler);
+        get(PROJECTS + pId + "/repository/tags", params, handler);
     }
 
     public static void getIssueDetail(String pId, String issueId, AsyncHttpResponseHandler handler) {
@@ -310,7 +316,6 @@ public class GitOSCApi {
 
     /**
      * 获得某个用户star的项目列表
-     *
      */
     public static void getUserStarProjects(String uId, int page, AsyncHttpResponseHandler handler) {
         RequestParams params = getPrivateTokenWithParams();

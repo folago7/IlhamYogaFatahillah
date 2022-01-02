@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
@@ -17,10 +18,8 @@ import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.Commit;
 import net.oschina.gitapp.bean.CommitDiff;
 import net.oschina.gitapp.bean.Project;
-import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.StringUtils;
-import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.interfaces.OnStatusListener;
 import net.oschina.gitapp.ui.basefragment.BaseFragment;
 import net.oschina.gitapp.util.GitViewUtils;
@@ -134,8 +133,8 @@ public class CommitFileDetailFragment extends BaseFragment implements
 		if (portrait == null || portrait.endsWith(".gif")) {
 			mCommitAuthorFace.setBackgroundResource(R.drawable.mini_avatar);
 		} else {
-			String faceurl = URLs.GITIMG + portrait;
-			UIHelper.showUserFace(mCommitAuthorFace, faceurl);
+			String faceurl = GitOSCApi.NO_API_BASE_URL + portrait;
+            ImageLoader.getInstance().displayImage(faceurl, mCommitAuthorFace);
 		}
 	}
 	

@@ -3,7 +3,6 @@ package net.oschina.gitapp.ui;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.PointF;
 import android.graphics.RectF;
@@ -20,17 +19,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ViewSwitcher;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 import net.oschina.gitapp.AppConfig;
 import net.oschina.gitapp.AppContext;
-import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
-import net.oschina.gitapp.api.ApiClient;
-import net.oschina.gitapp.common.FileUtils;
 import net.oschina.gitapp.common.ImageUtils;
-import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -141,55 +137,7 @@ public class ImageZoomActivity extends Activity implements OnTouchListener,
 				}
 			}
 		};
-		new Thread() {
-			public void run() {
-				Message msg = new Message();
-				Bitmap bmp = null;
-				String filename = FileUtils.getFileName(imgURL);
-				try {
-					// 读取本地图片
-					if (imgURL.endsWith("portrait.gif")
-							|| StringUtils.isEmpty(imgURL)) {
-						bmp = BitmapFactory
-								.decodeResource(imgView.getResources(),
-										R.drawable.mini_avatar);
-					}
-					if (bmp == null) {
-						// 是否有缓存图片
-						// Environment.getExternalStorageDirectory();返回/sdcard
-						String filepath = getFilesDir() + File.separator
-								+ filename;
-						File file = new File(filepath);
-						if (file.exists()) {
-							bmp = ImageUtils.getBitmap(imgView.getContext(),
-									filename);
-						}
-					}
-					if (bmp == null) {
- 						bmp = ApiClient.getNetBitmap(imgURL);
-						if (bmp != null) {
-							try {
-								// 写图片缓存
-								ImageUtils.saveImage(imgView.getContext(),
-										filename, bmp);
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
-							// 缩放图片
-							bmp = ImageUtils.reDrawBitMap(ImageZoomActivity.this,
-									bmp);
-						}
-					}
-					msg.what = 1;
-					msg.obj = bmp;
-				} catch (AppException e) {
-					e.printStackTrace();
-					msg.what = -1;
-					msg.obj = e;
-				}
-				handler.sendMessage(msg);
-			}
-		}.start();
+        ImageLoader.getInstance().displayImage(imgURL, imgView);
 	}
 
 	public boolean onTouch(View v, MotionEvent event) {

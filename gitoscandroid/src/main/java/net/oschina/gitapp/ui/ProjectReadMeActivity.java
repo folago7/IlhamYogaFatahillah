@@ -9,7 +9,6 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.GitOSCApi;
-import net.oschina.gitapp.api.HTTPRequestor;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.ReadMe;
 import net.oschina.gitapp.common.Contanst;
@@ -18,6 +17,7 @@ import net.oschina.gitapp.util.JsonUtils;
 import net.oschina.gitapp.widget.TipInfoLayout;
 
 import org.apache.http.Header;
+import org.apache.http.protocol.HTTP;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -71,7 +71,7 @@ public class ProjectReadMeActivity extends BaseActivity {
                 if (readMe != null && readMe.getContent() != null) {
                     webView.setVisibility(View.VISIBLE);
                     String body = linkCss + "<div class='markdown-body'>" + readMe.getContent() + "</div>";
-                    webView.loadDataWithBaseURL(null, body, "text/html", HTTPRequestor.UTF_8, null);
+                    webView.loadDataWithBaseURL(null, body, "text/html", HTTP.UTF_8, null);
                 } else {
                     tipInfo.setEmptyData("该项目暂无README.md");
                 }

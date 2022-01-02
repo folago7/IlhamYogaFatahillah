@@ -1,25 +1,29 @@
 package net.oschina.gitapp.ui;
 
-import android.app.ProgressDialog;
+import android.app.AlertDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
 import net.oschina.gitapp.AppContext;
-import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
+import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.Issue;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.StringUtils;
-import net.oschina.gitapp.common.UIHelper;
+import net.oschina.gitapp.dialog.LightProgressDialog;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
+import net.oschina.gitapp.util.GitViewUtils;
+
+import org.apache.http.Header;
 
 /**
  * 评论issue界面
@@ -41,8 +45,6 @@ public class IssueCommentActivity extends BaseActivity implements OnClickListene
 	
 	private TextWatcher mTextWatcher;
 	
-	private ProgressDialog mPubing;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -112,52 +114,31 @@ public class IssueCommentActivity extends BaseActivity implements OnClickListene
 		if (mProject == null || mIssue == null) {
 			return;
 		}
-		if (mPubing == null) {
-			mPubing = new ProgressDialog(this);
-			mPubing.setCanceledOnTouchOutside(false);
-			mPubing.setMessage("正在提交评论...");
-		}
-		
-		new AsyncTask<Void, Void, Message>() {
-			@Override
-			protected Message doInBackground(Void... params) {
-				Message msg =new Message();
-				try {
-					msg.obj = mAppContext.pubIssueComment(mProject.getId(), mIssue.getId(), mCommentContent.getText().toString());
-					msg.what = 1;
-				} catch (AppException e) {
-					e.printStackTrace();
-					msg.what = -1;
-					msg.obj = e;
-				}
-				return msg;
-			}
-			
-			@Override
-			protected void onPreExecute() {
-				super.onPreExecute();
-				if(mPubing != null) {
-					mPubing.show();
-				}
-			}
-			
-			@Override
-			protected void onPostExecute(Message msg) {
-				super.onPostExecute(msg);
-				//如果程序已经关闭，则不再执行以下处理
-				if(isFinishing()) {
-					return;
-				}
-				if(mPubing != null) {
-					mPubing.dismiss();
-				}
-				if (msg.what == 1) {
-					UIHelper.ToastMessage(AppContext.getInstance(), "评论成功");
-					finish();
-				} else {
-					((AppException)(msg.obj)).makeToast(AppContext.getInstance());
-				}
-			}
-		}.execute();
+
+        final AlertDialog pubing = LightProgressDialog.create(this, "提交评论中...");
+
+        GitOSCApi.pubIssueComment(mProject.getId(), mIssue.getId(), mCommentContent.getText().toString(), new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                GitViewUtils.showToast("评论成功");
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                GitViewUtils.showToast("评论失败");
+            }
+
+            @Override
+            public void onStart() {
+                super.onStart();
+                pubing.show();
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                pubing.dismiss();
+            }
+        });
 	}
 }

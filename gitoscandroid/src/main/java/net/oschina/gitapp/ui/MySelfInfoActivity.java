@@ -6,22 +6,19 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Message;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.core.ImageLoader;
+
 import net.oschina.gitapp.AppContext;
-import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
-import net.oschina.gitapp.bean.URLs;
-import net.oschina.gitapp.bean.UpLoadFile;
+import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.BroadcastController;
 import net.oschina.gitapp.common.FileUtils;
@@ -161,8 +158,8 @@ public class MySelfInfoActivity extends BaseActivity implements View.OnClickList
 				mUserFace.setImageResource(R.drawable.mini_avatar);
 			} else {
 				// 加载用户头像
-				String faceUrl = URLs.HTTPS + URLs.HOST + URLs.URL_SPLITTER + mUser.getPortrait();
-				UIHelper.showUserFace(mUserFace, faceUrl);
+				String faceUrl = GitOSCApi.NO_API_BASE_URL + mUser.getPortrait();
+                ImageLoader.getInstance().displayImage(faceUrl, mUserFace);
 			}
 			mFollowers.setText(mUser.getFollow().getFollowers() + "");
 			mStarred.setText(mUser.getFollow().getStarred() + "");
@@ -325,55 +322,55 @@ public class MySelfInfoActivity extends BaseActivity implements View.OnClickList
 		dialog.setCanceledOnTouchOutside(false);
 		dialog.setMessage("正在上传头像...");
 		
-		new AsyncTask<Void, Void, Message>() {
-			
-			@Override
-			protected void onPreExecute() {
-				super.onPreExecute();
-				dialog.show();
-			}
-
-			@Override
-			protected void onPostExecute(Message msg) {
-				super.onPostExecute(msg);
-				dialog.dismiss();
-				if (msg.what == 1) {
-					UpLoadFile file = (UpLoadFile) msg.obj;
-					if (file == null) {
-						Log.i("Test", "返回的结果为空");
-					}
-					//UIHelper.ToastMessage(mAppContext, file.getMsg());
-					mUserFace.setImageBitmap(protraitBitmap);
-				} else {
-					UIHelper.ToastMessage(AppContext.getInstance(), "上次头像失败");
-				}
-			}
-
-			@Override
-			protected Message doInBackground(Void... params) {
-				Message msg = new Message();
-				// 获取头像缩略图
-				if (!StringUtils.isEmpty(protraitPath) && protraitFile.exists()) {
-					protraitBitmap = ImageUtils.loadImgThumbnail(protraitPath,
-							200, 200);
-				} else {
-					UIHelper.ToastMessage(MySelfInfoActivity.this, "图像不存在");
-				}
-				if (protraitBitmap != null && protraitFile != null) {
-					try {
-						UpLoadFile file = mAppContext.upLoad(protraitFile);
-						msg.what = 1;
-						msg.obj = file;
-					} catch (AppException e) {
-						dialog.dismiss();
-						msg.what = -1;
-						msg.obj = e;
-					}
-				}
-				return msg;
-			}
-			
-		}.execute();
+//		new AsyncTask<Void, Void, Message>() {
+//
+//			@Override
+//			protected void onPreExecute() {
+//				super.onPreExecute();
+//				dialog.show();
+//			}
+//
+//			@Override
+//			protected void onPostExecute(Message msg) {
+//				super.onPostExecute(msg);
+//				dialog.dismiss();
+//				if (msg.what == 1) {
+//					UpLoadFile file = (UpLoadFile) msg.obj;
+//					if (file == null) {
+//						Log.i("Test", "返回的结果为空");
+//					}
+//					//UIHelper.ToastMessage(mAppContext, file.getMsg());
+//					mUserFace.setImageBitmap(protraitBitmap);
+//				} else {
+//					UIHelper.ToastMessage(AppContext.getInstance(), "上次头像失败");
+//				}
+//			}
+//
+//			@Override
+//			protected Message doInBackground(Void... params) {
+//				Message msg = new Message();
+//				// 获取头像缩略图
+//				if (!StringUtils.isEmpty(protraitPath) && protraitFile.exists()) {
+//					protraitBitmap = ImageUtils.loadImgThumbnail(protraitPath,
+//							200, 200);
+//				} else {
+//					UIHelper.ToastMessage(MySelfInfoActivity.this, "图像不存在");
+//				}
+//				if (protraitBitmap != null && protraitFile != null) {
+//					try {
+//						UpLoadFile file = mAppContext.upLoad(protraitFile);
+//						msg.what = 1;
+//						msg.obj = file;
+//					} catch (AppException e) {
+//						dialog.dismiss();
+//						msg.what = -1;
+//						msg.obj = e;
+//					}
+//				}
+//				return msg;
+//			}
+//
+//		}.execute();
 	}
 	
 	@Override

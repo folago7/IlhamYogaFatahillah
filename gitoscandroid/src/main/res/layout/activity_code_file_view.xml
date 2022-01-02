@@ -4,15 +4,14 @@
     android:layout_height="fill_parent" >
 
     <WebView
-        android:id="@+id/code_file_webview"
+        android:id="@+id/webview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:visibility="gone" />
-    
-    <ProgressBar 
-        android:id="@+id/code_file_loading"
-        style="@style/ListSpinner"
-        android:layout_centerInParent="true"
-        android:visibility="visible"/>
 
+    <net.oschina.gitapp.widget.TipInfoLayout
+        android:id="@+id/tip_info"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></net.oschina.gitapp.widget.TipInfoLayout>
+    
 </RelativeLayout>

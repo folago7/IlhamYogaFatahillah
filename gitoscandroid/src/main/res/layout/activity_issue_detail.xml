@@ -5,10 +5,9 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-    <ProgressBar
-        android:id="@+id/loading"
-        style="@style/ListSpinner"
-        android:layout_gravity="center"
-        android:visibility="gone" />
+    <net.oschina.gitapp.widget.TipInfoLayout
+        android:id="@+id/tip_info"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </FrameLayout>

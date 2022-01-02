@@ -1,20 +1,6 @@
 package net.oschina.gitapp.ui.fragments;
 
-import java.util.ArrayList;
-import java.util.List;
-import net.oschina.gitapp.AppContext;
-import net.oschina.gitapp.AppException;
-import net.oschina.gitapp.R;
-import net.oschina.gitapp.adapter.NotificationAdapter;
-import net.oschina.gitapp.bean.CommonList;
-import net.oschina.gitapp.bean.Notification;
-import net.oschina.gitapp.bean.ProjectNotification;
-import net.oschina.gitapp.bean.ProjectNotificationArray;
-import net.oschina.gitapp.common.UIHelper;
-import net.oschina.gitapp.ui.basefragment.BaseFragment;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Message;
 import android.support.v4.view.MenuItemCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,10 +10,28 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
-import android.widget.ImageView;
 import android.widget.ExpandableListView.OnChildClickListener;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
+import net.oschina.gitapp.AppContext;
+import net.oschina.gitapp.R;
+import net.oschina.gitapp.adapter.NotificationAdapter;
+import net.oschina.gitapp.api.GitOSCApi;
+import net.oschina.gitapp.bean.Notification;
+import net.oschina.gitapp.bean.ProjectNotification;
+import net.oschina.gitapp.bean.ProjectNotificationArray;
+import net.oschina.gitapp.common.UIHelper;
+import net.oschina.gitapp.ui.basefragment.BaseFragment;
+import net.oschina.gitapp.util.JsonUtils;
+
+import org.apache.http.Header;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 通知列表页面
@@ -131,7 +135,7 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		MenuItem createOption = menu.add(0, MENU_REFRESH_ID, MENU_REFRESH_ID, "刷新");
-		createOption.setIcon(R.drawable.abc_ic_menu_refresh);
+		createOption.setIcon(R.drawable.action_refresh);
 		
 		MenuItemCompat.setShowAsAction(createOption, MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
 	}
@@ -167,50 +171,40 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
 	}
 
 	private void loadData(final String filter, final String all, final String project_id) {
-		new AsyncTask<Void, Void, Message>() {
-			
-			@Override
-			protected Message doInBackground(Void... params) {
-				Message msg = new Message();
-				try {
-					CommonList<ProjectNotificationArray> commonList = mAppContext.getNotification(filter, all, project_id);
-					msg.what = 1;
-					msg.obj = commonList;
-				} catch (AppException e) {
-					msg.what = -1;
-					msg.obj = e;
-					e.printStackTrace();
-				}
-				return msg;
-			}
+        GitOSCApi.getNotification(filter, all, project_id, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                List<ProjectNotificationArray> notificationArrays = JsonUtils.getList(ProjectNotificationArray[].class, responseBody);
+                boolean isEmpty = true;
+                if (notificationArrays.size() != 0) {
+                    isEmpty = false;
+                    for (ProjectNotificationArray pna : notificationArrays) {
+                        mGroups.add(pna.getProject());
+                        List<Notification> ns = new ArrayList<Notification>();
+                        ns.addAll(pna.getProject().getNotifications());
+                        mData.add(ns);
+                    }
+                }
+                adapter.notifyDataSetChanged();
+                afterLoading(isEmpty);
+            }
 
-			@Override
-			protected void onPreExecute() {
-				super.onPreExecute();
-				beforeLoading();
-			}
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
 
-			@SuppressWarnings("unchecked")
-			@Override
-			protected void onPostExecute(Message msg) {
-				mData.clear();
-				if (msg.what == 1) {
-					CommonList<ProjectNotificationArray> commonList = (CommonList<ProjectNotificationArray>) msg.obj;
-					boolean isEmpty = true;
-					if (commonList.getList().size() != 0) {
-						isEmpty = false;
-						for (ProjectNotificationArray pna : commonList.getList()) {
-							mGroups.add(pna.getProject());
-							List<Notification> ns = new ArrayList<Notification>();
-							ns.addAll(pna.getProject().getNotifications());
-							mData.add(ns);
-						}
-					}
-					adapter.notifyDataSetChanged();
-					afterLoading(isEmpty);
-				}
-			}
-		}.execute();
+            }
+
+            @Override
+            public void onStart() {
+                super.onStart();
+                beforeLoading();
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+            }
+        });
 	}
 
 	@Override
@@ -230,15 +224,17 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
 		if (notification != null) {
 			// 设置未读通知为已读
 			if (!notification.isRead()) {
-				new Thread(){
-					public void run() {
-						try {
-							mAppContext.setNotificationIsRead(notification.getId());
-						} catch (AppException e) {
-							e.printStackTrace();
-						}
-					}
-				}.start();
+                GitOSCApi.setNotificationReaded(notification.getId(), new AsyncHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+                    }
+                });
 			}
 			if (notification.getTarget_type().equalsIgnoreCase("Issue")) {
 				UIHelper.showIssueDetail(mAppContext, null, null, notification.getProject_id(), notification.getTarget_id());

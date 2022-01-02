@@ -1,23 +1,28 @@
 package net.oschina.gitapp.ui;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
 import net.oschina.gitapp.AppContext;
-import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.R;
-import net.oschina.gitapp.api.ApiClient;
+import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.ShippingAddress;
 import net.oschina.gitapp.common.StringUtils;
-import net.oschina.gitapp.common.UIHelper;
+import net.oschina.gitapp.dialog.LightProgressDialog;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
+import net.oschina.gitapp.util.GitViewUtils;
+import net.oschina.gitapp.util.JsonUtils;
+
+import org.apache.http.Header;
 
 /**
  * 用户收货地址界面
@@ -108,46 +113,41 @@ public class ShippingAddressActivity extends BaseActivity implements View.OnClic
 	}
 	
 	private void loadingShippingAddress() {
-		new AsyncTask<Void, Void, Message>() {
 
-			@Override
-			protected Message doInBackground(Void... params) {
-				Message msg = new Message();
-				try {
-					msg.obj = ApiClient.getUserShippingAddress(mContext, mContext.getLoginUid() + "");
-					msg.what = 1;
-				} catch (AppException e) {
-					msg.what = -1;
-					msg.obj = e;
-					e.printStackTrace();
-				}
-				return msg;
-			}
+        GitOSCApi.getUserShippingAddress(AppContext.getInstance().getLoginUid() + "", new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                ShippingAddress address = JsonUtils.toBean(ShippingAddress.class, responseBody);
+                if (address != null) {
+                    mShippingAddress = address;
+                    mName.setText(mShippingAddress.getName());
+                    mTel.setText(mShippingAddress.getTel());
+                    mAddress.setText(mShippingAddress.getAddress());
+                    mComment.setText(mShippingAddress.getComment());
+                }
+            }
 
-			@Override
-			protected void onPostExecute(Message msg) {
-				super.onPostExecute(msg);
-				mLoading.setVisibility(View.GONE);
-				mContent.setVisibility(View.VISIBLE);
-				mPub.setVisibility(View.VISIBLE);
-				if (msg.what == 1 && msg.obj != null) {
-					mShippingAddress = (ShippingAddress) msg.obj;
-					mName.setText(mShippingAddress.getName());
-					mTel.setText(mShippingAddress.getTel());
-					mAddress.setText(mShippingAddress.getAddress());
-					mComment.setText(mShippingAddress.getComment());
-				}
-			}
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
 
-			@Override
-			protected void onPreExecute() {
-				super.onPreExecute();
-				mLoading.setVisibility(View.VISIBLE);
-				mContent.setVisibility(View.GONE);
-				mPub.setVisibility(View.GONE);
-			}
-			
-		}.execute();
+            }
+
+            @Override
+            public void onStart() {
+                super.onStart();
+                mLoading.setVisibility(View.VISIBLE);
+                mContent.setVisibility(View.GONE);
+                mPub.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                mLoading.setVisibility(View.GONE);
+                mContent.setVisibility(View.VISIBLE);
+                mPub.setVisibility(View.VISIBLE);
+            }
+        });
 	}
 
 	@Override
@@ -172,43 +172,31 @@ public class ShippingAddressActivity extends BaseActivity implements View.OnClic
 			mDialog = new ProgressDialog(ShippingAddressActivity.this);
 			mDialog.setMessage("正在提交保存...");
 		}
-		
-		new AsyncTask<Void, Void, Message>() {
 
-			@Override
-			protected Message doInBackground(Void... params) {
-				Message msg = new Message();
-				try {
-					msg.obj = ApiClient.updateUserShippingAddress(mContext, mContext.getLoginUid() + "", mShippingAddress);
-					msg.what = 1;
-				} catch (AppException e) {
-					msg.what = -1;
-					msg.obj = e;
-					e.printStackTrace();
-				}
-				return msg;
-			}
+        final AlertDialog pubing = LightProgressDialog.create(this, "正在提交保存...");
+        GitOSCApi.updateUserShippingAddress(AppContext.getInstance().getLoginUid() + "", mShippingAddress, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                GitViewUtils.showToast("保存成功");
+                ShippingAddressActivity.this.finish();
+            }
 
-			@Override
-			protected void onPostExecute(Message msg) {
-				super.onPostExecute(msg);
-				mDialog.dismiss();
-				if (msg.what == 1 && msg.obj != null) {
-					finish();
-					UIHelper.ToastMessage(mContext, "保存成功");
-				} else {
-					if (msg.obj instanceof AppException) {
-						((AppException)msg.obj).makeToast(mContext);
-					}
-				}
-			}
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                GitViewUtils.showToast("保存失败");
+            }
 
-			@Override
-			protected void onPreExecute() {
-				super.onPreExecute();
-				mDialog.show();
-			}
-			
-		}.execute();
+            @Override
+            public void onStart() {
+                super.onStart();
+                pubing.show();
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                pubing.dismiss();
+            }
+        });
 	}
 }

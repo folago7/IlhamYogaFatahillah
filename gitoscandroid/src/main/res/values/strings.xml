@@ -9,6 +9,7 @@
     <string name="main_menu_title_notice">通知</string>
     <string name="main_menu_title_language">语言</string>
     <string name="main_menu_title_shake">摇一摇</string>
+    <string name="main_menu_title_scan">扫一扫</string>
     <string name="main_menu_title_setting">设置</string>
     <string name="main_menu_title_exit">退出</string>
     

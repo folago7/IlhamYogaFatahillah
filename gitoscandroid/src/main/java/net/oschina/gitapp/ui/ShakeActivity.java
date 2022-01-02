@@ -25,13 +25,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.LuckMsg;
 import net.oschina.gitapp.bean.RandomProject;
-import net.oschina.gitapp.bean.URLs;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
@@ -142,7 +142,7 @@ public class ShakeActivity extends BaseActivity implements OnClickListener {
             UIHelper.getDialog(ShakeActivity.this, "温馨提示", "请先摇一摇再分享吧", "知道了").show();
         } else {
             String title = "摇项目，等你来！";
-            String url = URLs.URL_HOST + mProject.getOwner().getUsername() + URLs.URL_SPLITTER + mProject.getName();
+            String url = GitOSCApi.NO_API_BASE_URL + mProject.getOwner().getUsername() + "/" + mProject.getName();
             String shareContent = "我在Git@OSC客户端中摇到《" + mProject.getOwner().getName() + "的项目" + mProject.getName() + "》你也来试试手气吧";
             UIHelper.showShareOption(ShakeActivity.this, title, url, shareContent, mBitmap);
         }
@@ -329,7 +329,7 @@ public class ShakeActivity extends BaseActivity implements OnClickListener {
                     if (faceUrl.endsWith(".gif") || StringUtils.isEmpty(faceUrl)) {
                         mProjectFace.setImageResource(R.drawable.mini_avatar);
                     } else {
-                        UIHelper.showUserFace(mProjectFace, faceUrl);
+                        ImageLoader.getInstance().displayImage(faceUrl, mProjectFace);
                     }
 
                     Handler handle = new Handler();
@@ -343,7 +343,7 @@ public class ShakeActivity extends BaseActivity implements OnClickListener {
                 } else if (mProject != null) {
                     mShakeListener.stop();
                     mShakeResAward.setVisibility(View.VISIBLE);
-                    UIHelper.showUserFace(mShakeResAwardImg, mProject.getImg());
+                    ImageLoader.getInstance().displayImage(mProject.getImg(), mShakeResAwardImg);
                     mShakeResAwardMsg.setText(mProject.getMsg());
 
                     AlertDialog.Builder dialog = new Builder(ShakeActivity.this);

@@ -1,27 +1,15 @@
 package net.oschina.gitapp.common;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.text.DecimalFormat;
-import net.oschina.gitapp.AppContext;
-import net.oschina.gitapp.AppException;
-import net.oschina.gitapp.R;
-import net.oschina.gitapp.bean.Update;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.app.AlertDialog.Builder;
 import android.content.Context;
-import android.content.Intent;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
@@ -33,6 +21,26 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
+import net.oschina.gitapp.R;
+import net.oschina.gitapp.api.GitOSCApi;
+import net.oschina.gitapp.bean.Update;
+import net.oschina.gitapp.dialog.LightProgressDialog;
+import net.oschina.gitapp.util.GitViewUtils;
+import net.oschina.gitapp.util.JsonUtils;
+
+import org.apache.http.Header;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.text.DecimalFormat;
 
 /**
  * 应用程序更新工具包
@@ -154,59 +162,44 @@ public class UpdateManager {
 	 * @param context
 	 * @param isShowMsg 是否显示提示消息
 	 */
-	public void checkAppUpdate(Context appContext, final boolean isShowMsg){
-		this.mContext = appContext;
+	public void checkAppUpdate(Context context, final boolean isShowMsg){
+		this.mContext = context;
 		getCurrentVersion();
-		if(isShowMsg){
-			if(mProDialog == null) {
-				mProDialog = ProgressDialog.show(mContext, null, "正在检测，请稍后...", true, true);
-				mProDialog.setCanceledOnTouchOutside(false);
-			}
-			else if(mProDialog.isShowing() || (latestOrFailDialog!=null && latestOrFailDialog.isShowing()))
-				return;
-		}
-		final Handler handler = new Handler(){
-			public void handleMessage(Message msg) {
-				//进度条对话框不显示 - 检测结果也不显示
-				if(mProDialog != null && !mProDialog.isShowing()){
-					return;
-				}
-				//关闭并释放释放进度条对话框
-				if(isShowMsg && mProDialog != null){
-					mProDialog.dismiss();
-					mProDialog = null;
-				}
-				//显示检测结果
-				if(msg.what == 1){
-					mUpdate = (Update)msg.obj;
-					if(mUpdate != null){
-						if(curVersionCode < mUpdate.getNum_version()){
-							apkUrl = mUpdate.getDownload_url();
-							updateMsg = mUpdate.getDescription();
-							showNoticeDialog();
-						}else if(isShowMsg){
-							showLatestOrFailDialog(DIALOG_TYPE_LATEST);
-						}
-					}
-				}else if(isShowMsg){
-					showLatestOrFailDialog(DIALOG_TYPE_FAIL);
-				}
-			}
-		};
-		new Thread(){
-			public void run() {
-				Message msg = new Message();
-				try {					
-					Update update = ((AppContext)mContext.getApplicationContext()).getUpdateInfo();
-					msg.what = 1;
-					msg.obj = update;
-				} catch (AppException e) {
-					e.printStackTrace();
-				}
-				handler.sendMessage(msg);
-			}			
-		}.start();		
-	}	
+        final AlertDialog check = LightProgressDialog.create(context, "正在检测，请稍后...");
+        check.setCanceledOnTouchOutside(false);
+        GitOSCApi.getUpdateInfo(new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                Update update = JsonUtils.toBean(Update.class, responseBody);
+
+                if (update != null) {
+                    mUpdate = update;
+                    if(curVersionCode < mUpdate.getNum_version()){
+                        apkUrl = mUpdate.getDownload_url();
+                        updateMsg = mUpdate.getDescription();
+                        showNoticeDialog();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                GitViewUtils.showToast("网络异常");
+            }
+
+            @Override
+            public void onStart() {
+                super.onStart();
+                check.show();
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+                check.dismiss();
+            }
+        });
+	}
 	
 	/**
 	 * 显示版本更新通知对话框
@@ -350,8 +343,7 @@ public class UpdateManager {
 	
 	/**
 	* 下载apk
-	* @param url
-	*/	
+	*/
 	private void downloadApk(){
 		downLoadThread = new Thread(mdownApkRunnable);
 		downLoadThread.start();
@@ -359,7 +351,6 @@ public class UpdateManager {
 	
 	/**
     * 安装apk
-    * @param url
     */
 	private void installApk(){
 		File apkfile = new File(apkFilePath);

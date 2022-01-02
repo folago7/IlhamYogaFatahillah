@@ -31,13 +31,14 @@ android {
 
 dependencies {
     compile project(':social_sdk_library_project')
+    compile files('libs/zxing.jar')
     compile files('libs/commons-httpclient-3.1.jar')
     compile files('libs/commons-io-1.4.jar')
     compile files('libs/jackson-core-asl-1.9.9.jar')
     compile files('libs/jackson-mapper-asl-1.9.9.jar')
-    compile 'com.android.support:appcompat-v7:22.0.0'
+    compile 'com.android.support:appcompat-v7:22.1.0'
     compile 'com.android.support:recyclerview-v7:22.0.0'
-    compile 'com.android.support:support-v4:22.0.0'
+    compile 'com.android.support:support-v4:22.1.0'
     compile 'com.loopj.android:android-async-http:1.4.6'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
     compile 'com.jakewharton:butterknife:6.1.0'

@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -20,11 +18,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.dtr.zxing.activity.CaptureActivity;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
 import net.oschina.gitapp.AppContext;
-import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.AppManager;
 import net.oschina.gitapp.R;
-import net.oschina.gitapp.bean.CommonList;
+import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.ProjectNotificationArray;
 import net.oschina.gitapp.common.DoubleClickExitHelper;
 import net.oschina.gitapp.common.UIHelper;
@@ -32,6 +32,11 @@ import net.oschina.gitapp.common.UpdateManager;
 import net.oschina.gitapp.interfaces.DrawerMenuCallBack;
 import net.oschina.gitapp.ui.fragments.ExploreViewPagerFragment;
 import net.oschina.gitapp.ui.fragments.MySelfViewPagerFragment;
+import net.oschina.gitapp.util.JsonUtils;
+
+import org.apache.http.Header;
+
+import java.util.List;
 
 /**
  * 程序主界面
@@ -150,41 +155,33 @@ public class MainActivity extends ActionBarActivity implements
 	 */
 	private void foreachUserNotice() {
 		final boolean isLogin = mContext.isLogin();
-		final Handler handler = new Handler() {
-			@SuppressWarnings("unchecked")
-			public void handleMessage(Message msg) {
-				if (msg.what == 1) {
-					CommonList<ProjectNotificationArray> commonList = (CommonList<ProjectNotificationArray>) msg.obj;
-					int count = 0;
-					for (ProjectNotificationArray pna : commonList.getList()) {
-						count += pna.getProject().getNotifications().size();
-					}
-					UIHelper.sendBroadCast(MainActivity.this, count);
-				}
-				foreachUserNotice();// 回调
-			}
-		};
-		new Thread() {
-			public void run() {
-				Message msg = new Message();
-				try {
-					sleep(60 * 1000);
-					if (isLogin) {
-						msg.obj = mContext.getNotification("", "", "");
-						msg.what = 1;
-					} else {
-						msg.what = 0;
-					}
-				} catch (AppException e) {
-					e.printStackTrace();
-					msg.what = -1;
-				} catch (Exception e) {
-					e.printStackTrace();
-					msg.what = -1;
-				}
-				handler.sendMessage(msg);
-			}
-		}.start();
+        new Thread() {
+            public void run() {
+                try {
+                    sleep(60 * 1000);
+                    if (isLogin) {
+                        GitOSCApi.getNotification("", "", "", new AsyncHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                                List<ProjectNotificationArray> notificationArrays = JsonUtils.getList(ProjectNotificationArray[].class, responseBody);
+                                int count = 0;
+                                for (ProjectNotificationArray pna : notificationArrays) {
+                                    count += pna.getProject().getNotifications().size();
+                                }
+                                UIHelper.sendBroadCast(MainActivity.this, count);
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+                            }
+                        });
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
 	}
 
 	@Override
@@ -330,8 +327,15 @@ public class MainActivity extends ActionBarActivity implements
 		Intent intent = new Intent(mContext, ShakeActivity.class);
 		startActivity(intent);
 	}
-	
-	@Override
+
+    @Override
+    public void onClickScan() {
+        Intent intent = new Intent();
+        intent.setClass(this, CaptureActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
 	public void onClickSetting() {
 		Intent intent = new Intent(mContext, SettingActivity.class);
 		startActivity(intent);
