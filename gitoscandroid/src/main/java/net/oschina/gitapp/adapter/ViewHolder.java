@@ -9,11 +9,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.common.StringUtils;
+import net.oschina.gitapp.util.ImageLoaderUtils;
 import net.oschina.gitapp.util.TypefaceUtils;
 
 /**
@@ -140,13 +140,7 @@ public class ViewHolder {
         if (iv.getTag() == null || !((String)iv.getTag()).equals(imgUrl)) {
             iv.setImageResource(R.drawable.mini_avatar);
         }
-        // 使用DisplayImageOptions.Builder()创建DisplayImageOptions
-        DisplayImageOptions options = new DisplayImageOptions.Builder()
-                .showImageForEmptyUri(R.drawable.mini_avatar)  // 设置图片Uri为空或是错误的时候显示的图片
-                .cacheInMemory(true)                        // 设置下载的图片是否缓存在内存中
-                .cacheOnDisk(true)                          // 设置下载的图片是否缓存在SD卡中
-                .build();                                   // 创建配置过得DisplayImageOption对象                                        // 创建配置过的DisplayImageOption对象
-        ImageLoader.getInstance().displayImage(imgUrl, iv, options);
+        ImageLoader.getInstance().displayImage(imgUrl, iv, ImageLoaderUtils.getOption());
         iv.setTag(imgUrl);
     }
 }

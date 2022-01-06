@@ -27,6 +27,7 @@ import net.oschina.gitapp.bean.CodeTree;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.dialog.ProjectRefSelectDialog;
+import net.oschina.gitapp.photoBrowse.PhotoBrowseActivity;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 import net.oschina.gitapp.util.GitViewUtils;
 import net.oschina.gitapp.util.JsonUtils;
@@ -36,6 +37,8 @@ import net.oschina.gitapp.widget.TipInfoLayout;
 import org.apache.http.Header;
 
 import java.io.File;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
@@ -107,7 +110,7 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
     private Stack<String> paths = new Stack<>();
     private boolean isLoading;
 
-    /***
+    /**
      * 加载代码树
      */
     private void loadCode(final String path, final boolean refresh) {
@@ -122,7 +125,9 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
                 List<CodeTree> list = JsonUtils.getList(CodeTree[].class, responseBody);
                 if (list != null && !list.isEmpty()) {
                     if (refresh) {
-                        codeFloders.pop();
+                        if (!codeFloders.isEmpty()) {
+                            codeFloders.pop();
+                        }
                     }
                     codeFloders.push(list);
                     switchBranch.setVisibility(View.VISIBLE);
@@ -177,6 +182,7 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
 
     /**
      * 获取路径地址
+     *
      * @return 仓库的路径
      */
     private String getPath() {
@@ -207,7 +213,7 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
         tvPaths.setText(ps);
     }
 
-    /***
+    /**
      * 设置分支的信息
      */
     private void setBranchInfo() {
@@ -252,11 +258,27 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
             showDetail(fileName, refName);
 
         } else if (codeTree.isImage(fileName)) {
-//            String url = URLs.URL_HOST + project.getOwner().getUsername() + URLs.URL_SPLITTER + mProject.getPath() + URLs.URL_SPLITTER + "raw" + URLs.URL_SPLITTER + mBranch + URLs.URL_SPLITTER + URLEncoder.encode(getFilePath(fileName)) + "?private_token=" + ApiClient.getToken(mAppContext);
-//            //UIHelper.showImageZoomActivity(ProjectCodeActivity.this, url);
+            showImageView(codeTree);
         } else {
             openWithBrowser(codeTree);
         }
+    }
+
+    private void showImageView(CodeTree currenCodeTree) {
+        List<CodeTree> codeTrees = codeTreeAdapter.getDatas();
+        List<String> images = new ArrayList<>();
+        int index = 0;
+        for (int i = 0; i < codeTrees.size(); i++) {
+            CodeTree codeTree = codeTrees.get(i);
+            if (codeTree.isImage(codeTree.getName())) {
+                String url = GitOSCApi.NO_API_BASE_URL + project.getOwner().getUsername() + "/" + project.getPath() + "/" + "raw" + "/" + refName + "/" + URLEncoder.encode(getPath() + codeTree.getName()) + "?private_token=" + AppContext.getToken();
+                images.add(url);
+            }
+            if (codeTree.getId() == currenCodeTree.getId()) {
+                index = i;
+            }
+        }
+        PhotoBrowseActivity.showPhotoBrowse(this, images.toArray(new String[]{}), index);
     }
 
     /**
@@ -300,7 +322,7 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
         loadCode("", true);
     }
 
-    /***
+    /**
      * 查看代码文件详情
      */
     private void showDetail(String fileName, String ref) {

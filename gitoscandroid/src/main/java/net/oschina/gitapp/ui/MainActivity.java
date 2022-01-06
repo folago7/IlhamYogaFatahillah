@@ -276,7 +276,8 @@ public class MainActivity extends ActionBarActivity implements
                 ft.remove(fragment);
             }
         }
-        ft.replace(R.id.main_content, Fragment.instantiate(this, FRAGMENTS[pos]), tag);
+        ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
+                .replace(R.id.main_content, Fragment.instantiate(this, FRAGMENTS[pos]), tag);
         ft.commit();
 
         mActionBar.setTitle(TITLES[pos]);

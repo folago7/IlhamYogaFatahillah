@@ -49,6 +49,10 @@ public abstract class CommonAdapter<T> extends BaseAdapter {
         return vh.getConvertView();
     }
 
+    public List<T> getDatas() {
+        return this.mDatas;
+    }
+
     // 获取ViewHodler
     public ViewHolder getViewHodler(int position, View convertView, ViewGroup parent) {
 

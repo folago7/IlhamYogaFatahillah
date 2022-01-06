@@ -64,7 +64,7 @@ public class LightProgressDialog extends ProgressDialog {
             dialog.setMessage(message);
             dialog.setIndeterminate(true);
             dialog.setProgressStyle(STYLE_SPINNER);
-            dialog.setIndeterminateDrawable(context.getResources().getDrawable(R.drawable.spinner));
+            //dialog.setIndeterminateDrawable(context.getResources().getDrawable(R.drawable.spinner));
             return dialog;
         } else {
             AlertDialog dialog = LightAlertDialog.create(context);

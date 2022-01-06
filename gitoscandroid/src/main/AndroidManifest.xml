@@ -153,7 +153,8 @@
             android:name="com.dtr.zxing.activity.ResultActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" />
-
+        <activity android:name=".photoBrowse.PhotoBrowseActivity"
+            android:screenOrientation="portrait"/>
 
         <!-- umeng -->
         <!-- ###################注册SDK使用的Activity###################### -->
