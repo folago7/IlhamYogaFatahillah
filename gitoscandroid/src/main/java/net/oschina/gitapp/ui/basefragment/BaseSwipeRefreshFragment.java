@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
-import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.CommonAdapter;
 import net.oschina.gitapp.bean.Entity;
@@ -46,8 +45,6 @@ public abstract class BaseSwipeRefreshFragment<T extends Entity>
     static final int STATE_NONE = -1;
     static final int STATE_LOADING = 0;
     static final int STATE_LOADED = 1;
-
-    protected AppContext mApplication;
 
     protected SwipeRefreshLayout mSwipeRefreshLayout;
     protected ListView mListView;
@@ -105,7 +102,6 @@ public abstract class BaseSwipeRefreshFragment<T extends Entity>
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mApplication = getGitApplication();
     }
 
     @Override

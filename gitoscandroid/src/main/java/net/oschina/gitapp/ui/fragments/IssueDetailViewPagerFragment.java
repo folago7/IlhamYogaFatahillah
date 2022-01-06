@@ -1,20 +1,18 @@
 package net.oschina.gitapp.ui.fragments;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Message;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.ViewPageFragmentAdapter;
 import net.oschina.gitapp.bean.Issue;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.ui.IssueCommentActivity;
-import net.oschina.gitapp.ui.IssueDetailActivity;
 import net.oschina.gitapp.ui.basefragment.BaseViewPagerFragment;
 
 /**
@@ -77,7 +75,7 @@ public class IssueDetailViewPagerFragment extends BaseViewPagerFragment {
 		if (mProject == null || mIssue == null) {
 			return;
 		}
-		Intent intent = new Intent(getGitApplication(), IssueCommentActivity.class);
+		Intent intent = new Intent(getActivity(), IssueCommentActivity.class);
 		Bundle bundle = new Bundle();
 		bundle.putSerializable(Contanst.PROJECT, mProject);
 		bundle.putSerializable(Contanst.ISSUE, mIssue);

@@ -228,6 +228,13 @@ public class GitOSCApi {
         post(UPLOAD, params, handler);
     }
 
+    /***
+     * 获取通知
+     * @param filter
+     * @param all
+     * @param projectId
+     * @param handler
+     */
     public static void getNotification(String filter, String all, String projectId, AsyncHttpResponseHandler handler) {
         RequestParams params = getPrivateTokenWithParams();
         params.put("filter", filter);

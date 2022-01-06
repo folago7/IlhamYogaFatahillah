@@ -1,6 +1,8 @@
 package net.oschina.gitapp.ui.fragments;
 
 import android.os.Bundle;
+
+import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.ViewPageFragmentAdapter;
 import net.oschina.gitapp.common.Contanst;
@@ -24,7 +26,7 @@ public class MySelfViewPagerFragment extends BaseViewPagerFragment {
 		adapter.addTab(title[0], "event", MySelfEventsFragment.class, null);
 		adapter.addTab(title[1], "project", MySelfProjectsFragment.class, null);
 		Bundle bundle = new Bundle();
-		bundle.putSerializable(Contanst.USER, getGitApplication().getLoginInfo());
+		bundle.putSerializable(Contanst.USER, AppContext.getInstance().getLoginInfo());
 		adapter.addTab(title[2], "star_projects", UserStarProjectFragment.class, bundle);
 		adapter.addTab(title[3], "watch_projects", UserWatchProjectsFragment.class, bundle);
 	}

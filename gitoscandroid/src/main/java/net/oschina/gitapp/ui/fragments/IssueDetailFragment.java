@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.Commit;
@@ -30,8 +29,6 @@ import org.apache.http.protocol.HTTP;
  * @created 2014-08-25
  */
 public class IssueDetailFragment extends BaseFragment {
-	
-	private AppContext mAppContext;
 	
 	private Issue mIssue;
 	
@@ -64,7 +61,6 @@ public class IssueDetailFragment extends BaseFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		mAppContext = getGitApplication();
 		return inflater.inflate(R.layout.issue_detail, null);
 	}
 

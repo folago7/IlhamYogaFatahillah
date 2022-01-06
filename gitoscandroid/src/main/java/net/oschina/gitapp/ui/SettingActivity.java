@@ -1,167 +1,175 @@
 package net.oschina.gitapp.ui;
 
-import java.io.File;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.TextView;
+
 import net.oschina.gitapp.AppContext;
-import net.oschina.gitapp.AppManager;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.common.FileUtils;
 import net.oschina.gitapp.common.MethodsCompat;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.common.UpdateManager;
-import android.content.Intent;
-import android.os.Bundle;
-import android.preference.CheckBoxPreference;
-import android.preference.Preference;
-import android.preference.Preference.OnPreferenceClickListener;
-import android.preference.PreferenceActivity;
+import net.oschina.gitapp.ui.baseactivity.BaseActivity;
+
+import java.io.File;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnClick;
 
 /**
- * 设置界面
- * @created 2014-07-02
- * @author 火蚁（http://my.oschina.net/LittleDY）
- *
+ * Created by 火蚁 on 15/4/29.
  */
-public class SettingActivity extends PreferenceActivity implements OnPreferenceClickListener {
-	
-	private Preference cache;
-	private Preference feedback;
-	private Preference update;
-	private Preference about;
+public class SettingActivity extends BaseActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
-	private CheckBoxPreference isReceiveNotice;
-	private CheckBoxPreference voice;
-	private CheckBoxPreference checkup;
-	
-	private AppContext mAppContext;
-	
-	@SuppressWarnings("deprecation")
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);
-		addPreferencesFromResource(R.xml.preferences);
-		initView();
-		AppManager.getAppManager().addActivity(this);
-	}
-	
-	@SuppressWarnings("deprecation")
-	private void initView() {
-		mAppContext = (AppContext) getApplication();
-		
-		// 接收通知
-		isReceiveNotice = (CheckBoxPreference) findPreference("isnotice");
-		isReceiveNotice.setChecked(mAppContext.isReceiveNotice());
-		if (mAppContext.isReceiveNotice()) {
-			isReceiveNotice.setSummary("已开启接收通知");
-		} else {
-			isReceiveNotice.setSummary("已关闭接收通知");
-		}
-		isReceiveNotice.setOnPreferenceClickListener(this);
-		
-		// 提示声音
-		voice = (CheckBoxPreference) findPreference("voice");
-		voice.setChecked(mAppContext.isVoice());
-		if (mAppContext.isVoice()) {
-			voice.setSummary("已开启提示声音");
-		} else {
-			voice.setSummary("已关闭提示声音");
-		}
-		voice.setOnPreferenceClickListener(this);
-		
-		checkup = (CheckBoxPreference) findPreference("checkup");
-		checkup.setChecked(mAppContext.isCheckUp());
-		checkup.setOnPreferenceClickListener(this);
-		
-		cache = (Preference) findPreference("cache");
-		cache.setSummary(calCache());
-		cache.setOnPreferenceClickListener(this);
-		
-		feedback = (Preference) findPreference("feedback");
-		update = (Preference) findPreference("update");
-		about = (Preference) findPreference("about");
-		
-		
-		feedback.setOnPreferenceClickListener(this);
-		update.setOnPreferenceClickListener(this);
-		about.setOnPreferenceClickListener(this);
-	}
+    @InjectView(R.id.cb_receive_notice)
+    CheckBox cbReceiveNotice;
+    @InjectView(R.id.cb_notice_vioce)
+    CheckBox cbNoticeVioce;
+    @InjectView(R.id.cb_check_update_start)
+    CheckBox cbCheckUpdateStart;
+    @InjectView(R.id.tv_cache_size)
+    TextView tvCacheSize;
 
-	@Override
-	public boolean onPreferenceClick(Preference preference) {
-		if (preference == isReceiveNotice) {
-			onReceiveNotice();
-		} else if (preference == voice) {
-			onVoice();
-		} else if (preference == checkup) {
-			mAppContext.setConfigCheckUp(checkup.isChecked());
-		} else if (preference == cache) {
-			onCache();
-		} else if (preference == feedback) {
-			onFeedBack();
-		} else if (preference == update) {
-			UpdateManager.getUpdateManager().checkAppUpdate(this, true);
-		} else if (preference == about) {
-			showAbout();
-		}
-		return true;
-	}
+    private AppContext appContext;
 
-	private void onReceiveNotice() {
-		mAppContext.setConfigReceiveNotice(isReceiveNotice.isChecked());
-		if (isReceiveNotice.isChecked()) {
-			isReceiveNotice.setSummary("已开启接收通知");
-		} else {
-			isReceiveNotice.setSummary("已关闭接收通知");
-		}
-	}
-	
-	private void onVoice() {
-		mAppContext.setConfigVoice(voice.isChecked());
-		if (voice.isChecked()) {
-			voice.setSummary("已开启提示声音");
-		} else {
-			voice.setSummary("已关闭提示声音");
-		}
-	}
-	
-	private void onCache() {
-		UIHelper.clearAppCache(SettingActivity.this);
-		cache.setSummary("OKB");
-	}
-	
-	private String calCache() {
-		long fileSize = 0;
-		String cacheSize = "0KB";
-		File filesDir = getFilesDir();
-		File cacheDir = getCacheDir();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_setting);
+        ButterKnife.inject(this);
+        initDate();
+    }
 
-		fileSize += FileUtils.getDirSize(filesDir);
-		fileSize += FileUtils.getDirSize(cacheDir);
-		// 2.2版本才有将应用缓存转移到sd卡的功能
-		if (AppContext.isMethodsCompat(android.os.Build.VERSION_CODES.FROYO)) {
-			File externalCacheDir = MethodsCompat.getExternalCacheDir(this);
-			fileSize += FileUtils.getDirSize(externalCacheDir);
-		}
-		if (fileSize > 0)
-			cacheSize = FileUtils.formatFileSize(fileSize);
-		return cacheSize;
-	}
-	
-	/**
-	 * 发送反馈意见到指定的邮箱
-	 */
-	private void onFeedBack() {
-		Intent i = new Intent(Intent.ACTION_SEND);  
-		//i.setType("text/plain"); //模拟器
-		i.setType("message/rfc822") ; //真机
-		i.putExtra(Intent.EXTRA_EMAIL, new String[]{"ld@oschina.net", "zhangdeyi@oschina.net"});  
-		i.putExtra(Intent.EXTRA_SUBJECT,"用户反馈-git@osc Android客户端");  
-		i.putExtra(Intent.EXTRA_TEXT, "");  
-		startActivity(Intent.createChooser(i, "send email to me..."));
-	}
-	
-	private void showAbout() {
-		Intent intent = new Intent(SettingActivity.this, About.class);
-		startActivity(intent);
-	}
+    private void initDate() {
+        appContext = AppContext.getInstance();
+        cbReceiveNotice.setChecked(appContext.isReceiveNotice());
+        cbNoticeVioce.setChecked(appContext.isVoice());
+        cbCheckUpdateStart.setChecked(appContext.isCheckUp());
+
+        tvCacheSize.setText(calCache());
+
+        cbReceiveNotice.setOnCheckedChangeListener(this);
+    }
+
+    @Override
+    @OnClick({R.id.ll_receive_notice, R.id.ll_notice_voice, R.id.ll_check_update_start,
+            R.id.ll_feedback, R.id.ll_clear_cache, R.id.ll_check_update, R.id.ll_about})
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.ll_receive_notice:
+                updateReceiveNotice();
+                break;
+            case R.id.ll_notice_voice:
+
+                updateNoticeVoice();
+                break;
+            case R.id.ll_check_update_start:
+                updateCheckUpdateStart();
+                break;
+            case R.id.ll_feedback:
+                onFeedBack();
+                break;
+            case R.id.ll_clear_cache:
+                onCache();
+                break;
+            case R.id.ll_check_update:
+                UpdateManager.getUpdateManager().checkAppUpdate(this, true);
+                break;
+            case R.id.ll_about:
+                showAbout();
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void updateReceiveNotice() {
+        if (cbReceiveNotice.isChecked()) {
+            cbReceiveNotice.setChecked(false);
+        } else {
+            cbReceiveNotice.setChecked(true);
+        }
+        appContext.setConfigReceiveNotice(cbReceiveNotice.isChecked());
+    }
+
+    private void updateNoticeVoice() {
+        if (cbNoticeVioce.isChecked()) {
+            cbNoticeVioce.setChecked(false);
+        } else {
+            cbNoticeVioce.setChecked(true);
+        }
+        appContext.setConfigReceiveNotice(cbNoticeVioce.isChecked());
+    }
+
+    private void updateCheckUpdateStart() {
+        if (cbCheckUpdateStart.isChecked()) {
+            cbCheckUpdateStart.setChecked(false);
+        } else {
+            cbCheckUpdateStart.setChecked(true);
+        }
+        appContext.setConfigCheckUp(cbCheckUpdateStart.isChecked());
+    }
+
+    private void onCache() {
+        UIHelper.clearAppCache(SettingActivity.this);
+        tvCacheSize.setText("OKB");
+    }
+
+    private String calCache() {
+        long fileSize = 0;
+        String cacheSize = "0KB";
+        File filesDir = getFilesDir();
+        File cacheDir = getCacheDir();
+
+        fileSize += FileUtils.getDirSize(filesDir);
+        fileSize += FileUtils.getDirSize(cacheDir);
+        // 2.2版本才有将应用缓存转移到sd卡的功能
+        if (AppContext.isMethodsCompat(android.os.Build.VERSION_CODES.FROYO)) {
+            File externalCacheDir = MethodsCompat.getExternalCacheDir(this);
+            fileSize += FileUtils.getDirSize(externalCacheDir);
+        }
+        if (fileSize > 0)
+            cacheSize = FileUtils.formatFileSize(fileSize);
+        return cacheSize;
+    }
+
+    /**
+     * 发送反馈意见到指定的邮箱
+     */
+    private void onFeedBack() {
+        Intent i = new Intent(Intent.ACTION_SEND);
+        //i.setType("text/plain"); //模拟器
+        i.setType("message/rfc822"); //真机
+        i.putExtra(Intent.EXTRA_EMAIL, new String[]{"zhangdeyi@oschina.net"});
+        i.putExtra(Intent.EXTRA_SUBJECT, "用户反馈-git@osc Android客户端");
+        i.putExtra(Intent.EXTRA_TEXT, "");
+        startActivity(Intent.createChooser(i, "send email to me..."));
+    }
+
+    private void showAbout() {
+        Intent intent = new Intent(SettingActivity.this, About.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        switch (buttonView.getId()) {
+            case R.id.cb_receive_notice:
+                appContext.setConfigReceiveNotice(isChecked);
+                break;
+            case R.id.cb_notice_vioce:
+                appContext.setConfigVoice(isChecked);
+                break;
+            case R.id.cb_check_update_start:
+                appContext.setConfigCheckUp(isChecked);
+                break;
+            default:
+                break;
+        }
+    }
 }

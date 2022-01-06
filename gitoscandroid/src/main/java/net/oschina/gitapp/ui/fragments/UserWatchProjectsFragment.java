@@ -47,7 +47,7 @@ public class UserWatchProjectsFragment extends BaseSwipeRefreshFragment<Project>
 
     @Override
     public CommonAdapter<Project> getAdapter() {
-        return new ProjectAdapter(mApplication, R.layout.list_item_project);
+        return new ProjectAdapter(getActivity(), R.layout.list_item_project);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class UserWatchProjectsFragment extends BaseSwipeRefreshFragment<Project>
 
 	@Override
 	public void onItemClick(int position, Project project) {
-		UIHelper.showProjectDetail(mApplication, null, project.getId());
+		UIHelper.showProjectDetail(getActivity(), null, project.getId());
 	}
 
     @Override

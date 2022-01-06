@@ -17,7 +17,6 @@ import android.widget.TextView;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
-import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.NotificationAdapter;
 import net.oschina.gitapp.api.GitOSCApi;
@@ -63,8 +62,6 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
 	
 	private List<ProjectNotification> mGroups;
 	
-	private AppContext mAppContext;
-	
 	private NotificationAdapter adapter;
 	
 	private ImageView mEmptyImage;
@@ -90,7 +87,6 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		mAppContext = getGitApplication();
 		initView(view);
 		steupList();
 		initData();
@@ -122,11 +118,11 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
 	private void steupList() {
 		mData = new ArrayList<List<Notification>>();
 		mGroups = new ArrayList<ProjectNotification>();
-		adapter = new NotificationAdapter(mAppContext, mData, mGroups);
+		adapter = new NotificationAdapter(getActivity(),mData, mGroups);
 		mListView.setAdapter(adapter);
 		
 		mListView.setOnChildClickListener(this);
-		TextView v = new TextView(mAppContext);
+		TextView v = new TextView(getActivity());
 		v.setText("空的数据");
 		mListView.setEmptyView(v);
 		mListView.setGroupIndicator(null);
@@ -237,9 +233,9 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
                 });
 			}
 			if (notification.getTarget_type().equalsIgnoreCase("Issue")) {
-				UIHelper.showIssueDetail(mAppContext, null, null, notification.getProject_id(), notification.getTarget_id());
+				UIHelper.showIssueDetail(getActivity(), null, null, notification.getProject_id(), notification.getTarget_id());
 			} else {
-				UIHelper.showProjectDetail(mAppContext, null, notification.getProject_id());
+				UIHelper.showProjectDetail(getActivity(), null, notification.getProject_id());
 			}
 		}
 		return false;

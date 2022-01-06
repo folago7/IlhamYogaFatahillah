@@ -3,9 +3,9 @@ package net.oschina.gitapp.ui;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.MenuItemCompat;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.WebView;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -35,8 +35,6 @@ import butterknife.InjectView;
 @SuppressLint("SetJavaScriptEnabled")
 public class CommitFileDetailActivity extends BaseActivity {
 
-    private final int MENU_REFRESH_ID = 0;
-    private final int MENU_MORE_ID = 1;
     @InjectView(R.id.webview)
     WebView webview;
     @InjectView(R.id.tip_info)
@@ -79,21 +77,14 @@ public class CommitFileDetailActivity extends BaseActivity {
         mActionBar.setSubtitle("提交" + mCommit.getShortId());
 
         mEditor = new SourceEditor(webview);
+
+        loadCode(mProject.getId(), mCommit.getId(), mCommitDiff.getNew_path());
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         optionsMenu = menu;
-        // 刷新按钮
-        MenuItem refreshItem = menu.add(0, MENU_REFRESH_ID, MENU_REFRESH_ID,
-                "刷新");
-
-        MenuItem moreOption = menu.add(0, MENU_MORE_ID, MENU_MORE_ID, "更多");
-        MenuItemCompat.setShowAsAction(refreshItem,
-                MenuItemCompat.SHOW_AS_ACTION_ALWAYS);
-        /*MenuItemCompat.setShowAsAction(moreOption,
-                MenuItemCompat.SHOW_AS_ACTION_ALWAYS);*/
-        loadCode(mProject.getId(), mCommit.getId(), mCommitDiff.getNew_path());
+        getMenuInflater().inflate(R.menu.commit_file_detail_menu, menu);
         return true;
     }
 
@@ -102,11 +93,10 @@ public class CommitFileDetailActivity extends BaseActivity {
 
         int id = item.getItemId();
         switch (id) {
-            case MENU_REFRESH_ID:
+            case R.id.refresh:
                 loadCode(mProject.getId(), mCommit.getId(), mCommitDiff.getNew_path());
                 break;
-            case MENU_MORE_ID:
-
+            default:
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -119,6 +109,7 @@ public class CommitFileDetailActivity extends BaseActivity {
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 String body = new String(responseBody);
                 if (body != null) {
+                    webview.setVisibility(View.VISIBLE);
                     mEditor.setSource(filePath, body, false);
                 }
             }
@@ -135,6 +126,7 @@ public class CommitFileDetailActivity extends BaseActivity {
             @Override
             public void onStart() {
                 super.onStart();
+                webview.setVisibility(View.GONE);
                 tipInfo.setLoading();
             }
 

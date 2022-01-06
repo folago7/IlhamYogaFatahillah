@@ -42,6 +42,6 @@ public class MySelfEventsFragment extends BaseSwipeRefreshFragment<Event> {
 
 	@Override
 	public void onItemClick(int position, Event event) {
-		UIHelper.showEventDetail(mApplication, event);
+		UIHelper.showEventDetail(getActivity(), event);
 	}
 }

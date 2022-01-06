@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.CommitDiffAdapter;
 import net.oschina.gitapp.api.GitOSCApi;
@@ -38,8 +37,6 @@ import java.util.List;
  */
 public class CommitFileDetailFragment extends BaseFragment implements
 	OnStatusListener {
-	
-	private AppContext mAppContext;
 	
 	private Commit mCommit;
 	
@@ -80,7 +77,6 @@ public class CommitFileDetailFragment extends BaseFragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		mAppContext = getGitApplication();
 		return inflater.inflate(R.layout.commit_detail_file_fragment, null);
 	}
 
@@ -150,7 +146,7 @@ public class CommitFileDetailFragment extends BaseFragment implements
                     onStatus(STATUS_LOADED);
                     mCommitDiffList = commitDiffList;
                     mCommitFileSum.setText(mCommitDiffList.size() + " 个文件发生了变化");
-                    adapter = new CommitDiffAdapter(mAppContext, mCommitDiffList, R.layout.commit_diff_listitem, mCommitDiffll);
+                    adapter = new CommitDiffAdapter(getActivity(), mCommitDiffList, R.layout.commit_diff_listitem, mCommitDiffll);
                     adapter.setData(mProject, mCommit);
                     mCommitDiffll.setVisibility(View.VISIBLE);
                     adapter.notifyDataSetChanged();

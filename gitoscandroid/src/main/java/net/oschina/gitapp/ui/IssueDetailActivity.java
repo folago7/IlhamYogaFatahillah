@@ -74,7 +74,7 @@ public class IssueDetailActivity extends BaseActivity {
         mActionBar.setTitle(title);
         mActionBar.setSubtitle(mProject.getOwner().getName() + "/"
                 + mProject.getName());
-
+        tipInfo.setHiden();
         FragmentTransaction ft = mFragmentManager.beginTransaction();
         ft.replace(R.id.issue_content, IssueDetailViewPagerFragment.newInstance(mProject, mIssue)).commit();
     }
