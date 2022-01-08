@@ -66,10 +66,9 @@
             android:text="@string/main_menu_title_shake" />
     </LinearLayout>
 
-    <include layout="@layout/horizontal_divider_view" />
-
     <LinearLayout
         android:id="@+id/menu_item_scan"
+        android:visibility="gone"
         style="@style/MenuItemLayoutStyle" >
 
         <ImageView
