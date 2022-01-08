@@ -48,7 +48,7 @@ import net.oschina.gitapp.ui.ImageZoomActivity;
 import net.oschina.gitapp.ui.IssueDetailActivity;
 import net.oschina.gitapp.ui.LoginActivity;
 import net.oschina.gitapp.ui.MainActivity;
-import net.oschina.gitapp.ui.MySelfInfoActivity;
+import net.oschina.gitapp.ui.MyInfoDetailActivity;
 import net.oschina.gitapp.ui.NewIssueActivity;
 import net.oschina.gitapp.ui.NotificationActivity;
 import net.oschina.gitapp.ui.ProjectActivity;
@@ -416,7 +416,7 @@ public class UIHelper {
 	 * @param context
 	 */
 	public static void showMySelfInfoDetail(Context context) {
-		Intent intent = new Intent(context, MySelfInfoActivity.class);
+		Intent intent = new Intent(context, MyInfoDetailActivity.class);
 		context.startActivity(intent);
 	}
 

@@ -113,10 +113,9 @@
             android:configChanges="keyboardHidden|orientation"
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan|stateHidden" />
-        <activity
-            android:name=".ui.MySelfInfoActivity"
+        <activity android:name=".ui.MyInfoDetailActivity"
             android:label="个人信息"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask"/>
         <activity
             android:name=".ui.UserInfoActivity"
             android:label="用户信息"

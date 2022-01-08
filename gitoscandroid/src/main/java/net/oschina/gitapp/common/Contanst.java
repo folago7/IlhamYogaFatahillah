@@ -25,6 +25,7 @@ public class Contanst {
 	public static final String PROP_KEY_STATE = "user.state";
 	public static final String PROP_KEY_CREATED_AT = "user.created_at";
 	public static final String PROP_KEY_PORTRAIT = "user.portrait";// 用户头像-文件名
+	public static final String PROP_KEY_NEWPORTRAIT = "user.new_portrait";// 用户头像-文件名
 	public static final String PROP_KEY_IS_ADMIN = "user.is_admin";
 	public static final String PROP_KEY_CAN_CREATE_GROUP = "user.can_create_group";
 	public static final String PROP_KEY_CAN_CREATE_PROJECT = "user.can_create_project";

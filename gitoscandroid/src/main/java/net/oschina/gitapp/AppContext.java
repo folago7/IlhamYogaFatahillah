@@ -31,28 +31,7 @@ import java.io.Serializable;
 import java.util.Properties;
 import java.util.UUID;
 
-import static net.oschina.gitapp.common.Contanst.ACCOUNT_EMAIL;
-import static net.oschina.gitapp.common.Contanst.ACCOUNT_PWD;
-import static net.oschina.gitapp.common.Contanst.PROP_KEY_BIO;
-import static net.oschina.gitapp.common.Contanst.PROP_KEY_BLOG;
-import static net.oschina.gitapp.common.Contanst.PROP_KEY_CAN_CREATE_GROUP;
-import static net.oschina.gitapp.common.Contanst.PROP_KEY_CAN_CREATE_PROJECT;
-import static net.oschina.gitapp.common.Contanst.PROP_KEY_CAN_CREATE_TEAM;
-import static net.oschina.gitapp.common.Contanst.PROP_KEY_CREATED_AT;
-import static net.oschina.gitapp.common.Contanst.PROP_KEY_EMAIL;
-import static net.oschina.gitapp.common.Contanst.PROP_KEY_IS_ADMIN;
-import static net.oschina.gitapp.common.Contanst.PROP_KEY_NAME;
-import static net.oschina.gitapp.common.Contanst.PROP_KEY_PORTRAIT;
-import static net.oschina.gitapp.common.Contanst.PROP_KEY_PRIVATE_TOKEN;
-import static net.oschina.gitapp.common.Contanst.PROP_KEY_STATE;
-import static net.oschina.gitapp.common.Contanst.PROP_KEY_THEME_ID;
-import static net.oschina.gitapp.common.Contanst.PROP_KEY_UID;
-import static net.oschina.gitapp.common.Contanst.PROP_KEY_USERNAME;
-import static net.oschina.gitapp.common.Contanst.PROP_KEY_WEIBO;
-import static net.oschina.gitapp.common.Contanst.ROP_KEY_FOLLOWERS;
-import static net.oschina.gitapp.common.Contanst.ROP_KEY_FOLLOWING;
-import static net.oschina.gitapp.common.Contanst.ROP_KEY_STARRED;
-import static net.oschina.gitapp.common.Contanst.ROP_KEY_WATCHED;
+import static net.oschina.gitapp.common.Contanst.*;
 
 /**
  * 全局应用程序类：用于保存和调用全局应用配置及访问网络数据
@@ -390,6 +369,7 @@ public class AppContext extends Application {
 		user.setState(getProperty(PROP_KEY_STATE));
 		user.setCreated_at(getProperty(PROP_KEY_CREATED_AT));
 		user.setPortrait(getProperty(PROP_KEY_PORTRAIT));
+		user.setNew_portrait(getProperty(PROP_KEY_NEWPORTRAIT));
 		user.setIsAdmin(StringUtils.toBool(getProperty(PROP_KEY_IS_ADMIN)));
 		user.setCanCreateGroup(StringUtils
 				.toBool(getProperty(PROP_KEY_CAN_CREATE_GROUP)));
@@ -441,6 +421,7 @@ public class AppContext extends Application {
 				setProperty(PROP_KEY_STATE, String.valueOf(user.getState()));
 				setProperty(PROP_KEY_CREATED_AT, String.valueOf(user.getCreated_at()));
 				setProperty(PROP_KEY_PORTRAIT, String.valueOf(user.getPortrait()));// 个人头像
+				setProperty(PROP_KEY_NEWPORTRAIT, String.valueOf(user.getNew_portrait()));// 个人头像
 				setProperty(PROP_KEY_IS_ADMIN, String.valueOf(user.isIsAdmin()));
 				setProperty(PROP_KEY_CAN_CREATE_GROUP, String.valueOf(user.isCanCreateGroup()));
 				setProperty(PROP_KEY_CAN_CREATE_PROJECT, String.valueOf(user.isCanCreateProject()));
@@ -489,7 +470,7 @@ public class AppContext extends Application {
 	/**
 	 * 用户注销
 	 */
-	public void loginout() {
+	public void logout() {
 		// 清除已登录用户的信息
 		cleanLoginInfo();
 		this.login = false;
