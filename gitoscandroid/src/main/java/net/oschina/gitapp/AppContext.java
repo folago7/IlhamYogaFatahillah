@@ -3,13 +3,19 @@ package net.oschina.gitapp;
 import android.app.Application;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.graphics.Bitmap;
 import android.media.AudioManager;
 
-import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
+import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
+import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.nostra13.universalimageloader.core.decode.BaseImageDecoder;
 import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
+import com.nostra13.universalimageloader.utils.StorageUtils;
 
 import net.oschina.gitapp.api.AsyncHttpHelp;
 import net.oschina.gitapp.bean.Follow;
@@ -31,7 +37,29 @@ import java.io.Serializable;
 import java.util.Properties;
 import java.util.UUID;
 
-import static net.oschina.gitapp.common.Contanst.*;
+import static net.oschina.gitapp.common.Contanst.ACCOUNT_EMAIL;
+import static net.oschina.gitapp.common.Contanst.ACCOUNT_PWD;
+import static net.oschina.gitapp.common.Contanst.PROP_KEY_BIO;
+import static net.oschina.gitapp.common.Contanst.PROP_KEY_BLOG;
+import static net.oschina.gitapp.common.Contanst.PROP_KEY_CAN_CREATE_GROUP;
+import static net.oschina.gitapp.common.Contanst.PROP_KEY_CAN_CREATE_PROJECT;
+import static net.oschina.gitapp.common.Contanst.PROP_KEY_CAN_CREATE_TEAM;
+import static net.oschina.gitapp.common.Contanst.PROP_KEY_CREATED_AT;
+import static net.oschina.gitapp.common.Contanst.PROP_KEY_EMAIL;
+import static net.oschina.gitapp.common.Contanst.PROP_KEY_IS_ADMIN;
+import static net.oschina.gitapp.common.Contanst.PROP_KEY_NAME;
+import static net.oschina.gitapp.common.Contanst.PROP_KEY_NEWPORTRAIT;
+import static net.oschina.gitapp.common.Contanst.PROP_KEY_PORTRAIT;
+import static net.oschina.gitapp.common.Contanst.PROP_KEY_PRIVATE_TOKEN;
+import static net.oschina.gitapp.common.Contanst.PROP_KEY_STATE;
+import static net.oschina.gitapp.common.Contanst.PROP_KEY_THEME_ID;
+import static net.oschina.gitapp.common.Contanst.PROP_KEY_UID;
+import static net.oschina.gitapp.common.Contanst.PROP_KEY_USERNAME;
+import static net.oschina.gitapp.common.Contanst.PROP_KEY_WEIBO;
+import static net.oschina.gitapp.common.Contanst.ROP_KEY_FOLLOWERS;
+import static net.oschina.gitapp.common.Contanst.ROP_KEY_FOLLOWING;
+import static net.oschina.gitapp.common.Contanst.ROP_KEY_STARRED;
+import static net.oschina.gitapp.common.Contanst.ROP_KEY_WATCHED;
 
 /**
  * 全局应用程序类：用于保存和调用全局应用配置及访问网络数据
@@ -79,16 +107,43 @@ public class AppContext extends Application {
 	}
 
     private void initImageLoader() {
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this)
-                .threadPriority(Thread.NORM_PRIORITY - 2)
-                .denyCacheImageMultipleSizesInMemory()
-                .diskCacheFileNameGenerator(new Md5FileNameGenerator())
-                .diskCacheSize(50 * 1024 * 1024) // 50 Mb
-                .diskCacheFileCount(300)
-                .imageDownloader(new BaseImageDownloader(this, 5 * 1000, 3 * 1000))
-                .tasksProcessingOrder(QueueProcessingType.LIFO)
-                .writeDebugLogs() // Remove for release app
-                .build();
+		DisplayImageOptions imageOptions = new DisplayImageOptions.Builder()
+				.showImageOnLoading(R.color.gray)
+				.showImageOnFail(R.drawable.ic_picture_loadfailed)
+				.cacheInMemory(true).cacheOnDisk(true)
+				.resetViewBeforeLoading(true).considerExifParams(false)
+				.bitmapConfig(Bitmap.Config.RGB_565).build();
+
+		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
+				this)
+				.memoryCacheExtraOptions(400, 400)
+						// default = device screen dimensions
+				.diskCacheExtraOptions(400, 400, null)
+				.threadPoolSize(5)
+						// default Thread.NORM_PRIORITY - 1
+				.threadPriority(Thread.NORM_PRIORITY)
+						// default FIFO
+				.tasksProcessingOrder(QueueProcessingType.LIFO)
+						// default
+				.denyCacheImageMultipleSizesInMemory()
+				.memoryCache(new LruMemoryCache(2 * 1024 * 1024))
+				.memoryCacheSize(2 * 1024 * 1024)
+				.memoryCacheSizePercentage(13)
+						// default
+				.diskCache(
+						new UnlimitedDiscCache(StorageUtils.getCacheDirectory(
+								this, true)))
+						// default
+				.diskCacheSize(50 * 1024 * 1024).diskCacheFileCount(100)
+				.diskCacheFileNameGenerator(new HashCodeFileNameGenerator())
+						// default
+				.imageDownloader(new BaseImageDownloader(this))
+						// default
+				.imageDecoder(new BaseImageDecoder(false))
+						// default
+				.defaultDisplayImageOptions(DisplayImageOptions.createSimple())
+						// default
+				.defaultDisplayImageOptions(imageOptions).build();
 
         ImageLoader.getInstance().init(config);
     }

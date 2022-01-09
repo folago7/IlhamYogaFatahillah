@@ -1,8 +1,8 @@
 package net.oschina.gitapp.bean;
 
-import java.io.Serializable;
-
 import org.codehaus.jackson.annotate.JsonProperty;
+
+import java.io.Serializable;
 
 /**
  * 上传文件实体类
@@ -46,7 +46,7 @@ public class UpLoadFile implements Serializable {
 		this._file = file;
 	}
 
-	class GitFile {
+	public class GitFile {
 		@JsonProperty("filename")
 		private String _filename;
 		

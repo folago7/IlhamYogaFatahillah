@@ -1,5 +1,6 @@
 package net.oschina.gitapp.api;
 
+import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
@@ -11,6 +12,7 @@ import java.io.FileNotFoundException;
 import java.net.URLEncoder;
 
 import static net.oschina.gitapp.api.AsyncHttpHelp.get;
+import static net.oschina.gitapp.api.AsyncHttpHelp.getHttpClient;
 import static net.oschina.gitapp.api.AsyncHttpHelp.getPrivateTokenWithParams;
 import static net.oschina.gitapp.api.AsyncHttpHelp.post;
 
@@ -30,7 +32,7 @@ public class GitOSCApi {
     public final static String PROJECTS = BASE_URL + "projects/";
     public final static String USER = BASE_URL + "user/";
     public final static String EVENT = BASE_URL + "events/";
-    public final static String UPLOAD = BASE_URL + "upload/";
+    public final static String UPLOAD = BASE_URL + "upload";
     public final static String NOTIFICATION = USER + "notifications/";
     public final static String VERSION = BASE_URL + "app_version/new/android";
 
@@ -225,7 +227,20 @@ public class GitOSCApi {
     public static void upLoadFile(File file, AsyncHttpResponseHandler handler) throws FileNotFoundException {
         RequestParams params = getPrivateTokenWithParams();
         params.put("file", file);
-        post(UPLOAD, params, handler);
+        AsyncHttpClient client = getHttpClient();
+        client.addHeader("Content-disposition", "filename=\"" + file.getName() + "\"");
+        client.post(UPLOAD, params, handler);
+    }
+
+    /***
+     * 更新用户头像
+     * @param protraitUrl
+     * @param handler
+     */
+    public static void updateUserProtrait(String protraitUrl, AsyncHttpResponseHandler handler) {
+        RequestParams params = getPrivateTokenWithParams();
+        params.put("path", protraitUrl);
+        post(USER + "portrait", params, handler);
     }
 
     /***

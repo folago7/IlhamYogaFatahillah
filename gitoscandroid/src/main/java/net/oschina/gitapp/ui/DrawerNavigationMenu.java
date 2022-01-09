@@ -18,7 +18,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
-import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.BroadcastController;
 import net.oschina.gitapp.common.StringUtils;
@@ -124,12 +123,11 @@ public class DrawerNavigationMenu extends Fragment implements OnClickListener {
         User user = AppContext.getInstance().getLoginInfo();
 
         // 加载用户头像
-        String portrait = user.getPortrait() == null || user.getPortrait().equals("null") ? "" : user.getPortrait();
+        String portrait = user.getPortrait() == null || user.getNew_portrait().equals("null") ? "" : user.getNew_portrait();
         if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
             ivPortrait.setImageResource(R.drawable.mini_avatar);
         } else {
-            String faceUrl = GitOSCApi.HTTP + GitOSCApi.HOST + "/" + user.getPortrait();
-            ImageLoader.getInstance().displayImage(faceUrl, ivPortrait);
+            ImageLoader.getInstance().displayImage(user.getNew_portrait(), ivPortrait);
         }
         // 其他资料
         tvName.setText(user.getName());
