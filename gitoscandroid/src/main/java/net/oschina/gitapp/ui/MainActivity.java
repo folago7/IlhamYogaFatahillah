@@ -21,6 +21,7 @@ import android.view.View;
 import com.blueware.agent.android.BlueWare;
 import com.dtr.zxing.activity.CaptureActivity;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.umeng.analytics.MobclickAgent;
 
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppManager;
@@ -96,6 +97,7 @@ public class MainActivity extends ActionBarActivity implements
         AppManager.getAppManager().addActivity(this);
 
         BlueWare.withApplicationToken("A97669647CD7FA558E6076201E5F97B322").start(getApplicationContext());
+        MobclickAgent.updateOnlineConfig(this);
     }
 
     @Override

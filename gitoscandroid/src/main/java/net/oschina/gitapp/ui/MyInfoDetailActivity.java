@@ -308,7 +308,8 @@ public class MyInfoDetailActivity extends BaseActivity implements View.OnClickLi
                                 loading.setMessage("正在更新头像...");
                             }
                         });
-                        GitViewUtils.showToast(statusCode + upLoadFile.getFile().getUrl());
+                    } else {
+                        GitViewUtils.showToast("头像上传失败");
                     }
                 }
 

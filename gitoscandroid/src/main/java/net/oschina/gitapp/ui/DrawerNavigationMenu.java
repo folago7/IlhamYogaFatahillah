@@ -123,7 +123,7 @@ public class DrawerNavigationMenu extends Fragment implements OnClickListener {
         User user = AppContext.getInstance().getLoginInfo();
 
         // 加载用户头像
-        String portrait = user.getPortrait() == null || user.getNew_portrait().equals("null") ? "" : user.getNew_portrait();
+        String portrait = user.getNew_portrait() == null || user.getNew_portrait().equals("null") ? "" : user.getNew_portrait();
         if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
             ivPortrait.setImageResource(R.drawable.mini_avatar);
         } else {

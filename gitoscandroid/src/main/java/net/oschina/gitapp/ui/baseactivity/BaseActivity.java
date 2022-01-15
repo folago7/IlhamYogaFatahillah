@@ -7,6 +7,8 @@ import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 
+import com.umeng.analytics.MobclickAgent;
+
 import net.oschina.gitapp.AppManager;
 import net.oschina.gitapp.common.StringUtils;
 
@@ -84,5 +86,17 @@ public abstract class BaseActivity extends ActionBarActivity {
                 }
             }
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 }
