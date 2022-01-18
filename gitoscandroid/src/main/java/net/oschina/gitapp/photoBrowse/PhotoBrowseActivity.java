@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
@@ -151,8 +152,14 @@ public class PhotoBrowseActivity extends BaseActivity implements View.OnClickLis
 
     // 保存到相册
     public void saveImageToGallery() {
-        Bitmap bitmap = ImageLoader.getInstance().loadImageSync(imageUrls[index], ImageLoaderUtils.getOption());
-        saveImageToGallery(this, bitmap);
+        final Bitmap bitmap = ImageLoader.getInstance().loadImageSync(imageUrls[index], ImageLoaderUtils.getOption());
+        ImageLoader.getInstance().loadImage(imageUrls[index], ImageLoaderUtils.getOption(), new SimpleImageLoadingListener() {
+            
+            @Override
+            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                saveImageToGallery(PhotoBrowseActivity.this, bitmap);
+            }
+        });
     }
 
     public void saveImageToGallery(Context context, Bitmap bmp) {
