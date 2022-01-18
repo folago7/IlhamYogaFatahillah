@@ -21,18 +21,18 @@ import net.oschina.gitapp.util.TypefaceUtils;
  * Created by 火蚁 on 15/4/8.
  */
 public class ViewHolder {
-    // 用于存储listview item的容器
+    // 用于存储listView item的容器
     private SparseArray<View> mViews;
 
     // item根view
     private View mConvertView;
 
-    private Context mContext;
+    protected Context mContext;
 
     private int position;
 
     public ViewHolder(Context context, ViewGroup parent, int layoutId, int position) {
-        this.mViews = new SparseArray<View>();
+        this.mViews = new SparseArray<>();
         this.mConvertView = LayoutInflater.from(context).inflate(layoutId, parent, false);
         this.mConvertView.setTag(this);
         this.mContext = context;
@@ -42,11 +42,11 @@ public class ViewHolder {
     /**
      * 获取一个viewHolder
      *
-     * @param context
-     * @param convertView
-     * @param parent
-     * @param layoutId
-     * @param position
+     * @param context context
+     * @param convertView view
+     * @param parent parent view
+     * @param layoutId 布局资源id
+     * @param position 索引
      * @return
      */
     public static ViewHolder getViewHolder(Context context, View convertView, ViewGroup parent, int layoutId, int position) {
@@ -114,9 +114,9 @@ public class ViewHolder {
     }
 
     /**
-     * @param viewId
-     * @param text
-     * @param semanticRes
+     * @param viewId id
+     * @param text 内容
+     * @param semanticRes 资源
      */
     public void setTextWithSemantic(int viewId, String text, int semanticRes) {
         TextView tv = getView(viewId);
@@ -137,7 +137,7 @@ public class ViewHolder {
     public void setImageForUrl(int viewId, String imgUrl) {
 
         ImageView iv = getView(viewId);
-        if (iv.getTag() == null || !((String)iv.getTag()).equals(imgUrl)) {
+        if (iv.getTag() == null || !iv.getTag().equals(imgUrl)) {
             iv.setImageResource(R.drawable.mini_avatar);
         }
         ImageLoader.getInstance().displayImage(imgUrl, iv, ImageLoaderUtils.getOption());

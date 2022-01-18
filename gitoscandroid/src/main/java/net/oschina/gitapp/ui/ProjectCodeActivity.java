@@ -173,9 +173,13 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
 
 
     private void popPreCodeTree() {
-        paths.pop();
+        if (!paths.isEmpty()) {
+            paths.pop();
+        }
+        if (!codeFloders.isEmpty()) {
+            codeFloders.pop();
+        }
         codeTreeAdapter.clear();
-        codeFloders.pop();
         codeTreeAdapter.addItem(codeFloders.get(codeFloders.size() - 1));
         checkShowPaths();
     }
@@ -338,6 +342,9 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     public boolean onSupportNavigateUp() {
+        if (codeFloders.isEmpty()) {
+            return super.onSupportNavigateUp();
+        }
         if (codeFloders.size() != 1) {
             popPreCodeTree();
             return true;
@@ -348,7 +355,7 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (codeFloders.size() != 1) {
+            if (!codeFloders.isEmpty() && codeFloders.size() != 1) {
                 popPreCodeTree();
                 return true;
             }

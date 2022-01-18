@@ -44,7 +44,6 @@ import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.ui.CodeFileDetailActivity;
 import net.oschina.gitapp.ui.CommitDetailActivity;
 import net.oschina.gitapp.ui.CommitFileDetailActivity;
-import net.oschina.gitapp.ui.ImageZoomActivity;
 import net.oschina.gitapp.ui.IssueDetailActivity;
 import net.oschina.gitapp.ui.LoginActivity;
 import net.oschina.gitapp.ui.MainActivity;
@@ -530,20 +529,6 @@ public class UIHelper {
 	 */
 	public static void goMainActivity(Context context) {
 		Intent intent = new Intent(context, MainActivity.class);
-		context.startActivity(intent);
-	}
-
-	/**
-	 * 显示图片查看界面
-	 * 
-	 * @param context
-	 * @param img_url
-	 */
-	public static void showImageZoomActivity(Context context, String img_url) {
-		Intent intent = new Intent(context, ImageZoomActivity.class);
-		Bundle bundle = new Bundle();
-		bundle.putString(Contanst.IMG_URL, img_url);
-		intent.putExtras(bundle);
 		context.startActivity(intent);
 	}
 

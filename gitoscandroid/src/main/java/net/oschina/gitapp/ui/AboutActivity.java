@@ -1,12 +1,12 @@
 package net.oschina.gitapp.ui;
 
-import net.oschina.gitapp.R;
-import net.oschina.gitapp.ui.baseactivity.BaseActivity;
-
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.widget.TextView;
+
+import net.oschina.gitapp.R;
+import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 
 /**
  * 关于我们
@@ -14,7 +14,7 @@ import android.widget.TextView;
  * @version 1.0
  * @created 2012-3-21
  */
-public class About extends BaseActivity {
+public class AboutActivity extends BaseActivity {
 	
 	private TextView mVersion;
 	
@@ -27,7 +27,7 @@ public class About extends BaseActivity {
         try { 
         	PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
         	mVersion = (TextView)findViewById(R.id.about_version);
-    		mVersion.setText(info.versionName);
+    		mVersion.setText("V " + info.versionName);
         } catch (NameNotFoundException e) {    
 			e.printStackTrace(System.err);
 		} 

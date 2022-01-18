@@ -152,7 +152,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     }
 
     private void showAbout() {
-        Intent intent = new Intent(SettingActivity.this, About.class);
+        Intent intent = new Intent(SettingActivity.this, AboutActivity.class);
         startActivity(intent);
     }
 

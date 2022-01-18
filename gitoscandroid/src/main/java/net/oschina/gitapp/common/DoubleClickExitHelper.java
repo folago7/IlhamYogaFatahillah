@@ -1,11 +1,12 @@
 package net.oschina.gitapp.common;
 
-import net.oschina.gitapp.R;
 import android.app.Activity;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.KeyEvent;
 import android.widget.Toast;
+
+import net.oschina.gitapp.R;
 
 
 /**
@@ -44,10 +45,10 @@ public class DoubleClickExitHelper {
 		} else {
 			isOnKeyBacking = true;
 			if(mBackToast == null) {
-				mBackToast = Toast.makeText(mActivity, R.string.back_exit_tips, 2000);
+				mBackToast = Toast.makeText(mActivity, R.string.back_exit_tips, Toast.LENGTH_SHORT);
 			}
 			mBackToast.show();
-			mHandler.postDelayed(onBackTimeRunnable, 2000);
+			mHandler.postDelayed(onBackTimeRunnable, Toast.LENGTH_SHORT);
 			return true;
 		}
 	}

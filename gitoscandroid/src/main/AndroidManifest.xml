@@ -130,11 +130,7 @@
             android:label="编辑"
             android:launchMode="singleTask" />
         <activity
-            android:name=".ui.ImageZoomActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen" />
-        <activity
-            android:name=".ui.About"
+            android:name=".ui.AboutActivity"
             android:label="关于git"
             android:launchMode="singleTask" />
         <activity
@@ -191,7 +187,7 @@
             android:value="53ce746f56240bfb4105762d" />
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="osc" />
+            android:value="xiaomi" />
 
     </application>
 
