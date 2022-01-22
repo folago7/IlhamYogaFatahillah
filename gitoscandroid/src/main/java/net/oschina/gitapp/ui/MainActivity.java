@@ -160,6 +160,9 @@ public class MainActivity extends ActionBarActivity implements
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
             List<ProjectNotificationArray> notificationArrays = JsonUtils.getList(ProjectNotificationArray[].class, responseBody);
+            if (notificationArrays == null || notificationArrays.isEmpty()) {
+                return;
+            }
             int count = 0;
             for (ProjectNotificationArray pna : notificationArrays) {
                 count += pna.getProject().getNotifications().size();

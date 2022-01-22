@@ -69,6 +69,7 @@ public class JsonUtils {
     }
 
     public static <T> List<T> getList(Class<T[]> type, byte[] bytes) {
+        if (bytes == null) return null;
         List<T> results = new ArrayList<T>();
         T[] _next = toBean(type, bytes);
         results.addAll(Arrays.asList(_next));
