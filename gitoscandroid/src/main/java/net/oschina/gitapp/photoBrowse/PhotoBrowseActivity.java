@@ -150,11 +150,17 @@ public class PhotoBrowseActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
-    // 保存到相册
+    /***
+     * 保存图片到手机中
+     *
+     * update: 1.2014-05-06 下午 15：35
+     * 更新内容: 修改图片下载完成之后再保存到图库中
+     *
+     */
     public void saveImageToGallery() {
         final Bitmap bitmap = ImageLoader.getInstance().loadImageSync(imageUrls[index], ImageLoaderUtils.getOption());
         ImageLoader.getInstance().loadImage(imageUrls[index], ImageLoaderUtils.getOption(), new SimpleImageLoadingListener() {
-            
+
             @Override
             public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                 saveImageToGallery(PhotoBrowseActivity.this, bitmap);

@@ -1,17 +1,19 @@
 package net.oschina.gitapp.adapter;
 
-import java.util.List;
-import net.oschina.gitapp.R;
-import net.oschina.gitapp.bean.Commit;
-import net.oschina.gitapp.bean.CommitDiff;
-import net.oschina.gitapp.bean.Project;
-import net.oschina.gitapp.common.UIHelper;
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import net.oschina.gitapp.R;
+import net.oschina.gitapp.bean.Commit;
+import net.oschina.gitapp.bean.CommitDiff;
+import net.oschina.gitapp.bean.Project;
+import net.oschina.gitapp.common.UIHelper;
+
+import java.util.List;
 
 /**
  * 项目Commit diff列表适配器
@@ -122,8 +124,13 @@ public class CommitDiffAdapter {
 	//文本文件才会显示文本出来
 	private String getCommitFileDiff(CommitDiff commitDiff) {
 		if (commitDiff.getType().equalsIgnoreCase(CommitDiff.TYPE_TEXT)) {
-			return commitDiff.getDiff().substring(
-					commitDiff.getDiff().indexOf("@"));
+			int index = commitDiff.getDiff().indexOf("@");
+			if (index > 0) {
+				return commitDiff.getDiff().substring(index);
+			} else {
+				return "";
+			}
+
 		} else {
 			return "";
 		}
