@@ -23,7 +23,7 @@ public class ProjectAdapter extends CommonAdapter<Project> {
         vh.setText(R.id.tv_title, project.getOwner().getName() + " / " + project.getName());
 
         // 判断是否有项目的介绍
-        vh.setText(R.id.tv_description, project.getDescription().replace(" ", ""), R.string.msg_project_empty_description);
+        vh.setText(R.id.tv_description, project.getDescription(), R.string.msg_project_empty_description);
         // 显示项目的star、fork、language信息
         vh.setTextWithSemantic(R.id.tv_watch, project.getWatches_count().toString(), R.string.sem_watch);
         vh.setTextWithSemantic(R.id.tv_star, project.getStars_count().toString(), R.string.sem_star);
