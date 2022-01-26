@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-apply plugin: 'oneapm'
+//apply plugin: 'oneapm'
 
 android {
     compileSdkVersion 21
@@ -9,8 +9,8 @@ android {
         applicationId "net.oschina.gitapp"
         minSdkVersion 11
         targetSdkVersion 21
-        versionCode 9
-        versionName "1.2"
+        versionCode 10
+        versionName "1.2.1"
     }
 
     buildTypes {

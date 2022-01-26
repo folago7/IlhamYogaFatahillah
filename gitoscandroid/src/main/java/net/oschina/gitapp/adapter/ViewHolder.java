@@ -79,12 +79,14 @@ public class ViewHolder {
 
     // 给TextView设置文字
     public void setText(int viewId, String text) {
+        if (StringUtils.isEmpty(text)) return;
         TextView tv = getView(viewId);
         tv.setText(text);
     }
 
     // 给TextView设置文字
     public void setText(int viewId, SpannableString text) {
+        if (text == null) return;
         TextView tv = getView(viewId);
         tv.setText(text);
     }

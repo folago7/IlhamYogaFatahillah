@@ -45,10 +45,10 @@ public class DoubleClickExitHelper {
 		} else {
 			isOnKeyBacking = true;
 			if(mBackToast == null) {
-				mBackToast = Toast.makeText(mActivity, R.string.back_exit_tips, Toast.LENGTH_SHORT);
+				mBackToast = Toast.makeText(mActivity, R.string.back_exit_tips, 2000);
 			}
 			mBackToast.show();
-			mHandler.postDelayed(onBackTimeRunnable, Toast.LENGTH_SHORT);
+			mHandler.postDelayed(onBackTimeRunnable, 2000);
 			return true;
 		}
 	}

@@ -9,6 +9,7 @@ import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.UIHelper;
 
 /**
+ *
  * Created by 火蚁 on 15/4/9.
  */
 public class ProjectAdapter extends CommonAdapter<Project> {

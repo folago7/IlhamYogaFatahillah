@@ -187,7 +187,7 @@
             android:value="53ce746f56240bfb4105762d" />
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="xiaomi" />
+            android:value="osc" />
 
     </application>
 

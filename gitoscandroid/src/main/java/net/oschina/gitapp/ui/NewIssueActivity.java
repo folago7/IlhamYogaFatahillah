@@ -138,8 +138,8 @@ public class NewIssueActivity extends BaseActivity implements View.OnClickListen
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.new_issue_menu, menu);
         send = menu.findItem(R.id.send);
-        updateMenuState();
-        return super.onCreateOptionsMenu(menu);
+        send.setEnabled(false);
+        return true;
     }
 
     @Override
@@ -155,6 +155,7 @@ public class NewIssueActivity extends BaseActivity implements View.OnClickListen
     }
 
     private void updateMenuState() {
+        if (send == null) return;
         if (etTile.getText().toString().isEmpty()) {
             send.setEnabled(false);
         } else {
