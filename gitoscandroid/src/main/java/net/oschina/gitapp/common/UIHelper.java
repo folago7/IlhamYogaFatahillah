@@ -240,25 +240,30 @@ public class UIHelper {
 				author_name.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 		// 设置项目名字体大小和高亮
-		int start = title.indexOf(pAuthor_And_pName);
-		int end = start + pAuthor_And_pName.length();
-		sps.setSpan(new AbsoluteSizeSpan(14, true), start, end,
-				Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		sps.setSpan(new ForegroundColorSpan(Color.parseColor("#4183C4")),
-				start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		try {
+			int start = title.indexOf(pAuthor_And_pName);
+			int end = start + pAuthor_And_pName.length();
+			sps.setSpan(new AbsoluteSizeSpan(14, true), start, end,
+					Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			sps.setSpan(new ForegroundColorSpan(Color.parseColor("#4183C4")),
+					start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-		// 设置动态的title字体大小和高亮
-		if (!StringUtils.isEmpty(eventTitle) && eventTitle != null) {
-			start = title.indexOf(eventTitle);
-			end = start + eventTitle.length();
-			if (start > 0 && end > 0 && start < end) {
-				sps.setSpan(new AbsoluteSizeSpan(14, true), start, end,
-						Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-				sps.setSpan(
-						new ForegroundColorSpan(Color.parseColor("#4183C4")),
-						start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+			// 设置动态的title字体大小和高亮
+			if (!StringUtils.isEmpty(eventTitle) && eventTitle != null) {
+				start = title.indexOf(eventTitle);
+				end = start + eventTitle.length();
+				if (start > 0 && end > 0 && start < end) {
+					sps.setSpan(new AbsoluteSizeSpan(14, true), start, end,
+							Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+					sps.setSpan(
+							new ForegroundColorSpan(Color.parseColor("#4183C4")),
+							start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+				}
 			}
+		} catch (Exception e) {
+
 		}
+
 		return sps;
 	}
 
