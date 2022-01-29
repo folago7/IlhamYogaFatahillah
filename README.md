@@ -1,32 +1,17 @@
-git-osc-android-project
-===========
-# **Git@OSC Android 客户端项目简析** #
+### Git@OSC 安卓[客户端](http://http://git.oschina.net/appclient)
 
-*注：本文假设你已经有Android开发环境*
+android studio最近势头好猛，jar管理以及一些开源库的引用确实方便了好多，所以从1.2版本开始此项目开始转移到as进行开发
 
-本项目是采用了Google官方提供的appcompat_v7 lib项目来解决低版本的兼容性问题；<br>
-所以请确保你的Eclipse ADT为22.6.3以上，并且Android Support Library为19.0以上<br>
+eclipse则仅支持到[V1.1.3版本](http://git.oschina.net/oschina/git-osc-android-project/blob/V1.1.3/.gitignore)，构建方式可见[REAMME_old.md](http://git.oschina.net/oschina/git-osc-android-project/blob/master/README_old.md)
 
-## **项目的搭建步骤** ##
+本项目基于 [Android Studio](http://http://www.oschina.net/p/android-studio) v1.+，如果没有安装as，请先自行安装喔
 
-**1、clone相关的项目**<br>
+### 引用到的开源库：
+- [android-async-http:1.4.6](http://www.oschina.net/p/android-async-http)
+- [universal-image-loader:1.9.3](ttp://www.oschina.net/p/android-universal-image-loader)
+- [butterknife:6.1.0](hhttp://www.oschina.net/p/butterknife)
+- [photoview:library:1.2.3](http://www.oschina.net/p/android-photo-view)
+- [CodeMirror](http://www.oschina.net/p/codemirror)
 
-* clone 主项目git-osc-android-project：
-> git clone https://git.oschina.net/oschina/git-osc-android-project.git
-
-* clone 友盟的分享项目social_sdk_library_project：
-> git clone https://git.oschina.net/fireant/social_sdk_library_project.git
-
-**2、启动eclipse，导入相关项目**<br>
-
-请确保你当前的Android SDK是最新版。<br>
-推荐使用Android 4.0 以上版本的SDK,请使用JDK1.7编译<br>
-
-* 导入git-osc-android-project项目；
-
-* 导入social_sdk_library_project项目；
-
-* 将social_sdk_library_project作为lib引入到git-osc-android-project
-
-
-**本项目采用 GPL 授权协议，欢迎大家在这个基础上进行改进，并与大家分享。**
+### 开源协议
+- [Apache Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
