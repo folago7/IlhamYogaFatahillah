@@ -27,7 +27,6 @@ import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.dialog.LightProgressDialog;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
-import net.oschina.gitapp.util.GitViewUtils;
 import net.oschina.gitapp.util.JsonUtils;
 import net.oschina.gitapp.util.TypefaceUtils;
 import net.oschina.gitapp.widget.TipInfoLayout;
@@ -115,8 +114,12 @@ public class ProjectActivity extends BaseActivity implements
         mProject = (Project) intent.getSerializableExtra(Contanst.PROJECT);
         projectId = intent.getStringExtra(Contanst.PROJECTID);
         if (intent.getAction() != null && intent.getAction().equals(Intent.ACTION_VIEW)) {
-            GitViewUtils.showToast(intent.getDataString());
-            loadProjectForName();
+            String[] res = intent.getDataString().split("/");
+            if (res.length >= 2) {
+                String userName = res[res.length - 2];
+                String projectName = res[res.length - 1];
+                loadProjectForName(userName, projectName);
+            }
         } else {
 
             if (null == mProject) {
@@ -128,9 +131,9 @@ public class ProjectActivity extends BaseActivity implements
         }
 
         // set font icon
-        TypefaceUtils.setFontAwsome((TextView)findView(R.id.fi_time));
-        TypefaceUtils.setSemantic((TextView)findView(R.id.fi_ower), (TextView)findView(R.id.fi_language),
-                (TextView)findView(R.id.fi_lock), (TextView)findView(R.id.fi_fork), (TextView)findView(R.id.fi_ll_fork));
+        TypefaceUtils.setFontAwsome((TextView) findView(R.id.fi_time));
+        TypefaceUtils.setSemantic((TextView) findView(R.id.fi_ower), (TextView) findView(R.id.fi_language),
+                (TextView) findView(R.id.fi_lock), (TextView) findView(R.id.fi_fork), (TextView) findView(R.id.fi_ll_fork));
         TypefaceUtils.setOcticons((TextView) findView(R.id.fi_readme), (TextView) findView(R.id.fi_code),
                 (TextView) findView(R.id.fi_commit), (TextView) findView(R.id.fi_issue));
 
@@ -349,8 +352,12 @@ public class ProjectActivity extends BaseActivity implements
         });
     }
 
-    private void loadProjectForName() {
-        GitOSCApi.getProject("oschina", "android-app", new AsyncHttpResponseHandler() {
+    private void loadProjectForName(String userName, String projectName) {
+        if (StringUtils.isEmpty(userName) || StringUtils.isEmpty(projectName)) {
+            setProjectNotFound();
+            return;
+        }
+        GitOSCApi.getProject(userName, projectName, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 content.setVisibility(View.VISIBLE);
@@ -365,6 +372,9 @@ public class ProjectActivity extends BaseActivity implements
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 tipInfo.setLoadError();
+                if (statusCode == 404) {
+                    setProjectNotFound();
+                }
             }
 
             @Override
@@ -379,6 +389,10 @@ public class ProjectActivity extends BaseActivity implements
                 tipInfo.setHiden();
             }
         });
+    }
+
+    private void setProjectNotFound() {
+        tipInfo.setLoadError("仓库中找不到该项目喔");
     }
 
     @Override
