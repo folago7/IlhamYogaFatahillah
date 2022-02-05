@@ -6,28 +6,29 @@ import android.os.Looper;
 import android.view.KeyEvent;
 import android.widget.Toast;
 
+import net.oschina.gitapp.AppManager;
 import net.oschina.gitapp.R;
 
 
-/**
+/***
  * 双击退出
- * 创建日期 2014-05-12
- * @author 火蚁 (http://my.oschina.net/LittleDY)
- * 
+ * @author FireAnt（http://my.oschina.net/LittleDY）
+ * @created 2015年1月5日 下午7:07:44
+ *
  */
 public class DoubleClickExitHelper {
 
 	private final Activity mActivity;
-	
+
 	private boolean isOnKeyBacking;
 	private Handler mHandler;
 	private Toast mBackToast;
-	
+
 	public DoubleClickExitHelper(Activity activity) {
 		mActivity = activity;
 		mHandler = new Handler(Looper.getMainLooper());
 	}
-	
+
 	/**
 	 * Activity onKeyDown事件
 	 * */
@@ -40,7 +41,8 @@ public class DoubleClickExitHelper {
 			if(mBackToast != null){
 				mBackToast.cancel();
 			}
-			mActivity.finish();
+			// 退出
+			AppManager.getAppManager().AppExit(mActivity);
 			return true;
 		} else {
 			isOnKeyBacking = true;
@@ -52,9 +54,9 @@ public class DoubleClickExitHelper {
 			return true;
 		}
 	}
-	
+
 	private Runnable onBackTimeRunnable = new Runnable() {
-		
+
 		@Override
 		public void run() {
 			isOnKeyBacking = false;
