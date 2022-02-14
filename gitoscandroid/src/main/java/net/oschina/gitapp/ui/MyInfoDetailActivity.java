@@ -32,6 +32,7 @@ import net.oschina.gitapp.photoBrowse.PhotoBrowseActivity;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 import net.oschina.gitapp.util.GitViewUtils;
 import net.oschina.gitapp.util.JsonUtils;
+import net.oschina.gitapp.widget.ActionSheet;
 import net.oschina.gitapp.widget.CircleImageView;
 
 import org.apache.http.Header;
@@ -51,6 +52,9 @@ public class MyInfoDetailActivity extends BaseActivity implements View.OnClickLi
     private final static String FILE_SAVEPATH = Environment
             .getExternalStorageDirectory().getAbsolutePath()
             + "/OSChina/Git/Portrait/";
+
+    public static final int LOCAL_PIC_CODE = 0;
+    public static final int PHOTO_CODE = 1;
 
     @InjectView(R.id.iv_portrait)
     CircleImageView ivPortrait;
@@ -140,22 +144,32 @@ public class MyInfoDetailActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void imageChooseItem(CharSequence[] items) {
-        AlertDialog imageDialog = new AlertDialog.Builder(this)
-                .setTitle("更新头像").setIcon(android.R.drawable.btn_star)
-                .setItems(items, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int item) {
-                        // 相册选图
-                        if (item == 0) {
-                            startImagePick();
-                        }
-                        // 手机拍照
-                        else if (item == 1) {
-                            startActionCamera();
+        setTheme(R.style.ActionSheetStyleIOS7);
+        ActionSheet
+                .createBuilder(getApplicationContext(),
+                        getSupportFragmentManager())
+                .setCancelButtonTitle(R.string.cancle)
+                .setOtherButtonTitles(getString(R.string.img_from_album), getString(R.string.img_from_camera))
+                .setCancelableOnTouchOutside(true)
+                .setListener(new ActionSheet.ActionSheetListener() {
+                    @Override
+                    public void onOtherButtonClick(ActionSheet actionSheet,
+                                                   int index) {
+                        switch (index) {
+                            case LOCAL_PIC_CODE: // 本地相册.
+                                startImagePick();
+                                break;
+                            case PHOTO_CODE: // 照相.
+                                startActionCamera();
+                                break;
                         }
                     }
-                }).create();
 
-        imageDialog.show();
+                    @Override
+                    public void onDismiss(ActionSheet actionSheet,
+                                          boolean isCancel) {
+                    }
+                }).show();
     }
 
     /**
