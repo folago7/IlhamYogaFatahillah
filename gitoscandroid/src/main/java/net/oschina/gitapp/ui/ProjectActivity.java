@@ -31,11 +31,11 @@ import net.oschina.gitapp.util.JsonUtils;
 import net.oschina.gitapp.util.TypefaceUtils;
 import net.oschina.gitapp.widget.TipInfoLayout;
 
-import org.apache.http.Header;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import cz.msebera.android.httpclient.Header;
 
 /**
  * 项目详情界面

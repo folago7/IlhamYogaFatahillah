@@ -19,10 +19,10 @@ import net.oschina.gitapp.ui.fragments.IssueDetailViewPagerFragment;
 import net.oschina.gitapp.util.JsonUtils;
 import net.oschina.gitapp.widget.TipInfoLayout;
 
-import org.apache.http.Header;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import cz.msebera.android.httpclient.Header;
 
 /**
  * issue详情activity

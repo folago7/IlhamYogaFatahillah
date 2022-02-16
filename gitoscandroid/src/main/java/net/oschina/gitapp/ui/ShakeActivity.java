@@ -41,10 +41,11 @@ import net.oschina.gitapp.util.ShakeListener;
 import net.oschina.gitapp.util.ShakeListener.OnShakeListener;
 import net.oschina.gitapp.util.TypefaceUtils;
 
-import org.apache.http.Header;
 
 import java.io.IOException;
 import java.util.HashMap;
+
+import cz.msebera.android.httpclient.Header;
 
 public class ShakeActivity extends BaseActivity implements OnClickListener {
 

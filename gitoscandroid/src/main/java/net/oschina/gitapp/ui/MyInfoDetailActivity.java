@@ -35,7 +35,6 @@ import net.oschina.gitapp.util.JsonUtils;
 import net.oschina.gitapp.widget.ActionSheet;
 import net.oschina.gitapp.widget.CircleImageView;
 
-import org.apache.http.Header;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -43,6 +42,7 @@ import java.io.FileNotFoundException;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by 火蚁 on 15/5/4.

@@ -16,11 +16,11 @@ import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 import net.oschina.gitapp.util.JsonUtils;
 import net.oschina.gitapp.widget.TipInfoLayout;
 
-import org.apache.http.Header;
-import org.apache.http.protocol.HTTP;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.protocol.HTTP;
 
 /**
  * 项目ReadMe文件详情

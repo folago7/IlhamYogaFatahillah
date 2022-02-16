@@ -8,8 +8,6 @@ import android.widget.Toast;
 
 import net.oschina.gitapp.common.UIHelper;
 
-import org.apache.commons.httpclient.HttpException;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -19,6 +17,8 @@ import java.net.ConnectException;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Date;
+
+import cz.msebera.android.httpclient.HttpException;
 
 /**
  * 应用程序异常类：用于捕获异常和提示错误信息

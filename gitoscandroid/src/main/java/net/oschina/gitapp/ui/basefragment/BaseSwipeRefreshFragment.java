@@ -22,9 +22,10 @@ import net.oschina.gitapp.bean.MessageData;
 import net.oschina.gitapp.util.GitViewUtils;
 import net.oschina.gitapp.widget.TipInfoLayout;
 
-import org.apache.http.Header;
 
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * 说明 下拉刷新界面的基类

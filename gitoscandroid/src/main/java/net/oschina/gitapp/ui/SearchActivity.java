@@ -22,12 +22,12 @@ import net.oschina.gitapp.util.JsonUtils;
 import net.oschina.gitapp.widget.EnhanceListView;
 import net.oschina.gitapp.widget.TipInfoLayout;
 
-import org.apache.http.Header;
 
 import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import cz.msebera.android.httpclient.Header;
 
 /**
  * 搜索项目界面

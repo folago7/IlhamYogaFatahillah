@@ -20,7 +20,8 @@ import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.basefragment.BaseFragment;
 
-import org.apache.http.protocol.HTTP;
+import cz.msebera.android.httpclient.protocol.HTTP;
+
 
 /**
  * issue详情fragment

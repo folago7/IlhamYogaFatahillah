@@ -24,10 +24,11 @@ import net.oschina.gitapp.ui.basefragment.BaseFragment;
 import net.oschina.gitapp.util.GitViewUtils;
 import net.oschina.gitapp.util.JsonUtils;
 
-import org.apache.http.Header;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * commit文件详情

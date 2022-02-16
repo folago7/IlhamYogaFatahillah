@@ -27,10 +27,9 @@ import net.oschina.gitapp.util.MarkdownUtils;
 import net.oschina.gitapp.util.SourceEditor;
 import net.oschina.gitapp.widget.TipInfoLayout;
 
-import org.apache.http.Header;
-
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import cz.msebera.android.httpclient.Header;
 
 /**
  * 代码文件详情

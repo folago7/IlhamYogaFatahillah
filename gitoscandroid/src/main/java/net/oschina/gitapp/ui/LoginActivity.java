@@ -32,11 +32,11 @@ import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 import net.oschina.gitapp.util.GitViewUtils;
 import net.oschina.gitapp.util.JsonUtils;
 
-import org.apache.http.Header;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import cz.msebera.android.httpclient.Header;
 
 public class LoginActivity extends BaseActivity
         implements OnClickListener, OnEditorActionListener, TextWatcher {

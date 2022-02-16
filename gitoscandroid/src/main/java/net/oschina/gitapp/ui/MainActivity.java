@@ -36,9 +36,10 @@ import net.oschina.gitapp.ui.fragments.ExploreViewPagerFragment;
 import net.oschina.gitapp.ui.fragments.MySelfViewPagerFragment;
 import net.oschina.gitapp.util.JsonUtils;
 
-import org.apache.http.Header;
 
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * 程序主界面
