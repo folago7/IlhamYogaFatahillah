@@ -14,9 +14,10 @@ import net.oschina.gitapp.bean.ProjectMember;
 import net.oschina.gitapp.util.GitViewUtils;
 import net.oschina.gitapp.util.JsonUtils;
 
-import org.apache.http.Header;
 
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by 火蚁 on 15/4/24.

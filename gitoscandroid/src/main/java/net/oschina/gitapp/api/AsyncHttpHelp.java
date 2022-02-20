@@ -9,7 +9,8 @@ import com.loopj.android.http.RequestParams;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.common.CyptoUtils;
 
-import org.apache.http.protocol.HTTP;
+import cz.msebera.android.httpclient.protocol.HTTP;
+
 
 /**
  * 获取一个httpClient
@@ -22,34 +23,39 @@ public class AsyncHttpHelp {
     public final static int TIMEOUT_CONNECTION = 20000;// 连接超时时间
     public final static int TIMEOUT_SOCKET = 20000;// socket超时
 
-    public static AsyncHttpClient getHttpClient() {
-        AsyncHttpClient client = new AsyncHttpClient();
-        client.addHeader(HTTP.USER_AGENT, getUserAgent());
-        client.setTimeout(TIMEOUT_CONNECTION);
-        client.setResponseTimeout(TIMEOUT_SOCKET);
+    private static AsyncHttpClient sHttpClient = null;
+
+    static {
+        sHttpClient = new AsyncHttpClient();
+        sHttpClient.addHeader(HTTP.USER_AGENT, getUserAgent());
+        sHttpClient.setTimeout(TIMEOUT_CONNECTION);
+        sHttpClient.setResponseTimeout(TIMEOUT_SOCKET);
         String private_token = AppContext.getInstance().getProperty(PRIVATE_TOKEN);
         private_token = CyptoUtils.decode(GITOSC_PRIVATE_TOKEN, private_token);
-        client.addHeader("private-token", private_token);
-        return client;
+        sHttpClient.addHeader("private-token", private_token);
+    }
+
+    public static AsyncHttpClient getHttpClient() {
+        return sHttpClient;
     }
 
     public static void get(String url, AsyncHttpResponseHandler handler) {
-        getHttpClient().get(url, handler);
+        sHttpClient.get(url, handler);
         log(new StringBuilder("GET ").append(url).toString());
     }
 
     public static void get(String url, RequestParams params, AsyncHttpResponseHandler handler) {
-        getHttpClient().get(url, params, handler);
+        sHttpClient.get(url, params, handler);
         log(new StringBuilder("GET ").append(url).append("?").append(params).toString());
     }
 
     public static void post(String url, RequestParams params, AsyncHttpResponseHandler handler) {
-        getHttpClient().post(url, params, handler);
+        sHttpClient.post(url, params, handler);
         log(new StringBuilder("POST ").append(url).append("?").append(params).toString());
     }
 
     public static void post(String url, AsyncHttpResponseHandler handler) {
-        getHttpClient().post(url, handler);
+        sHttpClient.post(url, handler);
         log(new StringBuilder("POST ").append(url).append("?").toString());
     }
 

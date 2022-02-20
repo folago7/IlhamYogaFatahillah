@@ -22,7 +22,8 @@ import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 import net.oschina.gitapp.util.GitViewUtils;
 import net.oschina.gitapp.util.JsonUtils;
 
-import org.apache.http.Header;
+import cz.msebera.android.httpclient.Header;
+
 
 /**
  * 用户收货地址界面

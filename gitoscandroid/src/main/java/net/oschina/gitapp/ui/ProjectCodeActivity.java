@@ -34,7 +34,6 @@ import net.oschina.gitapp.util.JsonUtils;
 import net.oschina.gitapp.util.TypefaceUtils;
 import net.oschina.gitapp.widget.TipInfoLayout;
 
-import org.apache.http.Header;
 
 import java.io.File;
 import java.net.URLEncoder;
@@ -45,6 +44,7 @@ import java.util.Stack;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import cz.msebera.android.httpclient.Header;
 
 /**
  * 仓库代码

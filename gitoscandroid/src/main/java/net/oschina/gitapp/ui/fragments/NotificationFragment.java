@@ -27,10 +27,11 @@ import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.basefragment.BaseFragment;
 import net.oschina.gitapp.util.JsonUtils;
 
-import org.apache.http.Header;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * 通知列表页面

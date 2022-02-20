@@ -23,7 +23,8 @@ import net.oschina.gitapp.dialog.LightProgressDialog;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 import net.oschina.gitapp.util.GitViewUtils;
 
-import org.apache.http.Header;
+import cz.msebera.android.httpclient.Header;
+
 
 /**
  * 评论issue界面

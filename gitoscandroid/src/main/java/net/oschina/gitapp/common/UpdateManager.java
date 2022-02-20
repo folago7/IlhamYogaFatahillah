@@ -31,7 +31,6 @@ import net.oschina.gitapp.dialog.LightProgressDialog;
 import net.oschina.gitapp.util.GitViewUtils;
 import net.oschina.gitapp.util.JsonUtils;
 
-import org.apache.http.Header;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -41,6 +40,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
+
+import cz.msebera.android.httpclient.Header;
 
 /**
  * 应用程序更新工具包
