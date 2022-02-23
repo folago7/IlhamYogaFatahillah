@@ -1,17 +1,15 @@
 package net.oschina.gitapp.ui;
 
-import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -36,7 +34,6 @@ import net.oschina.gitapp.ui.fragments.ExploreViewPagerFragment;
 import net.oschina.gitapp.ui.fragments.MySelfViewPagerFragment;
 import net.oschina.gitapp.util.JsonUtils;
 
-
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
@@ -49,24 +46,22 @@ import cz.msebera.android.httpclient.Header;
  *         最后更新：2014-05-29
  *         更新内容：更改以callBack的方式进行交互
  *         更新者：火蚁
- * @created 2014-04-29
  */
-@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-public class MainActivity extends ActionBarActivity implements
+public class MainActivity extends AppCompatActivity implements
         DrawerMenuCallBack {
 
-    static final String DRAWER_MENU_TAG = "drawer_menu";
-    static final String DRAWER_CONTENT_TAG = "drawer_content";
+    final String DRAWER_MENU_TAG = "drawer_menu";
+    final String DRAWER_CONTENT_TAG = "drawer_content";
 
-    static final String CONTENT_TAG_EXPLORE = "content_explore";
-    static final String CONTENT_TAG_MYSELF = "content_myself";
+    final String CONTENT_TAG_EXPLORE = "content_explore";
+    final String CONTENT_TAG_MYSELF = "content_myself";
 
-    static final String CONTENTS[] = {
+    final String CONTENTS[] = {
             CONTENT_TAG_EXPLORE,
             CONTENT_TAG_MYSELF
     };
 
-    static final String FRAGMENTS[] = {
+    final String FRAGMENTS[] = {
             ExploreViewPagerFragment.class.getName(),
             MySelfViewPagerFragment.class.getName()
     };
@@ -76,7 +71,7 @@ public class MainActivity extends ActionBarActivity implements
             "我的"
     };
 
-    private static DrawerNavigationMenu mMenu = DrawerNavigationMenu.newInstance();
+    private DrawerNavigationMenu mMenu = DrawerNavigationMenu.newInstance();
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private FragmentManager mFragmentManager;
@@ -87,7 +82,7 @@ public class MainActivity extends ActionBarActivity implements
     private ActionBar mActionBar;
     private AppContext mContext;
 
-    private static String mTitle;// actionbar标题
+    private String mTitle;// actionbar标题
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,13 +92,9 @@ public class MainActivity extends ActionBarActivity implements
         initView(savedInstanceState);
         AppManager.getAppManager().addActivity(this);
 
-        BlueWare.withApplicationToken("A97669647CD7FA558E6076201E5F97B322").start(getApplicationContext());
+        BlueWare.withApplicationToken("A97669647CD7FA558E6076201E5F97B322").start
+                (getApplicationContext());
         MobclickAgent.updateOnlineConfig(this);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 
     @Override
@@ -134,8 +125,7 @@ public class MainActivity extends ActionBarActivity implements
         mDrawerLayout.setDrawerListener(new DrawerMenuListener());
         // 设置滑出菜单的阴影效果
         //mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,GravityCompat.START);
-        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                null, 0, 0);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, null, 0, 0);
 
 
         mFragmentManager = getSupportFragmentManager();
@@ -160,7 +150,8 @@ public class MainActivity extends ActionBarActivity implements
     private AsyncHttpResponseHandler noticeHandler = new AsyncHttpResponseHandler() {
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-            List<ProjectNotificationArray> notificationArrays = JsonUtils.getList(ProjectNotificationArray[].class, responseBody);
+            List<ProjectNotificationArray> notificationArrays = JsonUtils.getList
+                    (ProjectNotificationArray[].class, responseBody);
             if (notificationArrays == null || notificationArrays.isEmpty()) {
                 return;
             }
@@ -172,7 +163,8 @@ public class MainActivity extends ActionBarActivity implements
         }
 
         @Override
-        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable
+                error) {
         }
     };
 
@@ -205,8 +197,6 @@ public class MainActivity extends ActionBarActivity implements
         if (mainContent != null) {
             mainContent.setAlpha(0);
             mainContent.animate().alpha(1).setDuration(200);
-        } else {
-
         }
 
         // 检查新版本
@@ -290,7 +280,7 @@ public class MainActivity extends ActionBarActivity implements
         ft.commit();
 
         mActionBar.setTitle(TITLES[pos]);
-        mTitle = mActionBar.getTitle().toString();//记录主界面的标题
+        mTitle = TITLES[pos];//记录主界面的标题
         mCurrentContentTag = tag;
     }
 
@@ -317,7 +307,6 @@ public class MainActivity extends ActionBarActivity implements
     public void onClickMySelf() {
         if (!mContext.isLogin()) {
             UIHelper.showLoginActivity(this);
-            return;
         } else {
             showMainContent(1);
         }
