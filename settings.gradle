@@ -1,2 +1,2 @@
-include ':social_sdk_library_project'
+include ':social_sdk_library_project', ':zxing'
 include ':gitoscandroid'

@@ -17,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.blueware.agent.android.BlueWare;
-import com.dtr.zxing.activity.CaptureActivity;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.umeng.analytics.MobclickAgent;
 
@@ -335,9 +334,10 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onClickScan() {
-        Intent intent = new Intent();
-        intent.setClass(this, CaptureActivity.class);
-        startActivity(intent);
+        //zxing包中定义,暂时无用
+//        Intent intent = new Intent();
+//        intent.setClass(this, CaptureActivity.class);
+//        startActivity(intent);
     }
 
     @Override
