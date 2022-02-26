@@ -3,6 +3,7 @@ package net.oschina.gitapp.ui.baseactivity;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
@@ -14,7 +15,7 @@ import net.oschina.gitapp.common.StringUtils;
 
 import java.lang.reflect.Method;
 
-public abstract class BaseActivity extends ActionBarActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 
 	// 是否可以返回
 	protected static boolean isCanBack;
@@ -98,5 +99,11 @@ public abstract class BaseActivity extends ActionBarActivity {
     protected void onPause() {
         super.onPause();
         MobclickAgent.onPause(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        AppManager.getAppManager().removeActivity(this);
     }
 }

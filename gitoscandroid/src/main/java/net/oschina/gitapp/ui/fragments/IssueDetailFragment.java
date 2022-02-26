@@ -80,8 +80,8 @@ public class IssueDetailFragment extends BaseFragment {
 		mIssueData = (TextView) view.findViewById(R.id.issue_date);
 		mWebView = (WebView) view.findViewById(R.id.issue_content);
 	}
-	
-	private void initData() {
+
+	protected void initData() {
 		Bundle args = getArguments();
 		if (args != null) {
 			mProject = (Project) args.getSerializable(Contanst.PROJECT);

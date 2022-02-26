@@ -104,8 +104,8 @@ public class CommitFileDetailFragment extends BaseFragment implements
 		
 		mCommitDiffll = (LinearLayout) view.findViewById(R.id.commit_diff_file_list);
 	}
-	
-	private void initData() {
+
+	protected void initData() {
 		Bundle args = getArguments();
 		if (args != null) {
 			mProject = (Project) args.getSerializable(Contanst.PROJECT);

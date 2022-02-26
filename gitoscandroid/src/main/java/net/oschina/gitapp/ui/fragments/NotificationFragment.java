@@ -101,8 +101,8 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
 		mEmptyImage = (ImageView) view.findViewById(R.id.notification_empty_img);
 		mEmptyMsg = (TextView) view.findViewById(R.id.notification_empty_msg);
 	}
-	
-	private void initData() {
+
+	protected void initData() {
 		Bundle args = getArguments();
 		if (args != null) {
 			mAction = args.getInt(NOTIFICATION_ACTION_KEY, 0);

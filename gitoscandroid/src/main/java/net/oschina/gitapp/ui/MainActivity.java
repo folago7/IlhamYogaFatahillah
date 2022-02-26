@@ -241,18 +241,18 @@ public class MainActivity extends AppCompatActivity implements
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             // 判断菜单是否打开
-            if (mDrawerLayout.isDrawerOpen(Gravity.START)) {
+            if (mDrawerLayout.isDrawerOpen(Gravity.LEFT)) {
                 mDrawerLayout.closeDrawers();
                 return true;
             }
             return mDoubleClickExitHelper.onKeyDown(keyCode, event);
         }
         if (keyCode == KeyEvent.KEYCODE_MENU) {
-            if (mDrawerLayout.isDrawerOpen(Gravity.START)) {
+            if (mDrawerLayout.isDrawerOpen(Gravity.LEFT)) {
                 mDrawerLayout.closeDrawers();
                 return true;
             } else {
-                mDrawerLayout.openDrawer(Gravity.START);
+                mDrawerLayout.openDrawer(Gravity.LEFT);
                 return true;
             }
         }
