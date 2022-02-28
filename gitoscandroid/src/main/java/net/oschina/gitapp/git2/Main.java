@@ -1,6 +1,7 @@
 package net.oschina.gitapp.git2;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.RadioButton;
@@ -43,7 +44,6 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
         content1 = new ExploreViewPagerFragment();
         content2 = new MySelfViewPagerFragment();
         content3 = new ExploreViewPagerFragment();
-
         changeFragment(content1);
     }
 
@@ -71,18 +71,15 @@ public class Main extends AppCompatActivity implements View.OnClickListener {
         if (targetFragment.equals(currentSupportFragment)) {
             return;
         }
-        android.support.v4.app.FragmentTransaction transaction = getSupportFragmentManager()
-                .beginTransaction();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         if (!targetFragment.isAdded()) {
-            transaction.add(R.id.main_content, targetFragment, targetFragment.getClass()
-                    .getName());
+            transaction.add(R.id.main_content, targetFragment, targetFragment.getClass().getName());
         }
         if (targetFragment.isHidden()) {
             transaction.show(targetFragment);
             targetFragment.onChange();
         }
-        if (currentSupportFragment != null
-                && currentSupportFragment.isVisible()) {
+        if (currentSupportFragment != null && currentSupportFragment.isVisible()) {
             transaction.hide(currentSupportFragment);
         }
         currentSupportFragment = targetFragment;
