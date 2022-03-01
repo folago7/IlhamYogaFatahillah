@@ -41,12 +41,12 @@ import net.oschina.gitapp.bean.Event;
 import net.oschina.gitapp.bean.Issue;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.User;
-import net.oschina.gitapp.git2.Main;
 import net.oschina.gitapp.ui.CodeFileDetailActivity;
 import net.oschina.gitapp.ui.CommitDetailActivity;
 import net.oschina.gitapp.ui.CommitFileDetailActivity;
 import net.oschina.gitapp.ui.IssueDetailActivity;
 import net.oschina.gitapp.ui.LoginActivity;
+import net.oschina.gitapp.ui.MainActivity;
 import net.oschina.gitapp.ui.MyInfoDetailActivity;
 import net.oschina.gitapp.ui.NewIssueActivity;
 import net.oschina.gitapp.ui.NotificationActivity;
@@ -538,7 +538,7 @@ public class UIHelper {
      * @param context
      */
     public static void goMainActivity(Context context) {
-        Intent intent = new Intent(context, Main.class);
+        Intent intent = new Intent(context, MainActivity.class);
         context.startActivity(intent);
     }
 
