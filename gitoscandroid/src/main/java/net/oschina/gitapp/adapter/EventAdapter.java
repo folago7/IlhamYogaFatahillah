@@ -18,9 +18,9 @@ import java.util.List;
 
 /**
  * 个人动态列表适配器
- * 
- * @created 2014-05-20 下午15：28
+ *
  * @author 火蚁（http://my.oschina.net/LittleDY）
+ * @created 2014-05-20 下午15：28
  */
 public class EventAdapter extends CommonAdapter<Event> {
 
@@ -110,18 +110,21 @@ public class EventAdapter extends CommonAdapter<Event> {
 
     /**
      * 添加commit项
-     * 
+     *
      * @param layout
      * @param commit
      */
     private void addCommitItem(LinearLayout layout, Commit commit) {
-        View v = mInflater.inflate(R.layout.list_item_event_commits, null);
-        ((TextView) v.findViewById(R.id.event_commits_listitem_commitid))
-                .setText(commit.getId());
-        ((TextView) v.findViewById(R.id.event_commits_listitem_username))
-                .setText(commit.getAuthor().getName());
-        ((TextView) v.findViewById(R.id.event_commits_listitem_message))
-                .setText(commit.getMessage());
-        layout.addView(v);
+        try {
+            View v = mInflater.inflate(R.layout.list_item_event_commits, null);
+            ((TextView) v.findViewById(R.id.event_commits_listitem_commitid))
+                    .setText(commit.getId());
+            ((TextView) v.findViewById(R.id.event_commits_listitem_username))
+                    .setText(commit.getAuthor().getName());
+            ((TextView) v.findViewById(R.id.event_commits_listitem_message))
+                    .setText(commit.getMessage());
+            layout.addView(v);
+        } catch (Exception e) {
+        }
     }
 }
