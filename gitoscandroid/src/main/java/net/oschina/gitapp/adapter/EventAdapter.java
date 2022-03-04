@@ -24,8 +24,7 @@ import java.util.List;
  */
 public class EventAdapter extends CommonAdapter<Event> {
 
-    public EventAdapter(Context context,
-                        int resource) {
+    public EventAdapter(Context context, int resource) {
         super(context, resource);
     }
 
@@ -110,19 +109,20 @@ public class EventAdapter extends CommonAdapter<Event> {
 
     /**
      * 添加commit项
-     *
-     * @param layout
-     * @param commit
      */
     private void addCommitItem(LinearLayout layout, Commit commit) {
         try {
             View v = mInflater.inflate(R.layout.list_item_event_commits, null);
-            ((TextView) v.findViewById(R.id.event_commits_listitem_commitid))
-                    .setText(commit.getId());
-            ((TextView) v.findViewById(R.id.event_commits_listitem_username))
-                    .setText(commit.getAuthor().getName());
-            ((TextView) v.findViewById(R.id.event_commits_listitem_message))
-                    .setText(commit.getMessage());
+            if (commit != null) {
+                ((TextView) v.findViewById(R.id.event_commits_listitem_commitid))
+                        .setText(commit.getId());
+                if (commit.getAuthor() != null) {
+                    ((TextView) v.findViewById(R.id.event_commits_listitem_username))
+                            .setText(commit.getAuthor().getName());
+                }
+                ((TextView) v.findViewById(R.id.event_commits_listitem_message))
+                        .setText(commit.getMessage());
+            }
             layout.addView(v);
         } catch (Exception e) {
         }
