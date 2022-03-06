@@ -41,7 +41,7 @@ import cz.msebera.android.httpclient.Header;
  * 程序主界面
  *
  * @author 火蚁（http://my.oschina.net/LittleDY）
- *         <p/>
+ *         <p>
  *         最后更新：2014-05-29
  *         更新内容：更改以callBack的方式进行交互
  *         更新者：火蚁
@@ -115,8 +115,10 @@ public class MainActivity extends AppCompatActivity implements
     private void initView(Bundle savedInstanceState) {
 
         mActionBar = getSupportActionBar();
-        mActionBar.setDisplayHomeAsUpEnabled(true);
-        mActionBar.setHomeButtonEnabled(true);
+        if (mActionBar != null) {
+            mActionBar.setDisplayHomeAsUpEnabled(true);
+            mActionBar.setHomeButtonEnabled(true);
+        }
 
         mDoubleClickExitHelper = new DoubleClickExitHelper(this);
 

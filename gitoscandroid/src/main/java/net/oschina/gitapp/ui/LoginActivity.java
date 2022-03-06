@@ -66,9 +66,11 @@ public class LoginActivity extends BaseActivity
         etPassword.addTextChangedListener(this);
         etPassword.setOnEditorActionListener(this);
 
-        String account = CyptoUtils.decode(Contanst.ACCOUNT_EMAIL, AppContext.getInstance().getProperty(Contanst.ACCOUNT_EMAIL));
+        String account = CyptoUtils.decode(Contanst.ACCOUNT_EMAIL, AppContext.getInstance()
+                .getProperty(Contanst.ACCOUNT_EMAIL));
         etAccount.setText(account);
-        String pwd = CyptoUtils.decode(Contanst.ACCOUNT_PWD, AppContext.getInstance().getProperty(Contanst.ACCOUNT_PWD));
+        String pwd = CyptoUtils.decode(Contanst.ACCOUNT_PWD, AppContext.getInstance().getProperty
+                (Contanst.ACCOUNT_PWD));
         etPassword.setText(pwd);
     }
 
@@ -90,7 +92,6 @@ public class LoginActivity extends BaseActivity
      * 检查登录
      */
     private void checkLogin() {
-
         String email = etAccount.getText().toString();
         String passwd = etPassword.getText().toString();
 
@@ -110,7 +111,8 @@ public class LoginActivity extends BaseActivity
 
 
         // 保存用户名和密码
-        AppContext.getInstance().saveAccountInfo(CyptoUtils.encode(Contanst.ACCOUNT_EMAIL, email), CyptoUtils.encode(Contanst.ACCOUNT_PWD, passwd));
+        AppContext.getInstance().saveAccountInfo(CyptoUtils.encode(Contanst.ACCOUNT_EMAIL, email)
+                , CyptoUtils.encode(Contanst.ACCOUNT_PWD, passwd));
 
         login(email, passwd);
     }
@@ -131,8 +133,9 @@ public class LoginActivity extends BaseActivity
                     // 保存登录用户的信息
                     AppContext.getInstance().saveLoginInfo(session);
                     // 保存用户的私有token
-                    if (session != null && session.get_privateToken() != null) {
-                        String token = CyptoUtils.encode(AsyncHttpHelp.GITOSC_PRIVATE_TOKEN, session.get_privateToken());
+                    if (session.get_privateToken() != null) {
+                        String token = CyptoUtils.encode(AsyncHttpHelp.GITOSC_PRIVATE_TOKEN, 
+                                session.get_privateToken());
                         AppContext.getInstance().setProperty(AsyncHttpHelp.PRIVATE_TOKEN, token);
                     }
                     //返回标识，成功登录
@@ -144,7 +147,8 @@ public class LoginActivity extends BaseActivity
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, 
+                                  Throwable error) {
                 if (statusCode == 401) {
                     GitViewUtils.showToast(R.string.msg_login_error);
                 } else {
