@@ -263,7 +263,7 @@ public class ProjectActivity extends BaseActivity implements
             case R.id.copy:
                 ClipboardManager cbm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 cbm.setText(url_link);
-                UIHelper.ToastMessage(mAppContext, "已复制到剪贴板");
+                UIHelper.toastMessage(mAppContext, "已复制到剪贴板");
                 break;
             case R.id.open_browser:
                 UIHelper.openBrowser(ProjectActivity.this, url_link);
@@ -469,12 +469,12 @@ public class ProjectActivity extends BaseActivity implements
                 }
                 mProject.setWatches_count(res.getCount());
                 projectWatchnum.setText(res.getCount() + "");
-                UIHelper.ToastMessage(mAppContext, resMsg);
+                UIHelper.toastMessage(mAppContext, resMsg);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                UIHelper.ToastMessage(mAppContext, "操作失败");
+                UIHelper.toastMessage(mAppContext, "操作失败");
             }
 
             @Override
@@ -527,7 +527,7 @@ public class ProjectActivity extends BaseActivity implements
                 }
                 mProject.setStars_count(res.getCount());
                 projectStarnum.setText(res.getCount() + "");
-                UIHelper.ToastMessage(mAppContext, resMsg);
+                UIHelper.toastMessage(mAppContext, resMsg);
             }
 
             @Override

@@ -28,7 +28,6 @@ import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.Update;
 import net.oschina.gitapp.dialog.LightProgressDialog;
-import net.oschina.gitapp.util.GitViewUtils;
 import net.oschina.gitapp.util.JsonUtils;
 
 
@@ -154,7 +153,8 @@ public class UpdateManager {
      */
     private void getCurrentVersion() {
         try {
-            PackageInfo info = mContext.getPackageManager().getPackageInfo(mContext.getPackageName(), 0);
+            PackageInfo info = mContext.getPackageManager().getPackageInfo(mContext
+                    .getPackageName(), 0);
             curVersionCode = info.versionCode;
         } catch (NameNotFoundException e) {
             e.printStackTrace(System.err);
@@ -191,8 +191,9 @@ public class UpdateManager {
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                GitViewUtils.showToast("网络异常");
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, 
+                                  Throwable error) {
+                UIHelper.toastMessage(mContext, "网络异常");
             }
 
             @Override
@@ -278,7 +279,8 @@ public class UpdateManager {
                 //判断是否挂载了SD卡
                 String storageState = Environment.getExternalStorageState();
                 if (storageState.equals(Environment.MEDIA_MOUNTED)) {
-                    savePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/OSChina/Update/";
+                    savePath = Environment.getExternalStorageDirectory().getAbsolutePath() + 
+                            "/OSChina/Update/";
                     File file = new File(savePath);
                     if (!file.exists()) {
                         file.mkdirs();
@@ -368,7 +370,8 @@ public class UpdateManager {
             return;
         }
         Intent i = new Intent(Intent.ACTION_VIEW);
-        i.setDataAndType(Uri.parse("file://" + apkfile.toString()), "application/vnd.android.package-archive");
+        i.setDataAndType(Uri.parse("file://" + apkfile.toString()), "application/vnd.android" +
+                ".package-archive");
         mContext.startActivity(i);
     }
 }

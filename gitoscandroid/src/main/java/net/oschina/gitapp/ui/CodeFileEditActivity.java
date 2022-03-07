@@ -22,7 +22,6 @@ import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.dialog.LightProgressDialog;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
-import net.oschina.gitapp.util.GitViewUtils;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -105,11 +104,11 @@ public class CodeFileEditActivity extends BaseActivity implements OnClickListene
         final String content = mEditContent.getText().toString();
         final String commit_message = mCommitMsg.getText().toString();
         if (content.equals(mCodeFile.getContent())) {
-            UIHelper.ToastMessage(mAppContext, "文件内容没有改变");
+            UIHelper.toastMessage(mAppContext, "文件内容没有改变");
             return;
         }
         if (StringUtils.isEmpty(commit_message)) {
-            UIHelper.ToastMessage(mAppContext, "文件内容没有改变");
+            UIHelper.toastMessage(mAppContext, "文件内容没有改变");
             return;
         }
         final AlertDialog pubing = LightProgressDialog.create(this, "正在提交...");
@@ -120,17 +119,17 @@ public class CodeFileEditActivity extends BaseActivity implements OnClickListene
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                         if (responseBody != null && responseBody.length != 0) {
-                            GitViewUtils.showToast("提交成功");
+                            UIHelper.toastMessage(mAppContext, "提交成功");
                             CodeFileEditActivity.this.finish();
                         } else {
-                            GitViewUtils.showToast("提交失败");
+                            UIHelper.toastMessage(mAppContext, "提交失败");
                         }
                     }
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, byte[] responseBody,
                                           Throwable error) {
-                        GitViewUtils.showToast("提交失败");
+                        UIHelper.toastMessage(mAppContext, "提交失败");
                     }
 
                     @Override

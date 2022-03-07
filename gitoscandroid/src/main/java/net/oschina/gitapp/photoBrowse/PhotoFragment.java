@@ -16,7 +16,7 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
 import net.oschina.gitapp.R;
-import net.oschina.gitapp.util.GitViewUtils;
+import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.util.ImageLoaderUtils;
 
 import butterknife.ButterKnife;
@@ -46,7 +46,8 @@ public class PhotoFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable 
+    Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.photo_item, container, false);
         ButterKnife.inject(this, root);
         loadImage();
@@ -64,7 +65,8 @@ public class PhotoFragment extends Fragment {
 
     private void loadImage() {
         if (imageUrl != null && !TextUtils.isEmpty(imageUrl)) {
-            ImageLoader.getInstance().displayImage(imageUrl, image, ImageLoaderUtils.getOption(), new ImageLoadingListener() {
+            ImageLoader.getInstance().displayImage(imageUrl, image, ImageLoaderUtils.getOption(),
+                    new ImageLoadingListener() {
                 @Override
                 public void onLoadingStarted(String imageUri, View view) {
                     if (loading != null) {
@@ -77,7 +79,7 @@ public class PhotoFragment extends Fragment {
                     if (loading != null) {
                         loading.setVisibility(View.GONE);
                     }
-                    GitViewUtils.showToast("加载图片失败");
+                    UIHelper.toastMessage(getContext(), "加载图片失败");
                 }
 
                 @Override

@@ -32,6 +32,7 @@ public class WelcomePage extends Activity {
             public void onAnimationEnd(Animation arg0) {
                 finish();
                 UIHelper.goMainActivity(WelcomePage.this);
+//                startActivity(new Intent(WelcomePage.this, Main.class));
             }
 
             @Override

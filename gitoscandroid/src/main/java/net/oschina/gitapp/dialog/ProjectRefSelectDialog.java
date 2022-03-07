@@ -12,7 +12,7 @@ import net.oschina.gitapp.adapter.CommonAdapter;
 import net.oschina.gitapp.adapter.ViewHolder;
 import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.Branch;
-import net.oschina.gitapp.util.GitViewUtils;
+import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.util.JsonUtils;
 import net.oschina.gitapp.util.TypefaceUtils;
 
@@ -67,7 +67,8 @@ public class ProjectRefSelectDialog {
                     ProjectRefSelectDialog.this.branches.addAll(branches);
                     GitOSCApi.getProjectTags(pId, new AsyncHttpResponseHandler() {
                         @Override
-                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                        public void onSuccess(int statusCode, Header[] headers, byte[] 
+                                responseBody) {
                             List<Branch> branches = JsonUtils.getList(Branch[].class, responseBody);
                             if (branches != null && !branches.isEmpty()) {
                                 for (Branch b : branches) {
@@ -79,7 +80,8 @@ public class ProjectRefSelectDialog {
                         }
 
                         @Override
-                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                        public void onFailure(int statusCode, Header[] headers, byte[] 
+                                responseBody, Throwable error) {
 
                         }
 
@@ -93,8 +95,9 @@ public class ProjectRefSelectDialog {
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                GitViewUtils.showToast("加载分支和标签失败");
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, 
+                                  Throwable error) {
+                UIHelper.toastMessage(context, "加载分支和标签失败");
             }
 
             @Override

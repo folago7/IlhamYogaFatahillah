@@ -144,15 +144,11 @@ public class UIHelper {
      *
      * @param msg
      */
-    public static void ToastMessage(Context cont, String msg) {
+    public static void toastMessage(Context cont, String msg) {
         Toast.makeText(cont, msg, Toast.LENGTH_SHORT).show();
     }
 
-    public static void ToastMessage(Context cont, int msg) {
-        Toast.makeText(cont, msg, Toast.LENGTH_SHORT).show();
-    }
-
-    public static void ToastMessage(Context cont, String msg, int time) {
+    public static void toastMessage(Context cont, String msg, int time) {
         Toast.makeText(cont, msg, time).show();
     }
 
@@ -293,9 +289,9 @@ public class UIHelper {
         final Handler handler = new Handler() {
             public void handleMessage(Message msg) {
                 if (msg.what == 1) {
-                    ToastMessage(ac, "缓存清除成功");
+                    toastMessage(ac, "缓存清除成功");
                 } else {
-                    ToastMessage(ac, "缓存清除失败");
+                    toastMessage(ac, "缓存清除失败");
                 }
             }
         };
@@ -555,7 +551,7 @@ public class UIHelper {
             context.startActivity(it);
         } catch (Exception e) {
             e.printStackTrace();
-            ToastMessage(context, "无法浏览此网页", 500);
+            toastMessage(context, "无法浏览此网页", 500);
         }
     }
 

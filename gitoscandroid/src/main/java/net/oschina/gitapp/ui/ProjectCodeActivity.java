@@ -26,14 +26,13 @@ import net.oschina.gitapp.bean.Branch;
 import net.oschina.gitapp.bean.CodeTree;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.common.Contanst;
+import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.dialog.ProjectRefSelectDialog;
 import net.oschina.gitapp.photoBrowse.PhotoBrowseActivity;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
-import net.oschina.gitapp.util.GitViewUtils;
 import net.oschina.gitapp.util.JsonUtils;
 import net.oschina.gitapp.util.TypefaceUtils;
 import net.oschina.gitapp.widget.TipInfoLayout;
-
 
 import java.io.File;
 import java.net.URLEncoder;
@@ -50,7 +49,8 @@ import cz.msebera.android.httpclient.Header;
  * 仓库代码
  * Created by 火蚁 on 15/4/21.
  */
-public class ProjectCodeActivity extends BaseActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class ProjectCodeActivity extends BaseActivity implements View.OnClickListener, 
+        AdapterView.OnItemClickListener {
 
     @InjectView(R.id.tv_paths)
     TextView tvPaths;
@@ -114,7 +114,8 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
      * 加载代码树
      */
     private void loadCode(final String path, final boolean refresh) {
-        GitOSCApi.getProjectCodeTree(project.getId(), getPath() + path, refName, new AsyncHttpResponseHandler() {
+        GitOSCApi.getProjectCodeTree(project.getId(), getPath() + path, refName, new 
+                AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 if (!refresh) {
@@ -135,19 +136,20 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
                     codeTreeAdapter.clear();
                     codeTreeAdapter.addItem(list);
                 } else {
-                    GitViewUtils.showToast("该文件夹下面暂无文件");
+                    UIHelper.toastMessage(ProjectCodeActivity.this, "该文件夹下面暂无文件");
                 }
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, 
+                                  Throwable error) {
                 if (!paths.isEmpty()) {
                     paths.pop();
                 }
                 if (path.isEmpty()) {
                     tipInfo.setLoadError("加载代码失败");
                 } else {
-                    GitViewUtils.showToast("加载代码失败");
+                    UIHelper.toastMessage(ProjectCodeActivity.this, "加载代码失败");
                 }
             }
 
@@ -158,7 +160,8 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
                 if (path.isEmpty() || refresh) {
                     tipInfo.setLoading();
                 } else {
-                    MenuItemCompat.setActionView(optionsMenu.findItem(0), R.layout.actionbar_indeterminate_progress);
+                    MenuItemCompat.setActionView(optionsMenu.findItem(0), R.layout
+                            .actionbar_indeterminate_progress);
                 }
             }
 
@@ -275,7 +278,10 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
         for (int i = 0; i < codeTrees.size(); i++) {
             CodeTree codeTree = codeTrees.get(i);
             if (codeTree.isImage(codeTree.getName())) {
-                String url = GitOSCApi.NO_API_BASE_URL + project.getOwner().getUsername() + "/" + project.getPath() + "/" + "raw" + "/" + refName + "/" + URLEncoder.encode(getPath() + codeTree.getName()) + "?private_token=" + AppContext.getToken();
+                String url = GitOSCApi.NO_API_BASE_URL + project.getOwner().getUsername() + "/" +
+                        project.getPath() + "/" + "raw" + "/" + refName + "/" + URLEncoder.encode
+                        (getPath() + codeTree.getName()) + "?private_token=" + AppContext
+                        .getToken();
                 images.add(url);
             }
             if (codeTree.getId() == currenCodeTree.getId()) {
@@ -291,7 +297,10 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
      * @param codeTree 代码文件
      */
     private void openWithBrowser(CodeTree codeTree) {
-//        String url = URLs.URL_HOST + project.getOwner().getUsername() + URLs.URL_SPLITTER + project.getPath() + URLs.URL_SPLITTER + "blob" + URLs.URL_SPLITTER + refName + URLs.URL_SPLITTER + URLEncoder.encode(getFilePath(codeTree.getName())) + "?private_token=" + ApiClient.getToken(mAppContext);
+//        String url = URLs.URL_HOST + project.getOwner().getUsername() + URLs.URL_SPLITTER + 
+// project.getPath() + URLs.URL_SPLITTER + "blob" + URLs.URL_SPLITTER + refName + URLs
+// .URL_SPLITTER + URLEncoder.encode(getFilePath(codeTree.getName())) + "?private_token=" + 
+// ApiClient.getToken(mAppContext);
 //        UIHelper.openBrowser(this, url);
     }
 
@@ -393,7 +402,8 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
             int pathIndex = 0;// 标注层级，用于获取缓存
             while (chatIndex >= 0) {
                 String path = chatIndex > pathStart ? text.substring(pathStart, chatIndex) : " ";
-                setSpan(new Clickable(path, pathIndex), start, chatIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                setSpan(new Clickable(path, pathIndex), start, chatIndex, Spanned
+                        .SPAN_EXCLUSIVE_EXCLUSIVE);
                 pathIndex++;
                 start = chatIndex + 1;
                 chatIndex = text.indexOf(File.separatorChar, start);

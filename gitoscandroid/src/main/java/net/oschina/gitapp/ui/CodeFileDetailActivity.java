@@ -21,7 +21,6 @@ import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.FileUtils;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
-import net.oschina.gitapp.util.GitViewUtils;
 import net.oschina.gitapp.util.JsonUtils;
 import net.oschina.gitapp.util.MarkdownUtils;
 import net.oschina.gitapp.util.SourceEditor;
@@ -67,9 +66,9 @@ public class CodeFileDetailActivity extends BaseActivity {
         boolean res = FileUtils.writeFile(mCodeFile.getContent().getBytes(),
                 path, mFileName);
         if (res) {
-            UIHelper.ToastMessage(mContext, "文件已经保存在" + path);
+            UIHelper.toastMessage(mContext, "文件已经保存在" + path);
         } else {
-            UIHelper.ToastMessage(mContext, "保存文件失败");
+            UIHelper.toastMessage(mContext, "保存文件失败");
         }
     }
 
@@ -149,9 +148,10 @@ public class CodeFileDetailActivity extends BaseActivity {
                 loadCode(mProject.getId(), mPath, mRef);
                 break;
             case R.id.copy:
-                ClipboardManager cbm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipboardManager cbm = (ClipboardManager) getSystemService(Context
+                        .CLIPBOARD_SERVICE);
                 cbm.setText(url_link);
-                GitViewUtils.showToast("复制成功");
+                UIHelper.toastMessage(this, "复制成功");
                 break;
             case R.id.open_browser:
                 if (!mProject.isPublic()) {
@@ -172,7 +172,7 @@ public class CodeFileDetailActivity extends BaseActivity {
     }
 
     private void loadCode(final String projectId, final String path,
-                               final String ref_name) {
+                          final String ref_name) {
         GitOSCApi.getCodeFileDetail(projectId, path, ref_name, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
@@ -186,7 +186,8 @@ public class CodeFileDetailActivity extends BaseActivity {
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, 
+                                  Throwable error) {
                 webview.setVisibility(View.GONE);
                 tipInfo.setLoadError();
             }

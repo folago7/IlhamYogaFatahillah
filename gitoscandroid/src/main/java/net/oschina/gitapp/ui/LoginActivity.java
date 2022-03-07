@@ -29,7 +29,6 @@ import net.oschina.gitapp.common.CyptoUtils;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
-import net.oschina.gitapp.util.GitViewUtils;
 import net.oschina.gitapp.util.JsonUtils;
 
 
@@ -97,15 +96,15 @@ public class LoginActivity extends BaseActivity
 
         //检查用户输入的参数
         if (StringUtils.isEmpty(email)) {
-            UIHelper.ToastMessage(this, getString(R.string.msg_login_email_null));
+            UIHelper.toastMessage(this, getString(R.string.msg_login_email_null));
             return;
         }
         if (!StringUtils.isEmail(email)) {
-            UIHelper.ToastMessage(this, getString(R.string.msg_login_email_error));
+            UIHelper.toastMessage(this, getString(R.string.msg_login_email_error));
             return;
         }
         if (StringUtils.isEmpty(passwd)) {
-            UIHelper.ToastMessage(this, getString(R.string.msg_login_pwd_null));
+            UIHelper.toastMessage(this, getString(R.string.msg_login_pwd_null));
             return;
         }
 
@@ -150,9 +149,9 @@ public class LoginActivity extends BaseActivity
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, 
                                   Throwable error) {
                 if (statusCode == 401) {
-                    GitViewUtils.showToast(R.string.msg_login_error);
+                    UIHelper.toastMessage(LoginActivity.this,"用户未登录 或 密码错误");
                 } else {
-                    GitViewUtils.showToast("登录失败");
+                    UIHelper.toastMessage(LoginActivity.this,"登录失败");
                 }
             }
 

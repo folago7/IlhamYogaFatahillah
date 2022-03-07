@@ -19,9 +19,8 @@ import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.CommonAdapter;
 import net.oschina.gitapp.bean.Entity;
 import net.oschina.gitapp.bean.MessageData;
-import net.oschina.gitapp.util.GitViewUtils;
+import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.widget.TipInfoLayout;
-
 
 import java.util.List;
 
@@ -61,7 +60,7 @@ public abstract class BaseSwipeRefreshFragment<T extends Entity>
     private int mListViewAction = LISTVIEW_ACTION_NONE;
 
     // 当前数据状态，如果是已经全部加载，则不再执行滚动到底部就加载的情况
-    private int dataState = LISTVIEW_ACTION_NONE ;
+    private int dataState = LISTVIEW_ACTION_NONE;
 
     protected int mCurrentPage = 1;
 
@@ -79,9 +78,10 @@ public abstract class BaseSwipeRefreshFragment<T extends Entity>
         }
 
         @Override
-        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable
+                error) {
             mTipInfo.setLoadError();
-            GitViewUtils.showToast("网络错误");
+            UIHelper.toastMessage(getActivity(), "网络错误");
         }
 
         @Override
@@ -137,14 +137,14 @@ public abstract class BaseSwipeRefreshFragment<T extends Entity>
     }
 
     private void initView(View view) {
-        mSwipeRefreshLayout = GitViewUtils.findViewById(view, R.id.swiperefreshlayout);
-        mListView = GitViewUtils.findViewById(view, R.id.listView);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swiperefreshlayout);
+        mListView = (ListView) view.findViewById(R.id.listView);
 
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.swiperefresh_color1,
                 R.color.swiperefresh_color2, R.color.swiperefresh_color3,
                 R.color.swiperefresh_color4);
-        mTipInfo = GitViewUtils.findViewById(view, R.id.tip_info);
+        mTipInfo = (TipInfoLayout) view.findViewById(R.id.tip_info);
         mTipInfo.setOnClick(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -255,8 +255,11 @@ public abstract class BaseSwipeRefreshFragment<T extends Entity>
     }
 
     public abstract CommonAdapter<T> getAdapter();
+
     public abstract List<T> getDatas(byte[] responeString);
+
     public abstract void requestData();
+
     public abstract void onItemClick(int position, T data);
 
     public void loadDataSuccess(List<T> datas) {

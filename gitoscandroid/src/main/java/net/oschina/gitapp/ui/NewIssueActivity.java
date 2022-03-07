@@ -20,10 +20,10 @@ import net.oschina.gitapp.bean.Issue;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.ProjectMember;
 import net.oschina.gitapp.common.Contanst;
+import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.dialog.LightProgressDialog;
 import net.oschina.gitapp.dialog.ProjectMembersSelectDialog;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
-import net.oschina.gitapp.util.GitViewUtils;
 import net.oschina.gitapp.util.JsonUtils;
 import net.oschina.gitapp.util.TypefaceUtils;
 
@@ -99,19 +99,20 @@ public class NewIssueActivity extends BaseActivity implements View.OnClickListen
 
     private ProjectMembersSelectDialog membersSelectDialog;
     private String memberId = "";
-    private ProjectMembersSelectDialog.CallBack memberSelectCallBack = new ProjectMembersSelectDialog.CallBack() {
-        @Override
-        public void callBack(ProjectMember projectMember) {
-            memberId = projectMember.getId();
-            tvTouser.setText(projectMember.getName());
-        }
+    private ProjectMembersSelectDialog.CallBack memberSelectCallBack = new
+            ProjectMembersSelectDialog.CallBack() {
+                @Override
+                public void callBack(ProjectMember projectMember) {
+                    memberId = projectMember.getId();
+                    tvTouser.setText(projectMember.getName());
+                }
 
-        @Override
-        public void clear() {
-            memberId = "";
-            tvTouser.setText("未指派");
-        }
-    };
+                @Override
+                public void clear() {
+                    memberId = "";
+                    tvTouser.setText("未指派");
+                }
+            };
 
     @Override
     @OnClick({R.id.ll_touser, R.id.ll_milestone})
@@ -129,7 +130,8 @@ public class NewIssueActivity extends BaseActivity implements View.OnClickListen
 
     private void showMemberSelectDialog() {
         if (membersSelectDialog == null) {
-            membersSelectDialog = new ProjectMembersSelectDialog(this, mProject.getId(), memberSelectCallBack);
+            membersSelectDialog = new ProjectMembersSelectDialog(this, mProject.getId(),
+                    memberSelectCallBack);
         }
         membersSelectDialog.show(memberId);
     }
@@ -167,34 +169,36 @@ public class NewIssueActivity extends BaseActivity implements View.OnClickListen
         String title = etTile.getText().toString();
         String desc = etDesc.getText().toString();
         final AlertDialog pubing = LightProgressDialog.create(this, "提交中...");
-        GitOSCApi.pubCreateIssue(mProject.getId(), title, desc, memberId, "", new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                Issue issue = JsonUtils.toBean(Issue.class, responseBody);
-                if (issue != null) {
-                    GitViewUtils.showToast("创建成功");
-                    NewIssueActivity.this.finish();
-                } else {
-                    GitViewUtils.showToast("创建失败");
-                }
-            }
+        GitOSCApi.pubCreateIssue(mProject.getId(), title, desc, memberId, "", new
+                AsyncHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                        Issue issue = JsonUtils.toBean(Issue.class, responseBody);
+                        if (issue != null) {
+                            UIHelper.toastMessage(NewIssueActivity.this, "创建成功");
+                            NewIssueActivity.this.finish();
+                        } else {
+                            UIHelper.toastMessage(NewIssueActivity.this, "创建失败");
+                        }
+                    }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                GitViewUtils.showToast("issue创建失败");
-            }
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody,
+                                          Throwable error) {
+                        UIHelper.toastMessage(NewIssueActivity.this, "issue创建失败");
+                    }
 
-            @Override
-            public void onStart() {
-                super.onStart();
-                pubing.show();
-            }
+                    @Override
+                    public void onStart() {
+                        super.onStart();
+                        pubing.show();
+                    }
 
-            @Override
-            public void onFinish() {
-                super.onFinish();
-                pubing.dismiss();
-            }
-        });
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        pubing.dismiss();
+                    }
+                });
     }
 }
