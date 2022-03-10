@@ -16,8 +16,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
-
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.AsyncHttpHelp;
@@ -31,11 +29,13 @@ import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 import net.oschina.gitapp.util.JsonUtils;
 
+import org.kymjs.kjframe.http.HttpCallBack;
+
+import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import cz.msebera.android.httpclient.Header;
 
 public class LoginActivity extends BaseActivity
         implements OnClickListener, OnEditorActionListener, TextWatcher {
@@ -124,16 +124,17 @@ public class LoginActivity extends BaseActivity
             mLoginProgressDialog.setCanceledOnTouchOutside(false);
             mLoginProgressDialog.setMessage(getString(R.string.login_tips));
         }
-        GitOSCApi.login(account, passwd, new AsyncHttpResponseHandler() {
+        GitOSCApi.login(account, passwd, new HttpCallBack() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                Session session = JsonUtils.toBean(Session.class, responseBody);
+            public void onSuccess(Map<String, String> headers, byte[] t) {
+                super.onSuccess(headers, t);
+                Session session = JsonUtils.toBean(Session.class, t);
                 if (session != null) {
                     // 保存登录用户的信息
                     AppContext.getInstance().saveLoginInfo(session);
                     // 保存用户的私有token
                     if (session.get_privateToken() != null) {
-                        String token = CyptoUtils.encode(AsyncHttpHelp.GITOSC_PRIVATE_TOKEN, 
+                        String token = CyptoUtils.encode(AsyncHttpHelp.GITOSC_PRIVATE_TOKEN,
                                 session.get_privateToken());
                         AppContext.getInstance().setProperty(AsyncHttpHelp.PRIVATE_TOKEN, token);
                     }
@@ -146,18 +147,18 @@ public class LoginActivity extends BaseActivity
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, 
-                                  Throwable error) {
-                if (statusCode == 401) {
-                    UIHelper.toastMessage(LoginActivity.this,"用户未登录 或 密码错误");
+            public void onFailure(int errorNo, String strMsg) {
+                super.onFailure(errorNo, strMsg);
+                if (errorNo == 401) {
+                    UIHelper.toastMessage(LoginActivity.this, "用户未登录 或 密码错误");
                 } else {
-                    UIHelper.toastMessage(LoginActivity.this,"登录失败");
+                    UIHelper.toastMessage(LoginActivity.this, "登录失败");
                 }
             }
 
             @Override
-            public void onStart() {
-                super.onStart();
+            public void onPreStart() {
+                super.onPreStart();
                 if (mLoginProgressDialog != null) {
                     mLoginProgressDialog.show();
                 }

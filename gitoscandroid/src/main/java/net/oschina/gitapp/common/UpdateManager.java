@@ -22,14 +22,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
-
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.Update;
 import net.oschina.gitapp.dialog.LightProgressDialog;
 import net.oschina.gitapp.util.JsonUtils;
 
+import org.kymjs.kjframe.http.HttpCallBack;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -39,8 +38,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
-
-import cz.msebera.android.httpclient.Header;
+import java.util.Map;
 
 /**
  * 应用程序更新工具包
@@ -172,10 +170,11 @@ public class UpdateManager {
         getCurrentVersion();
         final AlertDialog check = LightProgressDialog.create(context, "正在检测，请稍候...");
         check.setCanceledOnTouchOutside(false);
-        GitOSCApi.getUpdateInfo(new AsyncHttpResponseHandler() {
+        GitOSCApi.getUpdateInfo(new HttpCallBack() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                Update update = JsonUtils.toBean(Update.class, responseBody);
+            public void onSuccess(Map<String, String> headers, byte[] t) {
+                super.onSuccess(headers, t);
+                Update update = JsonUtils.toBean(Update.class, t);
                 if (update != null) {
                     mUpdate = update;
                     if (curVersionCode < mUpdate.getNum_version()) {
@@ -191,14 +190,14 @@ public class UpdateManager {
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, 
-                                  Throwable error) {
+            public void onFailure(int errorNo, String strMsg) {
+                super.onFailure(errorNo, strMsg);
                 UIHelper.toastMessage(mContext, "网络异常");
             }
 
             @Override
-            public void onStart() {
-                super.onStart();
+            public void onPreStart() {
+                super.onPreStart();
                 if (isShowMsg) {
                     check.show();
                 }
@@ -279,7 +278,7 @@ public class UpdateManager {
                 //判断是否挂载了SD卡
                 String storageState = Environment.getExternalStorageState();
                 if (storageState.equals(Environment.MEDIA_MOUNTED)) {
-                    savePath = Environment.getExternalStorageDirectory().getAbsolutePath() + 
+                    savePath = Environment.getExternalStorageDirectory().getAbsolutePath() +
                             "/OSChina/Update/";
                     File file = new File(savePath);
                     if (!file.exists()) {

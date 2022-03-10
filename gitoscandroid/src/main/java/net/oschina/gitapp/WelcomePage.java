@@ -2,25 +2,21 @@ package net.oschina.gitapp;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.widget.LinearLayout;
 
 import net.oschina.gitapp.common.UIHelper;
 
 /**
  * app的欢迎界面
- *
- * @author deyi（http://my.oschina.net/LittleDY）
- * @created 2014-07-22
  */
 public class WelcomePage extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LinearLayout view = (LinearLayout) getLayoutInflater().inflate(R.layout.app_welcome_page,
-                null);
+        View view = View.inflate(this, R.layout.app_welcome_page, null);
         setContentView(view);
 
         //渐变展示启动屏

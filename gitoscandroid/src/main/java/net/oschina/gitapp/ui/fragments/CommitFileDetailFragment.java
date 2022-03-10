@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import net.oschina.gitapp.R;
@@ -24,10 +23,11 @@ import net.oschina.gitapp.interfaces.OnStatusListener;
 import net.oschina.gitapp.ui.basefragment.BaseFragment;
 import net.oschina.gitapp.util.JsonUtils;
 
+import org.kymjs.kjframe.http.HttpCallBack;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import cz.msebera.android.httpclient.Header;
+import java.util.Map;
 
 /**
  * commit文件详情
@@ -137,11 +137,11 @@ public class CommitFileDetailFragment extends BaseFragment implements
         onStatus(STATUS_LOADING);
 
         GitOSCApi.getCommitDiffList(mProject.getId(), mCommit.getId(), new
-                AsyncHttpResponseHandler() {
+                HttpCallBack() {
                     @Override
-                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                        List<CommitDiff> commitDiffList = JsonUtils.getList(CommitDiff[].class,
-                                responseBody);
+                    public void onSuccess(Map<String, String> headers, byte[] t) {
+                        super.onSuccess(headers, t);
+                        List<CommitDiff> commitDiffList = JsonUtils.getList(CommitDiff[].class, t);
                         if (commitDiffList != null) {
                             mLoading.setVisibility(View.GONE);
                             onStatus(STATUS_LOADED);
@@ -160,7 +160,8 @@ public class CommitFileDetailFragment extends BaseFragment implements
                     }
 
                     @Override
-                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    public void onFailure(int errorNo, String strMsg) {
+                        super.onFailure(errorNo, strMsg);
                         UIHelper.toastMessage(getActivity(), "获取commit详情失败");
                     }
                 });

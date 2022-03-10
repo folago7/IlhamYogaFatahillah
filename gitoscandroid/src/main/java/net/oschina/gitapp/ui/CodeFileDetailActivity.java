@@ -9,8 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
-
 import net.oschina.gitapp.AppConfig;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
@@ -26,9 +24,12 @@ import net.oschina.gitapp.util.MarkdownUtils;
 import net.oschina.gitapp.util.SourceEditor;
 import net.oschina.gitapp.widget.TipInfoLayout;
 
+import org.kymjs.kjframe.http.HttpCallBack;
+
+import java.util.Map;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import cz.msebera.android.httpclient.Header;
 
 /**
  * 代码文件详情
@@ -173,11 +174,12 @@ public class CodeFileDetailActivity extends BaseActivity {
 
     private void loadCode(final String projectId, final String path,
                           final String ref_name) {
-        GitOSCApi.getCodeFileDetail(projectId, path, ref_name, new AsyncHttpResponseHandler() {
+        GitOSCApi.getCodeFileDetail(projectId, path, ref_name, new HttpCallBack() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            public void onSuccess(Map<String, String> headers, byte[] t) {
+                super.onSuccess(headers, t);
                 webview.setVisibility(View.VISIBLE);
-                CodeFile codeFile = JsonUtils.toBean(CodeFile.class, responseBody);
+                CodeFile codeFile = JsonUtils.toBean(CodeFile.class, t);
                 mCodeFile = codeFile;
                 editor.setMarkdown(MarkdownUtils.isMarkdown(mPath));
                 editor.setSource(mPath, mCodeFile);
@@ -186,15 +188,15 @@ public class CodeFileDetailActivity extends BaseActivity {
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, 
-                                  Throwable error) {
+            public void onFailure(int errorNo, String strMsg) {
+                super.onFailure(errorNo, strMsg);
                 webview.setVisibility(View.GONE);
                 tipInfo.setLoadError();
             }
 
             @Override
-            public void onStart() {
-                super.onStart();
+            public void onPreStart() {
+                super.onPreStart();
                 tipInfo.setLoading();
                 webview.setVisibility(View.GONE);
             }

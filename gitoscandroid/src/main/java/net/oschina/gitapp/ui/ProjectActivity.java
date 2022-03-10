@@ -15,8 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
-
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.GitOSCApi;
@@ -32,10 +30,13 @@ import net.oschina.gitapp.util.TypefaceUtils;
 import net.oschina.gitapp.widget.TipInfoLayout;
 
 
+import org.kymjs.kjframe.http.HttpCallBack;
+
+import java.util.Map;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import cz.msebera.android.httpclient.Header;
 
 /**
  * 项目详情界面
@@ -132,9 +133,12 @@ public class ProjectActivity extends BaseActivity implements
 
         // set font icon
         TypefaceUtils.setFontAwsome((TextView) findView(R.id.fi_time));
-        TypefaceUtils.setSemantic((TextView) findView(R.id.fi_ower), (TextView) findView(R.id.fi_language),
-                (TextView) findView(R.id.fi_lock), (TextView) findView(R.id.fi_fork), (TextView) findView(R.id.fi_ll_fork));
-        TypefaceUtils.setOcticons((TextView) findView(R.id.fi_readme), (TextView) findView(R.id.fi_code),
+        TypefaceUtils.setSemantic((TextView) findView(R.id.fi_ower), (TextView) findView(R.id
+                        .fi_language),
+                (TextView) findView(R.id.fi_lock), (TextView) findView(R.id.fi_fork), (TextView)
+                        findView(R.id.fi_ll_fork));
+        TypefaceUtils.setOcticons((TextView) findView(R.id.fi_readme), (TextView) findView(R.id
+                        .fi_code),
                 (TextView) findView(R.id.fi_commit), (TextView) findView(R.id.fi_issue));
 
         tipInfo.setOnClick(new OnClickListener() {
@@ -168,7 +172,8 @@ public class ProjectActivity extends BaseActivity implements
         initForkMess();
 
         // 记录项目的地址链接：
-        url_link = GitOSCApi.NO_API_BASE_URL + mProject.getOwner().getUsername() + "/" + mProject.getPath();
+        url_link = GitOSCApi.NO_API_BASE_URL + mProject.getOwner().getUsername() + "/" + mProject
+                .getPath();
         // 截取屏幕
         Handler mHandler = new Handler();
         mHandler.postDelayed(new Runnable() {
@@ -258,10 +263,12 @@ public class ProjectActivity extends BaseActivity implements
         switch (id) {
             case R.id.share:
                 UIHelper.showShareOption(ProjectActivity.this, mProject.getName(), url_link,
-                        "我在关注《" + mProject.getOwner().getName() + "的项目" + mProject.getName() + "》" + "，你也来瞧瞧呗！", bitmap);
+                        "我在关注《" + mProject.getOwner().getName() + "的项目" + mProject.getName() +
+                                "》" + "，你也来瞧瞧呗！", bitmap);
                 break;
             case R.id.copy:
-                ClipboardManager cbm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipboardManager cbm = (ClipboardManager) getSystemService(Context
+                        .CLIPBOARD_SERVICE);
                 cbm.setText(url_link);
                 UIHelper.toastMessage(mAppContext, "已复制到剪贴板");
                 break;
@@ -320,12 +327,13 @@ public class ProjectActivity extends BaseActivity implements
     }
 
     private void loadProject(final int action, final String projectId) {
-        GitOSCApi.getProject(projectId, new AsyncHttpResponseHandler() {
+        GitOSCApi.getProject(projectId, new HttpCallBack() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            public void onSuccess(Map<String, String> headers, byte[] t) {
+                super.onSuccess(headers, t);
                 content.setVisibility(View.VISIBLE);
                 tipInfo.setHiden();
-                Project p = JsonUtils.toBean(Project.class, responseBody);
+                Project p = JsonUtils.toBean(Project.class, t);
                 if (p != null) {
 
                     if (action == ACTION_LOAD_PROJECT) {
@@ -338,15 +346,16 @@ public class ProjectActivity extends BaseActivity implements
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            public void onFailure(int errorNo, String strMsg) {
+                super.onFailure(errorNo, strMsg);
                 if (action == ACTION_LOAD_PROJECT) {
                     tipInfo.setLoadError();
                 }
             }
 
             @Override
-            public void onStart() {
-                super.onStart();
+            public void onPreStart() {
+                super.onPreStart();
                 tipInfo.setLoading();
             }
         });
@@ -357,12 +366,12 @@ public class ProjectActivity extends BaseActivity implements
             setProjectNotFound();
             return;
         }
-        GitOSCApi.getProject(userName, projectName, new AsyncHttpResponseHandler() {
+        GitOSCApi.getProject(userName, projectName, new HttpCallBack() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            public void onSuccess(Map<String, String> headers, byte[] t) {
                 content.setVisibility(View.VISIBLE);
                 tipInfo.setHiden();
-                Project p = JsonUtils.toBean(Project.class, responseBody);
+                Project p = JsonUtils.toBean(Project.class, t);
                 if (p != null) {
                     mProject = p;
                     initData();
@@ -370,16 +379,17 @@ public class ProjectActivity extends BaseActivity implements
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            public void onFailure(int errorNo, String strMsg) {
+                super.onFailure(errorNo, strMsg);
                 tipInfo.setLoadError();
-                if (statusCode == 404) {
+                if (errorNo == 404) {
                     setProjectNotFound();
                 }
             }
 
             @Override
-            public void onStart() {
-                super.onStart();
+            public void onPreStart() {
+                super.onPreStart();
                 tipInfo.setLoading();
             }
 
@@ -413,12 +423,14 @@ public class ProjectActivity extends BaseActivity implements
                 break;
             case R.id.ll_owner:
                 if (mProject.getOwner() != null) {
-                    UIHelper.showUserInfoDetail(ProjectActivity.this, mProject.getOwner(), mProject.getOwner().getId());
+                    UIHelper.showUserInfoDetail(ProjectActivity.this, mProject.getOwner(),
+                            mProject.getOwner().getId());
                 }
                 break;
             case R.id.ll_fork_from:
                 if (mProject.getParent_id() != null) {
-                    UIHelper.showProjectDetail(ProjectActivity.this, null, mProject.getParent_id() + "");
+                    UIHelper.showProjectDetail(ProjectActivity.this, null, mProject.getParent_id
+                            () + "");
                 }
                 break;
             case R.id.ll_readme:
@@ -428,10 +440,12 @@ public class ProjectActivity extends BaseActivity implements
                 UIHelper.showProjectCodeActivity(ProjectActivity.this, mProject);
                 break;
             case R.id.ll_commits:
-                UIHelper.showProjectListActivity(ProjectActivity.this, mProject, ProjectSomeInfoListActivity.PROJECT_LIST_TYPE_COMMITS);
+                UIHelper.showProjectListActivity(ProjectActivity.this, mProject,
+                        ProjectSomeInfoListActivity.PROJECT_LIST_TYPE_COMMITS);
                 break;
             case R.id.ll_issues:
-                UIHelper.showProjectListActivity(ProjectActivity.this, mProject, ProjectSomeInfoListActivity.PROJECT_LIST_TYPE_ISSUES);
+                UIHelper.showProjectListActivity(ProjectActivity.this, mProject,
+                        ProjectSomeInfoListActivity.PROJECT_LIST_TYPE_ISSUES);
                 break;
         }
     }
@@ -453,11 +467,11 @@ public class ProjectActivity extends BaseActivity implements
         }
         final AlertDialog loadingDialog = LightProgressDialog.create(this, message);
 
-        AsyncHttpResponseHandler handler = new AsyncHttpResponseHandler() {
+        HttpCallBack handler = new HttpCallBack() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            public void onSuccess(Map<String, String> headers, byte[] t) {
                 String resMsg = "";
-                StarWatchOptionResult res = JsonUtils.toBean(StarWatchOptionResult.class, responseBody);
+                StarWatchOptionResult res = JsonUtils.toBean(StarWatchOptionResult.class, t);
                 if (res.getCount() > mProject.getWatches_count()) {
                     setWatched(true);
                     mProject.setWatched(true);
@@ -473,13 +487,14 @@ public class ProjectActivity extends BaseActivity implements
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            public void onFailure(int errorNo, String strMsg) {
+                super.onFailure(errorNo, strMsg);
                 UIHelper.toastMessage(mAppContext, "操作失败");
             }
 
             @Override
-            public void onStart() {
-                super.onStart();
+            public void onPreStart() {
+                super.onPreStart();
                 loadingDialog.show();
             }
 
@@ -511,11 +526,11 @@ public class ProjectActivity extends BaseActivity implements
             message = "正在star该项目...";
         }
         final AlertDialog loadingDialog = LightProgressDialog.create(this, message);
-        AsyncHttpResponseHandler handler = new AsyncHttpResponseHandler() {
+        HttpCallBack handler = new HttpCallBack() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            public void onSuccess(Map<String, String> headers, byte[] t) {
                 String resMsg = "";
-                StarWatchOptionResult res = JsonUtils.toBean(StarWatchOptionResult.class, responseBody);
+                StarWatchOptionResult res = JsonUtils.toBean(StarWatchOptionResult.class, t);
                 if (res.getCount() > mProject.getStars_count()) {
                     setStared(true);
                     mProject.setStared(true);
@@ -531,13 +546,8 @@ public class ProjectActivity extends BaseActivity implements
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-
-            }
-
-            @Override
-            public void onStart() {
-                super.onStart();
+            public void onPreStart() {
+                super.onPreStart();
                 loadingDialog.show();
             }
 
@@ -556,9 +566,6 @@ public class ProjectActivity extends BaseActivity implements
 
     @Override
     public boolean onMenuOpened(int featureId, Menu menu) {
-        if (mProject == null) {
-            return false;
-        }
-        return super.onMenuOpened(featureId, menu);
+        return mProject != null && super.onMenuOpened(featureId, menu);
     }
 }

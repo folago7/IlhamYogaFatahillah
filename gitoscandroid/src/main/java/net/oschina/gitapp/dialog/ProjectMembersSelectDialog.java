@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.widget.Toast;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
-
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.CommonAdapter;
 import net.oschina.gitapp.adapter.ViewHolder;
@@ -15,9 +13,10 @@ import net.oschina.gitapp.bean.ProjectMember;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.util.JsonUtils;
 
-import java.util.List;
+import org.kymjs.kjframe.http.HttpCallBack;
 
-import cz.msebera.android.httpclient.Header;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by 火蚁 on 15/4/24.
@@ -60,11 +59,12 @@ public class ProjectMembersSelectDialog {
     private void load(final String memberId) {
         final AlertDialog loading = LightProgressDialog.create(this.context, "加载项目成员中...");
 
-        GitOSCApi.getProjectMembers(this.pId, new AsyncHttpResponseHandler() {
+        GitOSCApi.getProjectMembers(this.pId, new HttpCallBack() {
+
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                List<ProjectMember> projectMembers = JsonUtils.getList(ProjectMember[].class,
-                        responseBody);
+            public void onSuccess(Map<String, String> headers, byte[] t) {
+                super.onSuccess(headers, t);
+                List<ProjectMember> projectMembers = JsonUtils.getList(ProjectMember[].class, t);
                 if (projectMembers != null && !projectMembers.isEmpty()) {
                     members = projectMembers;
                     show(memberId);
@@ -74,14 +74,14 @@ public class ProjectMembersSelectDialog {
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody,
-                                  Throwable error) {
+            public void onFailure(int errorNo, String strMsg) {
+                super.onFailure(errorNo, strMsg);
                 UIHelper.toastMessage(context, "加载项目成员失败");
             }
 
             @Override
-            public void onStart() {
-                super.onStart();
+            public void onPreStart() {
+                super.onPreStart();
                 loading.show();
             }
 

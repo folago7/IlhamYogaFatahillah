@@ -16,8 +16,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
-
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.ProjectCodeTreeAdapter;
@@ -34,22 +32,24 @@ import net.oschina.gitapp.util.JsonUtils;
 import net.oschina.gitapp.util.TypefaceUtils;
 import net.oschina.gitapp.widget.TipInfoLayout;
 
+import org.kymjs.kjframe.http.HttpCallBack;
+
 import java.io.File;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import cz.msebera.android.httpclient.Header;
 
 /**
  * 仓库代码
  * Created by 火蚁 on 15/4/21.
  */
-public class ProjectCodeActivity extends BaseActivity implements View.OnClickListener, 
+public class ProjectCodeActivity extends BaseActivity implements View.OnClickListener,
         AdapterView.OnItemClickListener {
 
     @InjectView(R.id.tv_paths)
@@ -114,64 +114,65 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
      * 加载代码树
      */
     private void loadCode(final String path, final boolean refresh) {
-        GitOSCApi.getProjectCodeTree(project.getId(), getPath() + path, refName, new 
-                AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                if (!refresh) {
-                    paths.push(path);
-                }
-                checkShowPaths();
-                tipInfo.setHiden();
-                List<CodeTree> list = JsonUtils.getList(CodeTree[].class, responseBody);
-                if (list != null && !list.isEmpty()) {
-                    if (refresh) {
-                        if (!codeFloders.isEmpty()) {
-                            codeFloders.pop();
+        GitOSCApi.getProjectCodeTree(project.getId(), getPath() + path, refName, new
+                HttpCallBack() {
+                    @Override
+                    public void onSuccess(Map<String, String> headers, byte[] t) {
+                        super.onSuccess(headers, t);
+                        if (!refresh) {
+                            paths.push(path);
+                        }
+                        checkShowPaths();
+                        tipInfo.setHiden();
+                        List<CodeTree> list = JsonUtils.getList(CodeTree[].class, t);
+                        if (list != null && !list.isEmpty()) {
+                            if (refresh) {
+                                if (!codeFloders.isEmpty()) {
+                                    codeFloders.pop();
+                                }
+                            }
+                            codeFloders.push(list);
+                            switchBranch.setVisibility(View.VISIBLE);
+                            listView.setVisibility(View.VISIBLE);
+                            codeTreeAdapter.clear();
+                            codeTreeAdapter.addItem(list);
+                        } else {
+                            UIHelper.toastMessage(ProjectCodeActivity.this, "该文件夹下面暂无文件");
                         }
                     }
-                    codeFloders.push(list);
-                    switchBranch.setVisibility(View.VISIBLE);
-                    listView.setVisibility(View.VISIBLE);
-                    codeTreeAdapter.clear();
-                    codeTreeAdapter.addItem(list);
-                } else {
-                    UIHelper.toastMessage(ProjectCodeActivity.this, "该文件夹下面暂无文件");
-                }
-            }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, 
-                                  Throwable error) {
-                if (!paths.isEmpty()) {
-                    paths.pop();
-                }
-                if (path.isEmpty()) {
-                    tipInfo.setLoadError("加载代码失败");
-                } else {
-                    UIHelper.toastMessage(ProjectCodeActivity.this, "加载代码失败");
-                }
-            }
+                    @Override
+                    public void onFailure(int errorNo, String strMsg) {
+                        super.onFailure(errorNo, strMsg);
+                        if (!paths.isEmpty()) {
+                            paths.pop();
+                        }
+                        if (path.isEmpty()) {
+                            tipInfo.setLoadError("加载代码失败");
+                        } else {
+                            UIHelper.toastMessage(ProjectCodeActivity.this, "加载代码失败");
+                        }
+                    }
 
-            @Override
-            public void onStart() {
-                super.onStart();
-                isLoading = true;
-                if (path.isEmpty() || refresh) {
-                    tipInfo.setLoading();
-                } else {
-                    MenuItemCompat.setActionView(optionsMenu.findItem(0), R.layout
-                            .actionbar_indeterminate_progress);
-                }
-            }
+                    @Override
+                    public void onPreStart() {
+                        super.onPreStart();
+                        isLoading = true;
+                        if (path.isEmpty() || refresh) {
+                            tipInfo.setLoading();
+                        } else {
+                            MenuItemCompat.setActionView(optionsMenu.findItem(0), R.layout
+                                    .actionbar_indeterminate_progress);
+                        }
+                    }
 
-            @Override
-            public void onFinish() {
-                super.onFinish();
-                isLoading = false;
-                MenuItemCompat.setActionView(optionsMenu.findItem(0), null);
-            }
-        });
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        isLoading = false;
+                        MenuItemCompat.setActionView(optionsMenu.findItem(0), null);
+                    }
+                });
     }
 
 

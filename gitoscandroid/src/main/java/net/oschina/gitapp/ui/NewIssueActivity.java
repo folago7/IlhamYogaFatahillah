@@ -12,8 +12,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
-
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.Issue;
@@ -27,11 +25,13 @@ import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 import net.oschina.gitapp.util.JsonUtils;
 import net.oschina.gitapp.util.TypefaceUtils;
 
+import org.kymjs.kjframe.http.HttpCallBack;
+
+import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by 火蚁 on 15/4/23.
@@ -170,10 +170,11 @@ public class NewIssueActivity extends BaseActivity implements View.OnClickListen
         String desc = etDesc.getText().toString();
         final AlertDialog pubing = LightProgressDialog.create(this, "提交中...");
         GitOSCApi.pubCreateIssue(mProject.getId(), title, desc, memberId, "", new
-                AsyncHttpResponseHandler() {
+                HttpCallBack() {
                     @Override
-                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                        Issue issue = JsonUtils.toBean(Issue.class, responseBody);
+                    public void onSuccess(Map<String, String> headers, byte[] t) {
+                        super.onSuccess(headers, t);
+                        Issue issue = JsonUtils.toBean(Issue.class, t);
                         if (issue != null) {
                             UIHelper.toastMessage(NewIssueActivity.this, "创建成功");
                             NewIssueActivity.this.finish();
@@ -183,14 +184,14 @@ public class NewIssueActivity extends BaseActivity implements View.OnClickListen
                     }
 
                     @Override
-                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody,
-                                          Throwable error) {
+                    public void onFailure(int errorNo, String strMsg) {
+                        super.onFailure(errorNo, strMsg);
                         UIHelper.toastMessage(NewIssueActivity.this, "issue创建失败");
                     }
 
                     @Override
-                    public void onStart() {
-                        super.onStart();
+                    public void onPreStart() {
+                        super.onPreStart();
                         pubing.show();
                     }
 

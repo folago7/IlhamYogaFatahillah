@@ -17,44 +17,44 @@ import java.lang.reflect.Method;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
-	// 是否可以返回
-	protected static boolean isCanBack;
-	
-	protected ActionBar mActionBar;
+    // 是否可以返回
+    protected static boolean isCanBack;
 
-	protected String mTitle;
-	
-	protected String mSubTitle;
-	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		initActionBar();
-		//将activity加入到AppManager堆栈中
-		AppManager.getAppManager().addActivity(this);
-	}
+    protected ActionBar mActionBar;
 
-	// 关闭该Activity
-	@Override
-	public boolean onSupportNavigateUp() {
-		finish();
-		return super.onSupportNavigateUp();
-	}
-	
-	// 初始化ActionBar
-	private void initActionBar() {
-		mActionBar = getSupportActionBar();
-		int flags = ActionBar.DISPLAY_HOME_AS_UP;
-		int change = mActionBar.getDisplayOptions() ^ flags;
-		// 设置返回的图标
-		mActionBar.setDisplayOptions(change, flags);
+    protected String mTitle;
+
+    protected String mSubTitle;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        initActionBar();
+        //将activity加入到AppManager堆栈中
+        AppManager.getAppManager().addActivity(this);
+    }
+
+    // 关闭该Activity
+    @Override
+    public boolean onSupportNavigateUp() {
+        finish();
+        return super.onSupportNavigateUp();
+    }
+
+    // 初始化ActionBar
+    private void initActionBar() {
+        mActionBar = getSupportActionBar();
+        int flags = ActionBar.DISPLAY_HOME_AS_UP;
+        int change = mActionBar.getDisplayOptions() ^ flags;
+        // 设置返回的图标
+        mActionBar.setDisplayOptions(change, flags);
         if (mTitle != null && !StringUtils.isEmpty(mTitle)) {
             mActionBar.setTitle(mTitle);
         }
         if (mSubTitle != null && !StringUtils.isEmpty(mSubTitle)) {
             mActionBar.setSubtitle(mSubTitle);
         }
-	}
+    }
 
     public void setActionBarTitle(String title) {
         mActionBar.setTitle(title);
@@ -65,28 +65,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected <T extends View> T findView(int id) {
-        return (T)findViewById(id);
+        return (T) findViewById(id);
     }
 
     @Override
     public boolean onMenuOpened(int featureId, Menu menu) {
         //setOverflowIconVisible(featureId, menu);
         return super.onMenuOpened(featureId, menu);
-    }
-
-    // 显示出菜单的icon
-    protected void setOverflowIconVisible(int featureId, Menu menu) {
-        if (featureId == Window.FEATURE_ACTION_BAR && menu != null) {
-            if (menu.getClass().getSimpleName().equals("MenuBuilder")) {
-                try {
-                    Method m = menu.getClass().getDeclaredMethod("setOptionalIconsVisible", Boolean.TYPE);
-                    m.setAccessible(true);
-                    m.invoke(menu, true);
-                } catch (Exception e) {
-
-                }
-            }
-        }
     }
 
     @Override

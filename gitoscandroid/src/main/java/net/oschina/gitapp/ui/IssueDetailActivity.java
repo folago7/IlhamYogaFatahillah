@@ -7,8 +7,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.View;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
-
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.Issue;
@@ -19,10 +17,12 @@ import net.oschina.gitapp.ui.fragments.IssueDetailViewPagerFragment;
 import net.oschina.gitapp.util.JsonUtils;
 import net.oschina.gitapp.widget.TipInfoLayout;
 
+import org.kymjs.kjframe.http.HttpCallBack;
+
+import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import cz.msebera.android.httpclient.Header;
 
 /**
  * issue详情activity
@@ -76,7 +76,8 @@ public class IssueDetailActivity extends BaseActivity {
                 + mProject.getName());
         tipInfo.setHiden();
         FragmentTransaction ft = mFragmentManager.beginTransaction();
-        ft.replace(R.id.issue_content, IssueDetailViewPagerFragment.newInstance(mProject, mIssue)).commit();
+        ft.replace(R.id.issue_content, IssueDetailViewPagerFragment.newInstance(mProject, mIssue)
+        ).commit();
     }
 
     @Override
@@ -85,16 +86,18 @@ public class IssueDetailActivity extends BaseActivity {
     }
 
     private void loadIssueAndProject(final String projectId, final String issueId) {
-        GitOSCApi.getProject(projectId, new AsyncHttpResponseHandler() {
+        GitOSCApi.getProject(projectId, new HttpCallBack() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                Project p = JsonUtils.toBean(Project.class, responseBody);
+            public void onSuccess(Map<String, String> headers, byte[] t) {
+                super.onSuccess(headers, t);
+                Project p = JsonUtils.toBean(Project.class, t);
                 if (p != null) {
                     mProject = p;
-                    GitOSCApi.getIssueDetail(projectId, issueId, new AsyncHttpResponseHandler() {
+                    GitOSCApi.getIssueDetail(projectId, issueId, new HttpCallBack() {
                         @Override
-                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                            Issue issue = JsonUtils.toBean(Issue.class, responseBody);
+                        public void onSuccess(Map<String, String> headers, byte[] t) {
+                            super.onSuccess(headers, t);
+                            Issue issue = JsonUtils.toBean(Issue.class, t);
                             if (issue != null) {
                                 mIssue = issue;
                                 initData();
@@ -104,7 +107,8 @@ public class IssueDetailActivity extends BaseActivity {
                         }
 
                         @Override
-                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                        public void onFailure(int errorNo, String strMsg) {
+                            super.onFailure(errorNo, strMsg);
                             setLoadError();
                         }
 
@@ -119,14 +123,16 @@ public class IssueDetailActivity extends BaseActivity {
                 }
             }
 
+
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            public void onFailure(int errorNo, String strMsg) {
+                super.onFailure(errorNo, strMsg);
                 setLoadError();
             }
 
             @Override
-            public void onStart() {
-                super.onStart();
+            public void onPreStart() {
+                super.onPreStart();
                 tipInfo.setLoading();
             }
 

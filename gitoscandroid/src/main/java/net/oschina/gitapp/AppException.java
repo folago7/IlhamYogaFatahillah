@@ -14,11 +14,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.net.ConnectException;
-import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Date;
-
-import cz.msebera.android.httpclient.HttpException;
 
 /**
  * 应用程序异常类：用于捕获异常和提示错误信息
@@ -205,18 +202,6 @@ public class AppException extends Exception implements UncaughtExceptionHandler 
 
     public static AppException xml(Exception e) {
         return new AppException(TYPE_XML, 0, e);
-    }
-
-    // 网络请求异常
-    public static AppException network(Exception e) {
-        if (e instanceof UnknownHostException || e instanceof ConnectException) {
-            return new AppException(TYPE_NETWORK, 0, e);
-        } else if (e instanceof HttpException) {
-            return http(e);
-        } else if (e instanceof SocketException) {
-            return socket(e);
-        }
-        return http(e);
     }
 
     public static AppException run(Exception e) {

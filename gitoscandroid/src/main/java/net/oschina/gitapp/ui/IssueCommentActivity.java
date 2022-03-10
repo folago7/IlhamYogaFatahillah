@@ -10,8 +10,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
-
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.Issue;
@@ -22,7 +20,9 @@ import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.dialog.LightProgressDialog;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 
-import cz.msebera.android.httpclient.Header;
+import org.kymjs.kjframe.http.HttpCallBack;
+
+import java.util.Map;
 
 
 /**
@@ -113,21 +113,22 @@ public class IssueCommentActivity extends BaseActivity implements OnClickListene
         final AlertDialog pubing = LightProgressDialog.create(this, "提交评论中...");
 
         GitOSCApi.pubIssueComment(mProject.getId(), mIssue.getId(), mCommentContent.getText()
-                .toString(), new AsyncHttpResponseHandler() {
+                .toString(), new HttpCallBack() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            public void onSuccess(Map<String, String> headers, byte[] t) {
+                super.onSuccess(headers, t);
                 UIHelper.toastMessage(IssueCommentActivity.this, "评论成功");
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, 
-                                  Throwable error) {
+            public void onFailure(int errorNo, String strMsg) {
+                super.onFailure(errorNo, strMsg);
                 UIHelper.toastMessage(IssueCommentActivity.this, "评论失败");
             }
 
             @Override
-            public void onStart() {
-                super.onStart();
+            public void onPreStart() {
+                super.onPreStart();
                 pubing.show();
             }
 

@@ -3,12 +3,11 @@ package net.oschina.gitapp.ui;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
-
-import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
@@ -21,10 +20,12 @@ import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 import net.oschina.gitapp.util.SourceEditor;
 import net.oschina.gitapp.widget.TipInfoLayout;
 
+import org.kymjs.kjframe.http.HttpCallBack;
+
+import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import cz.msebera.android.httpclient.Header;
 
 /**
  * 代码文件详情
@@ -104,19 +105,21 @@ public class CommitFileDetailActivity extends BaseActivity {
 
     private void loadCode(final String projectId, final String commitId, final String filePath) {
 
-        GitOSCApi.getCommitFileDetail(projectId, commitId, filePath, new AsyncHttpResponseHandler() {
+        GitOSCApi.getCommitFileDetail(projectId, commitId, filePath, new HttpCallBack() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                String body = new String(responseBody);
-                if (body != null) {
+            public void onSuccess(Map<String, String> headers, byte[] t) {
+                super.onSuccess(headers, t);
+                String body = new String(t);
+                if (!TextUtils.isEmpty(body)) {
                     webview.setVisibility(View.VISIBLE);
                     mEditor.setSource(filePath, body, false);
                 }
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                if (statusCode == 404) {
+            public void onFailure(int errorNo, String strMsg) {
+                super.onFailure(errorNo, strMsg);
+                if (errorNo == 404) {
                     tipInfo.setLoadError("读取失败，文件可能已被删除");
                 } else {
                     tipInfo.setLoadError();
@@ -124,8 +127,8 @@ public class CommitFileDetailActivity extends BaseActivity {
             }
 
             @Override
-            public void onStart() {
-                super.onStart();
+            public void onPreStart() {
+                super.onPreStart();
                 webview.setVisibility(View.GONE);
                 tipInfo.setLoading();
             }

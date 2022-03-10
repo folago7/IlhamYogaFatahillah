@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 import net.oschina.gitapp.AppContext;
@@ -33,13 +32,15 @@ import net.oschina.gitapp.util.JsonUtils;
 import net.oschina.gitapp.widget.ActionSheet;
 import net.oschina.gitapp.widget.CircleImageView;
 
+import org.kymjs.kjframe.http.HttpCallBack;
+
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by 火蚁 on 15/5/4.
@@ -287,16 +288,17 @@ public class MyInfoDetailActivity extends BaseActivity implements View.OnClickLi
         final AlertDialog loading = LightProgressDialog.create(this, "正在上传头像...");
         loading.setCanceledOnTouchOutside(false);
         try {
-            GitOSCApi.upLoadFile(protraitFile, new AsyncHttpResponseHandler() {
+            GitOSCApi.upLoadFile(protraitFile, new HttpCallBack() {
                 @Override
-                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                    UpLoadFile upLoadFile = JsonUtils.toBean(UpLoadFile.class, responseBody);
+                public void onSuccess(Map<String, String> headers, byte[] t) {
+                    super.onSuccess(headers, t);
+                    UpLoadFile upLoadFile = JsonUtils.toBean(UpLoadFile.class, t);
                     if (upLoadFile != null && upLoadFile.isSuccess()) {
                         final String protraitUrl = upLoadFile.getFile().getUrl();
-                        GitOSCApi.updateUserProtrait(protraitUrl, new AsyncHttpResponseHandler() {
+                        GitOSCApi.updateUserProtrait(protraitUrl, new HttpCallBack() {
                             @Override
-                            public void onSuccess(int statusCode, Header[] headers, byte[]
-                                    responseBody) {
+                            public void onSuccess(Map<String, String> headers, byte[] t) {
+                                super.onSuccess(headers, t);
                                 UIHelper.toastMessage(MyInfoDetailActivity.this, "头像已更新");
                                 ivPortrait.setImageBitmap(protraitBitmap);
                                 AppContext.getInstance().setProperty(Contanst
@@ -306,9 +308,9 @@ public class MyInfoDetailActivity extends BaseActivity implements View.OnClickLi
                             }
 
                             @Override
-                            public void onFailure(int statusCode, Header[] headers, byte[]
-                                    responseBody, Throwable error) {
-                                UIHelper.toastMessage(MyInfoDetailActivity.this, statusCode +
+                            public void onFailure(int errorNo, String strMsg) {
+                                super.onFailure(errorNo, strMsg);
+                                UIHelper.toastMessage(MyInfoDetailActivity.this, errorNo +
                                         "更新头像失败");
                             }
 
@@ -319,8 +321,8 @@ public class MyInfoDetailActivity extends BaseActivity implements View.OnClickLi
                             }
 
                             @Override
-                            public void onStart() {
-                                super.onStart();
+                            public void onPreStart() {
+                                super.onPreStart();
                                 loading.setMessage("正在更新头像...");
                             }
                         });
@@ -330,14 +332,14 @@ public class MyInfoDetailActivity extends BaseActivity implements View.OnClickLi
                 }
 
                 @Override
-                public void onFailure(int statusCode, Header[] headers, byte[] responseBody,
-                                      Throwable error) {
+                public void onFailure(int errorNo, String strMsg) {
+                    super.onFailure(errorNo, strMsg);
                     UIHelper.toastMessage(MyInfoDetailActivity.this, "上传图片失败, 网络错误");
                 }
 
                 @Override
-                public void onStart() {
-                    super.onStart();
+                public void onPreStart() {
+                    super.onPreStart();
                     loading.show();
                 }
 

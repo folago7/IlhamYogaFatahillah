@@ -10,8 +10,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
-
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.GitOSCApi;
@@ -23,7 +21,9 @@ import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.dialog.LightProgressDialog;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 
-import cz.msebera.android.httpclient.Header;
+import org.kymjs.kjframe.http.HttpCallBack;
+
+import java.util.Map;
 
 
 public class CodeFileEditActivity extends BaseActivity implements OnClickListener {
@@ -115,10 +115,11 @@ public class CodeFileEditActivity extends BaseActivity implements OnClickListene
 
 
         GitOSCApi.updateRepositoryFiles(mProject.getId(), mBranch, mPath, mBranch, content,
-                commit_message, new AsyncHttpResponseHandler() {
+                commit_message, new HttpCallBack() {
                     @Override
-                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                        if (responseBody != null && responseBody.length != 0) {
+                    public void onSuccess(Map<String, String> headers, byte[] t) {
+                        super.onSuccess(headers, t);
+                        if (t != null && t.length != 0) {
                             UIHelper.toastMessage(mAppContext, "提交成功");
                             CodeFileEditActivity.this.finish();
                         } else {
@@ -127,8 +128,8 @@ public class CodeFileEditActivity extends BaseActivity implements OnClickListene
                     }
 
                     @Override
-                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody,
-                                          Throwable error) {
+                    public void onFailure(int errorNo, String strMsg) {
+                        super.onFailure(errorNo, strMsg);
                         UIHelper.toastMessage(mAppContext, "提交失败");
                     }
 
@@ -139,8 +140,8 @@ public class CodeFileEditActivity extends BaseActivity implements OnClickListene
                     }
 
                     @Override
-                    public void onStart() {
-                        super.onStart();
+                    public void onPreStart() {
+                        super.onPreStart();
                         pubing.show();
                     }
                 });

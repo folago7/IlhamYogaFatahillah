@@ -13,8 +13,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
-
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.CommonAdapter;
 import net.oschina.gitapp.bean.Entity;
@@ -22,9 +20,10 @@ import net.oschina.gitapp.bean.MessageData;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.widget.TipInfoLayout;
 
-import java.util.List;
+import org.kymjs.kjframe.http.HttpCallBack;
 
-import cz.msebera.android.httpclient.Header;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 说明 下拉刷新界面的基类
@@ -68,29 +67,29 @@ public abstract class BaseSwipeRefreshFragment<T extends Entity>
 
     private boolean isFrist = true;
 
-    protected AsyncHttpResponseHandler mHandler = new AsyncHttpResponseHandler() {
+    protected HttpCallBack mHandler = new HttpCallBack() {
         @Override
-        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+        public void onSuccess(Map<String, String> headers, byte[] t) {
+            super.onSuccess(headers, t);
             mTipInfo.setHiden();
             mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-            loadDataSuccess(getDatas(responseBody));
+            loadDataSuccess(getDatas(t));
             isFrist = false;
         }
 
         @Override
-        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable
-                error) {
+        public void onFailure(int errorNo, String strMsg) {
+            super.onFailure(errorNo, strMsg);
             mTipInfo.setLoadError();
             UIHelper.toastMessage(getActivity(), "网络错误");
         }
 
         @Override
-        public void onStart() {
+        public void onPreStart() {
             if (isFrist || mAdapter.getCount() == 0) {
                 mTipInfo.setLoading();
             }
-
-            super.onStart();
+            super.onPreStart();
         }
 
         @Override

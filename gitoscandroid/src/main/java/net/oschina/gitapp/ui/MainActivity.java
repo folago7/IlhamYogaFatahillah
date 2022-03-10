@@ -17,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.blueware.agent.android.BlueWare;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.umeng.analytics.MobclickAgent;
 
 import net.oschina.gitapp.AppContext;
@@ -33,15 +32,17 @@ import net.oschina.gitapp.ui.fragments.ExploreViewPagerFragment;
 import net.oschina.gitapp.ui.fragments.MySelfViewPagerFragment;
 import net.oschina.gitapp.util.JsonUtils;
 
-import java.util.List;
+import org.kymjs.kjframe.http.HttpCallBack;
 
-import cz.msebera.android.httpclient.Header;
+import java.util.List;
+import java.util.Map;
+
 
 /**
  * 程序主界面
  *
  * @author 火蚁（http://my.oschina.net/LittleDY）
- *         <p>
+ *         <p/>
  *         最后更新：2014-05-29
  *         更新内容：更改以callBack的方式进行交互
  *         更新者：火蚁
@@ -148,11 +149,12 @@ public class MainActivity extends AppCompatActivity implements
         mCurrentContentTag = CONTENT_TAG_EXPLORE;
     }
 
-    private AsyncHttpResponseHandler noticeHandler = new AsyncHttpResponseHandler() {
+    private HttpCallBack noticeHandler = new HttpCallBack() {
         @Override
-        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+        public void onSuccess(Map<String, String> headers, byte[] t) {
+            super.onSuccess(headers, t);
             List<ProjectNotificationArray> notificationArrays = JsonUtils.getList
-                    (ProjectNotificationArray[].class, responseBody);
+                    (ProjectNotificationArray[].class, t);
             if (notificationArrays == null || notificationArrays.isEmpty()) {
                 return;
             }
@@ -163,10 +165,6 @@ public class MainActivity extends AppCompatActivity implements
             UIHelper.sendBroadCast(MainActivity.this, count);
         }
 
-        @Override
-        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable
-                error) {
-        }
     };
 
     /**
@@ -336,10 +334,6 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onClickScan() {
-        //zxing包中定义,暂时无用
-//        Intent intent = new Intent();
-//        intent.setClass(this, CaptureActivity.class);
-//        startActivity(intent);
     }
 
     @Override

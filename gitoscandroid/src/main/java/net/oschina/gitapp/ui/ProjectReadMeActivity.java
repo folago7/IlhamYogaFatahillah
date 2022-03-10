@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebView;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.GitOSCApi;
@@ -17,10 +16,12 @@ import net.oschina.gitapp.util.JsonUtils;
 import net.oschina.gitapp.widget.TipInfoLayout;
 
 
+import org.kymjs.kjframe.http.HttpCallBack;
+
+import java.util.Map;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import cz.msebera.android.httpclient.Header;
-import cz.msebera.android.httpclient.protocol.HTTP;
 
 /**
  * 项目ReadMe文件详情
@@ -36,7 +37,8 @@ public class ProjectReadMeActivity extends BaseActivity {
     WebView webView;
     private Project mProject;
 
-    public String linkCss = "<link rel=\"stylesheet\" type=\"text/css\" href=\"file:///android_asset/readme_style.css\">";
+    public String linkCss = "<link rel=\"stylesheet\" type=\"text/css\" " +
+            "href=\"file:///android_asset/readme_style.css\">";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,28 +65,31 @@ public class ProjectReadMeActivity extends BaseActivity {
     }
 
     private void loadData() {
-        GitOSCApi.getReadMeFile(mProject.getId(), new AsyncHttpResponseHandler() {
+        GitOSCApi.getReadMeFile(mProject.getId(), new HttpCallBack() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            public void onSuccess(Map<String, String> headers, byte[] t) {
+                super.onSuccess(headers, t);
                 tipInfo.setHiden();
-                ReadMe readMe = JsonUtils.toBean(ReadMe.class, responseBody);
+                ReadMe readMe = JsonUtils.toBean(ReadMe.class, t);
                 if (readMe != null && readMe.getContent() != null) {
                     webView.setVisibility(View.VISIBLE);
-                    String body = linkCss + "<div class='markdown-body'>" + readMe.getContent() + "</div>";
-                    webView.loadDataWithBaseURL(null, body, "text/html", HTTP.UTF_8, null);
+                    String body = linkCss + "<div class='markdown-body'>" + readMe.getContent() +
+                            "</div>";
+                    webView.loadDataWithBaseURL(null, body, "text/html", "utf-8", null);
                 } else {
                     tipInfo.setEmptyData("该项目暂无README.md");
                 }
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            public void onFailure(int errorNo, String strMsg) {
+                super.onFailure(errorNo, strMsg);
                 tipInfo.setLoadError();
             }
 
             @Override
-            public void onStart() {
-                super.onStart();
+            public void onPreStart() {
+                super.onPreStart();
                 tipInfo.setLoading();
                 webView.setVisibility(View.GONE);
             }

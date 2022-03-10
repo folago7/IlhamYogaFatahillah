@@ -6,8 +6,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
-
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.CommonAdapter;
 import net.oschina.gitapp.adapter.ProjectAdapter;
@@ -21,12 +19,13 @@ import net.oschina.gitapp.util.JsonUtils;
 import net.oschina.gitapp.widget.EnhanceListView;
 import net.oschina.gitapp.widget.TipInfoLayout;
 
+import org.kymjs.kjframe.http.HttpCallBack;
 
 import java.util.List;
+import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import cz.msebera.android.httpclient.Header;
 
 public class LanguageActivity extends BaseActivity implements
         ActionBar.OnNavigationListener, OnItemClickListener {
@@ -56,7 +55,8 @@ public class LanguageActivity extends BaseActivity implements
         mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         mProjectAdapter = new ProjectAdapter(this, R.layout.list_item_project);
 
-        mLanguageAdapter = new CommonAdapter<Language>(getApplicationContext(), R.layout.languages) {
+        mLanguageAdapter = new CommonAdapter<Language>(getApplicationContext(), R.layout
+                .languages) {
             @Override
             public void convert(ViewHolder vh, Language item) {
                 vh.setText(R.id.language_name, item.getName());
@@ -104,11 +104,12 @@ public class LanguageActivity extends BaseActivity implements
     }
 
     private void loadProjects(final String languageId, final int page) {
-        GitOSCApi.getLanguageProjectList(languageId, page, new AsyncHttpResponseHandler() {
+        GitOSCApi.getLanguageProjectList(languageId, page, new HttpCallBack() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            public void onSuccess(Map<String, String> headers, byte[] t) {
+                super.onSuccess(headers, t);
                 tipInfo.setHiden();
-                List<Project> projects = JsonUtils.getList(Project[].class, responseBody);
+                List<Project> projects = JsonUtils.getList(Project[].class, t);
                 if (projects != null && !projects.isEmpty()) {
                     listView.setVisibility(View.VISIBLE);
                     mProjectAdapter.addItem(projects);
@@ -120,13 +121,14 @@ public class LanguageActivity extends BaseActivity implements
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            public void onFailure(int errorNo, String strMsg) {
+                super.onFailure(errorNo, strMsg);
                 tipInfo.setLoadError();
             }
 
             @Override
-            public void onStart() {
-                super.onStart();
+            public void onPreStart() {
+                super.onPreStart();
                 if (page == 1) {
                     tipInfo.setLoading();
                     listView.setVisibility(View.GONE);
@@ -142,10 +144,11 @@ public class LanguageActivity extends BaseActivity implements
 
     // 加载语言列表
     private void loadLanguagesList() {
-        GitOSCApi.getLanguageList(new AsyncHttpResponseHandler() {
+        GitOSCApi.getLanguageList(new HttpCallBack() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                List<Language> languageList = JsonUtils.getList(Language[].class, responseBody);
+            public void onSuccess(Map<String, String> headers, byte[] t) {
+                super.onSuccess(headers, t);
+                List<Language> languageList = JsonUtils.getList(Language[].class, t);
                 if (languageList != null && !languageList.isEmpty()) {
                     mLanguageAdapter.addItem(languageList);
                 } else {
@@ -154,13 +157,14 @@ public class LanguageActivity extends BaseActivity implements
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            public void onFailure(int errorNo, String strMsg) {
+                super.onFailure(errorNo, strMsg);
                 setFooterNotLanguages();
             }
 
             @Override
-            public void onStart() {
-                super.onStart();
+            public void onPreStart() {
+                super.onPreStart();
                 tipInfo.setLoading();
             }
         });
