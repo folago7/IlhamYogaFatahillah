@@ -12,8 +12,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.GitOSCApi;
@@ -32,6 +30,7 @@ import net.oschina.gitapp.util.JsonUtils;
 import net.oschina.gitapp.widget.ActionSheet;
 import net.oschina.gitapp.widget.CircleImageView;
 
+import org.kymjs.kjframe.Core;
 import org.kymjs.kjframe.http.HttpCallBack;
 
 import java.io.File;
@@ -107,7 +106,7 @@ public class MyInfoDetailActivity extends BaseActivity implements View.OnClickLi
             if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
                 ivPortrait.setImageResource(R.drawable.mini_avatar);
             } else {
-                ImageLoader.getInstance().displayImage(mUser.getNew_portrait(), ivPortrait);
+                new Core.Builder().url(mUser.getNew_portrait()).view(ivPortrait).doTask();
             }
 
             tvFollowers.setText(mUser.getFollow().getFollowers() + "");

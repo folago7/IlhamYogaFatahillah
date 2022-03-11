@@ -9,12 +9,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.common.StringUtils;
-import net.oschina.gitapp.util.ImageLoaderUtils;
 import net.oschina.gitapp.util.TypefaceUtils;
+
+import org.kymjs.kjframe.Core;
 
 /**
  * 通用性极高的ViewHolder
@@ -42,14 +41,15 @@ public class ViewHolder {
     /**
      * 获取一个viewHolder
      *
-     * @param context context
+     * @param context     context
      * @param convertView view
-     * @param parent parent view
-     * @param layoutId 布局资源id
-     * @param position 索引
+     * @param parent      parent view
+     * @param layoutId    布局资源id
+     * @param position    索引
      * @return
      */
-    public static ViewHolder getViewHolder(Context context, View convertView, ViewGroup parent, int layoutId, int position) {
+    public static ViewHolder getViewHolder(Context context, View convertView, ViewGroup parent, 
+                                           int layoutId, int position) {
         if (convertView == null) {
             return new ViewHolder(context, parent, layoutId, position);
         }
@@ -116,8 +116,8 @@ public class ViewHolder {
     }
 
     /**
-     * @param viewId id
-     * @param text 内容
+     * @param viewId      id
+     * @param text        内容
      * @param semanticRes 资源
      */
     public void setTextWithSemantic(int viewId, String text, int semanticRes) {
@@ -142,7 +142,7 @@ public class ViewHolder {
         if (iv.getTag() == null || !iv.getTag().equals(imgUrl)) {
             iv.setImageResource(R.drawable.mini_avatar);
         }
-        ImageLoader.getInstance().displayImage(imgUrl, iv, ImageLoaderUtils.getOption());
+        new Core.Builder().url(imgUrl).view(iv).doTask();
         iv.setTag(imgUrl);
     }
 }

@@ -8,8 +8,6 @@ import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.Commit;
@@ -19,6 +17,8 @@ import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.basefragment.BaseFragment;
+
+import org.kymjs.kjframe.Core;
 
 
 /**
@@ -94,8 +94,7 @@ public class IssueDetailFragment extends BaseFragment {
     private void setIssueDetail() {
         mIssueTitle.setText(mIssue.getTitle());
         mIssueUserName.setText(mIssue.getAuthor().getName());
-        mIssueData.setText("创建于"
-                + StringUtils.friendly_time(mIssue.getCreatedAt()));
+        mIssueData.setText("创建于" + StringUtils.friendly_time(mIssue.getCreatedAt()));
         mWebView.loadDataWithBaseURL(null, UIHelper.WEB_STYLE + mIssue.getDescription(),
                 "text/html", "utf-8", null);
 
@@ -105,7 +104,7 @@ public class IssueDetailFragment extends BaseFragment {
             mIssueUserFace.setImageResource(R.drawable.mini_avatar);
         } else {
             String portraitURL = GitOSCApi.NO_API_BASE_URL + mIssue.getAuthor().getPortrait();
-            ImageLoader.getInstance().displayImage(portraitURL, mIssueUserFace);
+            new Core.Builder().url(portraitURL).view(mIssueUserFace).doTask();
         }
     }
 }

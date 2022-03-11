@@ -1,6 +1,5 @@
 package net.oschina.gitapp.api;
 
-import net.oschina.gitapp.AppException;
 import net.oschina.gitapp.bean.ShippingAddress;
 
 import org.kymjs.kjframe.Core;
@@ -206,14 +205,6 @@ public class GitOSCApi {
 
     /**
      * 创建一个issue
-     *
-     * @param projectId
-     * @param title
-     * @param description
-     * @param assignee_id
-     * @param milestone_id
-     * @return
-     * @throws AppException
      */
     public static void pubCreateIssue(String projectId, String title, String description, String 
             assignee_id, String milestone_id, HttpCallBack handler) {
@@ -227,8 +218,6 @@ public class GitOSCApi {
 
     /**
      * 上传文件
-     *
-     * @return
      */
     public static void upLoadFile(File file, HttpCallBack handler) throws FileNotFoundException {
         HttpParams params = AsyncHttpHelp.getHttpParams();
@@ -239,9 +228,6 @@ public class GitOSCApi {
 
     /***
      * 更新用户头像
-     *
-     * @param protraitUrl
-     * @param handler
      */
     public static void updateUserProtrait(String protraitUrl, HttpCallBack handler) {
         HttpParams params = AsyncHttpHelp.getHttpParams();
@@ -289,11 +275,6 @@ public class GitOSCApi {
 
     /**
      * 根据语言的ID获得项目的列表
-     *
-     * @param languageId
-     * @param page
-     * @return
-     * @throws AppException
      */
     public static void getLanguageProjectList(String languageId, int page, HttpCallBack handler) {
         HttpParams params = getPrivateTokenWithParams();
@@ -303,10 +284,6 @@ public class GitOSCApi {
 
     /**
      * star or unstar一个项目
-     *
-     * @param projectId
-     * @return
-     * @throws AppException
      */
     public static void starProject(String projectId, HttpCallBack handler) {
         HttpParams params = getPrivateTokenWithParams();
@@ -389,5 +366,4 @@ public class GitOSCApi {
         HttpParams params = getPrivateTokenWithParams();
         get(PROJECTS + "luck_msg", handler);
     }
-
 }

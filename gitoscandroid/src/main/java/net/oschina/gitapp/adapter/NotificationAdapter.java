@@ -9,15 +9,14 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.Notification;
 import net.oschina.gitapp.bean.ProjectNotification;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
+
+import org.kymjs.kjframe.Core;
 
 import java.util.List;
 
@@ -55,7 +54,8 @@ public class NotificationAdapter extends BaseExpandableListAdapter {
         public TextView date;//日期
     }
 
-    public NotificationAdapter(Context context, List<List<Notification>> data, List<ProjectNotification> mGroups) {
+    public NotificationAdapter(Context context, List<List<Notification>> data,
+                               List<ProjectNotification> mGroups) {
         this.mContext = context;
         this.mData = data;
         this.mInflater = LayoutInflater.from(mContext);
@@ -125,12 +125,8 @@ public class NotificationAdapter extends BaseExpandableListAdapter {
             holder.mGroupFace.setImageResource(R.drawable.mini_avatar);
         } else {
             String portraitURL = pn.getOwner().getPortrait();
-            DisplayImageOptions options = new DisplayImageOptions.Builder()
-                    .showImageForEmptyUri(R.drawable.mini_avatar)
-                    .cacheInMemory(true)
-                    .cacheOnDisk(true)
-                    .build();
-            ImageLoader.getInstance().displayImage(portraitURL, holder.mGroupFace, options);
+            new Core.Builder().url(portraitURL).view(holder.mGroupFace).errorBitmapRes(R.drawable
+                    .mini_avatar).doTask();
         }
 
         holder.mGroupUserName.setText(pn.getOwner().getName());
@@ -173,18 +169,14 @@ public class NotificationAdapter extends BaseExpandableListAdapter {
         final Notification notification = getChild(groupPosition, childPosition);
 
         // 1.加载头像
-        String portrait = notification.getUserinfo().getPortrait() == null ? "" : notification.getUserinfo().getPortrait();
+        String portrait = notification.getUserinfo().getPortrait() == null ? "" : notification
+                .getUserinfo().getPortrait();
         if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
             holder.face.setImageResource(R.drawable.mini_avatar);
         } else {
             String portraitURL = notification.getUserinfo().getPortrait();
-            // 使用DisplayImageOptions.Builder()创建DisplayImageOptions
-            DisplayImageOptions options = new DisplayImageOptions.Builder()
-                    .showImageForEmptyUri(R.drawable.mini_avatar)
-                    .cacheInMemory(true)
-                    .cacheOnDisk(true)
-                    .build();
-            ImageLoader.getInstance().displayImage(portraitURL, holder.face, options);
+            new Core.Builder().view(holder.face).url(portraitURL)
+                    .errorBitmapRes(R.drawable.mini_avatar).doTask();
         }
 
         holder.face.setOnClickListener(new OnClickListener() {

@@ -36,7 +36,6 @@ dependencies {
     compile project(':social_sdk_library_project')
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:recyclerview-v7:23.1.1'
-    compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
     compile 'com.jakewharton:butterknife:6.1.0'
     compile 'com.github.chrisbanes.photoview:library:1.2.3'
     compile 'com.umeng.analytics:analytics:5.5.2'

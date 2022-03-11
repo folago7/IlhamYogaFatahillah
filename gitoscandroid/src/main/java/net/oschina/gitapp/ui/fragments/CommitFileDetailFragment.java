@@ -8,8 +8,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.CommitDiffAdapter;
 import net.oschina.gitapp.api.GitOSCApi;
@@ -23,6 +21,7 @@ import net.oschina.gitapp.interfaces.OnStatusListener;
 import net.oschina.gitapp.ui.basefragment.BaseFragment;
 import net.oschina.gitapp.util.JsonUtils;
 
+import org.kymjs.kjframe.Core;
 import org.kymjs.kjframe.http.HttpCallBack;
 
 import java.util.ArrayList;
@@ -129,7 +128,7 @@ public class CommitFileDetailFragment extends BaseFragment implements
             mCommitAuthorFace.setBackgroundResource(R.drawable.mini_avatar);
         } else {
             String faceurl = GitOSCApi.NO_API_BASE_URL + portrait;
-            ImageLoader.getInstance().displayImage(faceurl, mCommitAuthorFace);
+            new Core.Builder().url(faceurl).view(mCommitAuthorFace).doTask();
         }
     }
 

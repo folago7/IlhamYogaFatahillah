@@ -24,8 +24,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.GitOSCApi;
@@ -39,6 +37,7 @@ import net.oschina.gitapp.util.ShakeListener;
 import net.oschina.gitapp.util.ShakeListener.OnShakeListener;
 import net.oschina.gitapp.util.TypefaceUtils;
 
+import org.kymjs.kjframe.Core;
 import org.kymjs.kjframe.http.HttpCallBack;
 
 import java.io.IOException;
@@ -334,7 +333,7 @@ public class ShakeActivity extends BaseActivity implements OnClickListener {
                     if (faceUrl.endsWith(".gif") || StringUtils.isEmpty(faceUrl)) {
                         mProjectFace.setImageResource(R.drawable.mini_avatar);
                     } else {
-                        ImageLoader.getInstance().displayImage(faceUrl, mProjectFace);
+                        new Core.Builder().url(faceUrl).view(mProjectFace).doTask();
                     }
 
                     Handler handle = new Handler();
@@ -348,7 +347,7 @@ public class ShakeActivity extends BaseActivity implements OnClickListener {
                 } else if (mProject != null) {
                     mShakeListener.stop();
                     mShakeResAward.setVisibility(View.VISIBLE);
-                    ImageLoader.getInstance().displayImage(mProject.getImg(), mShakeResAwardImg);
+                    new Core.Builder().url(mProject.getImg()).view(mShakeResAwardImg).doTask();
                     mShakeResAwardMsg.setText(mProject.getMsg());
 
                     AlertDialog.Builder dialog = new Builder(ShakeActivity.this);
