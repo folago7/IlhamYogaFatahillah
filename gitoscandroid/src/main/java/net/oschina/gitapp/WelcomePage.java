@@ -16,19 +16,20 @@ public class WelcomePage extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        View view = View.inflate(this, R.layout.app_welcome_page, null);
+        View view = new View(this);
+        view.setBackgroundResource(R.drawable.git_star);
         setContentView(view);
 
         //渐变展示启动屏
         AlphaAnimation aa = new AlphaAnimation(0.3f, 1.0f);
-        aa.setDuration(3000);
+        aa.setDuration(2000);
         view.startAnimation(aa);
         aa.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationEnd(Animation arg0) {
-                finish();
                 UIHelper.goMainActivity(WelcomePage.this);
 //                startActivity(new Intent(WelcomePage.this, Main.class));
+                finish();
             }
 
             @Override

@@ -1,6 +1,5 @@
 package net.oschina.gitapp.ui.basefragment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -68,12 +67,20 @@ public abstract class BaseSwipeRefreshFragment<T extends Entity>
     private boolean isFrist = true;
 
     protected HttpCallBack mHandler = new HttpCallBack() {
+        private List<T> datas = null;
+
+        @Override
+        public void onSuccessInAsync(byte[] t) {
+            super.onSuccessInAsync(t);
+            datas = getDatas(t);
+        }
+
         @Override
         public void onSuccess(Map<String, String> headers, byte[] t) {
             super.onSuccess(headers, t);
             mTipInfo.setHiden();
             mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-            loadDataSuccess(getDatas(t));
+            loadDataSuccess(datas);
             isFrist = false;
         }
 
@@ -86,7 +93,8 @@ public abstract class BaseSwipeRefreshFragment<T extends Entity>
 
         @Override
         public void onPreStart() {
-            if (isFrist || mAdapter.getCount() == 0) {
+            datas = null;
+            if ((isFrist || mAdapter.getCount() == 0) && mTipInfo != null) {
                 mTipInfo.setLoading();
             }
             super.onPreStart();
@@ -98,11 +106,6 @@ public abstract class BaseSwipeRefreshFragment<T extends Entity>
             setSwipeRefreshLoadedState();
         }
     };
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -127,12 +130,21 @@ public abstract class BaseSwipeRefreshFragment<T extends Entity>
 
         initView(view);
         setupListView();
-
         // 正在刷新的状态
         if (mListViewAction == LISTVIEW_ACTION_REFRESH) {
             setSwipeRefreshLoadingState();
         }
-        requestData();
+    }
+
+    private boolean isInit = true;
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (getUserVisibleHint() && isInit) {
+            isInit = false;
+            requestData();
+        }
     }
 
     private void initView(View view) {
