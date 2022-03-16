@@ -5,6 +5,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.media.AudioManager;
 
+import com.kymjs.crash.CustomActivityOnCrash;
+
 import net.oschina.gitapp.api.AsyncHttpHelp;
 import net.oschina.gitapp.bean.Follow;
 import net.oschina.gitapp.bean.User;
@@ -63,6 +65,7 @@ public class AppContext extends Application {
         // 注册App异常崩溃处理器
 //        Thread.setDefaultUncaughtExceptionHandler(AppException
 //                .getAppExceptionHandler(this));
+        CustomActivityOnCrash.install(this);
         init();
         appContext = this;
     }
@@ -105,7 +108,6 @@ public class AppContext extends Application {
     public void removeProperty(String... key) {
         AppConfig.getAppConfig(this).remove(key);
     }
-
 
     /**
      * 是否是第一次启动App

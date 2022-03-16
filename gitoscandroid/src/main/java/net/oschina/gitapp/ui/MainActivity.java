@@ -133,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.main_slidingmenu_frame, mMenu, DRAWER_MENU_TAG).commit();
 
+            changeFragment(R.id.main_content, new MySelfViewPagerFragment());
             changeFragment(R.id.main_content, new ExploreViewPagerFragment());
 
             mTitle = "发现";

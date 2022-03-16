@@ -16,7 +16,6 @@ import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.CommonAdapter;
 import net.oschina.gitapp.bean.Entity;
 import net.oschina.gitapp.bean.MessageData;
-import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.widget.TipInfoLayout;
 
 import org.kymjs.kjframe.http.HttpCallBack;
@@ -88,7 +87,6 @@ public abstract class BaseSwipeRefreshFragment<T extends Entity>
         public void onFailure(int errorNo, String strMsg) {
             super.onFailure(errorNo, strMsg);
             mTipInfo.setLoadError();
-            UIHelper.toastMessage(getActivity(), "网络错误");
         }
 
         @Override
