@@ -88,8 +88,6 @@ public class ProjectActivity extends BaseActivity implements
     @InjectView(R.id.ll_fork_from)
     LinearLayout forkFrom;
 
-    private Menu menu;
-
     private Project mProject;
 
     private String projectId;
@@ -185,8 +183,6 @@ public class ProjectActivity extends BaseActivity implements
                 }
             }
         }, 500);
-
-        updateMenuState(true);
     }
 
     private void setStared(boolean stared) {
@@ -232,26 +228,7 @@ public class ProjectActivity extends BaseActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.projet_menu, menu);
-        this.menu = menu;
-        updateMenuState(false);
         return true;
-    }
-
-    private void updateMenuState(boolean isShow) {
-//        if (isShow) {
-//
-//            menu.findItem(R.id.new_issue).setVisible(true);
-//            menu.findItem(R.id.share).setVisible(true);
-//            menu.findItem(R.id.copy).setVisible(true);
-//            menu.findItem(R.id.open_browser).setVisible(true);
-//
-//        } else {
-//
-//            menu.findItem(R.id.new_issue).setVisible(false);
-//            menu.findItem(R.id.share).setVisible(false);
-//            menu.findItem(R.id.copy).setVisible(false);
-//            menu.findItem(R.id.open_browser).setVisible(false);
-//        }
     }
 
     @Override
@@ -316,9 +293,7 @@ public class ProjectActivity extends BaseActivity implements
     }
 
     private void initForkMess() {
-        if (mProject.getParent_id() == null) {
-            return;
-        } else {
+        if (mProject.getParent_id() != null) {
             forkFrom.setVisibility(View.VISIBLE);
             findViewById(R.id.project_fork_ll_line).setVisibility(View.VISIBLE);
             loadProject(ACTION_LOAD_PARENT_PROJECT, mProject.getParent_id() + "");

@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 
-import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.Commit;
@@ -41,8 +40,6 @@ public class CommitFileDetailActivity extends BaseActivity {
     @InjectView(R.id.tip_info)
     TipInfoLayout tipInfo;
 
-    private Menu optionsMenu;
-
     private SourceEditor mEditor;
 
     private Project mProject;
@@ -51,15 +48,12 @@ public class CommitFileDetailActivity extends BaseActivity {
 
     private Commit mCommit;
 
-    private AppContext appContext;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // 设置actionbar加载动态
         setContentView(R.layout.activity_code_file_view);
         ButterKnife.inject(this);
-        appContext = AppContext.getInstance();
         Intent intent = getIntent();
         mProject = (Project) intent.getSerializableExtra(Contanst.PROJECT);
         mCommitDiff = (CommitDiff) intent.getSerializableExtra(Contanst.COMMITDIFF);
@@ -84,7 +78,6 @@ public class CommitFileDetailActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        optionsMenu = menu;
         getMenuInflater().inflate(R.menu.commit_file_detail_menu, menu);
         return true;
     }

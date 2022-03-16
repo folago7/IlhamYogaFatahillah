@@ -142,9 +142,7 @@ public class SearchActivity extends BaseActivity implements
             @Override
             public void onPreStart() {
                 super.onPreStart();
-                if (page != 0 && page != 1) {
-
-                } else {
+                if (page <= 1) {
                     tipInfo.setLoading();
                     listView.setVisibility(View.GONE);
                 }

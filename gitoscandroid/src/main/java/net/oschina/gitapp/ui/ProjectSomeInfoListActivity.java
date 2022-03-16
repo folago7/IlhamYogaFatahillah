@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ProgressBar;
+
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.Project;
@@ -37,17 +37,12 @@ public class ProjectSomeInfoListActivity extends BaseActivity {
 	
 	private Project mProject;
 	
-	private ProgressBar mLoading;
-	
-	private AppContext mAppContext;
-	
 	private int mListType;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.base_activity_fragment);
-		mAppContext = AppContext.getInstance();
 		this.mSavedInstanceState = savedInstanceState;
 		initView();
 	}
@@ -65,8 +60,6 @@ public class ProjectSomeInfoListActivity extends BaseActivity {
 			mSubTitle = mProject.getOwner().getName() + "/" + mProject.getName();
             setActionBarSubTitle(mSubTitle);
 		}
-		
-		mLoading = (ProgressBar) findViewById(R.id.content_loading);
 		
 		if (null == mSavedInstanceState) {
 			setFragmentCommit(mListType);

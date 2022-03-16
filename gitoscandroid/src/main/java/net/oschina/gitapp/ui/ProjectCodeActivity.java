@@ -262,13 +262,9 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
         String fileName = codeTree.getName();
 
         if (codeTree.isCodeTextFile(fileName)) {
-
             showDetail(fileName, refName);
-
         } else if (codeTree.isImage(fileName)) {
             showImageView(codeTree);
-        } else {
-            openWithBrowser(codeTree);
         }
     }
 
@@ -285,24 +281,11 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
                         .getToken();
                 images.add(url);
             }
-            if (codeTree.getId() == currenCodeTree.getId()) {
+            if (codeTree.getId() != null && codeTree.getId().equals(currenCodeTree.getId())) {
                 index = i;
             }
         }
-        PhotoBrowseActivity.showPhotoBrowse(this, images.toArray(new String[]{}), index);
-    }
-
-    /**
-     * 在浏览器中在打开
-     *
-     * @param codeTree 代码文件
-     */
-    private void openWithBrowser(CodeTree codeTree) {
-//        String url = URLs.URL_HOST + project.getOwner().getUsername() + URLs.URL_SPLITTER + 
-// project.getPath() + URLs.URL_SPLITTER + "blob" + URLs.URL_SPLITTER + refName + URLs
-// .URL_SPLITTER + URLEncoder.encode(getFilePath(codeTree.getName())) + "?private_token=" + 
-// ApiClient.getToken(mAppContext);
-//        UIHelper.openBrowser(this, url);
+        PhotoBrowseActivity.showPhotoBrowse(this, (String[]) images.toArray(), index);
     }
 
     @Override

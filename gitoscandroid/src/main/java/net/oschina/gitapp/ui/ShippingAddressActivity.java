@@ -33,8 +33,6 @@ import java.util.Map;
  */
 public class ShippingAddressActivity extends BaseActivity implements View.OnClickListener {
 
-    private AppContext mContext;
-
     private ShippingAddress mShippingAddress;
 
     private View mContent;
@@ -51,15 +49,12 @@ public class ShippingAddressActivity extends BaseActivity implements View.OnClic
 
     private Button mPub;
 
-    private TextWatcher mWatcher;
-
     private ProgressDialog mDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shipping_address);
-        mContext = AppContext.getInstance();
         initView();
         initData();
     }
@@ -73,7 +68,7 @@ public class ShippingAddressActivity extends BaseActivity implements View.OnClic
         mComment = (TextView) findViewById(R.id.comment);
         mPub = (Button) findViewById(R.id.shipping_address_pub);
 
-        mWatcher = new TextWatcher() {
+        TextWatcher mWatcher = new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 

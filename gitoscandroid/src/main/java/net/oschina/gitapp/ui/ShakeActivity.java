@@ -87,7 +87,7 @@ public class ShakeActivity extends BaseActivity implements OnClickListener {
     private RandomProject mProject;
 
     private SoundPool sndPool;
-    private HashMap<Integer, Integer> soundPoolMap = new HashMap<Integer, Integer>();
+    private HashMap<Integer, Integer> soundPoolMap = new HashMap<>();
 
     private Bitmap mBitmap;
 
@@ -259,10 +259,6 @@ public class ShakeActivity extends BaseActivity implements OnClickListener {
         });
     }
 
-    public void startVibrato() {
-        mVibrator.vibrate(new long[]{500, 200, 500, 200}, -1);
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -305,8 +301,8 @@ public class ShakeActivity extends BaseActivity implements OnClickListener {
             @Override
             public void onSuccess(Map<String, String> headers, byte[] t) {
                 super.onSuccess(headers, t);
-                RandomProject randomProject = JsonUtils.toBean(RandomProject.class, t);
-                mProject = randomProject;
+                mProject = JsonUtils.toBean(RandomProject.class, t);
+
                 if (mProject != null && mProject.getRand_num() == 0) {
                     mShakeResProject.setBackgroundResource(R.color.white);
                     mShakeResProject.setVisibility(View.VISIBLE);

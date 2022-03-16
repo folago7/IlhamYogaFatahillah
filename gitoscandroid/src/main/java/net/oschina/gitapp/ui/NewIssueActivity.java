@@ -57,8 +57,6 @@ public class NewIssueActivity extends BaseActivity implements View.OnClickListen
 
     private Project mProject;
 
-    private Issue mIssue;
-
     private MenuItem send;
 
     @Override
@@ -72,7 +70,6 @@ public class NewIssueActivity extends BaseActivity implements View.OnClickListen
     private void init() {
         Intent intent = getIntent();
         mProject = (Project) intent.getSerializableExtra(Contanst.PROJECT);
-        mIssue = (Issue) intent.getSerializableExtra(Contanst.ISSUE);
 
         mActionBar.setTitle("新建issue");
         mActionBar.setSubtitle(mProject.getOwner().getName() + "/" + mProject.getName());
