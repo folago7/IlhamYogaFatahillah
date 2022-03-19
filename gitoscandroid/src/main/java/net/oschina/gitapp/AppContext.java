@@ -59,7 +59,7 @@ public class AppContext extends Application {
 
     private static AppContext appContext;
 
-    @Override
+    @Override 
     public void onCreate() {
         super.onCreate();
         // 注册App异常崩溃处理器
@@ -118,7 +118,6 @@ public class AppContext extends Application {
             res = true;
             setProperty(AppConfig.CONF_FRIST_START, "false");
         }
-
         return res;
     }
 
