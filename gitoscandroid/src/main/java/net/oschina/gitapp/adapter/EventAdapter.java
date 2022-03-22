@@ -109,6 +109,12 @@ public class EventAdapter extends CommonAdapter<Event> {
 
     /**
      * 添加commit项
+<<<<<<< HEAD
+=======
+     *
+     * @param layout
+     * @param commit
+>>>>>>> dev
      */
     private void addCommitItem(LinearLayout layout, Commit commit) {
         try {

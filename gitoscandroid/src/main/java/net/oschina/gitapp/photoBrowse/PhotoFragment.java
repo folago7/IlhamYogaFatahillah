@@ -10,14 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.FailReason;
-import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
-import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
-
 import net.oschina.gitapp.R;
-import net.oschina.gitapp.util.GitViewUtils;
-import net.oschina.gitapp.util.ImageLoaderUtils;
+import net.oschina.gitapp.common.UIHelper;
+
+import org.kymjs.kjframe.Core;
+import org.kymjs.kjframe.bitmap.BitmapCallBack;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -46,7 +43,8 @@ public class PhotoFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable
+    Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.photo_item, container, false);
         ButterKnife.inject(this, root);
         loadImage();
@@ -64,27 +62,29 @@ public class PhotoFragment extends Fragment {
 
     private void loadImage() {
         if (imageUrl != null && !TextUtils.isEmpty(imageUrl)) {
-            ImageLoader.getInstance().displayImage(imageUrl, image, ImageLoaderUtils.getOption(), new ImageLoadingListener() {
+            new Core.Builder().url(imageUrl).view(image).bitmapCallBack(new BitmapCallBack() {
                 @Override
-                public void onLoadingStarted(String imageUri, View view) {
+                public void onPreLoad() {
+                    super.onPreLoad();
                     if (loading != null) {
                         loading.setVisibility(View.VISIBLE);
                     }
                 }
 
                 @Override
-                public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+                public void onFailure(Exception e) {
+                    super.onFailure(e);
                     if (loading != null) {
                         loading.setVisibility(View.GONE);
                     }
-                    GitViewUtils.showToast("加载图片失败");
+                    UIHelper.toastMessage(getContext(), "加载图片失败");
                 }
 
                 @Override
-                public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                public void onSuccess(Bitmap bitmap) {
+                    super.onSuccess(bitmap);
                     if (loading != null) {
                         loading.setVisibility(View.GONE);
-                        FadeInBitmapDisplayer.animate(image, 1000);
                     }
                     if (image != null) {
                         attacher = new PhotoViewAttacher(image);
@@ -97,12 +97,7 @@ public class PhotoFragment extends Fragment {
                         attacher.update();
                     }
                 }
-
-                @Override
-                public void onLoadingCancelled(String imageUri, View view) {
-
-                }
-            });
+            }).doTask();
         }
     }
 

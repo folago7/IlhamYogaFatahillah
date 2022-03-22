@@ -1,7 +1,6 @@
 package net.oschina.gitapp.ui;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -12,9 +11,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.nostra13.universalimageloader.core.ImageLoader;
 
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
@@ -30,19 +26,20 @@ import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.dialog.LightProgressDialog;
 import net.oschina.gitapp.photoBrowse.PhotoBrowseActivity;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
-import net.oschina.gitapp.util.GitViewUtils;
 import net.oschina.gitapp.util.JsonUtils;
 import net.oschina.gitapp.widget.ActionSheet;
 import net.oschina.gitapp.widget.CircleImageView;
 
+import org.kymjs.kjframe.Core;
+import org.kymjs.kjframe.http.HttpCallBack;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by 火蚁 on 15/5/4.
@@ -104,11 +101,12 @@ public class MyInfoDetailActivity extends BaseActivity implements View.OnClickLi
 
             tvJointime.setText(mUser.getCreated_at().substring(0, 10));
 
-            String portrait = mUser.getPortrait() == null || mUser.getPortrait().equals("null") ? "" : mUser.getPortrait();
+            String portrait = mUser.getPortrait() == null || mUser.getPortrait().equals("null") ?
+                    "" : mUser.getPortrait();
             if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
                 ivPortrait.setImageResource(R.drawable.mini_avatar);
             } else {
-                ImageLoader.getInstance().displayImage(mUser.getNew_portrait(), ivPortrait);
+                new Core.Builder().url(mUser.getNew_portrait()).view(ivPortrait).doTask();
             }
 
             tvFollowers.setText(mUser.getFollow().getFollowers() + "");
@@ -131,8 +129,8 @@ public class MyInfoDetailActivity extends BaseActivity implements View.OnClickLi
                 PhotoBrowseActivity.showPhotoBrowse(this, new String[]{mUser.getNew_portrait()}, 0);
                 break;
             case R.id.ll_user_portrait:
-                CharSequence[] items = {getString(R.string.img_from_album),
-                        getString(R.string.img_from_camera)};
+                CharSequence[] items = {getString(R.string.img_from_album), getString(R.string
+                        .img_from_camera)};
                 imageChooseItem(items);
                 break;
             case R.id.btn_logout:
@@ -145,11 +143,10 @@ public class MyInfoDetailActivity extends BaseActivity implements View.OnClickLi
 
     private void imageChooseItem(CharSequence[] items) {
         setTheme(R.style.ActionSheetStyleIOS7);
-        ActionSheet
-                .createBuilder(getApplicationContext(),
-                        getSupportFragmentManager())
+        ActionSheet.createBuilder(getApplicationContext(), getSupportFragmentManager())
                 .setCancelButtonTitle(R.string.cancle)
-                .setOtherButtonTitles(getString(R.string.img_from_album), getString(R.string.img_from_camera))
+                .setOtherButtonTitles(getString(R.string.img_from_album), getString(R.string
+                        .img_from_camera))
                 .setCancelableOnTouchOutside(true)
                 .setListener(new ActionSheet.ActionSheetListener() {
                     @Override
@@ -202,7 +199,7 @@ public class MyInfoDetailActivity extends BaseActivity implements View.OnClickLi
                 savedir.mkdirs();
             }
         } else {
-            UIHelper.ToastMessage(AppContext.getInstance(), "无法保存上传的头像，请检查SD卡是否挂载");
+            UIHelper.toastMessage(AppContext.getInstance(), "无法保存上传的头像，请检查SD卡是否挂载");
             return null;
         }
         String timeStamp = System.currentTimeMillis() + "";
@@ -225,7 +222,7 @@ public class MyInfoDetailActivity extends BaseActivity implements View.OnClickLi
                 savedir.mkdirs();
             }
         } else {
-            UIHelper.ToastMessage(AppContext.getInstance(), "无法保存上传的头像，请检查SD卡是否挂载");
+            UIHelper.toastMessage(AppContext.getInstance(), "无法保存上传的头像，请检查SD卡是否挂载");
             return null;
         }
         String timeStamp = System.currentTimeMillis() + "";
@@ -290,24 +287,30 @@ public class MyInfoDetailActivity extends BaseActivity implements View.OnClickLi
         final AlertDialog loading = LightProgressDialog.create(this, "正在上传头像...");
         loading.setCanceledOnTouchOutside(false);
         try {
-            GitOSCApi.upLoadFile(protraitFile, new AsyncHttpResponseHandler() {
+            GitOSCApi.upLoadFile(protraitFile, new HttpCallBack() {
                 @Override
-                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                    UpLoadFile upLoadFile = JsonUtils.toBean(UpLoadFile.class, responseBody);
+                public void onSuccess(Map<String, String> headers, byte[] t) {
+                    super.onSuccess(headers, t);
+                    UpLoadFile upLoadFile = JsonUtils.toBean(UpLoadFile.class, t);
                     if (upLoadFile != null && upLoadFile.isSuccess()) {
                         final String protraitUrl = upLoadFile.getFile().getUrl();
-                        GitOSCApi.updateUserProtrait(protraitUrl, new AsyncHttpResponseHandler() {
+                        GitOSCApi.updateUserProtrait(protraitUrl, new HttpCallBack() {
                             @Override
-                            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                                GitViewUtils.showToast("头像已更新");
+                            public void onSuccess(Map<String, String> headers, byte[] t) {
+                                super.onSuccess(headers, t);
+                                UIHelper.toastMessage(MyInfoDetailActivity.this, "头像已更新");
                                 ivPortrait.setImageBitmap(protraitBitmap);
-                                AppContext.getInstance().setProperty(Contanst.PROP_KEY_NEWPORTRAIT, protraitUrl);
-                                BroadcastController.sendUserChangeBroadcase(MyInfoDetailActivity.this);
+                                AppContext.getInstance().setProperty(Contanst
+                                        .PROP_KEY_NEWPORTRAIT, protraitUrl);
+                                BroadcastController.sendUserChangeBroadcase(MyInfoDetailActivity
+                                        .this);
                             }
 
                             @Override
-                            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                                GitViewUtils.showToast(statusCode + "更新头像失败");
+                            public void onFailure(int errorNo, String strMsg) {
+                                super.onFailure(errorNo, strMsg);
+                                UIHelper.toastMessage(MyInfoDetailActivity.this, errorNo +
+                                        "更新头像失败");
                             }
 
                             @Override
@@ -317,24 +320,25 @@ public class MyInfoDetailActivity extends BaseActivity implements View.OnClickLi
                             }
 
                             @Override
-                            public void onStart() {
-                                super.onStart();
+                            public void onPreStart() {
+                                super.onPreStart();
                                 loading.setMessage("正在更新头像...");
                             }
                         });
                     } else {
-                        GitViewUtils.showToast("头像上传失败");
+                        UIHelper.toastMessage(MyInfoDetailActivity.this, "头像上传失败");
                     }
                 }
 
                 @Override
-                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                    GitViewUtils.showToast("上传图片失败, 网络错误");
+                public void onFailure(int errorNo, String strMsg) {
+                    super.onFailure(errorNo, strMsg);
+                    UIHelper.toastMessage(MyInfoDetailActivity.this, "上传图片失败, 网络错误");
                 }
 
                 @Override
-                public void onStart() {
-                    super.onStart();
+                public void onPreStart() {
+                    super.onPreStart();
                     loading.show();
                 }
 

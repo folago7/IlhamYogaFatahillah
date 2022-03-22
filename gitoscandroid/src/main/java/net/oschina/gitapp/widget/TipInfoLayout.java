@@ -10,12 +10,11 @@ import android.widget.TextView;
 
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.common.StringUtils;
-import net.oschina.gitapp.util.GitViewUtils;
 import net.oschina.gitapp.util.TypefaceUtils;
 
 /**
  * 一些提示信息显示，包含有加载过程的显示
- *
+ * <p/>
  * Created by 火蚁 on 15/4/16.
  */
 public class TipInfoLayout extends FrameLayout {
@@ -48,10 +47,10 @@ public class TipInfoLayout extends FrameLayout {
 
     private void initView(Context context) {
         View view = LayoutInflater.from(context).inflate(R.layout.tip_info_layout, null, false);
-        mPbProgressBar = GitViewUtils.findViewById(view, R.id.pb_loading);
-        mTvTipState = GitViewUtils.findViewById(view, R.id.tv_tip_state);
-        mTvTipMsg = GitViewUtils.findViewById(view, R.id.tv_tip_msg);
-        mTipContainer = GitViewUtils.findViewById(view, R.id.ll_tip);
+        mPbProgressBar = (ProgressBar) view.findViewById(R.id.pb_loading);
+        mTvTipState = (TextView) view.findViewById(R.id.tv_tip_state);
+        mTvTipMsg = (TextView) view.findViewById(R.id.tv_tip_msg);
+        mTipContainer = view.findViewById(R.id.ll_tip);
         setLoading();
         addView(view);
     }

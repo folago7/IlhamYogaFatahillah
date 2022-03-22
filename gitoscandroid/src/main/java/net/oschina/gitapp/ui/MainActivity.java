@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -17,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.blueware.agent.android.BlueWare;
-import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.umeng.analytics.MobclickAgent;
 
 import net.oschina.gitapp.AppContext;
@@ -33,9 +31,11 @@ import net.oschina.gitapp.ui.fragments.ExploreViewPagerFragment;
 import net.oschina.gitapp.ui.fragments.MySelfViewPagerFragment;
 import net.oschina.gitapp.util.JsonUtils;
 
-import java.util.List;
+import org.kymjs.kjframe.http.HttpCallBack;
 
-import cz.msebera.android.httpclient.Header;
+import java.util.List;
+import java.util.Map;
+
 
 /**
  * 程序主界面
@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity implements
         DrawerMenuCallBack {
 
     final String DRAWER_MENU_TAG = "drawer_menu";
-    final String DRAWER_CONTENT_TAG = "drawer_content";
 
     final String CONTENT_TAG_EXPLORE = "content_explore";
     final String CONTENT_TAG_MYSELF = "content_myself";
@@ -73,8 +72,9 @@ public class MainActivity extends AppCompatActivity implements
     private DrawerNavigationMenu mMenu = DrawerNavigationMenu.newInstance();
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
-    private FragmentManager mFragmentManager;
     private DoubleClickExitHelper mDoubleClickExitHelper;
+
+    private Fragment currentSupportFragment;
 
     // 当前显示的界面标识
     private String mCurrentContentTag;
@@ -115,8 +115,10 @@ public class MainActivity extends AppCompatActivity implements
     private void initView(Bundle savedInstanceState) {
 
         mActionBar = getSupportActionBar();
-        mActionBar.setDisplayHomeAsUpEnabled(true);
-        mActionBar.setHomeButtonEnabled(true);
+        if (mActionBar != null) {
+            mActionBar.setDisplayHomeAsUpEnabled(true);
+            mActionBar.setHomeButtonEnabled(true);
+        }
 
         mDoubleClickExitHelper = new DoubleClickExitHelper(this);
 
@@ -127,30 +129,25 @@ public class MainActivity extends AppCompatActivity implements
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, null, 0, 0);
 
 
-        mFragmentManager = getSupportFragmentManager();
         if (null == savedInstanceState) {
-            setExploreShow();
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.main_slidingmenu_frame, mMenu, DRAWER_MENU_TAG).commit();
+
+            changeFragment(R.id.main_content, new MySelfViewPagerFragment());
+            changeFragment(R.id.main_content, new ExploreViewPagerFragment());
+
+            mTitle = "发现";
+            mActionBar.setTitle(mTitle);
+            mCurrentContentTag = CONTENT_TAG_EXPLORE;
         }
     }
 
-    private void setExploreShow() {
-        FragmentTransaction ft = mFragmentManager.beginTransaction();
-        ft.replace(R.id.main_slidingmenu_frame,
-                mMenu, DRAWER_MENU_TAG)
-                .replace(R.id.main_content,
-                        ExploreViewPagerFragment.newInstance(),
-                        DRAWER_CONTENT_TAG).commit();
-
-        mTitle = "发现";
-        mActionBar.setTitle(mTitle);
-        mCurrentContentTag = CONTENT_TAG_EXPLORE;
-    }
-
-    private AsyncHttpResponseHandler noticeHandler = new AsyncHttpResponseHandler() {
+    private HttpCallBack noticeHandler = new HttpCallBack() {
         @Override
-        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+        public void onSuccess(Map<String, String> headers, byte[] t) {
+            super.onSuccess(headers, t);
             List<ProjectNotificationArray> notificationArrays = JsonUtils.getList
-                    (ProjectNotificationArray[].class, responseBody);
+                    (ProjectNotificationArray[].class, t);
             if (notificationArrays == null || notificationArrays.isEmpty()) {
                 return;
             }
@@ -161,10 +158,6 @@ public class MainActivity extends AppCompatActivity implements
             UIHelper.sendBroadCast(MainActivity.this, count);
         }
 
-        @Override
-        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable
-                error) {
-        }
     };
 
     /**
@@ -267,16 +260,7 @@ public class MainActivity extends AppCompatActivity implements
         String tag = CONTENTS[pos];
         if (tag.equalsIgnoreCase(mCurrentContentTag)) return;
 
-        FragmentTransaction ft = mFragmentManager.beginTransaction();
-        if (mCurrentContentTag != null) {
-            Fragment fragment = mFragmentManager.findFragmentByTag(mCurrentContentTag);
-            if (fragment != null) {
-                ft.remove(fragment);
-            }
-        }
-        ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                .replace(R.id.main_content, Fragment.instantiate(this, FRAGMENTS[pos]), tag);
-        ft.commit();
+        changeFragment(R.id.main_content, Fragment.instantiate(this, FRAGMENTS[pos]));
 
         mActionBar.setTitle(TITLES[pos]);
         mTitle = TITLES[pos];//记录主界面的标题
@@ -334,10 +318,6 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onClickScan() {
-        //zxing包中定义,暂时无用
-//        Intent intent = new Intent();
-//        intent.setClass(this, CaptureActivity.class);
-//        startActivity(intent);
     }
 
     @Override
@@ -366,5 +346,31 @@ public class MainActivity extends AppCompatActivity implements
         public void onDrawerStateChanged(int newState) {
             mDrawerToggle.onDrawerStateChanged(newState);
         }
+    }
+
+    /**
+     * 用Fragment替换视图
+     *
+     * @param resView        将要被替换掉的视图
+     * @param targetFragment 用来替换的Fragment
+     */
+    public void changeFragment(int resView, Fragment targetFragment) {
+        if (targetFragment.equals(currentSupportFragment)) {
+            return;
+        }
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        if (!targetFragment.isAdded()) {
+//            transaction.replace(resView, targetFragment);
+            transaction.add(resView, targetFragment, targetFragment.getClass().getName());
+        }
+        if (targetFragment.isHidden()) {
+            transaction.show(targetFragment);
+        }
+        if (currentSupportFragment != null
+                && currentSupportFragment.isVisible()) {
+            transaction.hide(currentSupportFragment);
+        }
+        currentSupportFragment = targetFragment;
+        transaction.commit();
     }
 }

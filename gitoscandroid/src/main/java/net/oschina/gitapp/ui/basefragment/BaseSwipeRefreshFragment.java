@@ -1,6 +1,5 @@
 package net.oschina.gitapp.ui.basefragment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -13,19 +12,16 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
-
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.CommonAdapter;
 import net.oschina.gitapp.bean.Entity;
 import net.oschina.gitapp.bean.MessageData;
-import net.oschina.gitapp.util.GitViewUtils;
 import net.oschina.gitapp.widget.TipInfoLayout;
 
+import org.kymjs.kjframe.http.HttpCallBack;
 
 import java.util.List;
-
-import cz.msebera.android.httpclient.Header;
+import java.util.Map;
 
 /**
  * 说明 下拉刷新界面的基类
@@ -61,7 +57,7 @@ public abstract class BaseSwipeRefreshFragment<T extends Entity>
     private int mListViewAction = LISTVIEW_ACTION_NONE;
 
     // 当前数据状态，如果是已经全部加载，则不再执行滚动到底部就加载的情况
-    private int dataState = LISTVIEW_ACTION_NONE ;
+    private int dataState = LISTVIEW_ACTION_NONE;
 
     protected int mCurrentPage = 1;
 
@@ -69,28 +65,37 @@ public abstract class BaseSwipeRefreshFragment<T extends Entity>
 
     private boolean isFrist = true;
 
-    protected AsyncHttpResponseHandler mHandler = new AsyncHttpResponseHandler() {
+    protected HttpCallBack mHandler = new HttpCallBack() {
+        private List<T> datas = null;
+
         @Override
-        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+        public void onSuccessInAsync(byte[] t) {
+            super.onSuccessInAsync(t);
+            datas = getDatas(t);
+        }
+
+        @Override
+        public void onSuccess(Map<String, String> headers, byte[] t) {
+            super.onSuccess(headers, t);
             mTipInfo.setHiden();
             mSwipeRefreshLayout.setVisibility(View.VISIBLE);
-            loadDataSuccess(getDatas(responseBody));
+            loadDataSuccess(datas);
             isFrist = false;
         }
 
         @Override
-        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+        public void onFailure(int errorNo, String strMsg) {
+            super.onFailure(errorNo, strMsg);
             mTipInfo.setLoadError();
-            GitViewUtils.showToast("网络错误");
         }
 
         @Override
-        public void onStart() {
-            if (isFrist || mAdapter.getCount() == 0) {
+        public void onPreStart() {
+            datas = null;
+            if ((isFrist || mAdapter.getCount() == 0) && mTipInfo != null) {
                 mTipInfo.setLoading();
             }
-
-            super.onStart();
+            super.onPreStart();
         }
 
         @Override
@@ -99,11 +104,6 @@ public abstract class BaseSwipeRefreshFragment<T extends Entity>
             setSwipeRefreshLoadedState();
         }
     };
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -128,23 +128,32 @@ public abstract class BaseSwipeRefreshFragment<T extends Entity>
 
         initView(view);
         setupListView();
-
         // 正在刷新的状态
         if (mListViewAction == LISTVIEW_ACTION_REFRESH) {
             setSwipeRefreshLoadingState();
         }
-        requestData();
+    }
+
+    private boolean isInit = true;
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (getUserVisibleHint() && isInit) {
+            isInit = false;
+            requestData();
+        }
     }
 
     private void initView(View view) {
-        mSwipeRefreshLayout = GitViewUtils.findViewById(view, R.id.swiperefreshlayout);
-        mListView = GitViewUtils.findViewById(view, R.id.listView);
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swiperefreshlayout);
+        mListView = (ListView) view.findViewById(R.id.listView);
 
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.swiperefresh_color1,
                 R.color.swiperefresh_color2, R.color.swiperefresh_color3,
                 R.color.swiperefresh_color4);
-        mTipInfo = GitViewUtils.findViewById(view, R.id.tip_info);
+        mTipInfo = (TipInfoLayout) view.findViewById(R.id.tip_info);
         mTipInfo.setOnClick(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -255,8 +264,11 @@ public abstract class BaseSwipeRefreshFragment<T extends Entity>
     }
 
     public abstract CommonAdapter<T> getAdapter();
+
     public abstract List<T> getDatas(byte[] responeString);
+
     public abstract void requestData();
+
     public abstract void onItemClick(int position, T data);
 
     public void loadDataSuccess(List<T> datas) {

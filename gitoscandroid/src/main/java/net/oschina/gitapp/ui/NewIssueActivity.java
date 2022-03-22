@@ -12,26 +12,26 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
-
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.Issue;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.ProjectMember;
 import net.oschina.gitapp.common.Contanst;
+import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.dialog.LightProgressDialog;
 import net.oschina.gitapp.dialog.ProjectMembersSelectDialog;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
-import net.oschina.gitapp.util.GitViewUtils;
 import net.oschina.gitapp.util.JsonUtils;
 import net.oschina.gitapp.util.TypefaceUtils;
 
+import org.kymjs.kjframe.http.HttpCallBack;
+
+import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import cz.msebera.android.httpclient.Header;
 
 /**
  * Created by 火蚁 on 15/4/23.
@@ -57,8 +57,6 @@ public class NewIssueActivity extends BaseActivity implements View.OnClickListen
 
     private Project mProject;
 
-    private Issue mIssue;
-
     private MenuItem send;
 
     @Override
@@ -72,7 +70,6 @@ public class NewIssueActivity extends BaseActivity implements View.OnClickListen
     private void init() {
         Intent intent = getIntent();
         mProject = (Project) intent.getSerializableExtra(Contanst.PROJECT);
-        mIssue = (Issue) intent.getSerializableExtra(Contanst.ISSUE);
 
         mActionBar.setTitle("新建issue");
         mActionBar.setSubtitle(mProject.getOwner().getName() + "/" + mProject.getName());
@@ -99,19 +96,20 @@ public class NewIssueActivity extends BaseActivity implements View.OnClickListen
 
     private ProjectMembersSelectDialog membersSelectDialog;
     private String memberId = "";
-    private ProjectMembersSelectDialog.CallBack memberSelectCallBack = new ProjectMembersSelectDialog.CallBack() {
-        @Override
-        public void callBack(ProjectMember projectMember) {
-            memberId = projectMember.getId();
-            tvTouser.setText(projectMember.getName());
-        }
+    private ProjectMembersSelectDialog.CallBack memberSelectCallBack = new
+            ProjectMembersSelectDialog.CallBack() {
+                @Override
+                public void callBack(ProjectMember projectMember) {
+                    memberId = projectMember.getId();
+                    tvTouser.setText(projectMember.getName());
+                }
 
-        @Override
-        public void clear() {
-            memberId = "";
-            tvTouser.setText("未指派");
-        }
-    };
+                @Override
+                public void clear() {
+                    memberId = "";
+                    tvTouser.setText("未指派");
+                }
+            };
 
     @Override
     @OnClick({R.id.ll_touser, R.id.ll_milestone})
@@ -129,7 +127,8 @@ public class NewIssueActivity extends BaseActivity implements View.OnClickListen
 
     private void showMemberSelectDialog() {
         if (membersSelectDialog == null) {
-            membersSelectDialog = new ProjectMembersSelectDialog(this, mProject.getId(), memberSelectCallBack);
+            membersSelectDialog = new ProjectMembersSelectDialog(this, mProject.getId(),
+                    memberSelectCallBack);
         }
         membersSelectDialog.show(memberId);
     }
@@ -167,34 +166,37 @@ public class NewIssueActivity extends BaseActivity implements View.OnClickListen
         String title = etTile.getText().toString();
         String desc = etDesc.getText().toString();
         final AlertDialog pubing = LightProgressDialog.create(this, "提交中...");
-        GitOSCApi.pubCreateIssue(mProject.getId(), title, desc, memberId, "", new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                Issue issue = JsonUtils.toBean(Issue.class, responseBody);
-                if (issue != null) {
-                    GitViewUtils.showToast("创建成功");
-                    NewIssueActivity.this.finish();
-                } else {
-                    GitViewUtils.showToast("创建失败");
-                }
-            }
+        GitOSCApi.pubCreateIssue(mProject.getId(), title, desc, memberId, "", new
+                HttpCallBack() {
+                    @Override
+                    public void onSuccess(Map<String, String> headers, byte[] t) {
+                        super.onSuccess(headers, t);
+                        Issue issue = JsonUtils.toBean(Issue.class, t);
+                        if (issue != null) {
+                            UIHelper.toastMessage(NewIssueActivity.this, "创建成功");
+                            NewIssueActivity.this.finish();
+                        } else {
+                            UIHelper.toastMessage(NewIssueActivity.this, "创建失败");
+                        }
+                    }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                GitViewUtils.showToast("issue创建失败");
-            }
+                    @Override
+                    public void onFailure(int errorNo, String strMsg) {
+                        super.onFailure(errorNo, strMsg);
+                        UIHelper.toastMessage(NewIssueActivity.this, "issue创建失败");
+                    }
 
-            @Override
-            public void onStart() {
-                super.onStart();
-                pubing.show();
-            }
+                    @Override
+                    public void onPreStart() {
+                        super.onPreStart();
+                        pubing.show();
+                    }
 
-            @Override
-            public void onFinish() {
-                super.onFinish();
-                pubing.dismiss();
-            }
-        });
+                    @Override
+                    public void onFinish() {
+                        super.onFinish();
+                        pubing.dismiss();
+                    }
+                });
     }
 }

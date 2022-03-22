@@ -1,11 +1,12 @@
 package net.oschina.gitapp.adapter;
 
-import java.util.List;
-
-import net.oschina.gitapp.ui.basefragment.BaseFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import net.oschina.gitapp.ui.basefragment.SupportFragment;
+
+import java.util.List;
 
 /**
  * viewpage适配器
@@ -13,7 +14,7 @@ import android.support.v4.app.FragmentPagerAdapter;
  * @author 火蚁（http://my.oschina.LittleDY）
  *
  */
-public class ListFragmentPagerAdapter<T extends BaseFragment> extends FragmentPagerAdapter {
+public class ListFragmentPagerAdapter<T extends SupportFragment> extends FragmentPagerAdapter {
 	private List<T> fragmentList;
 	private List<String> titleList;
 

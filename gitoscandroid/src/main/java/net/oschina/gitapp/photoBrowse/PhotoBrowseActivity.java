@@ -3,6 +3,7 @@ package net.oschina.gitapp.photoBrowse;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -13,13 +14,12 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
-
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
-import net.oschina.gitapp.util.ImageLoaderUtils;
 import net.oschina.gitapp.util.TypefaceUtils;
+
+import org.kymjs.kjframe.Core;
+import org.kymjs.kjframe.http.HttpCallBack;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -87,7 +87,8 @@ public class PhotoBrowseActivity extends BaseActivity implements View.OnClickLis
         viewpager.setOffscreenPageLimit(1);
         viewpager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            public void onPageScrolled(int position, float positionOffset, int 
+                    positionOffsetPixels) {
 
             }
 
@@ -152,18 +153,17 @@ public class PhotoBrowseActivity extends BaseActivity implements View.OnClickLis
 
     /***
      * 保存图片到手机中
-     *
+     * <p/>
      * update: 1.2014-05-06 下午 15：35
      * 更新内容: 修改图片下载完成之后再保存到图库中
-     *
      */
     public void saveImageToGallery() {
-        final Bitmap bitmap = ImageLoader.getInstance().loadImageSync(imageUrls[index], ImageLoaderUtils.getOption());
-        ImageLoader.getInstance().loadImage(imageUrls[index], ImageLoaderUtils.getOption(), new SimpleImageLoadingListener() {
-
+        Core.getKJHttp().download("", imageUrls[index], new HttpCallBack() {
             @Override
-            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                saveImageToGallery(PhotoBrowseActivity.this, bitmap);
+            public void onSuccess(byte[] t) {
+                super.onSuccess(t);
+                saveImageToGallery(PhotoBrowseActivity.this, BitmapFactory.decodeByteArray(t, 0,
+                        t.length));
             }
         });
     }
@@ -192,7 +192,8 @@ public class PhotoBrowseActivity extends BaseActivity implements View.OnClickLis
             String path = MediaStore.Images.Media.insertImage(context.getContentResolver(),
                     file.getAbsolutePath(), fileName, null);
             // 最后通知图库更新
-            context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://" + path)));
+            context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse
+                    ("file://" + path)));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

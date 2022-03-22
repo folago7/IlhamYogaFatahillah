@@ -10,8 +10,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
-
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.ProjectAdapter;
 import net.oschina.gitapp.api.GitOSCApi;
@@ -22,12 +20,13 @@ import net.oschina.gitapp.util.JsonUtils;
 import net.oschina.gitapp.widget.EnhanceListView;
 import net.oschina.gitapp.widget.TipInfoLayout;
 
+import org.kymjs.kjframe.http.HttpCallBack;
 
 import java.util.List;
+import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import cz.msebera.android.httpclient.Header;
 
 /**
  * 搜索项目界面
@@ -117,10 +116,11 @@ public class SearchActivity extends BaseActivity implements
     }
 
     private void load(final String key, final int page) {
-        GitOSCApi.searchProjects(key, page, new AsyncHttpResponseHandler() {
+        GitOSCApi.searchProjects(key, page, new HttpCallBack() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                List<Project> projects = JsonUtils.getList(Project[].class, responseBody);
+            public void onSuccess(Map<String, String> headers, byte[] t) {
+                super.onSuccess(headers, t);
+                List<Project> projects = JsonUtils.getList(Project[].class, t);
                 tipInfo.setHiden();
                 if (projects.size() > 0) {
                     adapter.addItem(projects);
@@ -134,16 +134,15 @@ public class SearchActivity extends BaseActivity implements
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            public void onFailure(int errorNo, String strMsg) {
+                super.onFailure(errorNo, strMsg);
                 tipInfo.setLoadError();
             }
 
             @Override
-            public void onStart() {
-                super.onStart();
-                if (page != 0 && page != 1) {
-
-                } else {
+            public void onPreStart() {
+                super.onPreStart();
+                if (page <= 1) {
                     tipInfo.setLoading();
                     listView.setVisibility(View.GONE);
                 }

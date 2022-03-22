@@ -16,8 +16,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
-
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.AsyncHttpHelp;
@@ -29,14 +27,15 @@ import net.oschina.gitapp.common.CyptoUtils;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
-import net.oschina.gitapp.util.GitViewUtils;
 import net.oschina.gitapp.util.JsonUtils;
 
+import org.kymjs.kjframe.http.HttpCallBack;
+
+import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
-import cz.msebera.android.httpclient.Header;
 
 public class LoginActivity extends BaseActivity
         implements OnClickListener, OnEditorActionListener, TextWatcher {
@@ -66,9 +65,11 @@ public class LoginActivity extends BaseActivity
         etPassword.addTextChangedListener(this);
         etPassword.setOnEditorActionListener(this);
 
-        String account = CyptoUtils.decode(Contanst.ACCOUNT_EMAIL, AppContext.getInstance().getProperty(Contanst.ACCOUNT_EMAIL));
+        String account = CyptoUtils.decode(Contanst.ACCOUNT_EMAIL, AppContext.getInstance()
+                .getProperty(Contanst.ACCOUNT_EMAIL));
         etAccount.setText(account);
-        String pwd = CyptoUtils.decode(Contanst.ACCOUNT_PWD, AppContext.getInstance().getProperty(Contanst.ACCOUNT_PWD));
+        String pwd = CyptoUtils.decode(Contanst.ACCOUNT_PWD, AppContext.getInstance().getProperty
+                (Contanst.ACCOUNT_PWD));
         etPassword.setText(pwd);
     }
 
@@ -90,27 +91,27 @@ public class LoginActivity extends BaseActivity
      * 检查登录
      */
     private void checkLogin() {
-
         String email = etAccount.getText().toString();
         String passwd = etPassword.getText().toString();
 
         //检查用户输入的参数
         if (StringUtils.isEmpty(email)) {
-            UIHelper.ToastMessage(this, getString(R.string.msg_login_email_null));
+            UIHelper.toastMessage(this, getString(R.string.msg_login_email_null));
             return;
         }
         if (!StringUtils.isEmail(email)) {
-            UIHelper.ToastMessage(this, getString(R.string.msg_login_email_error));
+            UIHelper.toastMessage(this, getString(R.string.msg_login_email_error));
             return;
         }
         if (StringUtils.isEmpty(passwd)) {
-            UIHelper.ToastMessage(this, getString(R.string.msg_login_pwd_null));
+            UIHelper.toastMessage(this, getString(R.string.msg_login_pwd_null));
             return;
         }
 
 
         // 保存用户名和密码
-        AppContext.getInstance().saveAccountInfo(CyptoUtils.encode(Contanst.ACCOUNT_EMAIL, email), CyptoUtils.encode(Contanst.ACCOUNT_PWD, passwd));
+        AppContext.getInstance().saveAccountInfo(CyptoUtils.encode(Contanst.ACCOUNT_EMAIL, email)
+                , CyptoUtils.encode(Contanst.ACCOUNT_PWD, passwd));
 
         login(email, passwd);
     }
@@ -123,16 +124,18 @@ public class LoginActivity extends BaseActivity
             mLoginProgressDialog.setCanceledOnTouchOutside(false);
             mLoginProgressDialog.setMessage(getString(R.string.login_tips));
         }
-        GitOSCApi.login(account, passwd, new AsyncHttpResponseHandler() {
+        GitOSCApi.login(account, passwd, new HttpCallBack() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                Session session = JsonUtils.toBean(Session.class, responseBody);
+            public void onSuccess(Map<String, String> headers, byte[] t) {
+                super.onSuccess(headers, t);
+                Session session = JsonUtils.toBean(Session.class, t);
                 if (session != null) {
                     // 保存登录用户的信息
                     AppContext.getInstance().saveLoginInfo(session);
                     // 保存用户的私有token
-                    if (session != null && session.get_privateToken() != null) {
-                        String token = CyptoUtils.encode(AsyncHttpHelp.GITOSC_PRIVATE_TOKEN, session.get_privateToken());
+                    if (session.get_privateToken() != null) {
+                        String token = CyptoUtils.encode(AsyncHttpHelp.GITOSC_PRIVATE_TOKEN,
+                                session.get_privateToken());
                         AppContext.getInstance().setProperty(AsyncHttpHelp.PRIVATE_TOKEN, token);
                     }
                     //返回标识，成功登录
@@ -144,17 +147,18 @@ public class LoginActivity extends BaseActivity
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                if (statusCode == 401) {
-                    GitViewUtils.showToast(R.string.msg_login_error);
+            public void onFailure(int errorNo, String strMsg) {
+                super.onFailure(errorNo, strMsg);
+                if (errorNo == 401) {
+                    UIHelper.toastMessage(LoginActivity.this, "用户未登录 或 密码错误");
                 } else {
-                    GitViewUtils.showToast("登录失败");
+                    UIHelper.toastMessage(LoginActivity.this, "登录失败");
                 }
             }
 
             @Override
-            public void onStart() {
-                super.onStart();
+            public void onPreStart() {
+                super.onPreStart();
                 if (mLoginProgressDialog != null) {
                     mLoginProgressDialog.show();
                 }

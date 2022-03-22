@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  * 通用的ViewHolder
- *
+ * <p/>
  * Created by 火蚁 on 15/4/8.
  */
 public abstract class CommonAdapter<T> extends BaseAdapter {
@@ -44,7 +44,8 @@ public abstract class CommonAdapter<T> extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final ViewHolder vh = ViewHolder.getViewHolder(this.mContext, convertView, parent, this.mLayoutId, position);
+        final ViewHolder vh = ViewHolder.getViewHolder(this.mContext, convertView, parent, this
+                .mLayoutId, position);
         convert(vh, getItem(position));
         return vh.getConvertView();
     }
@@ -56,7 +57,8 @@ public abstract class CommonAdapter<T> extends BaseAdapter {
     // 获取ViewHodler
     public ViewHolder getViewHodler(int position, View convertView, ViewGroup parent) {
 
-        return ViewHolder.getViewHolder(this.mContext, convertView, parent, this.mLayoutId, position);
+        return ViewHolder.getViewHolder(this.mContext, convertView, parent, this.mLayoutId, 
+                position);
     }
 
     // 提供给外部填充实际的显示数据，以及可以一些其他的操作，如：隐藏＝＝
@@ -81,7 +83,7 @@ public abstract class CommonAdapter<T> extends BaseAdapter {
     }
 
     public void removeItem(int location) {
-        if (mDatas == null && mDatas.isEmpty()) {
+        if (mDatas == null || mDatas.isEmpty()) {
             return;
         }
         mDatas.remove(location);
@@ -89,7 +91,7 @@ public abstract class CommonAdapter<T> extends BaseAdapter {
     }
 
     public void clear() {
-        if (mDatas == null && mDatas.isEmpty()) {
+        if (mDatas == null || mDatas.isEmpty()) {
             return;
         }
         mDatas.clear();

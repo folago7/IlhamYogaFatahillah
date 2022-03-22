@@ -10,26 +10,26 @@ import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 
 /**
  * 关于我们
+ *
  * @author liux (http://my.oschina.net/liux)
  * @version 1.0
  * @created 2012-3-21
  */
 public class AboutActivity extends BaseActivity {
-	
-	private TextView mVersion;
-	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.about);
-		
-		//获取客户端版本信息
-        try { 
-        	PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
-        	mVersion = (TextView)findViewById(R.id.about_version);
-    		mVersion.setText("V " + info.versionName);
-        } catch (NameNotFoundException e) {    
-			e.printStackTrace(System.err);
-		} 
-	}
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.about);
+
+        //获取客户端版本信息
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
+            TextView mVersion = (TextView) findViewById(R.id.about_version);
+            mVersion.setText("V " + info.versionName);
+        } catch (NameNotFoundException e) {
+            e.printStackTrace(System.err);
+        }
+    }
 }

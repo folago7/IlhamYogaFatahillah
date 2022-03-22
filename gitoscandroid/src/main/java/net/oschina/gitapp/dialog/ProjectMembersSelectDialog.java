@@ -3,21 +3,20 @@ package net.oschina.gitapp.dialog;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-
-import com.loopj.android.http.AsyncHttpResponseHandler;
+import android.widget.Toast;
 
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.CommonAdapter;
 import net.oschina.gitapp.adapter.ViewHolder;
 import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.ProjectMember;
-import net.oschina.gitapp.util.GitViewUtils;
+import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.util.JsonUtils;
 
+import org.kymjs.kjframe.http.HttpCallBack;
 
 import java.util.List;
-
-import cz.msebera.android.httpclient.Header;
+import java.util.Map;
 
 /**
  * Created by 火蚁 on 15/4/24.
@@ -26,6 +25,7 @@ public class ProjectMembersSelectDialog {
 
     public interface CallBack {
         public void callBack(ProjectMember projectMember);
+
         public void clear();
     }
 
@@ -59,26 +59,29 @@ public class ProjectMembersSelectDialog {
     private void load(final String memberId) {
         final AlertDialog loading = LightProgressDialog.create(this.context, "加载项目成员中...");
 
-        GitOSCApi.getProjectMembers(this.pId, new AsyncHttpResponseHandler() {
+        GitOSCApi.getProjectMembers(this.pId, new HttpCallBack() {
+
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                List<ProjectMember> projectMembers = JsonUtils.getList(ProjectMember[].class, responseBody);
+            public void onSuccess(Map<String, String> headers, byte[] t) {
+                super.onSuccess(headers, t);
+                List<ProjectMember> projectMembers = JsonUtils.getList(ProjectMember[].class, t);
                 if (projectMembers != null && !projectMembers.isEmpty()) {
                     members = projectMembers;
                     show(memberId);
                 } else {
-                    GitViewUtils.showToast("加载项目成员失败");
+                    Toast.makeText(context, "加载项目成员失败", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                GitViewUtils.showToast("加载项目成员失败");
+            public void onFailure(int errorNo, String strMsg) {
+                super.onFailure(errorNo, strMsg);
+                UIHelper.toastMessage(context, "加载项目成员失败");
             }
 
             @Override
-            public void onStart() {
-                super.onStart();
+            public void onPreStart() {
+                super.onPreStart();
                 loading.show();
             }
 
@@ -98,7 +101,8 @@ public class ProjectMembersSelectDialog {
 
         if (adapter == null || dialog == null) {
 
-            adapter = new CommonAdapter<ProjectMember>(this.context, R.layout.list_item_project_member) {
+            adapter = new CommonAdapter<ProjectMember>(this.context, R.layout
+                    .list_item_project_member) {
                 @Override
                 public void convert(ViewHolder vh, ProjectMember item) {
                     vh.setText(R.id.tv_name, item.getName());

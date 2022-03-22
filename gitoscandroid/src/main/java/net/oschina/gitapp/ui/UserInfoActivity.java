@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.ProgressBar;
-import net.oschina.gitapp.AppContext;
+
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.Contanst;
@@ -32,17 +32,12 @@ public class UserInfoActivity extends BaseActivity {
 	
 	private User mUser;
 	
-	private String mUserId;
-	
 	private ProgressBar mLoading;
-	
-	private AppContext mAppContext;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_userinfo_detail);
-		mAppContext = AppContext.getInstance();
 		this.mSavedInstanceState = savedInstanceState;
 		initView();
 	}
@@ -51,11 +46,7 @@ public class UserInfoActivity extends BaseActivity {
 		mFragmentManager = getSupportFragmentManager();
 		// 拿到传过来的project对象
 		Intent intent = getIntent();
-		
 		mUser = (User) intent.getSerializableExtra(Contanst.USER);
-		
-		mUserId = intent.getStringExtra(Contanst.USERID);
-		
 		mLoading = (ProgressBar) findViewById(R.id.userinfo_loading);
 		
 		if (mUser == null) {
@@ -63,7 +54,6 @@ public class UserInfoActivity extends BaseActivity {
 		} else {
 			initViewPage();
 		}
-		
 	}
 	
 	private void initViewPage() {
@@ -81,8 +71,7 @@ public class UserInfoActivity extends BaseActivity {
 
 			@Override
 			protected Message doInBackground(Void... params) {
-				Message msg = new Message();
-				return msg;
+				return Message.obtain();
 			}
 
 			@Override

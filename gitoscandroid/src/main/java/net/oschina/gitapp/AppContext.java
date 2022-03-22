@@ -3,19 +3,9 @@ package net.oschina.gitapp;
 import android.app.Application;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.graphics.Bitmap;
 import android.media.AudioManager;
 
-import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
-import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
-import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
-import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
-import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-import com.nostra13.universalimageloader.core.decode.BaseImageDecoder;
-import com.nostra13.universalimageloader.core.download.BaseImageDownloader;
-import com.nostra13.universalimageloader.utils.StorageUtils;
+import com.kymjs.crash.CustomActivityOnCrash;
 
 import net.oschina.gitapp.api.AsyncHttpHelp;
 import net.oschina.gitapp.bean.Follow;
@@ -26,14 +16,6 @@ import net.oschina.gitapp.common.MethodsCompat;
 import net.oschina.gitapp.common.StringUtils;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InvalidClassException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -77,14 +59,12 @@ public class AppContext extends Application {
 
     private static AppContext appContext;
 
-    @Override
+    @Override 
     public void onCreate() {
         super.onCreate();
         // 注册App异常崩溃处理器
-//        Thread.setDefaultUncaughtExceptionHandler(AppException
-//                .getAppExceptionHandler(this));
+        CustomActivityOnCrash.install(this);
         init();
-        initImageLoader();
         appContext = this;
     }
 
@@ -106,47 +86,6 @@ public class AppContext extends Application {
         }
     }
 
-    private void initImageLoader() {
-        DisplayImageOptions imageOptions = new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.color.gray)
-                .showImageOnFail(R.drawable.ic_picture_loadfailed)
-                .cacheInMemory(true).cacheOnDisk(true)
-                .resetViewBeforeLoading(true).considerExifParams(false)
-                .bitmapConfig(Bitmap.Config.RGB_565).build();
-
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
-                this)
-                .memoryCacheExtraOptions(400, 400)
-                        // default = device screen dimensions
-                .diskCacheExtraOptions(400, 400, null)
-                .threadPoolSize(5)
-                        // default Thread.NORM_PRIORITY - 1
-                .threadPriority(Thread.NORM_PRIORITY)
-                        // default FIFO
-                .tasksProcessingOrder(QueueProcessingType.LIFO)
-                        // default
-                .denyCacheImageMultipleSizesInMemory()
-                .memoryCache(new LruMemoryCache(2 * 1024 * 1024))
-                .memoryCacheSize(2 * 1024 * 1024)
-                .memoryCacheSizePercentage(13)
-                        // default
-                .diskCache(
-                        new UnlimitedDiscCache(StorageUtils.getCacheDirectory(
-                                this, true)))
-                        // default
-                .diskCacheSize(50 * 1024 * 1024).diskCacheFileCount(100)
-                .diskCacheFileNameGenerator(new HashCodeFileNameGenerator())
-                        // default
-                .imageDownloader(new BaseImageDownloader(this))
-                        // default
-                .imageDecoder(new BaseImageDecoder(false))
-                        // default
-                .defaultDisplayImageOptions(DisplayImageOptions.createSimple())
-                        // default
-                .defaultDisplayImageOptions(imageOptions).build();
-
-        ImageLoader.getInstance().init(config);
-    }
 
     public void setProperties(Properties ps) {
         AppConfig.getAppConfig(this).set(ps);
@@ -161,19 +100,15 @@ public class AppContext extends Application {
     }
 
     public String getProperty(String key) {
-        String res = AppConfig.getAppConfig(this).get(key);
-        return res;
+        return AppConfig.getAppConfig(this).get(key);
     }
 
     public void removeProperty(String... key) {
         AppConfig.getAppConfig(this).remove(key);
     }
 
-
     /**
      * 是否是第一次启动App
-     *
-     * @return
      */
     public boolean isFristStart() {
         boolean res = false;
@@ -183,14 +118,11 @@ public class AppContext extends Application {
             res = true;
             setProperty(AppConfig.CONF_FRIST_START, "false");
         }
-
         return res;
     }
 
     /**
      * 设置是否发出提示音
-     *
-     * @param b
      */
     public void setConfigVoice(boolean b) {
         setProperty(AppConfig.CONF_VOICE, String.valueOf(b));
@@ -198,22 +130,15 @@ public class AppContext extends Application {
 
     /**
      * 是否启动检查更新
-     *
-     * @return
      */
     public boolean isCheckUp() {
         String perf_checkup = getProperty(AppConfig.CONF_CHECKUP);
         // 默认是开启
-        if (StringUtils.isEmpty(perf_checkup))
-            return true;
-        else
-            return StringUtils.toBool(perf_checkup);
+        return StringUtils.isEmpty(perf_checkup) || StringUtils.toBool(perf_checkup);
     }
 
     /**
      * 设置启动检查更新
-     *
-     * @param b
      */
     public void setConfigCheckUp(boolean b) {
         setProperty(AppConfig.CONF_CHECKUP, String.valueOf(b));
@@ -221,8 +146,6 @@ public class AppContext extends Application {
 
     /**
      * 检测当前系统声音是否为正常模式
-     *
-     * @return
      */
     public boolean isAudioNormal() {
         AudioManager mAudioManager = (AudioManager) getSystemService(AUDIO_SERVICE);
@@ -231,8 +154,6 @@ public class AppContext extends Application {
 
     /**
      * 应用程序是否发出提示音
-     *
-     * @return
      */
     public boolean isAppSound() {
         return isAudioNormal() && isVoice();
@@ -240,17 +161,11 @@ public class AppContext extends Application {
 
     /**
      * 是否接收通知
-     *
-     * @return
      */
     public boolean isReceiveNotice() {
         String perf_notice = getProperty(AppConfig.CONF_RECEIVENOTICE);
         // 默认是开启提示声音
-        if (StringUtils.isEmpty(perf_notice)) {
-            return true;
-        } else {
-            return StringUtils.toBool(perf_notice);
-        }
+        return StringUtils.isEmpty(perf_notice) || StringUtils.toBool(perf_notice);
     }
 
     /**
@@ -262,24 +177,14 @@ public class AppContext extends Application {
 
     /**
      * 是否发出提示音
-     *
-     * @return
      */
     public boolean isVoice() {
         String perf_voice = getProperty(AppConfig.CONF_VOICE);
-        // 默认是开启提示声音
-        if (StringUtils.isEmpty(perf_voice)) {
-            return true;
-        } else {
-            return StringUtils.toBool(perf_voice);
-        }
+        return StringUtils.isEmpty(perf_voice) || StringUtils.toBool(perf_voice);
     }
 
     /**
      * 判断当前版本是否兼容目标版本的方法
-     *
-     * @param VersionCode
-     * @return
      */
     public static boolean isMethodsCompat(int VersionCode) {
         int currentVersion = android.os.Build.VERSION.SDK_INT;
@@ -288,8 +193,6 @@ public class AppContext extends Application {
 
     /**
      * 获取App唯一标识
-     *
-     * @return
      */
     public String getAppId() {
         String uniqueID = getProperty(AppConfig.CONF_APP_UNIQUEID);
@@ -302,8 +205,6 @@ public class AppContext extends Application {
 
     /**
      * 获取App安装包信息
-     *
-     * @return
      */
     public PackageInfo getPackageInfo() {
         PackageInfo info = null;
@@ -318,101 +219,7 @@ public class AppContext extends Application {
     }
 
     /**
-     * 判断缓存数据是否可读
-     *
-     * @param cachefile
-     * @return
-     */
-    private boolean isReadDataCache(String cachefile) {
-        return readObject(cachefile) != null;
-    }
-
-    /**
-     * 保存对象
-     *
-     * @param ser
-     * @param file
-     * @throws IOException
-     */
-    public boolean saveObject(Serializable ser, String file) {
-        FileOutputStream fos = null;
-        ObjectOutputStream oos = null;
-        try {
-            fos = openFileOutput(file, MODE_PRIVATE);
-            oos = new ObjectOutputStream(fos);
-            oos.writeObject(ser);
-            oos.flush();
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        } finally {
-            try {
-                oos.close();
-            } catch (Exception e) {
-            }
-            try {
-                fos.close();
-            } catch (Exception e) {
-            }
-        }
-    }
-
-    /**
-     * 读取对象
-     *
-     * @param file
-     * @return
-     * @throws IOException
-     */
-    public Serializable readObject(String file) {
-        if (!isExistDataCache(file))
-            return null;
-        FileInputStream fis = null;
-        ObjectInputStream ois = null;
-        try {
-            fis = openFileInput(file);
-            ois = new ObjectInputStream(fis);
-            return (Serializable) ois.readObject();
-        } catch (FileNotFoundException e) {
-        } catch (Exception e) {
-            e.printStackTrace();
-            // 反序列化失败 - 删除缓存文件
-            if (e instanceof InvalidClassException) {
-                File data = getFileStreamPath(file);
-                data.delete();
-            }
-        } finally {
-            try {
-                ois.close();
-            } catch (Exception e) {
-            }
-            try {
-                fis.close();
-            } catch (Exception e) {
-            }
-        }
-        return null;
-    }
-
-    /**
-     * 判断缓存是否存在
-     *
-     * @param cachefile
-     * @return
-     */
-    private boolean isExistDataCache(String cachefile) {
-        boolean exist = false;
-        File data = getFileStreamPath(cachefile);
-        if (data.exists())
-            exist = true;
-        return exist;
-    }
-
-    /**
      * 获取登录信息
-     *
-     * @return
      */
     public User getLoginInfo() {
         User user = new User();
@@ -445,9 +252,6 @@ public class AppContext extends Application {
 
     /**
      * 保存用户的email和pwd
-     *
-     * @param email
-     * @param pwd
      */
     public void saveAccountInfo(String email, String pwd) {
         setProperty(ACCOUNT_EMAIL, email);
@@ -456,8 +260,6 @@ public class AppContext extends Application {
 
     /**
      * 保存登录用户的信息
-     *
-     * @param user
      */
     @SuppressWarnings("serial")
     public void saveLoginInfo(final User user) {
@@ -509,8 +311,6 @@ public class AppContext extends Application {
 
     /**
      * 用户是否登录
-     *
-     * @return
      */
     public boolean isLogin() {
         return login;
@@ -518,8 +318,6 @@ public class AppContext extends Application {
 
     /**
      * 获取登录用户id
-     *
-     * @return
      */
     public int getLoginUid() {
         return this.loginUid;
@@ -569,7 +367,6 @@ public class AppContext extends Application {
      *
      * @param dir     目录
      * @param curTime 当前系统时间
-     * @return
      */
     private int clearCacheFolder(File dir, long curTime) {
         int deletedFiles = 0;

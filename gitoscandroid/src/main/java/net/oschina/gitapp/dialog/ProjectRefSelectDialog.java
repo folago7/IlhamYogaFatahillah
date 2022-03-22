@@ -5,22 +5,20 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.widget.TextView;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
-
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.CommonAdapter;
 import net.oschina.gitapp.adapter.ViewHolder;
 import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.Branch;
-import net.oschina.gitapp.util.GitViewUtils;
+import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.util.JsonUtils;
 import net.oschina.gitapp.util.TypefaceUtils;
 
+import org.kymjs.kjframe.http.HttpCallBack;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import cz.msebera.android.httpclient.Header;
+import java.util.Map;
 
 /**
  * Created by 火蚁 on 15/4/23.
@@ -56,19 +54,21 @@ public class ProjectRefSelectDialog {
         final AlertDialog loading = LightProgressDialog.create(context, "加载分支和标签中...");
         loading.show();
 
-        GitOSCApi.getProjectBranchs(pId, new AsyncHttpResponseHandler() {
+        GitOSCApi.getProjectBranchs(pId, new HttpCallBack() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                List<Branch> branches = JsonUtils.getList(Branch[].class, responseBody);
+            public void onSuccess(Map<String, String> headers, byte[] t) {
+                super.onSuccess(headers, t);
+                List<Branch> branches = JsonUtils.getList(Branch[].class, t);
                 if (branches != null && !branches.isEmpty()) {
                     for (Branch b : branches) {
                         b.setType(Branch.TYPE_BRANCH);
                     }
                     ProjectRefSelectDialog.this.branches.addAll(branches);
-                    GitOSCApi.getProjectTags(pId, new AsyncHttpResponseHandler() {
+                    GitOSCApi.getProjectTags(pId, new HttpCallBack() {
                         @Override
-                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                            List<Branch> branches = JsonUtils.getList(Branch[].class, responseBody);
+                        public void onSuccess(Map<String, String> headers, byte[] t) {
+                            super.onSuccess(headers, t);
+                            List<Branch> branches = JsonUtils.getList(Branch[].class, t);
                             if (branches != null && !branches.isEmpty()) {
                                 for (Branch b : branches) {
                                     b.setType(Branch.TYPE_TAG);
@@ -76,11 +76,6 @@ public class ProjectRefSelectDialog {
                                 ProjectRefSelectDialog.this.branches.addAll(branches);
                             }
                             show(branch);
-                        }
-
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-
                         }
 
                         @Override
@@ -93,8 +88,9 @@ public class ProjectRefSelectDialog {
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                GitViewUtils.showToast("加载分支和标签失败");
+            public void onFailure(int errorNo, String strMsg) {
+                super.onFailure(errorNo, strMsg);
+                UIHelper.toastMessage(context, "加载分支和标签失败");
             }
 
             @Override

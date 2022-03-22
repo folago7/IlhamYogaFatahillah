@@ -14,8 +14,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.nostra13.universalimageloader.core.ImageLoader;
-
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.User;
@@ -23,6 +21,8 @@ import net.oschina.gitapp.common.BroadcastController;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.interfaces.DrawerMenuCallBack;
 import net.oschina.gitapp.widget.CircleImageView;
+
+import org.kymjs.kjframe.Core;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -123,11 +123,12 @@ public class DrawerNavigationMenu extends Fragment implements OnClickListener {
         User user = AppContext.getInstance().getLoginInfo();
 
         // 加载用户头像
-        String portrait = user.getNew_portrait() == null || user.getNew_portrait().equals("null") ? "" : user.getNew_portrait();
+        String portrait = user.getNew_portrait() == null || user.getNew_portrait().equals("null")
+                ? "" : user.getNew_portrait();
         if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
             ivPortrait.setImageResource(R.drawable.mini_avatar);
         } else {
-            ImageLoader.getInstance().displayImage(user.getNew_portrait(), ivPortrait);
+            new Core.Builder().url(user.getNew_portrait()).view(ivPortrait).doTask();
         }
         // 其他资料
         tvName.setText(user.getName());
@@ -192,7 +193,8 @@ public class DrawerNavigationMenu extends Fragment implements OnClickListener {
     }
 
     @Override
-    @OnClick({R.id.menu_user_layout, R.id.menu_item_explore, R.id.menu_item_myself, R.id.menu_item_language,
+    @OnClick({R.id.menu_user_layout, R.id.menu_item_explore, R.id.menu_item_myself, R.id
+            .menu_item_language,
             R.id.menu_item_shake, R.id.menu_item_scan, R.id.menu_item_setting})
     public void onClick(View v) {
         int id = v.getId();

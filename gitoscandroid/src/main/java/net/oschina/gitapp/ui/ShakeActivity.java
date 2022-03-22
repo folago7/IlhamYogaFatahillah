@@ -24,9 +24,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.nostra13.universalimageloader.core.ImageLoader;
-
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.GitOSCApi;
@@ -35,17 +32,17 @@ import net.oschina.gitapp.bean.RandomProject;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
-import net.oschina.gitapp.util.GitViewUtils;
 import net.oschina.gitapp.util.JsonUtils;
 import net.oschina.gitapp.util.ShakeListener;
 import net.oschina.gitapp.util.ShakeListener.OnShakeListener;
 import net.oschina.gitapp.util.TypefaceUtils;
 
+import org.kymjs.kjframe.Core;
+import org.kymjs.kjframe.http.HttpCallBack;
 
 import java.io.IOException;
 import java.util.HashMap;
-
-import cz.msebera.android.httpclient.Header;
+import java.util.Map;
 
 public class ShakeActivity extends BaseActivity implements OnClickListener {
 
@@ -90,7 +87,7 @@ public class ShakeActivity extends BaseActivity implements OnClickListener {
     private RandomProject mProject;
 
     private SoundPool sndPool;
-    private HashMap<Integer, Integer> soundPoolMap = new HashMap<Integer, Integer>();
+    private HashMap<Integer, Integer> soundPoolMap = new HashMap<>();
 
     private Bitmap mBitmap;
 
@@ -143,8 +140,10 @@ public class ShakeActivity extends BaseActivity implements OnClickListener {
             UIHelper.getDialog(ShakeActivity.this, "温馨提示", "请先摇一摇再分享吧", "知道了").show();
         } else {
             String title = "摇项目，等你来！";
-            String url = GitOSCApi.NO_API_BASE_URL + mProject.getOwner().getUsername() + "/" + mProject.getName();
-            String shareContent = "我在Git@OSC客户端中摇到《" + mProject.getOwner().getName() + "的项目" + mProject.getName() + "》你也来试试手气吧";
+            String url = GitOSCApi.NO_API_BASE_URL + mProject.getOwner().getUsername() + "/" +
+                    mProject.getName();
+            String shareContent = "我在Git@OSC客户端中摇到《" + mProject.getOwner().getName() + "的项目" +
+                    mProject.getName() + "》你也来试试手气吧";
             UIHelper.showShareOption(ShakeActivity.this, title, url, shareContent, mBitmap);
         }
     }
@@ -260,10 +259,6 @@ public class ShakeActivity extends BaseActivity implements OnClickListener {
         });
     }
 
-    public void startVibrato() {
-        mVibrator.vibrate(new long[]{500, 200, 500, 200}, -1);
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -302,11 +297,12 @@ public class ShakeActivity extends BaseActivity implements OnClickListener {
     }
 
     private void loadProject() {
-        GitOSCApi.getRandomProject(new AsyncHttpResponseHandler() {
+        GitOSCApi.getRandomProject(new HttpCallBack() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                RandomProject randomProject = JsonUtils.toBean(RandomProject.class, responseBody);
-                mProject = randomProject;
+            public void onSuccess(Map<String, String> headers, byte[] t) {
+                super.onSuccess(headers, t);
+                mProject = JsonUtils.toBean(RandomProject.class, t);
+
                 if (mProject != null && mProject.getRand_num() == 0) {
                     mShakeResProject.setBackgroundResource(R.color.white);
                     mShakeResProject.setVisibility(View.VISIBLE);
@@ -314,9 +310,12 @@ public class ShakeActivity extends BaseActivity implements OnClickListener {
                     mProjectTitle.setText(mProject.getOwner().getName() + "/" + mProject.getName());
                     mProjectDescription.setText(mProject.getDescription());
 
-                    setTextWithSemantic(mProjectStarNums, mProject.getWatches_count().toString(), R.string.sem_watch);
-                    setTextWithSemantic(mProjectForkNums, mProject.getStars_count().toString(), R.string.sem_star);
-                    setTextWithSemantic(mProjectWatchNums, mProject.getForks_count().toString(), R.string.sem_fork);
+                    setTextWithSemantic(mProjectStarNums, mProject.getWatches_count().toString(),
+                            R.string.sem_watch);
+                    setTextWithSemantic(mProjectForkNums, mProject.getStars_count().toString(), R
+                            .string.sem_star);
+                    setTextWithSemantic(mProjectWatchNums, mProject.getForks_count().toString(),
+                            R.string.sem_fork);
 
                     String language = mProject.getLanguage() != null ? mProject.getLanguage() : "";
                     if (mProject.getLanguage() != null) {
@@ -330,7 +329,7 @@ public class ShakeActivity extends BaseActivity implements OnClickListener {
                     if (faceUrl.endsWith(".gif") || StringUtils.isEmpty(faceUrl)) {
                         mProjectFace.setImageResource(R.drawable.mini_avatar);
                     } else {
-                        ImageLoader.getInstance().displayImage(faceUrl, mProjectFace);
+                        new Core.Builder().url(faceUrl).view(mProjectFace).doTask();
                     }
 
                     Handler handle = new Handler();
@@ -344,13 +343,14 @@ public class ShakeActivity extends BaseActivity implements OnClickListener {
                 } else if (mProject != null) {
                     mShakeListener.stop();
                     mShakeResAward.setVisibility(View.VISIBLE);
-                    ImageLoader.getInstance().displayImage(mProject.getImg(), mShakeResAwardImg);
+                    new Core.Builder().url(mProject.getImg()).view(mShakeResAwardImg).doTask();
                     mShakeResAwardMsg.setText(mProject.getMsg());
 
                     AlertDialog.Builder dialog = new Builder(ShakeActivity.this);
                     dialog.setCancelable(false);
                     dialog.setTitle("恭喜您，摇到奖品啦！！！");
-                    dialog.setMessage(Html.fromHtml("获得：" + mProject.getMsg() + "<br><br>温馨提示：<br>请完善您的收货信息，方便我们给您邮寄奖品"));
+                    dialog.setMessage(Html.fromHtml("获得：" + mProject.getMsg() +
+                            "<br><br>温馨提示：<br>请完善您的收货信息，方便我们给您邮寄奖品"));
                     dialog.setNegativeButton("我知道了", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
@@ -364,7 +364,8 @@ public class ShakeActivity extends BaseActivity implements OnClickListener {
                         public void onClick(DialogInterface dialog, int which) {
                             String url = "http://t.cn/RhLDd4k";
                             Bitmap bitmap = UIHelper.takeScreenShot(ShakeActivity.this);
-                            UIHelper.showShareOption(ShakeActivity.this, "我摇到奖品啦", url, mProject.getMsg(), bitmap);
+                            UIHelper.showShareOption(ShakeActivity.this, "我摇到奖品啦", url, mProject
+                                    .getMsg(), bitmap);
                         }
                     });
                     dialog.show();
@@ -372,13 +373,14 @@ public class ShakeActivity extends BaseActivity implements OnClickListener {
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                GitViewUtils.showToast("红薯跟你开了个玩笑，没有为你找到项目");
+            public void onFailure(int errorNo, String strMsg) {
+                super.onFailure(errorNo, strMsg);
+                UIHelper.toastMessage(ShakeActivity.this, "红薯跟你开了个玩笑，没有为你找到项目");
             }
 
             @Override
-            public void onStart() {
-                super.onStart();
+            public void onPreStart() {
+                super.onPreStart();
                 beforeLoading();
             }
 
@@ -391,7 +393,8 @@ public class ShakeActivity extends BaseActivity implements OnClickListener {
     }
 
     public void setTextWithSemantic(TextView tv, String text, int semanticRes) {
-        String finalText = AppContext.getInstance().getResources().getString(semanticRes) + " " + text;
+        String finalText = AppContext.getInstance().getResources().getString(semanticRes) + " " +
+                text;
         tv.setText(finalText);
         TypefaceUtils.setSemantic(tv);
     }
@@ -410,20 +413,17 @@ public class ShakeActivity extends BaseActivity implements OnClickListener {
 
     private void loadLuckMsg() {
 
-        GitOSCApi.getLuckMsg(new AsyncHttpResponseHandler() {
+        GitOSCApi.getLuckMsg(new HttpCallBack() {
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                LuckMsg luckMsg = JsonUtils.toBean(LuckMsg.class, responseBody);
+            public void onSuccess(Map<String, String> headers, byte[] t) {
+                super.onSuccess(headers, t);
+                LuckMsg luckMsg = JsonUtils.toBean(LuckMsg.class, t);
                 if (luckMsg != null) {
                     mLuckMsg.setVisibility(View.VISIBLE);
                     mLuckMsg.setText(luckMsg.getMessage());
                 }
             }
 
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-
-            }
         });
     }
 }
