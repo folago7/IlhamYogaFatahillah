@@ -1,9 +1,10 @@
 package net.oschina.gitapp.bean;
 
-import java.io.Serializable;
-import java.util.List;
-
 import org.codehaus.jackson.annotate.JsonProperty;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 个人动态中的数据实体类
@@ -35,7 +36,7 @@ public class Data implements Serializable {
 	
 	// 提交，可能有多个commits
 	@JsonProperty("commits")
-	private List<Commit> _commits;
+	private List<Commit> _commits = new ArrayList<>();
 	
 	// 提交的数量
 	@JsonProperty("total_commits_count")

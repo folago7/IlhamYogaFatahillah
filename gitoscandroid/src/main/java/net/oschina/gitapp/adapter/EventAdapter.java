@@ -14,6 +14,8 @@ import net.oschina.gitapp.common.HtmlRegexpUtils;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 
+import org.kymjs.kjframe.utils.KJLoger;
+
 import java.util.List;
 
 /**
@@ -97,24 +99,20 @@ public class EventAdapter extends CommonAdapter<Event> {
     }
 
     private void showCommitInfo(LinearLayout layout, List<Commit> commits) {
-        if (commits.size() >= 2) {
-            addCommitItem(layout, commits.get(0));
-            addCommitItem(layout, commits.get(1));
-        } else {
-            for (Commit commit : commits) {
-                addCommitItem(layout, commit);
+        try {
+            if (commits.size() == 1) {
+                addCommitItem(layout, commits.get(0));
+            } else if (commits.size() == 2) {
+                addCommitItem(layout, commits.get(0));
+                addCommitItem(layout, commits.get(1));
             }
+        } catch (Exception e) {
+            KJLoger.debug("====" + e.getMessage());
         }
     }
 
     /**
      * 添加commit项
-<<<<<<< HEAD
-=======
-     *
-     * @param layout
-     * @param commit
->>>>>>> dev
      */
     private void addCommitItem(LinearLayout layout, Commit commit) {
         try {

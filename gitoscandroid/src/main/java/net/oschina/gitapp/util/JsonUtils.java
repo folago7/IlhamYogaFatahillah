@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import javax.net.ssl.SSLHandshakeException;
@@ -28,10 +28,7 @@ public class JsonUtils {
         try {
             obj = parse(is, type, null);
         } catch (IOException e) {
-            e.printStackTrace();
         }
-
-
         return obj;
     }
 
@@ -44,7 +41,7 @@ public class JsonUtils {
      * @return
      * @throws java.io.IOException
      */
-    private static <T> T parse(InputStream inputStream, Class<T> type, T instance) throws 
+    private static <T> T parse(InputStream inputStream, Class<T> type, T instance) throws
             IOException {
         InputStreamReader reader = null;
         try {
@@ -67,7 +64,9 @@ public class JsonUtils {
     }
 
     public static <T> T toBean(Class<T> type, byte[] bytes) {
-        if (bytes == null) return null;
+        if (bytes == null) {
+            return null;
+        }
         return toBean(type, new ByteArrayInputStream(bytes));
     }
 
@@ -76,7 +75,8 @@ public class JsonUtils {
         List<T> results = new ArrayList<T>();
         try {
             T[] _next = toBean(type, bytes);
-            results.addAll(Arrays.asList(_next));
+            if (_next != null)
+                Collections.addAll(results, _next);
         } catch (Exception e) {
             return null;
         }
