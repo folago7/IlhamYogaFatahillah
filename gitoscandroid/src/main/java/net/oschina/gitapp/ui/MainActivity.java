@@ -41,7 +41,7 @@ import java.util.Map;
  * 程序主界面
  *
  * @author 火蚁（http://my.oschina.net/LittleDY）
- *         <p/>
+ *         <p>
  *         最后更新：2014-05-29
  *         更新内容：更改以callBack的方式进行交互
  *         更新者：火蚁
@@ -260,8 +260,9 @@ public class MainActivity extends AppCompatActivity implements
         String tag = CONTENTS[pos];
         if (tag.equalsIgnoreCase(mCurrentContentTag)) return;
 
-        changeFragment(R.id.main_content, Fragment.instantiate(this, FRAGMENTS[pos]));
-
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.main_content, Fragment.instantiate(this, FRAGMENTS[pos]))
+                .commit();
         mActionBar.setTitle(TITLES[pos]);
         mTitle = TITLES[pos];//记录主界面的标题
         mCurrentContentTag = tag;
@@ -366,8 +367,7 @@ public class MainActivity extends AppCompatActivity implements
         if (targetFragment.isHidden()) {
             transaction.show(targetFragment);
         }
-        if (currentSupportFragment != null
-                && currentSupportFragment.isVisible()) {
+        if (currentSupportFragment != null && currentSupportFragment.isVisible()) {
             transaction.hide(currentSupportFragment);
         }
         currentSupportFragment = targetFragment;

@@ -103,10 +103,8 @@ public final class DefaultErrorActivity extends Activity {
                     // i.setType("text/plain"); //模拟器
                     i.setType("message/rfc822"); // 真机
                     // 接收错误报告的邮箱地址
-                    i.putExtra(Intent.EXTRA_EMAIL,
-                            new String[]{"zhangdeyi@oschina.net"});
-                    i.putExtra(Intent.EXTRA_SUBJECT,
-                            "GIT@OSC,Android客户端 - 错误报告");
+                    i.putExtra(Intent.EXTRA_EMAIL, new String[]{"app@oschina.cn"});
+                    i.putExtra(Intent.EXTRA_SUBJECT, "GIT@OSC,Android客户端 - 错误报告");
                     i.putExtra(Intent.EXTRA_TEXT, CustomActivityOnCrash.getAllErrorDetailsFromIntent
                             (DefaultErrorActivity.this, getIntent()));
                     DefaultErrorActivity.this.startActivity(Intent.createChooser(i,
