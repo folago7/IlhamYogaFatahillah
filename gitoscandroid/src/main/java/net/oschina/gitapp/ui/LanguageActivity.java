@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
+import com.kymjs.rxvolley.client.HttpCallback;
+
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.CommonAdapter;
 import net.oschina.gitapp.adapter.ProjectAdapter;
@@ -19,7 +21,6 @@ import net.oschina.gitapp.util.JsonUtils;
 import net.oschina.gitapp.widget.EnhanceListView;
 import net.oschina.gitapp.widget.TipInfoLayout;
 
-import org.kymjs.kjframe.http.HttpCallBack;
 
 import java.util.List;
 import java.util.Map;
@@ -104,7 +105,7 @@ public class LanguageActivity extends BaseActivity implements
     }
 
     private void loadProjects(final String languageId, final int page) {
-        GitOSCApi.getLanguageProjectList(languageId, page, new HttpCallBack() {
+        GitOSCApi.getLanguageProjectList(languageId, page, new HttpCallback() {
             @Override
             public void onSuccess(Map<String, String> headers, byte[] t) {
                 super.onSuccess(headers, t);
@@ -144,7 +145,7 @@ public class LanguageActivity extends BaseActivity implements
 
     // 加载语言列表
     private void loadLanguagesList() {
-        GitOSCApi.getLanguageList(new HttpCallBack() {
+        GitOSCApi.getLanguageList(new HttpCallback() {
             @Override
             public void onSuccess(Map<String, String> headers, byte[] t) {
                 super.onSuccess(headers, t);

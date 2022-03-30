@@ -6,6 +6,10 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.media.AudioManager;
 
 import com.kymjs.crash.CustomActivityOnCrash;
+import com.kymjs.okhttp.OkHttpStack;
+import com.kymjs.rxvolley.RxVolley;
+import com.kymjs.rxvolley.http.RequestQueue;
+import com.squareup.okhttp.OkHttpClient;
 
 import net.oschina.gitapp.api.AsyncHttpHelp;
 import net.oschina.gitapp.bean.Follow;
@@ -59,11 +63,13 @@ public class AppContext extends Application {
 
     private static AppContext appContext;
 
-    @Override 
+    @Override
     public void onCreate() {
         super.onCreate();
         // 注册App异常崩溃处理器
         CustomActivityOnCrash.install(this);
+        RxVolley.setRequestQueue(RequestQueue.newRequestQueue(RxVolley.CACHE_FOLDER, new
+                OkHttpStack(new OkHttpClient())));
         init();
         appContext = this;
     }

@@ -7,6 +7,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.View;
 
+import com.kymjs.rxvolley.client.HttpCallback;
+
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.Issue;
@@ -17,7 +19,6 @@ import net.oschina.gitapp.ui.fragments.IssueDetailViewPagerFragment;
 import net.oschina.gitapp.util.JsonUtils;
 import net.oschina.gitapp.widget.TipInfoLayout;
 
-import org.kymjs.kjframe.http.HttpCallBack;
 
 import java.util.Map;
 
@@ -86,14 +87,14 @@ public class IssueDetailActivity extends BaseActivity {
     }
 
     private void loadIssueAndProject(final String projectId, final String issueId) {
-        GitOSCApi.getProject(projectId, new HttpCallBack() {
+        GitOSCApi.getProject(projectId, new HttpCallback() {
             @Override
             public void onSuccess(Map<String, String> headers, byte[] t) {
                 super.onSuccess(headers, t);
                 Project p = JsonUtils.toBean(Project.class, t);
                 if (p != null) {
                     mProject = p;
-                    GitOSCApi.getIssueDetail(projectId, issueId, new HttpCallBack() {
+                    GitOSCApi.getIssueDetail(projectId, issueId, new HttpCallback() {
                         @Override
                         public void onSuccess(Map<String, String> headers, byte[] t) {
                             super.onSuccess(headers, t);

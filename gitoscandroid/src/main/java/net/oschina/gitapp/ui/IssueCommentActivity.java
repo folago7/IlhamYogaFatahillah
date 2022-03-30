@@ -10,6 +10,8 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.kymjs.rxvolley.client.HttpCallback;
+
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.Issue;
@@ -19,8 +21,6 @@ import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.dialog.LightProgressDialog;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
-
-import org.kymjs.kjframe.http.HttpCallBack;
 
 import java.util.Map;
 
@@ -113,7 +113,7 @@ public class IssueCommentActivity extends BaseActivity implements OnClickListene
         final AlertDialog pubing = LightProgressDialog.create(this, "提交评论中...");
 
         GitOSCApi.pubIssueComment(mProject.getId(), mIssue.getId(), mCommentContent.getText()
-                .toString(), new HttpCallBack() {
+                .toString(), new HttpCallback() {
             @Override
             public void onSuccess(Map<String, String> headers, byte[] t) {
                 super.onSuccess(headers, t);

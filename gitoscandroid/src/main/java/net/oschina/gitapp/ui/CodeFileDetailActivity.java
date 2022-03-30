@@ -9,6 +9,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 
+import com.kymjs.rxvolley.client.HttpCallback;
+
 import net.oschina.gitapp.AppConfig;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
@@ -23,8 +25,6 @@ import net.oschina.gitapp.util.JsonUtils;
 import net.oschina.gitapp.util.MarkdownUtils;
 import net.oschina.gitapp.util.SourceEditor;
 import net.oschina.gitapp.widget.TipInfoLayout;
-
-import org.kymjs.kjframe.http.HttpCallBack;
 
 import java.util.Map;
 
@@ -174,7 +174,7 @@ public class CodeFileDetailActivity extends BaseActivity {
 
     private void loadCode(final String projectId, final String path,
                           final String ref_name) {
-        GitOSCApi.getCodeFileDetail(projectId, path, ref_name, new HttpCallBack() {
+        GitOSCApi.getCodeFileDetail(projectId, path, ref_name, new HttpCallback() {
             @Override
             public void onSuccess(Map<String, String> headers, byte[] t) {
                 super.onSuccess(headers, t);

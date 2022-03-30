@@ -14,12 +14,12 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.TextView;
 
+import com.kymjs.rxvolley.RxVolley;
+import com.kymjs.rxvolley.client.HttpCallback;
+
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 import net.oschina.gitapp.util.TypefaceUtils;
-
-import org.kymjs.kjframe.Core;
-import org.kymjs.kjframe.http.HttpCallBack;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -27,6 +27,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -46,8 +47,6 @@ public class PhotoBrowseActivity extends BaseActivity implements View.OnClickLis
     TextView tvPhotoIndex;
     @InjectView(R.id.tv_icon)
     TextView tvDownloadIcon;
-
-    private PhotoAdapter adapter;
 
     private String[] imageUrls;
 
@@ -72,7 +71,7 @@ public class PhotoBrowseActivity extends BaseActivity implements View.OnClickLis
 
     private void initView() {
         mActionBar.setDisplayShowTitleEnabled(false);
-        adapter = new PhotoAdapter(getSupportFragmentManager());
+        PhotoAdapter adapter = new PhotoAdapter(getSupportFragmentManager());
 
         viewpager.setAdapter(adapter);
 
@@ -87,7 +86,7 @@ public class PhotoBrowseActivity extends BaseActivity implements View.OnClickLis
         viewpager.setOffscreenPageLimit(1);
         viewpager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int 
+            public void onPageScrolled(int position, float positionOffset, int
                     positionOffsetPixels) {
 
             }
@@ -158,14 +157,16 @@ public class PhotoBrowseActivity extends BaseActivity implements View.OnClickLis
      * 更新内容: 修改图片下载完成之后再保存到图库中
      */
     public void saveImageToGallery() {
-        Core.getKJHttp().download("", imageUrls[index], new HttpCallBack() {
-            @Override
-            public void onSuccess(byte[] t) {
-                super.onSuccess(t);
-                saveImageToGallery(PhotoBrowseActivity.this, BitmapFactory.decodeByteArray(t, 0,
-                        t.length));
-            }
-        });
+        RxVolley.download(Environment.getExternalStorageDirectory() + "/oschina/gitosc",
+                imageUrls[index], new HttpCallback() {
+                    @Override
+                    public void onSuccess(Map<String, String> headers, byte[] t) {
+                        super.onSuccess(headers, t);
+                        saveImageToGallery(PhotoBrowseActivity.this, BitmapFactory
+                                .decodeByteArray(t, 0,
+                                        t.length));
+                    }
+                });
     }
 
     public void saveImageToGallery(Context context, Bitmap bmp) {

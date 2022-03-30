@@ -22,13 +22,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kymjs.rxvolley.client.HttpCallback;
+
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.Update;
 import net.oschina.gitapp.dialog.LightProgressDialog;
 import net.oschina.gitapp.util.JsonUtils;
-
-import org.kymjs.kjframe.http.HttpCallBack;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -170,7 +170,7 @@ public class UpdateManager {
         getCurrentVersion();
         final AlertDialog check = LightProgressDialog.create(context, "正在检测，请稍候...");
         check.setCanceledOnTouchOutside(false);
-        GitOSCApi.getUpdateInfo(new HttpCallBack() {
+        GitOSCApi.getUpdateInfo(new HttpCallback() {
             @Override
             public void onSuccess(Map<String, String> headers, byte[] t) {
                 super.onSuccess(headers, t);

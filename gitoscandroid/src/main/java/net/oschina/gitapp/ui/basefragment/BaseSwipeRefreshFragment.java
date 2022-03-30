@@ -12,13 +12,13 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.kymjs.rxvolley.client.HttpCallback;
+
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.CommonAdapter;
 import net.oschina.gitapp.bean.Entity;
 import net.oschina.gitapp.bean.MessageData;
 import net.oschina.gitapp.widget.TipInfoLayout;
-
-import org.kymjs.kjframe.http.HttpCallBack;
 
 import java.util.List;
 import java.util.Map;
@@ -65,7 +65,7 @@ public abstract class BaseSwipeRefreshFragment<T extends Entity>
 
     private boolean isFrist = true;
 
-    protected HttpCallBack mHandler = new HttpCallBack() {
+    protected HttpCallback mHandler = new HttpCallback() {
         private List<T> datas = null;
 
         @Override

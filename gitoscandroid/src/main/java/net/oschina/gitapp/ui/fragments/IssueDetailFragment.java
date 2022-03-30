@@ -8,6 +8,8 @@ import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.kymjs.core.bitmap.client.BitmapCore;
+
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.Commit;
@@ -17,8 +19,6 @@ import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.basefragment.BaseFragment;
-
-import org.kymjs.kjframe.Core;
 
 
 /**
@@ -104,7 +104,7 @@ public class IssueDetailFragment extends BaseFragment {
             mIssueUserFace.setImageResource(R.drawable.mini_avatar);
         } else {
             String portraitURL = GitOSCApi.NO_API_BASE_URL + mIssue.getAuthor().getPortrait();
-            new Core.Builder().url(portraitURL).view(mIssueUserFace).doTask();
+            new BitmapCore.Builder().url(portraitURL).view(mIssueUserFace).doTask();
         }
     }
 }

@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.kymjs.core.bitmap.client.BitmapCore;
+
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.User;
@@ -21,8 +23,6 @@ import net.oschina.gitapp.common.BroadcastController;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.interfaces.DrawerMenuCallBack;
 import net.oschina.gitapp.widget.CircleImageView;
-
-import org.kymjs.kjframe.Core;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -128,7 +128,7 @@ public class DrawerNavigationMenu extends Fragment implements OnClickListener {
         if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
             ivPortrait.setImageResource(R.drawable.mini_avatar);
         } else {
-            new Core.Builder().url(user.getNew_portrait()).view(ivPortrait).doTask();
+            new BitmapCore.Builder().url(user.getNew_portrait()).view(ivPortrait).doTask();
         }
         // 其他资料
         tvName.setText(user.getName());

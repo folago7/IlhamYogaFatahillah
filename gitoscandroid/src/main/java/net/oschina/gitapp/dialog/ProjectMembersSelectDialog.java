@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.widget.Toast;
 
+import com.kymjs.rxvolley.client.HttpCallback;
+
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.CommonAdapter;
 import net.oschina.gitapp.adapter.ViewHolder;
@@ -12,8 +14,6 @@ import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.ProjectMember;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.util.JsonUtils;
-
-import org.kymjs.kjframe.http.HttpCallBack;
 
 import java.util.List;
 import java.util.Map;
@@ -59,7 +59,7 @@ public class ProjectMembersSelectDialog {
     private void load(final String memberId) {
         final AlertDialog loading = LightProgressDialog.create(this.context, "加载项目成员中...");
 
-        GitOSCApi.getProjectMembers(this.pId, new HttpCallBack() {
+        GitOSCApi.getProjectMembers(this.pId, new HttpCallback() {
 
             @Override
             public void onSuccess(Map<String, String> headers, byte[] t) {

@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.widget.TextView;
 
+import com.kymjs.rxvolley.client.HttpCallback;
+
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.CommonAdapter;
 import net.oschina.gitapp.adapter.ViewHolder;
@@ -13,8 +15,6 @@ import net.oschina.gitapp.bean.Branch;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.util.JsonUtils;
 import net.oschina.gitapp.util.TypefaceUtils;
-
-import org.kymjs.kjframe.http.HttpCallBack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +54,7 @@ public class ProjectRefSelectDialog {
         final AlertDialog loading = LightProgressDialog.create(context, "加载分支和标签中...");
         loading.show();
 
-        GitOSCApi.getProjectBranchs(pId, new HttpCallBack() {
+        GitOSCApi.getProjectBranchs(pId, new HttpCallback() {
             @Override
             public void onSuccess(Map<String, String> headers, byte[] t) {
                 super.onSuccess(headers, t);
@@ -64,7 +64,7 @@ public class ProjectRefSelectDialog {
                         b.setType(Branch.TYPE_BRANCH);
                     }
                     ProjectRefSelectDialog.this.branches.addAll(branches);
-                    GitOSCApi.getProjectTags(pId, new HttpCallBack() {
+                    GitOSCApi.getProjectTags(pId, new HttpCallback() {
                         @Override
                         public void onSuccess(Map<String, String> headers, byte[] t) {
                             super.onSuccess(headers, t);

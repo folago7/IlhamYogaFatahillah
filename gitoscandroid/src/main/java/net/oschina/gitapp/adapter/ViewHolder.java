@@ -9,11 +9,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.kymjs.core.bitmap.client.BitmapCore;
+
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.util.TypefaceUtils;
 
-import org.kymjs.kjframe.Core;
 
 /**
  * 通用性极高的ViewHolder
@@ -48,7 +49,7 @@ public class ViewHolder {
      * @param position    索引
      * @return
      */
-    public static ViewHolder getViewHolder(Context context, View convertView, ViewGroup parent, 
+    public static ViewHolder getViewHolder(Context context, View convertView, ViewGroup parent,
                                            int layoutId, int position) {
         if (convertView == null) {
             return new ViewHolder(context, parent, layoutId, position);
@@ -142,7 +143,7 @@ public class ViewHolder {
         if (iv.getTag() == null || !iv.getTag().equals(imgUrl)) {
             iv.setImageResource(R.drawable.mini_avatar);
         }
-        new Core.Builder().url(imgUrl).view(iv).doTask();
+        new BitmapCore.Builder().url(imgUrl).view(iv).doTask();
         iv.setTag(imgUrl);
     }
 }

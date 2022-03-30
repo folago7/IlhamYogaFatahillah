@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.kymjs.rxvolley.client.HttpCallback;
+
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.NotificationAdapter;
 import net.oschina.gitapp.api.GitOSCApi;
@@ -24,8 +26,6 @@ import net.oschina.gitapp.bean.ProjectNotificationArray;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.basefragment.BaseFragment;
 import net.oschina.gitapp.util.JsonUtils;
-
-import org.kymjs.kjframe.http.HttpCallBack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -168,7 +168,7 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
     }
 
     private void loadData(final String filter, final String all, final String project_id) {
-        GitOSCApi.getNotification(filter, all, project_id, new HttpCallBack() {
+        GitOSCApi.getNotification(filter, all, project_id, new HttpCallback() {
             @Override
             public void onSuccess(Map<String, String> headers, byte[] t) {
                 super.onSuccess(headers, t);
@@ -219,7 +219,7 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
             // 设置未读通知为已读
             if (!notification.isRead()) {
                 GitOSCApi.setNotificationReaded(notification.getId(), new
-                        HttpCallBack() {
+                        HttpCallback() {
                         });
             }
             if (notification.getTarget_type().equalsIgnoreCase("Issue")) {

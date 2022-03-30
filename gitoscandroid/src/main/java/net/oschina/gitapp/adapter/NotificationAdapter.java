@@ -9,14 +9,14 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.kymjs.core.bitmap.client.BitmapCore;
+
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.Notification;
 import net.oschina.gitapp.bean.ProjectNotification;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
-
-import org.kymjs.kjframe.Core;
 
 import java.util.List;
 
@@ -125,7 +125,7 @@ public class NotificationAdapter extends BaseExpandableListAdapter {
             holder.mGroupFace.setImageResource(R.drawable.mini_avatar);
         } else {
             String portraitURL = pn.getOwner().getPortrait();
-            new Core.Builder().url(portraitURL).view(holder.mGroupFace).errorBitmapRes(R.drawable
+            new BitmapCore.Builder().url(portraitURL).view(holder.mGroupFace).errorResId(R.drawable
                     .mini_avatar).doTask();
         }
 
@@ -175,8 +175,8 @@ public class NotificationAdapter extends BaseExpandableListAdapter {
             holder.face.setImageResource(R.drawable.mini_avatar);
         } else {
             String portraitURL = notification.getUserinfo().getPortrait();
-            new Core.Builder().view(holder.face).url(portraitURL)
-                    .errorBitmapRes(R.drawable.mini_avatar).doTask();
+            new BitmapCore.Builder().view(holder.face).url(portraitURL)
+                    .errorResId(R.drawable.mini_avatar).doTask();
         }
 
         holder.face.setOnClickListener(new OnClickListener() {

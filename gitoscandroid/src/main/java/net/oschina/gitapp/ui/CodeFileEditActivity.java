@@ -10,6 +10,8 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.kymjs.rxvolley.client.HttpCallback;
+
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.GitOSCApi;
@@ -20,8 +22,6 @@ import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.dialog.LightProgressDialog;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
-
-import org.kymjs.kjframe.http.HttpCallBack;
 
 import java.util.Map;
 
@@ -115,7 +115,7 @@ public class CodeFileEditActivity extends BaseActivity implements OnClickListene
 
 
         GitOSCApi.updateRepositoryFiles(mProject.getId(), mBranch, mPath, mBranch, content,
-                commit_message, new HttpCallBack() {
+                commit_message, new HttpCallback() {
                     @Override
                     public void onSuccess(Map<String, String> headers, byte[] t) {
                         super.onSuccess(headers, t);

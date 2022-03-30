@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.kymjs.rxvolley.toolbox.Loger;
+
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.Commit;
 import net.oschina.gitapp.bean.Event;
@@ -13,8 +15,6 @@ import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.HtmlRegexpUtils;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
-
-import org.kymjs.kjframe.utils.KJLoger;
 
 import java.util.List;
 
@@ -107,7 +107,7 @@ public class EventAdapter extends CommonAdapter<Event> {
                 addCommitItem(layout, commits.get(1));
             }
         } catch (Exception e) {
-            KJLoger.debug("====" + e.getMessage());
+            Loger.debug("====" + e.getMessage());
         }
     }
 

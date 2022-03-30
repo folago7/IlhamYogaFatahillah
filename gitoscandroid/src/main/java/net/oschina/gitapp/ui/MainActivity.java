@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.blueware.agent.android.BlueWare;
+import com.kymjs.rxvolley.client.HttpCallback;
 import com.umeng.analytics.MobclickAgent;
 
 import net.oschina.gitapp.AppContext;
@@ -30,8 +31,6 @@ import net.oschina.gitapp.interfaces.DrawerMenuCallBack;
 import net.oschina.gitapp.ui.fragments.ExploreViewPagerFragment;
 import net.oschina.gitapp.ui.fragments.MySelfViewPagerFragment;
 import net.oschina.gitapp.util.JsonUtils;
-
-import org.kymjs.kjframe.http.HttpCallBack;
 
 import java.util.List;
 import java.util.Map;
@@ -142,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    private HttpCallBack noticeHandler = new HttpCallBack() {
+    private HttpCallback noticeHandler = new HttpCallback() {
         @Override
         public void onSuccess(Map<String, String> headers, byte[] t) {
             super.onSuccess(headers, t);

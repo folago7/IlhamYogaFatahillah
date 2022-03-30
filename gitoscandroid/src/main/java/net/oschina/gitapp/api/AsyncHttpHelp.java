@@ -2,12 +2,12 @@ package net.oschina.gitapp.api;
 
 import android.text.TextUtils;
 
+import com.kymjs.rxvolley.RxVolley;
+import com.kymjs.rxvolley.client.HttpCallback;
+import com.kymjs.rxvolley.client.HttpParams;
+
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.common.CyptoUtils;
-
-import org.kymjs.kjframe.Core;
-import org.kymjs.kjframe.http.HttpCallBack;
-import org.kymjs.kjframe.http.HttpParams;
 
 
 /**
@@ -18,16 +18,16 @@ public class AsyncHttpHelp {
     public final static String PRIVATE_TOKEN = "private_token";
     public final static String GITOSC_PRIVATE_TOKEN = "git@osc_token";
 
-    public static void get(String url, HttpCallBack handler) {
-        Core.get(url, handler);
+    public static void get(String url, HttpCallback handler) {
+        RxVolley.get(url, handler);
     }
 
-    public static void get(String url, HttpParams params, HttpCallBack handler) {
-        Core.get(url, params, handler);
+    public static void get(String url, HttpParams params, HttpCallback handler) {
+        RxVolley.get(url, params, handler);
     }
 
-    public static void post(String url, HttpParams params, HttpCallBack handler) {
-        Core.post(url, params, false, handler);
+    public static void post(String url, HttpParams params, HttpCallback handler) {
+        RxVolley.post(url, params, handler);
     }
 
     /**

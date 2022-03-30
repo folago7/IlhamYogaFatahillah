@@ -10,11 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.kymjs.core.bitmap.client.BitmapCore;
+import com.kymjs.rxvolley.client.HttpCallback;
+
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.common.UIHelper;
 
-import org.kymjs.kjframe.Core;
-import org.kymjs.kjframe.bitmap.BitmapCallBack;
+
+import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -62,18 +65,17 @@ public class PhotoFragment extends Fragment {
 
     private void loadImage() {
         if (imageUrl != null && !TextUtils.isEmpty(imageUrl)) {
-            new Core.Builder().url(imageUrl).view(image).bitmapCallBack(new BitmapCallBack() {
+            new BitmapCore.Builder().url(imageUrl).view(image).callback(new HttpCallback() {
                 @Override
-                public void onPreLoad() {
-                    super.onPreLoad();
+                public void onPreStart() {
                     if (loading != null) {
                         loading.setVisibility(View.VISIBLE);
                     }
                 }
 
                 @Override
-                public void onFailure(Exception e) {
-                    super.onFailure(e);
+                public void onFailure(int errorNo, String strMsg) {
+                    super.onFailure(errorNo, strMsg);
                     if (loading != null) {
                         loading.setVisibility(View.GONE);
                     }
@@ -81,8 +83,8 @@ public class PhotoFragment extends Fragment {
                 }
 
                 @Override
-                public void onSuccess(Bitmap bitmap) {
-                    super.onSuccess(bitmap);
+                public void onSuccess(Map<String, String> headers, Bitmap bitmap) {
+                    super.onSuccess(headers, bitmap);
                     if (loading != null) {
                         loading.setVisibility(View.GONE);
                     }

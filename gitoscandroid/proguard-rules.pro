@@ -63,3 +63,13 @@
 -dontwarn com.kymjs.crash.**
 -dontwarn com.fasterxml.jackson.**
 -dontwarn org.codehaus.jackson.**
+
+-dontwarn com.squareup.okhttp.internal.huc.**
+-dontwarn okio.**
+-dontwarn rx.**
+
+-dontwarn com.squareup.okhttp.internal.http.*
+-keepnames class com.levelup.http.okhttp.** { *; }
+-keepnames interface com.levelup.http.okhttp.** { *; }
+-keepnames class com.squareup.okhttp.** { *; }
+-keepnames interface com.squareup.okhttp.** { *; }

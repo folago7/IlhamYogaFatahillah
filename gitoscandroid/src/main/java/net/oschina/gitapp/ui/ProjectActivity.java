@@ -15,6 +15,8 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.kymjs.rxvolley.client.HttpCallback;
+
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.GitOSCApi;
@@ -28,9 +30,6 @@ import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 import net.oschina.gitapp.util.JsonUtils;
 import net.oschina.gitapp.util.TypefaceUtils;
 import net.oschina.gitapp.widget.TipInfoLayout;
-
-
-import org.kymjs.kjframe.http.HttpCallBack;
 
 import java.util.Map;
 
@@ -120,10 +119,8 @@ public class ProjectActivity extends BaseActivity implements
                 loadProjectForName(userName, projectName);
             }
         } else {
-
             if (null == mProject) {
                 loadProject(ACTION_LOAD_PROJECT, projectId);
-
             } else {
                 initData();
             }
@@ -302,7 +299,7 @@ public class ProjectActivity extends BaseActivity implements
     }
 
     private void loadProject(final int action, final String projectId) {
-        GitOSCApi.getProject(projectId, new HttpCallBack() {
+        GitOSCApi.getProject(projectId, new HttpCallback() {
             @Override
             public void onSuccess(Map<String, String> headers, byte[] t) {
                 super.onSuccess(headers, t);
@@ -341,7 +338,7 @@ public class ProjectActivity extends BaseActivity implements
             setProjectNotFound();
             return;
         }
-        GitOSCApi.getProject(userName, projectName, new HttpCallBack() {
+        GitOSCApi.getProject(userName, projectName, new HttpCallback() {
             @Override
             public void onSuccess(Map<String, String> headers, byte[] t) {
                 content.setVisibility(View.VISIBLE);
@@ -442,7 +439,7 @@ public class ProjectActivity extends BaseActivity implements
         }
         final AlertDialog loadingDialog = LightProgressDialog.create(this, message);
 
-        HttpCallBack handler = new HttpCallBack() {
+        HttpCallback handler = new HttpCallback() {
             @Override
             public void onSuccess(Map<String, String> headers, byte[] t) {
                 String resMsg = "";
@@ -501,7 +498,7 @@ public class ProjectActivity extends BaseActivity implements
             message = "正在star该项目...";
         }
         final AlertDialog loadingDialog = LightProgressDialog.create(this, message);
-        HttpCallBack handler = new HttpCallBack() {
+        HttpCallback handler = new HttpCallback() {
             @Override
             public void onSuccess(Map<String, String> headers, byte[] t) {
                 String resMsg = "";
@@ -542,5 +539,11 @@ public class ProjectActivity extends BaseActivity implements
     @Override
     public boolean onMenuOpened(int featureId, Menu menu) {
         return mProject != null && super.onMenuOpened(featureId, menu);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        System.gc();
     }
 }

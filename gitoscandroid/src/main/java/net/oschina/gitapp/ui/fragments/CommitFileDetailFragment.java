@@ -8,6 +8,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.kymjs.core.bitmap.client.BitmapCore;
+import com.kymjs.rxvolley.client.HttpCallback;
+
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.CommitDiffAdapter;
 import net.oschina.gitapp.api.GitOSCApi;
@@ -20,9 +23,6 @@ import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.interfaces.OnStatusListener;
 import net.oschina.gitapp.ui.basefragment.BaseFragment;
 import net.oschina.gitapp.util.JsonUtils;
-
-import org.kymjs.kjframe.Core;
-import org.kymjs.kjframe.http.HttpCallBack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,41 +128,40 @@ public class CommitFileDetailFragment extends BaseFragment implements
             mCommitAuthorFace.setBackgroundResource(R.drawable.mini_avatar);
         } else {
             String faceurl = GitOSCApi.NO_API_BASE_URL + portrait;
-            new Core.Builder().url(faceurl).view(mCommitAuthorFace).doTask();
+            new BitmapCore.Builder().url(faceurl).view(mCommitAuthorFace).doTask();
         }
     }
 
     private void loadDatasCode(final boolean isRefresh) {
         onStatus(STATUS_LOADING);
 
-        GitOSCApi.getCommitDiffList(mProject.getId(), mCommit.getId(), new
-                HttpCallBack() {
-                    @Override
-                    public void onSuccess(Map<String, String> headers, byte[] t) {
-                        super.onSuccess(headers, t);
-                        List<CommitDiff> commitDiffList = JsonUtils.getList(CommitDiff[].class, t);
-                        if (commitDiffList != null) {
-                            mLoading.setVisibility(View.GONE);
-                            onStatus(STATUS_LOADED);
-                            mCommitDiffList = commitDiffList;
-                            mCommitFileSum.setText(mCommitDiffList.size() + " 个文件发生了变化");
-                            adapter = new CommitDiffAdapter(getActivity(), mCommitDiffList, R.layout
-                                    .commit_diff_listitem, mCommitDiffll);
-                            adapter.setData(mProject, mCommit);
-                            mCommitDiffll.setVisibility(View.VISIBLE);
-                            adapter.notifyDataSetChanged();
-                        } else {
-                            mLoading.setVisibility(View.GONE);
-                            UIHelper.toastMessage(getActivity(), "获取commit详情失败");
-                            onStatus(STATUS_NONE);
-                        }
-                    }
+        GitOSCApi.getCommitDiffList(mProject.getId(), mCommit.getId(), new HttpCallback() {
+            @Override
+            public void onSuccess(Map<String, String> headers, byte[] t) {
+                super.onSuccess(headers, t);
+                List<CommitDiff> commitDiffList = JsonUtils.getList(CommitDiff[].class, t);
+                if (commitDiffList != null) {
+                    mLoading.setVisibility(View.GONE);
+                    onStatus(STATUS_LOADED);
+                    mCommitDiffList = commitDiffList;
+                    mCommitFileSum.setText(mCommitDiffList.size() + " 个文件发生了变化");
+                    adapter = new CommitDiffAdapter(getActivity(), mCommitDiffList, R.layout
+                            .commit_diff_listitem, mCommitDiffll);
+                    adapter.setData(mProject, mCommit);
+                    mCommitDiffll.setVisibility(View.VISIBLE);
+                    adapter.notifyDataSetChanged();
+                } else {
+                    mLoading.setVisibility(View.GONE);
+                    UIHelper.toastMessage(getActivity(), "获取commit详情失败");
+                    onStatus(STATUS_NONE);
+                }
+            }
 
-                    @Override
-                    public void onFailure(int errorNo, String strMsg) {
-                        super.onFailure(errorNo, strMsg);
-                        UIHelper.toastMessage(getActivity(), "获取commit详情失败");
-                    }
-                });
+            @Override
+            public void onFailure(int errorNo, String strMsg) {
+                super.onFailure(errorNo, strMsg);
+                UIHelper.toastMessage(getActivity(), "获取commit详情失败");
+            }
+        });
     }
 }

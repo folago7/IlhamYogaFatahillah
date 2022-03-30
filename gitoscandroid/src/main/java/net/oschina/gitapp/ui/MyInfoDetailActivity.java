@@ -12,6 +12,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.kymjs.core.bitmap.client.BitmapCore;
+import com.kymjs.rxvolley.client.HttpCallback;
+
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.GitOSCApi;
@@ -29,9 +32,6 @@ import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 import net.oschina.gitapp.util.JsonUtils;
 import net.oschina.gitapp.widget.ActionSheet;
 import net.oschina.gitapp.widget.CircleImageView;
-
-import org.kymjs.kjframe.Core;
-import org.kymjs.kjframe.http.HttpCallBack;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -106,7 +106,7 @@ public class MyInfoDetailActivity extends BaseActivity implements View.OnClickLi
             if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
                 ivPortrait.setImageResource(R.drawable.mini_avatar);
             } else {
-                new Core.Builder().url(mUser.getNew_portrait()).view(ivPortrait).doTask();
+                new BitmapCore.Builder().url(mUser.getNew_portrait()).view(ivPortrait).doTask();
             }
 
             tvFollowers.setText(mUser.getFollow().getFollowers() + "");
@@ -287,14 +287,14 @@ public class MyInfoDetailActivity extends BaseActivity implements View.OnClickLi
         final AlertDialog loading = LightProgressDialog.create(this, "正在上传头像...");
         loading.setCanceledOnTouchOutside(false);
         try {
-            GitOSCApi.upLoadFile(protraitFile, new HttpCallBack() {
+            GitOSCApi.upLoadFile(protraitFile, new HttpCallback() {
                 @Override
                 public void onSuccess(Map<String, String> headers, byte[] t) {
                     super.onSuccess(headers, t);
                     UpLoadFile upLoadFile = JsonUtils.toBean(UpLoadFile.class, t);
                     if (upLoadFile != null && upLoadFile.isSuccess()) {
                         final String protraitUrl = upLoadFile.getFile().getUrl();
-                        GitOSCApi.updateUserProtrait(protraitUrl, new HttpCallBack() {
+                        GitOSCApi.updateUserProtrait(protraitUrl, new HttpCallback() {
                             @Override
                             public void onSuccess(Map<String, String> headers, byte[] t) {
                                 super.onSuccess(headers, t);

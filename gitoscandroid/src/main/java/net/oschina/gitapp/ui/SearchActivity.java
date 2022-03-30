@@ -10,6 +10,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
+import com.kymjs.rxvolley.client.HttpCallback;
+
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.ProjectAdapter;
 import net.oschina.gitapp.api.GitOSCApi;
@@ -19,8 +21,6 @@ import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 import net.oschina.gitapp.util.JsonUtils;
 import net.oschina.gitapp.widget.EnhanceListView;
 import net.oschina.gitapp.widget.TipInfoLayout;
-
-import org.kymjs.kjframe.http.HttpCallBack;
 
 import java.util.List;
 import java.util.Map;
@@ -116,7 +116,7 @@ public class SearchActivity extends BaseActivity implements
     }
 
     private void load(final String key, final int page) {
-        GitOSCApi.searchProjects(key, page, new HttpCallBack() {
+        GitOSCApi.searchProjects(key, page, new HttpCallback() {
             @Override
             public void onSuccess(Map<String, String> headers, byte[] t) {
                 super.onSuccess(headers, t);

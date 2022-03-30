@@ -16,6 +16,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
+import com.kymjs.rxvolley.client.HttpCallback;
+
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.AsyncHttpHelp;
@@ -29,7 +31,6 @@ import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 import net.oschina.gitapp.util.JsonUtils;
 
-import org.kymjs.kjframe.http.HttpCallBack;
 
 import java.util.Map;
 
@@ -124,7 +125,7 @@ public class LoginActivity extends BaseActivity
             mLoginProgressDialog.setCanceledOnTouchOutside(false);
             mLoginProgressDialog.setMessage(getString(R.string.login_tips));
         }
-        GitOSCApi.login(account, passwd, new HttpCallBack() {
+        GitOSCApi.login(account, passwd, new HttpCallback() {
             @Override
             public void onSuccess(Map<String, String> headers, byte[] t) {
                 super.onSuccess(headers, t);

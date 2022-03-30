@@ -9,6 +9,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 
+import com.kymjs.rxvolley.client.HttpCallback;
+
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.Commit;
@@ -18,8 +20,6 @@ import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 import net.oschina.gitapp.util.SourceEditor;
 import net.oschina.gitapp.widget.TipInfoLayout;
-
-import org.kymjs.kjframe.http.HttpCallBack;
 
 import java.util.Map;
 
@@ -98,7 +98,7 @@ public class CommitFileDetailActivity extends BaseActivity {
 
     private void loadCode(final String projectId, final String commitId, final String filePath) {
 
-        GitOSCApi.getCommitFileDetail(projectId, commitId, filePath, new HttpCallBack() {
+        GitOSCApi.getCommitFileDetail(projectId, commitId, filePath, new HttpCallback() {
             @Override
             public void onSuccess(Map<String, String> headers, byte[] t) {
                 super.onSuccess(headers, t);

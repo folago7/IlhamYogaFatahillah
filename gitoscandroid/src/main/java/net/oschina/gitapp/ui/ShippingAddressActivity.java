@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.kymjs.rxvolley.client.HttpCallback;
+
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.GitOSCApi;
@@ -19,8 +21,6 @@ import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.dialog.LightProgressDialog;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 import net.oschina.gitapp.util.JsonUtils;
-
-import org.kymjs.kjframe.http.HttpCallBack;
 
 import java.util.Map;
 
@@ -113,7 +113,7 @@ public class ShippingAddressActivity extends BaseActivity implements View.OnClic
     private void loadingShippingAddress() {
 
         GitOSCApi.getUserShippingAddress(AppContext.getInstance().getLoginUid() + "", new
-                HttpCallBack() {
+                HttpCallback() {
                     @Override
                     public void onSuccess(Map<String, String> headers, byte[] t) {
                         super.onSuccess(headers, t);
@@ -171,7 +171,7 @@ public class ShippingAddressActivity extends BaseActivity implements View.OnClic
 
         final AlertDialog pubing = LightProgressDialog.create(this, "正在提交保存...");
         GitOSCApi.updateUserShippingAddress(AppContext.getInstance().getLoginUid() + "",
-                mShippingAddress, new HttpCallBack() {
+                mShippingAddress, new HttpCallback() {
                     @Override
                     public void onSuccess(Map<String, String> headers, byte[] t) {
                         super.onSuccess(headers, t);
