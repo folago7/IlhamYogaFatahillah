@@ -1,18 +1,3 @@
-/*
- * Copyright (c) 2015, 张涛.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.kymjs.core.bitmap.client;
 
 import android.annotation.SuppressLint;
@@ -109,6 +94,7 @@ public final class BitmapCore {
         private HttpCallback realCallback;
         private HttpCallback callback;
         private Request<?> request;
+        private Drawable defaultDrawable;
         private View view;
         private BitmapRequestConfig config = new BitmapRequestConfig();
 
@@ -234,22 +220,35 @@ public final class BitmapCore {
             return this;
         }
 
+        private Drawable getDefaultDrawable() {
+            if (defaultDrawable == null) {
+                defaultDrawable = new ColorDrawable(0xFFCFCFCF);
+            }
+            return defaultDrawable;
+        }
+
         /**
          * 安全校验
          */
         private synchronized void build() {
             if (view == null) {
-                Loger.debug("view is null");
+                final String warn = "view is null";
+                Loger.debug(warn);
                 if (callback != null)
-                    callback.onFailure(-1, "view is null");
+                    callback.onFailure(-1, warn);
+                RxVolley.getRequestQueue().getPoster().put(config.mUrl,
+                        new RuntimeException(warn));
                 return;
             }
 
             if (TextUtils.isEmpty(config.mUrl)) {
-                Loger.debug("image url is empty");
+                final String warn = "image url is empty";
+                Loger.debug(warn);
                 doFailure(view, config.errorDrawable, config.errorRes);
                 if (callback != null)
-                    callback.onFailure(-1, "image url is empty");
+                    callback.onFailure(-1, warn);
+                RxVolley.getRequestQueue().getPoster().put(config.mUrl,
+                        new RuntimeException(warn));
                 return;
             }
 
@@ -270,10 +269,10 @@ public final class BitmapCore {
             }
 
             if (config.loadRes == 0 && config.loadDrawable == null) {
-                config.loadDrawable = new ColorDrawable(0xFFCFCFCF);
+                config.loadDrawable = getDefaultDrawable();
             }
             if (config.errorRes == 0 && config.errorDrawable == null) {
-                config.errorDrawable = new ColorDrawable(0xFFCFCFCF);
+                config.errorDrawable = getDefaultDrawable();
             }
 
             if (realCallback == null)

@@ -123,8 +123,6 @@ public class MainActivity extends AppCompatActivity implements
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setDrawerListener(new DrawerMenuListener());
-        // 设置滑出菜单的阴影效果
-        //mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,GravityCompat.START);
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, null, 0, 0);
 
 
