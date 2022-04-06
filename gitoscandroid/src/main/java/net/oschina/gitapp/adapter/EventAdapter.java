@@ -6,16 +6,15 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.kymjs.rxvolley.toolbox.Loger;
-
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.Commit;
 import net.oschina.gitapp.bean.Event;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.HtmlRegexpUtils;
-import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
+import net.oschina.gitapp.util.RecyclerList;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -26,8 +25,14 @@ import java.util.List;
  */
 public class EventAdapter extends CommonAdapter<Event> {
 
+    //有关本类请查看 http://kymjs.com/code/2015/11/26/01/
+    private RecyclerList recyclerList;
+
+    private static final SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
     public EventAdapter(Context context, int resource) {
         super(context, resource);
+        recyclerList = new RecyclerList(context, R.layout.list_item_event_commits);
     }
 
     @Override
@@ -36,18 +41,15 @@ public class EventAdapter extends CommonAdapter<Event> {
     }
 
     private void displayContent(ViewHolder vh, final Event event) {
-
         // 1.加载头像
         vh.setImageForUrl(R.id.iv_portrait, event.getAuthor().getNew_portrait());
         vh.getView(R.id.iv_portrait).setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 User user = event.getAuthor();
-                if (user == null) {
-                    return;
+                if (user != null) {
+                    UIHelper.showUserInfoDetail(mContext, user, null);
                 }
-                UIHelper.showUserInfoDetail(mContext, user, null);
             }
         });
 
@@ -60,7 +62,11 @@ public class EventAdapter extends CommonAdapter<Event> {
         // commits信息的显示
         LinearLayout commitLists = vh.getView(R.id.ll_commits_list);
         commitLists.setVisibility(View.GONE);
-        commitLists.removeAllViews();
+        int count = commitLists.getChildCount();
+        while (--count > 0) {
+            recyclerList.add(commitLists.getChildAt(0));
+            commitLists.removeViewAt(0);
+        }
         if (event.getData() != null) {
             List<Commit> commits = event.getData().getCommits();
             if (commits != null && commits.size() > 0) {
@@ -94,20 +100,15 @@ public class EventAdapter extends CommonAdapter<Event> {
                     .getTitle());
             content.setVisibility(View.VISIBLE);
         }
-        vh.setText(R.id.tv_date, StringUtils.friendly_time(event
-                .getUpdated_at()));
+        try {
+            vh.setText(R.id.tv_date, f.format(event.getUpdated_at()).substring(5, 10));
+        } catch (Exception e) {
+        }
     }
 
     private void showCommitInfo(LinearLayout layout, List<Commit> commits) {
-        try {
-            if (commits.size() == 1) {
-                addCommitItem(layout, commits.get(0));
-            } else if (commits.size() == 2) {
-                addCommitItem(layout, commits.get(0));
-                addCommitItem(layout, commits.get(1));
-            }
-        } catch (Exception e) {
-            Loger.debug("====" + e.getMessage());
+        for (int i = 0; i < commits.size() && i < 2; i++) {
+            addCommitItem(layout, commits.get(i));
         }
     }
 
@@ -115,20 +116,14 @@ public class EventAdapter extends CommonAdapter<Event> {
      * 添加commit项
      */
     private void addCommitItem(LinearLayout layout, Commit commit) {
-        try {
-            View v = mInflater.inflate(R.layout.list_item_event_commits, null);
-            if (commit != null) {
-                ((TextView) v.findViewById(R.id.event_commits_listitem_commitid))
-                        .setText(commit.getId());
-                if (commit.getAuthor() != null) {
-                    ((TextView) v.findViewById(R.id.event_commits_listitem_username))
-                            .setText(commit.getAuthor().getName());
-                }
-                ((TextView) v.findViewById(R.id.event_commits_listitem_message))
-                        .setText(commit.getMessage());
+        LinearLayout v = (LinearLayout) recyclerList.get();
+        if (commit != null) {
+            ((TextView) v.getChildAt(0)).setText(commit.getId());
+            if (commit.getAuthor() != null) {
+                ((TextView) v.getChildAt(1)).setText(commit.getAuthor().getName());
             }
-            layout.addView(v);
-        } catch (Exception e) {
+            ((TextView) v.getChildAt(3)).setText(commit.getMessage());
         }
+        layout.addView(v);
     }
 }
