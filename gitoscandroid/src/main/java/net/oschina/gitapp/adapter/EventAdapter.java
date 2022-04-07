@@ -16,6 +16,7 @@ import net.oschina.gitapp.util.RecyclerList;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * 个人动态列表适配器
@@ -28,7 +29,8 @@ public class EventAdapter extends CommonAdapter<Event> {
     //有关本类请查看 http://kymjs.com/code/2015/11/26/01/
     private RecyclerList recyclerList;
 
-    private static final SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static final SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",
+            Locale.US);
 
     public EventAdapter(Context context, int resource) {
         super(context, resource);
@@ -63,7 +65,7 @@ public class EventAdapter extends CommonAdapter<Event> {
         LinearLayout commitLists = vh.getView(R.id.ll_commits_list);
         commitLists.setVisibility(View.GONE);
         int count = commitLists.getChildCount();
-        while (--count > 0) {
+        while (count-- > 0) {
             recyclerList.add(commitLists.getChildAt(0));
             commitLists.removeViewAt(0);
         }

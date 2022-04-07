@@ -125,7 +125,6 @@ public class MainActivity extends AppCompatActivity implements
         mDrawerLayout.setDrawerListener(new DrawerMenuListener());
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, null, 0, 0);
 
-
         if (null == savedInstanceState) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.main_slidingmenu_frame, mMenu, DRAWER_MENU_TAG).commit();
@@ -154,7 +153,6 @@ public class MainActivity extends AppCompatActivity implements
             }
             UIHelper.sendBroadCast(MainActivity.this, count);
         }
-
     };
 
     /**
