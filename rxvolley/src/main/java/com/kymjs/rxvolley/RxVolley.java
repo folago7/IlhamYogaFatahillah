@@ -13,6 +13,7 @@ import com.kymjs.rxvolley.http.Request;
 import com.kymjs.rxvolley.http.RequestQueue;
 import com.kymjs.rxvolley.http.RetryPolicy;
 import com.kymjs.rxvolley.interf.ICache;
+import com.kymjs.rxvolley.rx.RxBus;
 import com.kymjs.rxvolley.rx.Result;
 import com.kymjs.rxvolley.toolbox.FileUtils;
 
@@ -237,7 +238,7 @@ public class RxVolley {
 
         public Observable<Result> getResult() {
             doTask();
-            return getRequestQueue().getPoster().take(httpConfig.mUrl);
+            return RxBus.getDefault().take(httpConfig.mUrl);
         }
 
         /**
@@ -270,6 +271,7 @@ public class RxVolley {
         new Builder().url(url).params(params).contentType(ContentType.JSON)
                 .httpMethod(Method.POST).callback(callback).doTask();
     }
+
 
     public static byte[] getCache(String url) {
         ICache cache = getRequestQueue().getCache();

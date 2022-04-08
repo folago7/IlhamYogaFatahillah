@@ -6,10 +6,10 @@ import com.kymjs.core.bitmap.DiskImageDisplayer;
 import com.kymjs.core.bitmap.client.BitmapCore;
 import com.kymjs.core.bitmap.client.BitmapRequestConfig;
 import com.kymjs.core.bitmap.toolbox.CreateBitmap;
-import com.kymjs.rxvolley.RxVolley;
 import com.kymjs.rxvolley.client.HttpCallback;
 import com.kymjs.rxvolley.http.Response;
 import com.kymjs.rxvolley.http.VolleyError;
+import com.kymjs.rxvolley.rx.RxBus;
 import com.kymjs.rxvolley.toolbox.FileUtils;
 
 import java.io.FileInputStream;
@@ -41,8 +41,10 @@ public class AsyncPoster implements Runnable {
         if (pendingPost == null) {
             throw new IllegalStateException("No pending post available");
         }
-        loadFromFile(pendingPost.config.mUrl, pendingPost.config.maxWidth,
+        byte[] bytes = loadFromFile(pendingPost.config.mUrl, pendingPost.config.maxWidth,
                 pendingPost.config.maxHeight, pendingPost.callback);
+        RxBus.getDefault().put(pendingPost.config.mUrl,
+                Collections.<String, String>emptyMap(), bytes);
         PendingPost.releasePendingPost(pendingPost);
     }
 
@@ -59,7 +61,6 @@ public class AsyncPoster implements Runnable {
             data = FileUtils.input2byte(fis);
             handleBitmap(path, data, maxWidth, maxHeight, callback);
         } catch (Exception e) {
-            RxVolley.getRequestQueue().getPoster().put(path, e);
             displayer.post(path, callback, Response.<Bitmap>error(new VolleyError(e)));
         } finally {
             FileUtils.closeIO(fis);
@@ -71,13 +72,9 @@ public class AsyncPoster implements Runnable {
                                 HttpCallback callback) {
         Bitmap bitmap = CreateBitmap.create(data, maxWidth, maxHeight);
         if (bitmap == null) {
-            VolleyError exception = new VolleyError("bitmap create error");
-            RxVolley.getRequestQueue().getPoster().put(path, exception);
             displayer.post(path, callback,
-                    Response.<Bitmap>error(exception));
+                    Response.<Bitmap>error(new VolleyError("bitmap create error")));
         } else {
-            RxVolley.getRequestQueue().getPoster().put(path,
-                    Collections.<String, String>emptyMap(), data);
             displayer.post(path, callback,
                     Response.success(bitmap, Collections.<String, String>emptyMap(), null));
         }
