@@ -119,12 +119,11 @@ public class ProjectActivity extends BaseActivity implements
                 loadProjectForName(userName, projectName);
             }
         } else {
-            if (null == mProject) {
-                loadProject(ACTION_LOAD_PROJECT, projectId);
-            } else {
+            if (null != mProject) {
                 initData();
             }
         }
+        loadProject(ACTION_LOAD_PROJECT, projectId);
 
         // set font icon
         TypefaceUtils.setFontAwsome((TextView) findView(R.id.fi_time));
@@ -307,7 +306,6 @@ public class ProjectActivity extends BaseActivity implements
                 tipInfo.setHiden();
                 Project p = JsonUtils.toBean(Project.class, t);
                 if (p != null) {
-
                     if (action == ACTION_LOAD_PROJECT) {
                         mProject = p;
                         initData();
@@ -323,12 +321,6 @@ public class ProjectActivity extends BaseActivity implements
                 if (action == ACTION_LOAD_PROJECT) {
                     tipInfo.setLoadError();
                 }
-            }
-
-            @Override
-            public void onPreStart() {
-                super.onPreStart();
-                tipInfo.setLoading();
             }
         });
     }
@@ -357,18 +349,6 @@ public class ProjectActivity extends BaseActivity implements
                 if (errorNo == 404) {
                     setProjectNotFound();
                 }
-            }
-
-            @Override
-            public void onPreStart() {
-                super.onPreStart();
-                tipInfo.setLoading();
-            }
-
-            @Override
-            public void onFinish() {
-                super.onFinish();
-                tipInfo.setHiden();
             }
         });
     }
