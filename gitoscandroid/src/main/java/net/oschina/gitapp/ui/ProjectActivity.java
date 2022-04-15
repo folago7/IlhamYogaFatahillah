@@ -310,7 +310,8 @@ public class ProjectActivity extends BaseActivity implements
                         mProject = p;
                         initData();
                     } else {
-                        projectForkForm.setText(p.getOwner().getName() + " / " + p.getName());
+                        projectForkForm.setText(String.format("%s / %s", p.getOwner().getName(),
+                                p.getName()));
                     }
                 }
             }

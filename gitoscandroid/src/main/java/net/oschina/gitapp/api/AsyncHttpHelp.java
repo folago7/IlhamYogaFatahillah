@@ -23,7 +23,7 @@ public class AsyncHttpHelp {
     }
 
     public static void get(String url, HttpParams params, HttpCallback handler) {
-        RxVolley.get(url, params, handler);
+        new RxVolley.Builder().url(url).params(params).cacheTime(15).callback(handler).doTask();
     }
 
     public static void post(String url, HttpParams params, HttpCallback handler) {
