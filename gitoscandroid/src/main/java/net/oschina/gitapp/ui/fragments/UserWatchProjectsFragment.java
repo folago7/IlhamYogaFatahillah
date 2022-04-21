@@ -17,33 +17,34 @@ import java.util.List;
 
 /**
  * 用户watch项目列表
- * @created 2014-08-27
+ *
  * @author 火蚁（http://my.oschina.net/LittleDY）
- * 
- * 最后更新
- * 更新者
+ *         <p/>
+ *         最后更新
+ *         更新者
+ * @created 2014-08-27
  */
 public class UserWatchProjectsFragment extends BaseSwipeRefreshFragment<Project> {
-	
-	private User mUser;
-	
-	public static UserWatchProjectsFragment newInstance(User user) {
-		UserWatchProjectsFragment fragment = new UserWatchProjectsFragment();
-		Bundle bundle = new Bundle();
-		bundle.putSerializable(Contanst.USER, user);
-		fragment.setArguments(bundle);
-		return fragment;
-	}
-	
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		Bundle args = getArguments();
-		if (args != null) {
-			mUser = (User) args.getSerializable(Contanst.USER);
-		}
-		setUserVisibleHint(true);
-	}
+
+    private User mUser;
+
+    public static UserWatchProjectsFragment newInstance(User user) {
+        UserWatchProjectsFragment fragment = new UserWatchProjectsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(Contanst.USER, user);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle args = getArguments();
+        if (args != null) {
+            mUser = (User) args.getSerializable(Contanst.USER);
+        }
+        requestData();
+    }
 
     @Override
     public CommonAdapter<Project> getAdapter() {
@@ -60,10 +61,10 @@ public class UserWatchProjectsFragment extends BaseSwipeRefreshFragment<Project>
         GitOSCApi.getWatchProjects(mUser.getId(), mCurrentPage, mHandler);
     }
 
-	@Override
-	public void onItemClick(int position, Project project) {
-		UIHelper.showProjectDetail(getActivity(), null, project.getId());
-	}
+    @Override
+    public void onItemClick(int position, Project project) {
+        UIHelper.showProjectDetail(getActivity(), null, project.getId());
+    }
 
     @Override
     protected String getEmptyTip() {

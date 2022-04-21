@@ -51,7 +51,7 @@ public class ProjectCommitsFragment extends BaseSwipeRefreshFragment<Commit> {
 		if (args != null) {
 			mProject = (Project) args.getSerializable(Contanst.PROJECT);
 		}
-		setUserVisibleHint(true);
+        requestData();
 	}
 
     @Override

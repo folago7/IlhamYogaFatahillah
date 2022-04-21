@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements
             changeFragment(R.id.main_content, new ExploreViewPagerFragment());
 
             mTitle = "发现";
-            mActionBar.setTitle(mTitle);
+            mActionBar.setTitle(mTitle); 
             mCurrentContentTag = CONTENT_TAG_EXPLORE;
         }
     }

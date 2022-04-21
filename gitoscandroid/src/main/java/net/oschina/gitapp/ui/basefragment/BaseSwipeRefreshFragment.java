@@ -134,14 +134,14 @@ public abstract class BaseSwipeRefreshFragment<T extends Entity>
         }
     }
 
-    private boolean isInit = true;
+    private boolean init = false;
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (getUserVisibleHint() && isInit) {
-            isInit = false;
+        if (isVisibleToUser && !init) {
             requestData();
+            init = true;
         }
     }
 

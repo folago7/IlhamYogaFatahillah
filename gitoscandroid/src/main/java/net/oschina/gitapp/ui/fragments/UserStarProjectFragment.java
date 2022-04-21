@@ -42,7 +42,6 @@ public class UserStarProjectFragment extends BaseSwipeRefreshFragment<Project> {
 		if (args != null) {
 			mUser = (User) args.getSerializable(Contanst.USER);
 		}
-		setUserVisibleHint(true);
 	}
 
     @Override
