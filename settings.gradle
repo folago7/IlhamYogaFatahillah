@@ -1,2 +1,2 @@
-include ':social_sdk_library_project', ':crash', ':rxvolley', ':bitmapcore', ':okhttp'
+include ':social_sdk_library_project', ':crash'
 include ':gitoscandroid'
