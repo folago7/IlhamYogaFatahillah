@@ -68,7 +68,8 @@ public class AppContext extends Application {
         super.onCreate();
         // 注册App异常崩溃处理器
         CustomActivityOnCrash.install(this);
-        RxVolley.setRequestQueue(RequestQueue.newRequestQueue(RxVolley.CACHE_FOLDER, new
+        File cacheFolder = getCacheDir();
+        RxVolley.setRequestQueue(RequestQueue.newRequestQueue(cacheFolder, new
                 OkHttpStack(new OkHttpClient())));
         init();
         appContext = this;
