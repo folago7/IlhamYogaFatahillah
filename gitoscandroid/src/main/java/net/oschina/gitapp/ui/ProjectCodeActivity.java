@@ -161,8 +161,9 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
                 if (path.isEmpty() || refresh) {
                     tipInfo.setLoading();
                 } else {
-                    MenuItemCompat.setActionView(optionsMenu.findItem(0), R.layout
-                            .actionbar_indeterminate_progress);
+                    if (optionsMenu != null)
+                        MenuItemCompat.setActionView(optionsMenu.findItem(0), R.layout
+                                .actionbar_indeterminate_progress);
                 }
             }
 
@@ -170,7 +171,9 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
             public void onFinish() {
                 super.onFinish();
                 isLoading = false;
-                MenuItemCompat.setActionView(optionsMenu.findItem(0), null);
+                if (optionsMenu != null) {
+                    MenuItemCompat.setActionView(optionsMenu.findItem(0), null);
+                }
             }
         });
     }
@@ -285,7 +288,8 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
                 index = i;
             }
         }
-        PhotoBrowseActivity.showPhotoBrowse(this, (String[]) images.toArray(), index);
+        String[] urls = new String[images.size()];
+        PhotoBrowseActivity.showPhotoBrowse(this, images.toArray(urls), index);
     }
 
     @Override

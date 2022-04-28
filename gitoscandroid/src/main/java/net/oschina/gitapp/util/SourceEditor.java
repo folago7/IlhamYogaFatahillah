@@ -15,8 +15,6 @@
  */
 package net.oschina.gitapp.util;
 
-import static net.oschina.gitapp.common.Contanst.CHARSET_UTF8;
-import static net.oschina.gitapp.bean.CodeFile.ENCODING_BASE64;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.os.Build;
@@ -24,22 +22,25 @@ import android.text.TextUtils;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import java.io.UnsupportedEncodingException;
+
 import net.oschina.gitapp.bean.CodeFile;
+
+import java.io.UnsupportedEncodingException;
+
+import static net.oschina.gitapp.bean.CodeFile.ENCODING_BASE64;
+import static net.oschina.gitapp.common.Contanst.CHARSET_UTF8;
 
 /**
  * 用markdown渲染代码显示
- * @author 火蚁（http://my.oschina.net/LittleDY）
  *
+ * @author 火蚁（http://my.oschina.net/LittleDY）
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 @SuppressLint("SetJavaScriptEnabled")
 public class SourceEditor {
 
-    private static final String URL_PAGE = "file:///android_asset/source-editor.html";
-
     private final WebView view;
-    
+
     private boolean wrap;
 
     private String name;
@@ -55,20 +56,20 @@ public class SourceEditor {
      *
      * @param view
      */
-	public SourceEditor(final WebView view) {
-        
+    @SuppressLint("AddJavascriptInterface")
+    public SourceEditor(final WebView view) {
         WebSettings settings = view.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setBuiltInZoomControls(true);
-        try { 
-        	int version = Integer.valueOf(android.os.Build.VERSION.SDK_INT);
-        	if (version >= 11) {
-        		// 这个方法在API level 11 以上才可以调用，不然会发生异常
+        try {
+            int version = android.os.Build.VERSION.SDK_INT;
+            if (version >= 11) {
+                // 这个方法在API level 11 以上才可以调用，不然会发生异常
                 settings.setDisplayZoomControls(false);
-        	}
-        } catch (NumberFormatException e) { 
-        	
-        } 
+            }
+        } catch (NumberFormatException e) {
+
+        }
         settings.setUseWideViewPort(true);
         view.addJavascriptInterface(SourceEditor.this, "SourceEditor");
         this.view = view;
@@ -98,7 +99,7 @@ public class SourceEditor {
         if (encoded)
             try {
                 return new String(EncodingUtils.fromBase64(content),
-                		CHARSET_UTF8);
+                        CHARSET_UTF8);
             } catch (UnsupportedEncodingException e) {
                 return getRawContent();
             }
@@ -157,7 +158,7 @@ public class SourceEditor {
      */
     @JavascriptInterface
     public SourceEditor setSource(final String name, final String content,
-            final boolean encoded) {
+                                  final boolean encoded) {
         this.name = name;
         this.content = content;
         this.encoded = encoded;
@@ -165,12 +166,12 @@ public class SourceEditor {
 
         return this;
     }
-    
+
     @JavascriptInterface
     private void loadSource() {
-    	if (name != null && content != null) {
-    		view.loadUrl(URL_PAGE);
-    	}
+        if (name != null && content != null) {
+            view.loadUrl("file:///android_asset/source-editor.html");
+        }
     }
 
     /**
@@ -182,6 +183,7 @@ public class SourceEditor {
      */
     @JavascriptInterface
     public SourceEditor setSource(final String name, final CodeFile blob) {
+
         String content = blob.getContent();
         if (content == null)
             content = "";

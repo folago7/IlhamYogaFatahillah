@@ -129,6 +129,7 @@ public class CodeFileDetailActivity extends BaseActivity {
     }
 
     private void updateMenuState() {
+        if (optionsMenu == null) return;
         if (mCodeFile == null) {
             optionsMenu.findItem(R.id.open_browser).setVisible(false);
             optionsMenu.findItem(R.id.copy).setVisible(false);

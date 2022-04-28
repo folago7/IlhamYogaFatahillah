@@ -46,6 +46,7 @@
 -keepnames class * { @butterknife.InjectView *;}
 
 -keep class net.oschina.gitapp.bean.** { *; }
+-keep class net.oschina.gitapp.util.SourceEditor { *; }
 -keep class uk.co.senab.photoview.** { *; } 
 -keep class com.umeng.** { *; }
 -keep class com.facebook.** { *; }
