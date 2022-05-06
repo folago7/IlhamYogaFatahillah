@@ -132,7 +132,8 @@ public class GitOSCApi {
     }
 
     public static void getProjectBranchs(String pId, HttpCallback handler) {
-        get(PROJECTS + pId + "/repository/branches", handler);
+        HttpParams params = AsyncHttpHelp.getHttpParams();
+        get(PROJECTS + pId + "/repository/branches", params, handler);
     }
 
     public static void getProjectTags(String pId, HttpCallback handler) {
