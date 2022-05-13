@@ -3,6 +3,7 @@ package net.oschina.gitapp.bean;
 import org.codehaus.jackson.annotate.JsonProperty;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 上传文件实体类
@@ -19,34 +20,36 @@ public class UpLoadFile implements Serializable {
 	@JsonProperty("msg")
 	private String _msg;
 	
-	@JsonProperty("file")
-	private GitFile _file;
+	@JsonProperty("files")
+	private List<GitFile> _files;
 
 	public boolean isSuccess() {
 		return _success;
 	}
 
-	public void setSuccess(boolean success) {
-		this._success = success;
+	public void setSuccess(boolean _success) {
+		this._success = _success;
 	}
 
 	public String getMsg() {
 		return _msg;
 	}
 
-	public void setMsg(String msg) {
-		this._msg = msg;
+	public void setMsg(String _msg) {
+		this._msg = _msg;
 	}
 
-	public GitFile getFile() {
-		return _file;
+	public List<GitFile> getFiles() {
+		return _files;
 	}
 
-	public void setFile(GitFile file) {
-		this._file = file;
+	public void setFiles(List<GitFile> _files) {
+		this._files = _files;
 	}
 
-	public class GitFile {
+	@SuppressWarnings("serial")
+	public static class GitFile implements Serializable{
+
 		@JsonProperty("filename")
 		private String _filename;
 		
@@ -60,24 +63,24 @@ public class UpLoadFile implements Serializable {
 			return _filename;
 		}
 
-		public void setFilename(String filename) {
-			this._filename = filename;
+		public void setFilename(String _filename) {
+			this._filename = _filename;
 		}
 
 		public String getTitle() {
 			return _title;
 		}
 
-		public void setTitle(String title) {
-			this._title = title;
+		public void setTitle(String _title) {
+			this._title = _title;
 		}
 
 		public String getUrl() {
 			return _url;
 		}
 
-		public void setUrl(String url) {
-			this._url = url;
+		public void setUrl(String _url) {
+			this._url = _url;
 		}
 	}
 }

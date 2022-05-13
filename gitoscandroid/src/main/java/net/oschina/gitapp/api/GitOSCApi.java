@@ -4,6 +4,7 @@ import com.kymjs.rxvolley.client.HttpCallback;
 import com.kymjs.rxvolley.client.HttpParams;
 
 import net.oschina.gitapp.bean.ShippingAddress;
+import net.oschina.gitapp.common.ImageUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -28,7 +29,6 @@ public class GitOSCApi {
     public final static String PROJECTS = BASE_URL + "projects/";
     public final static String USER = BASE_URL + "user/";
     public final static String EVENT = BASE_URL + "events/";
-    public final static String UPLOAD = BASE_URL + "upload";
     public final static String NOTIFICATION = USER + "notifications/";
     public final static String VERSION = BASE_URL + "app_version/new/android";
 
@@ -219,11 +219,11 @@ public class GitOSCApi {
     /**
      * 上传文件
      */
-    public static void upLoadFile(File file, HttpCallback handler) throws FileNotFoundException {
+    public static void upLoadFile(File file, HttpCallback handler) throws Exception {
         HttpParams params = AsyncHttpHelp.getHttpParams();
-        params.put("file", file);
-        params.putHeaders("Content-disposition", "filename=\"" + file.getName() + "\"");
-        post(UPLOAD, params, handler);
+        String suffix = file.getName().substring(file.getName().lastIndexOf(".")+1, file.getName().length()).toLowerCase();
+        params.put("files", ImageUtils.fileToByteArray(file), "image/"+suffix, file.getName());
+        post("https://git.oschina.net/upload", params, handler);
     }
 
     /***
@@ -366,4 +366,21 @@ public class GitOSCApi {
         HttpParams params = getPrivateTokenWithParams();
         get(PROJECTS + "luck_msg", handler);
     }
+
+
+    /**
+     * 用户反馈,其实就是发了个issue
+     * @param message
+     * @param title
+     * @param callback
+     */
+    public static void feedback(String title, String message, HttpCallback callback) {
+        HttpParams params = AsyncHttpHelp.getHttpParams();
+        params.put("description", message);
+        params.put("title", title);
+        params.put("assignee_id", 355540);
+        params.put("milestone_id", "");
+        post(PROJECTS + "142148/issues", params, callback);
+    }
+
 }

@@ -99,4 +99,20 @@
 
     <include layout="@layout/horizontal_divider_view" />
 
+    <LinearLayout
+        android:id="@+id/menu_item_feedback"
+        style="@style/MenuItemLayoutStyle" >
+
+        <ImageView
+            style="@style/MenuItemImageViewStyle"
+            android:src="@drawable/menu_icon_feedback"
+            android:contentDescription="@string/img_description"/>
+
+        <TextView
+            style="@style/MenuItemTextViewStyle"
+            android:text="@string/main_menu_title_feedback" />
+    </LinearLayout>
+
+    <include layout="@layout/horizontal_divider_view" />
+
 </LinearLayout>

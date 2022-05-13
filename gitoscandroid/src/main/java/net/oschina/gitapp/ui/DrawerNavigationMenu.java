@@ -193,9 +193,9 @@ public class DrawerNavigationMenu extends Fragment implements OnClickListener {
     }
 
     @Override
-    @OnClick({R.id.menu_user_layout, R.id.menu_item_explore, R.id.menu_item_myself, R.id
-            .menu_item_language,
-            R.id.menu_item_shake, R.id.menu_item_scan, R.id.menu_item_setting})
+    @OnClick({R.id.menu_user_layout, R.id.menu_item_explore, R.id.menu_item_myself,
+            R.id.menu_item_language, R.id.menu_item_feedback, R.id.menu_item_shake,
+            R.id.menu_item_scan, R.id.menu_item_setting})
     public void onClick(View v) {
         int id = v.getId();
         switch (id) {
@@ -224,8 +224,16 @@ public class DrawerNavigationMenu extends Fragment implements OnClickListener {
             case R.id.menu_item_setting:
                 onClickSetting();
                 break;
+            case R.id.menu_item_feedback:
+                onClickFeedback();
             default:
                 break;
+        }
+    }
+
+    private void onClickFeedback() {
+        if (mCallBack!=null){
+            mCallBack.onClickFeedback();
         }
     }
 

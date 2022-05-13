@@ -14,4 +14,6 @@ public interface DrawerMenuCallBack {
 	public void onClickLanguage();
 	public void onClickShake();
     public void onClickScan();
+
+	void onClickFeedback();
 }

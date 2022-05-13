@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -103,6 +104,7 @@ public class NewIssueActivity extends BaseActivity implements View.OnClickListen
                 public void callBack(ProjectMember projectMember) {
                     memberId = projectMember.getId();
                     tvTouser.setText(projectMember.getName());
+                    Log.e("thanatosx", "memberId is " + memberId + " name is " + tvTouser);
                 }
 
                 @Override

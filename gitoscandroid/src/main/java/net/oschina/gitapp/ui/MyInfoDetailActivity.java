@@ -293,7 +293,7 @@ public class MyInfoDetailActivity extends BaseActivity implements View.OnClickLi
                     super.onSuccess(headers, t);
                     UpLoadFile upLoadFile = JsonUtils.toBean(UpLoadFile.class, t);
                     if (upLoadFile != null && upLoadFile.isSuccess()) {
-                        final String protraitUrl = upLoadFile.getFile().getUrl();
+                        final String protraitUrl = upLoadFile.getFiles().get(0).getUrl();
                         GitOSCApi.updateUserProtrait(protraitUrl, new HttpCallback() {
                             @Override
                             public void onSuccess(Map<String, String> headers, byte[] t) {
@@ -348,7 +348,7 @@ public class MyInfoDetailActivity extends BaseActivity implements View.OnClickLi
                     loading.dismiss();
                 }
             });
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
