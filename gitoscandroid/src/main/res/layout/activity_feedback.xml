@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/feedback_background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--container-->
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!--chooser container-->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:background="@color/feedback_container_background"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="@string/type_of_the_feedback"
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <RadioGroup
+                android:id="@+id/radio_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:button="@null"
+                    android:padding="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
+                    android:id="@+id/rb_program_error"
+                    android:background="@drawable/selector_feedback_check"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/program_problem" />
+
+                <RadioButton
+                    android:id="@+id/rb_feature_opinion"
+                    android:button="@null"
+                    android:padding="10dp"
+                    android:background="@drawable/selector_feedback_check"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/feature_opinion" />
+            </RadioGroup>
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/et_input"
+            android:background="@color/feedback_container_background"
+            android:layout_width="match_parent"
+            android:hint="@string/please_input_you_opinion"
+            android:gravity="start|top"
+            android:padding="7dp"
+            android:textSize="14sp"
+            android:layout_height="100dp"
+            android:layout_marginTop="20dp"/>
+
+        <RelativeLayout
+            android:padding="10dp"
+            android:layout_marginTop="20dp"
+            android:background="@color/feedback_container_background"
+            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="@string/please_screenshot_describe"
+                android:layout_centerVertical="true"
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <ImageView
+                android:id="@+id/iv_pick_image"
+                android:src="@drawable/icon_add"
+                android:contentDescription="@null"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:background="@color/feedback_preview_image_background"
+                android:scaleType="centerCrop"
+                android:layout_width="50dp"
+                android:layout_height="50dp" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <!--submit-->
+    <Button
+        android:id="@+id/btn_submit"
+        android:layout_margin="10dp"
+        android:textSize="15sp"
+        android:textColor="@color/feedback_submit_text"
+        android:background="@drawable/selector_feedback_submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="@string/opinion_feedback" />
+
+</RelativeLayout>

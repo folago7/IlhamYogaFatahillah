@@ -317,6 +317,16 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
+    public void onClickFeedback() {
+        if (!mContext.isLogin()) {
+            UIHelper.showLoginActivity(this);
+            return;
+        }
+        Intent intent = new Intent(mContext, FeedbackActivity.class);
+        startActivity(intent);
+    }
+
+    @Override
     public void onClickSetting() {
         Intent intent = new Intent(mContext, SettingActivity.class);
         startActivity(intent);

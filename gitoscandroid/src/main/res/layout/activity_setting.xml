@@ -98,25 +98,6 @@
         android:layout_height="0.5dp" />
 
     <LinearLayout
-        android:id="@+id/ll_feedback"
-        style="@style/setting_item"
-        android:padding="15dp">
-
-        <TextView
-            android:text="意见反馈"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-
-    <View
-        android:background="@color/gray"
-        android:layout_marginLeft="10dp"
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp" />
-
-    <LinearLayout
         android:id="@+id/ll_check_update"
         style="@style/setting_item"
         android:padding="15dp">

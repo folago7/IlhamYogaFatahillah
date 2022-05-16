@@ -426,8 +426,8 @@ public class ImageUtils {
         float scaleHeight = ((float) newHeight) / height; 
         // 缩放图片动作 
         matrix.postScale(scaleWidth, scaleHeight); 
-        Bitmap bitmap = Bitmap.createBitmap(bgimage, 0, 0, (int) width, 
-                        (int) height, matrix, true); 
+        Bitmap bitmap = Bitmap.createBitmap(bgimage, 0, 0, (int) width,
+				(int) height, matrix, true);
         return bitmap; 
 	}
 
@@ -703,5 +703,19 @@ public class ImageUtils {
 			return false;
 		}
 		return (b[0] == 0x42) && (b[1] == 0x4d);
+	}
+
+	public static byte[] fileToByteArray(File file) throws Exception {
+		FileInputStream inputStream = new FileInputStream(file);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+		byte[] buffer = new byte[1024];
+		int length;
+		while ((length = inputStream.read(buffer)) != -1){
+			baos.write(buffer, 0, length);
+		}
+		inputStream.close();
+		baos.close();
+		return baos.toByteArray();
 	}
 }

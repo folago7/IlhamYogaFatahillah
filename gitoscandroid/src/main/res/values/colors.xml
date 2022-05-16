@@ -75,5 +75,14 @@
     <color name="inset_background">#F8F8F8</color>
     <color name="inset_outer">#C7C7C7</color>
     <color name="inset_inner">#FFFFFF</color>
+    <color name="feedback_submit_text">#FFF</color>
+    <color name="feedback_submit_selected">#e45150</color>
+    <color name="feedback_submit_unavailable">#df7b7a</color>
+    <color name="feedback_submit_unselected">#e35b5a</color>
+    <color name="feedback_background">#E4E4E4</color>
+    <color name="feedback_container_background">#FFF</color>
+    <color name="feedback_radio_unselected">#FFF</color>
+    <color name="feedback_radio_unselected_border">#E4E4E4</color>
+    <color name="feedback_preview_image_background">#EEE</color>
 
 </resources>

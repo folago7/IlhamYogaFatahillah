@@ -158,7 +158,7 @@ public class PhotoBrowseActivity extends BaseActivity implements View.OnClickLis
      */
     public void saveImageToGallery() {
         RxVolley.download(Environment.getExternalStorageDirectory() + "/oschina/gitosc",
-                imageUrls[index], new HttpCallback() {
+                imageUrls[index], null, new HttpCallback() {
                     @Override
                     public void onSuccess(Map<String, String> headers, byte[] t) {
                         super.onSuccess(headers, t);

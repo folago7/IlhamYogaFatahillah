@@ -184,6 +184,10 @@
 			android:name="UMENG_CHANNEL"
 			android:value="osc"/>
 
+		<activity android:name=".ui.FeedbackActivity"
+			android:screenOrientation="portrait"
+			android:windowSoftInputMode="adjustPan|stateHidden"/>
+
 	</application>
 
 </manifest>
