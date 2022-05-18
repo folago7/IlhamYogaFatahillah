@@ -105,9 +105,9 @@ public class FeedbackActivity extends BaseActivity{
         String title;
         Date date = new Date();
         if (id == R.id.rb_program_error){
-            title = String.format("Android客户端-%s-%d", "程序错误", date.getTime());
+            title = String.format("[Android客户端-%s-%d]", "程序错误", date.getTime());
         }else{
-            title = String.format("Android客户端-%s-%d", "功能建议", date.getTime());
+            title = String.format("[Android客户端-%s-%d]", "功能建议", date.getTime());
         }
 
         // 是否要上传文件
