@@ -100,7 +100,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         } else {
             cbNoticeVioce.setChecked(true);
         }
-        appContext.setConfigReceiveNotice(cbNoticeVioce.isChecked());
+        appContext.setConfigVoice(cbNoticeVioce.isChecked());
     }
 
     private void updateCheckUpdateStart() {
