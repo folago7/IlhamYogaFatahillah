@@ -18,6 +18,7 @@ import net.oschina.gitapp.common.BroadcastController;
 import net.oschina.gitapp.common.CyptoUtils;
 import net.oschina.gitapp.common.MethodsCompat;
 import net.oschina.gitapp.common.StringUtils;
+import net.oschina.gitapp.util.FileUtil;
 
 import java.io.File;
 import java.util.Properties;
@@ -91,6 +92,7 @@ public class AppContext extends Application {
             this.loginUid = StringUtils.toInt(loginUser.getId());
             this.login = true;
         }
+        FileUtil.getInstance().init(this);
     }
 
 
