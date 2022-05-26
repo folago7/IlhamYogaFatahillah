@@ -6,6 +6,7 @@
 
     <LinearLayout
         android:id="@+id/ll_receive_notice"
+        android:descendantFocusability="beforeDescendants"
         android:layout_marginTop="20dp"
         style="@style/setting_item">
 
@@ -17,6 +18,7 @@
 
         <CheckBox
             android:id="@+id/cb_receive_notice"
+            android:clickable="false"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
@@ -28,6 +30,7 @@
         android:layout_height="0.5dp" />
 
     <LinearLayout
+        android:descendantFocusability="beforeDescendants"
         android:id="@+id/ll_notice_voice"
         style="@style/setting_item">
 
@@ -39,6 +42,7 @@
 
         <CheckBox
             android:id="@+id/cb_notice_vioce"
+            android:clickable="false"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
@@ -50,6 +54,7 @@
         android:layout_height="0.5dp" />
 
     <LinearLayout
+        android:descendantFocusability="beforeDescendants"
         android:id="@+id/ll_check_update_start"
         style="@style/setting_item">
 
@@ -61,6 +66,7 @@
 
         <CheckBox
             android:id="@+id/cb_check_update_start"
+            android:clickable="false"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
