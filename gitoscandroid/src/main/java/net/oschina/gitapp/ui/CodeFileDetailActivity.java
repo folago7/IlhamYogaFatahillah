@@ -1,6 +1,7 @@
 package net.oschina.gitapp.ui;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.ClipboardManager;
@@ -16,14 +17,17 @@ import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.CodeFile;
+import net.oschina.gitapp.bean.CodeTree;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.FileUtils;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
+import net.oschina.gitapp.util.DialogHelp;
 import net.oschina.gitapp.util.JsonUtils;
 import net.oschina.gitapp.util.MarkdownUtils;
 import net.oschina.gitapp.util.SourceEditor;
+import net.oschina.gitapp.util.T;
 import net.oschina.gitapp.widget.TipInfoLayout;
 
 import java.util.Map;
@@ -63,13 +67,18 @@ public class CodeFileDetailActivity extends BaseActivity {
     private String url_link = null;
 
     private void downloadFile() {
-        String path = AppConfig.DEFAULT_SAVE_FILE_PATH;
+        final String path = AppConfig.DEFAULT_SAVE_FILE_PATH;
         boolean res = FileUtils.writeFile(mCodeFile.getContent().getBytes(),
                 path, mFileName);
         if (res) {
-            UIHelper.toastMessage(mContext, "文件已经保存在" + path);
+            DialogHelp.getOpenFileDialog(this, "文件已经保存在" + AppConfig.DEFAULT_SAVE_FILE_PATH, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    UIHelper.showOpenFileActivity(CodeFileDetailActivity.this, path + "/" + mFileName, CodeTree.getMIME(mFileName));
+                }
+            }).show();
         } else {
-            UIHelper.toastMessage(mContext, "保存文件失败");
+            T.showToastShort(mContext, "保存文件失败");
         }
     }
 

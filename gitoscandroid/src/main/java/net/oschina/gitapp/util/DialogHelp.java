@@ -71,6 +71,14 @@ public class DialogHelp {
         return builder;
     }
 
+    public static AlertDialog.Builder getOpenFileDialog(Context context, String message, DialogInterface.OnClickListener onClickListener) {
+        AlertDialog.Builder builder = getDialog(context);
+        builder.setMessage(Html.fromHtml(message));
+        builder.setPositiveButton("打开", onClickListener);
+        builder.setNegativeButton("取消", null);
+        return builder;
+    }
+
     public static AlertDialog.Builder getConfirmDialog(Context context, String message, DialogInterface.OnClickListener onOkClickListener, DialogInterface.OnClickListener onCancleClickListener) {
         AlertDialog.Builder builder = getDialog(context);
         builder.setMessage(message);
