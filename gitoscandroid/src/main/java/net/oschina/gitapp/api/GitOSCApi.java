@@ -3,11 +3,13 @@ package net.oschina.gitapp.api;
 import com.kymjs.rxvolley.client.HttpCallback;
 import com.kymjs.rxvolley.client.HttpParams;
 
+import net.oschina.gitapp.AppContext;
+import net.oschina.gitapp.bean.CodeTree;
+import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.ShippingAddress;
 import net.oschina.gitapp.common.ImageUtils;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.net.URLEncoder;
 
 import static net.oschina.gitapp.api.AsyncHttpHelp.get;
@@ -16,7 +18,7 @@ import static net.oschina.gitapp.api.AsyncHttpHelp.post;
 
 /**
  * Git@OSC API
- * <p>
+ * <p/>
  * Created by 火蚁 on 15/4/10.
  */
 public class GitOSCApi {
@@ -167,6 +169,7 @@ public class GitOSCApi {
         get(PROJECTS + projectId + "/repository/files", params, handler);
     }
 
+
     public static void getReadMeFile(String projectId, HttpCallback handler) {
         HttpParams params = AsyncHttpHelp.getHttpParams();
         get(PROJECTS + projectId + "/readme", params, handler);
@@ -221,8 +224,8 @@ public class GitOSCApi {
      */
     public static void upLoadFile(File file, HttpCallback handler) throws Exception {
         HttpParams params = AsyncHttpHelp.getHttpParams();
-        String suffix = file.getName().substring(file.getName().lastIndexOf(".")+1, file.getName().length()).toLowerCase();
-        params.put("files", ImageUtils.fileToByteArray(file), "image/"+suffix, file.getName());
+        String suffix = file.getName().substring(file.getName().lastIndexOf(".") + 1, file.getName().length()).toLowerCase();
+        params.put("files", ImageUtils.fileToByteArray(file), "image/" + suffix, file.getName());
         post("https://git.oschina.net/upload", params, handler);
     }
 
@@ -370,6 +373,7 @@ public class GitOSCApi {
 
     /**
      * 用户反馈,其实就是发了个issue
+     *
      * @param message
      * @param title
      * @param callback
@@ -383,4 +387,16 @@ public class GitOSCApi {
         post(PROJECTS + "142148/issues", params, callback);
     }
 
+    /**
+     * 下载二进制文件
+     * @param project
+     * @param codeTree
+     * @param path
+     * @param refName
+     * @param callback
+     */
+    public static void downloadFile(Project project, CodeTree codeTree, String path, String refName, HttpCallback callback) {
+        String uri = GitOSCApi.NO_API_BASE_URL + project.getOwner().getUsername() + "/" + project.getName() + "/raw/" + refName + "/" + path + codeTree.getName() + "?private_token=" + AppContext.getToken();
+        get(uri, callback);
+    }
 }

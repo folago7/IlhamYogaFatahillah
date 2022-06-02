@@ -54,8 +54,10 @@ import net.oschina.gitapp.ui.ProjectReadMeActivity;
 import net.oschina.gitapp.ui.ProjectSomeInfoListActivity;
 import net.oschina.gitapp.ui.SearchActivity;
 import net.oschina.gitapp.ui.UserInfoActivity;
+import net.oschina.gitapp.util.T;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 
 import static net.oschina.gitapp.common.Contanst.PROJECT;
 import static net.oschina.gitapp.common.Contanst.PROJECTID;
@@ -469,6 +471,29 @@ public class UIHelper {
     public static void goMainActivity(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
         context.startActivity(intent);
+    }
+
+    /**
+     * 显示打开文件界面
+     * @param context
+     * @param filePath
+     */
+    public static void showOpenFileActivity(Context context,String filePath,String mime) {
+        File file = new File(filePath);
+        if (file != null) {
+            try{
+                Intent intent = new Intent();
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setAction(Intent.ACTION_VIEW);
+                intent.setDataAndType(Uri.fromFile(file), mime);
+                context.startActivity(intent);
+            }catch (Exception e){
+                e.printStackTrace();
+                T.showToastShort(context, "没有应用程序可打开该文件");
+            }
+        }else {
+            T.showToastShort(context,"打开失败");
+        }
     }
 
     /**
