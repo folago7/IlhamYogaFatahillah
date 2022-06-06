@@ -132,7 +132,13 @@ public class CodeTree extends Entity {
                         ".scm",
                         ".xhml",
                         ".xaml",
-                        ".lua"
+                        ".lua",
+                        ".sty",
+                        ".cls",
+                        ".thm",
+                        ".tex",
+                        ".bst",
+                        ".config"
                 };
         for (String string : codeFileSuffix) {
             if (fileName.equalsIgnoreCase(string)) {
