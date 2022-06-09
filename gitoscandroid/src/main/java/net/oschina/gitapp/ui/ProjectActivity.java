@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.ClipboardManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -111,6 +112,13 @@ public class ProjectActivity extends BaseActivity implements
         Intent intent = getIntent();
         mProject = (Project) intent.getSerializableExtra(Contanst.PROJECT);
         projectId = intent.getStringExtra(Contanst.PROJECTID);
+
+        if(projectId == null){
+            if(mProject != null){
+                projectId = mProject.getId();
+            }
+        }
+
         if (intent.getAction() != null && intent.getAction().equals(Intent.ACTION_VIEW)) {
             String[] res = intent.getDataString().split("/");
             if (res.length >= 2) {
@@ -168,6 +176,7 @@ public class ProjectActivity extends BaseActivity implements
         // 记录项目的地址链接：
         url_link = GitOSCApi.NO_API_BASE_URL + mProject.getOwner().getUsername() + "/" + mProject
                 .getPath();
+        
         // 截取屏幕
         Handler mHandler = new Handler();
         mHandler.postDelayed(new Runnable() {
