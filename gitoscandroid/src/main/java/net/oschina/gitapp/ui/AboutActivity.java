@@ -22,6 +22,8 @@ public class AboutActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.about);
+        setTitle("关于码云");
+
 
         //获取客户端版本信息
         try {
