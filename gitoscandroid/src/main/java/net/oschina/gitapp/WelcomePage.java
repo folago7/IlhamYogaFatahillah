@@ -17,7 +17,7 @@ public class WelcomePage extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View view = new View(this);
-        view.setBackgroundResource(R.drawable.git_star);
+        view.setBackgroundResource(R.drawable.git_start);
         setContentView(view);
 
         //渐变展示启动屏
