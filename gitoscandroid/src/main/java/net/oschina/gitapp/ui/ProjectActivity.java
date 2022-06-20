@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.ClipboardManager;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -113,8 +114,8 @@ public class ProjectActivity extends BaseActivity implements
         mProject = (Project) intent.getSerializableExtra(Contanst.PROJECT);
         projectId = intent.getStringExtra(Contanst.PROJECTID);
 
-        if (projectId == null) {
-            if (mProject != null) {
+        if(projectId == null){
+            if(mProject != null){
                 projectId = mProject.getId();
             }
         }
