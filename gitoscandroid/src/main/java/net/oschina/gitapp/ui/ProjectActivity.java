@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.ClipboardManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -176,7 +177,7 @@ public class ProjectActivity extends BaseActivity implements
         // 记录项目的地址链接：
         url_link = GitOSCApi.NO_API_BASE_URL + mProject.getOwner().getUsername() + "/" + mProject
                 .getPath();
-        
+
         // 截取屏幕
         Handler mHandler = new Handler();
         mHandler.postDelayed(new Runnable() {
@@ -274,11 +275,13 @@ public class ProjectActivity extends BaseActivity implements
     }
 
     private String getDescription(String description) {
-        if (description == null || StringUtils.isEmpty(description)) {
+
+        if (TextUtils.isEmpty(description)) {
             return "该项目暂无简介！";
         } else {
-            return description.replaceAll(" ", "");
+            return description;
         }
+
     }
 
     private String getLocked() {
