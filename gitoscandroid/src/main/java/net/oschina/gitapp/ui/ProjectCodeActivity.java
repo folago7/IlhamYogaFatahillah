@@ -57,6 +57,7 @@ import butterknife.OnClick;
 public class ProjectCodeActivity extends BaseActivity implements View.OnClickListener,
         AdapterView.OnItemClickListener {
 
+    private static final String TAG = "ProjectCodeActivity";
     @InjectView(R.id.tv_paths)
     TextView tvPaths;
 
@@ -132,6 +133,7 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
                 checkShowPaths();
                 tipInfo.setHiden();
                 List<CodeTree> list = JsonUtils.getList(CodeTree[].class, t);
+
                 if (list != null && !list.isEmpty()) {
                     if (refresh) {
                         if (!codeFloders.isEmpty()) {
@@ -151,13 +153,17 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void onFailure(int errorNo, String strMsg) {
                 super.onFailure(errorNo, strMsg);
-                if (!paths.isEmpty()) {
-                    paths.pop();
-                }
-                if (path.isEmpty()) {
-                    tipInfo.setLoadError("加载代码失败");
+                if (errorNo == 401) {
+                    tipInfo.setLoadError("对不起，没有访问权限");
                 } else {
-                    T.showToastShort(ProjectCodeActivity.this, "加载代码失败");
+                    if (!paths.isEmpty()) {
+                        paths.pop();
+                    }
+                    if (path.isEmpty()) {
+                        tipInfo.setLoadError("加载代码失败");
+                    } else {
+                        T.showToastShort(ProjectCodeActivity.this, "加载代码失败");
+                    }
                 }
             }
 
@@ -466,7 +472,7 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
 
     }
 
-    private void showDownload(final CodeTree codeTree){
+    private void showDownload(final CodeTree codeTree) {
         DialogHelp.getDownloadDialog(this, "该文件不支持在线预览，是否下载?", new DialogInterface.OnClickListener
                 () {
             @Override
@@ -475,7 +481,7 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
                     @Override
                     public void onSuccessInAsync(byte[] t) {
                         super.onSuccessInAsync(t);
-                        downloadFile(codeTree.getName(),t);
+                        downloadFile(codeTree.getName(), t);
                     }
 
                     @Override
@@ -502,7 +508,7 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
                             DialogHelp.getOpenFileDialog(ProjectCodeActivity.this, "文件已经保存在" + AppConfig.DEFAULT_SAVE_FILE_PATH, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    UIHelper.showOpenFileActivity(ProjectCodeActivity.this,AppConfig.DEFAULT_SAVE_FILE_PATH + "/" + codeTree.getName(),CodeTree.getMIME(codeTree.getName()));
+                                    UIHelper.showOpenFileActivity(ProjectCodeActivity.this, AppConfig.DEFAULT_SAVE_FILE_PATH + "/" + codeTree.getName(), CodeTree.getMIME(codeTree.getName()));
                                 }
                             }).show();
                         } else {
