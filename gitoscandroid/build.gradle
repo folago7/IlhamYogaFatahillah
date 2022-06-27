@@ -8,8 +8,8 @@ android {
         applicationId "net.oschina.gitapp"
         minSdkVersion 12
         targetSdkVersion 23
-        versionCode 16
-        versionName "1.5.1 (16031511)"
+        versionCode 17
+        versionName "1.5.2 (1604211102)"
     }
 
     buildTypes {

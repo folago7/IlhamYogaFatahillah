@@ -90,8 +90,7 @@ public class MainActivity extends AppCompatActivity implements
         initView(savedInstanceState);
         AppManager.getAppManager().addActivity(this);
 
-        BlueWare.withApplicationToken("A97669647CD7FA558E6076201E5F97B322").start
-                (getApplicationContext());
+        BlueWare.withApplicationToken("A97669647CD7FA558E6076201E5F97B322").start(getApplicationContext());
         MobclickAgent.updateOnlineConfig(this);
     }
 
