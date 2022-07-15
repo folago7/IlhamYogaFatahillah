@@ -74,13 +74,13 @@ public class GitOSCApi {
     public static void getStarProjects(String uid, int page, HttpCallback handler) {
         HttpParams params = AsyncHttpHelp.getHttpParams();
         params.put("page", page);
-        get(USER + "/" + uid + "/stared_projects", handler);
+        get(USER + uid + "/stared_projects",params, handler);
     }
 
     public static void getWatchProjects(String uid, int page, HttpCallback handler) {
         HttpParams params = AsyncHttpHelp.getHttpParams();
         params.put("page", page);
-        get(USER + uid + "/watched_projects", handler);
+        get(USER + uid + "/watched_projects",params, handler);
     }
 
     public static void getProject(String pId, HttpCallback handler) {
@@ -389,6 +389,7 @@ public class GitOSCApi {
 
     /**
      * 下载二进制文件
+     *
      * @param project
      * @param codeTree
      * @param path
