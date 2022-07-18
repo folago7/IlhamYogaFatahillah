@@ -93,7 +93,7 @@ public class MyInfoDetailActivity extends BaseActivity implements View.OnClickLi
         mUser = AppContext.getInstance().getLoginInfo();
         if (mUser != null) {
             tvName.setText(mUser.getName());
-            if (TextUtils.isEmpty(mUser.getWeibo())) {
+            if (TextUtils.isEmpty(mUser.getBio())) {
                 tvDescription.setText("暂无填写");
             } else {
                 tvDescription.setText(mUser.getBio());
