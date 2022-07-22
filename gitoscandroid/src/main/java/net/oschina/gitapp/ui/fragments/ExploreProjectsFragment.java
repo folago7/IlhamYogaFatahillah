@@ -1,7 +1,6 @@
 package net.oschina.gitapp.ui.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.adapter.CommonAdapter;
@@ -32,7 +31,6 @@ public class ExploreProjectsFragment extends BaseSwipeRefreshFragment<Project> {
     public final static byte TYPE_POPULAR = 0x1;
 
     public final static byte TYPE_LATEST = 0x2;
-    private static final String TAG = "ExploreProjectsFragment";
 
     private byte type = 0;
 
@@ -58,7 +56,6 @@ public class ExploreProjectsFragment extends BaseSwipeRefreshFragment<Project> {
 
     @Override
     public List<Project> getDatas(byte[] responeString) {
-
         return JsonUtils.getList(Project[].class, responeString);
     }
 
