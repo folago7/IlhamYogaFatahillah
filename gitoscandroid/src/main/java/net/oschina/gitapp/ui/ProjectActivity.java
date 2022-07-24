@@ -522,9 +522,9 @@ public class ProjectActivity extends BaseActivity implements
             }
         };
         if (mProject.isStared()) {
-            GitOSCApi.unStarProject(mProject.getId(), handler);
+            GitOSCApi.unStarProject(mProject.getPathWithNamespace().replace("/", "%2F"), handler);
         } else {
-            GitOSCApi.starProject(mProject.getId(), handler);
+            GitOSCApi.starProject(mProject.getPathWithNamespace().replace("/", "%2F"), handler);
         }
     }
 
