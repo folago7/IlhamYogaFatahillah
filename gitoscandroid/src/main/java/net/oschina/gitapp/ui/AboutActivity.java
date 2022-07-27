@@ -25,6 +25,9 @@ public class AboutActivity extends BaseActivity {
         setTitle("关于码云");
 
 
+
+
+
         //获取客户端版本信息
         try {
             PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
