@@ -1,8 +1,10 @@
 package net.oschina.gitapp.ui;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -35,6 +37,9 @@ import net.oschina.gitapp.util.JsonUtils;
 import java.util.List;
 import java.util.Map;
 
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
+
 
 /**
  * 程序主界面
@@ -46,7 +51,7 @@ import java.util.Map;
  *         更新者：火蚁
  */
 public class MainActivity extends AppCompatActivity implements
-        DrawerMenuCallBack {
+        DrawerMenuCallBack, EasyPermissions.PermissionCallbacks {
 
     final String DRAWER_MENU_TAG = "drawer_menu";
 
@@ -132,7 +137,7 @@ public class MainActivity extends AppCompatActivity implements
             changeFragment(R.id.main_content, new ExploreViewPagerFragment());
 
             mTitle = "发现";
-            mActionBar.setTitle(mTitle); 
+            mActionBar.setTitle(mTitle);
             mCurrentContentTag = CONTENT_TAG_EXPLORE;
         }
     }
@@ -187,7 +192,12 @@ public class MainActivity extends AppCompatActivity implements
 
         // 检查新版本
         if (mContext.isCheckUp()) {
-            UpdateManager.getUpdateManager().checkAppUpdate(this, false);
+            UpdateManager.getUpdateManager().checkAppUpdate(this, new UpdateManager.OnPermissionCallback() {
+                @Override
+                public void onPermissionCallback() {
+                    requestExternalStorage();
+                }
+            }, false);
         }
         // 启动轮询获取通知信息
         if (mContext.isReceiveNotice()) {
@@ -376,5 +386,31 @@ public class MainActivity extends AppCompatActivity implements
         }
         currentSupportFragment = targetFragment;
         transaction.commit();
+    }
+
+    private static final int RC_EXTERNAL_STORAGE = 0x04;//存储权限
+
+    @AfterPermissionGranted(RC_EXTERNAL_STORAGE)
+    public void requestExternalStorage() {
+        if (EasyPermissions.hasPermissions(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            UpdateManager.getUpdateManager().showDownloadDialog();
+        } else {
+            EasyPermissions.requestPermissions(this, "", RC_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE);
+        }
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> perms) {
+
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+        UpdateManager.getUpdateManager().showNotPermissionDialog();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 }
