@@ -13,9 +13,12 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
+import android.support.v4.content.FileProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -63,7 +66,7 @@ public class UpdateManager {
     //通知对话框
     private Dialog noticeDialog;
     //下载对话框
-    private Dialog downloadDialog;
+    private AlertDialog downloadDialog;
     //'已经是最新' 或者 '无法获取最新版本' 的对话框
     private Dialog latestOrFailDialog;
     //进度条
@@ -153,10 +156,14 @@ public class UpdateManager {
         try {
             PackageInfo info = mContext.getPackageManager().getPackageInfo(mContext
                     .getPackageName(), 0);
-            curVersionCode = info.versionCode;
+            curVersionCode = 153;
         } catch (NameNotFoundException e) {
             e.printStackTrace(System.err);
         }
+    }
+
+    public interface OnPermissionCallback {
+        void onPermissionCallback();
     }
 
     /**
@@ -165,7 +172,7 @@ public class UpdateManager {
      * @param context
      * @param isShowMsg 是否显示提示消息
      */
-    public void checkAppUpdate(Context context, final boolean isShowMsg) {
+    public void checkAppUpdate(Context context, final OnPermissionCallback callback, final boolean isShowMsg) {
         this.mContext = context;
         getCurrentVersion();
         final AlertDialog check = LightProgressDialog.create(context, "正在检测，请稍候...");
@@ -180,7 +187,7 @@ public class UpdateManager {
                     if (curVersionCode < mUpdate.getNum_version()) {
                         apkUrl = mUpdate.getDownload_url();
                         updateMsg = mUpdate.getDescription();
-                        showNoticeDialog();
+                        showNoticeDialog(callback);
                     } else {
                         if (isShowMsg) {
                             showLatestOrFailDialog(DIALOG_TYPE_LATEST);
@@ -214,15 +221,16 @@ public class UpdateManager {
     /**
      * 显示版本更新通知对话框
      */
-    private void showNoticeDialog() {
-        AlertDialog.Builder builder = new Builder(mContext);
+    private void showNoticeDialog(final OnPermissionCallback callback) {
+        AlertDialog.Builder builder = new Builder(mContext, R.style.App_Theme_Dialog_Alert);
         builder.setTitle("软件版本更新");
         builder.setMessage(updateMsg);
         builder.setPositiveButton("立即更新", new OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                showDownloadDialog();
+                callback.onPermissionCallback();
+                //showDownloadDialog();
             }
         });
         builder.setNegativeButton("以后再说", new OnClickListener() {
@@ -235,10 +243,30 @@ public class UpdateManager {
         noticeDialog.show();
     }
 
+    public void showNotPermissionDialog() {
+        AlertDialog.Builder builder = new Builder(mContext, R.style.App_Theme_Dialog_Alert);
+        builder.setTitle("温馨提示");
+        builder.setMessage("需要开启开源中国对您手机的存储权限才能下载安装，是否现在开启");
+        builder.setPositiveButton("去开启", new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                mContext.startActivity(new Intent(Settings.ACTION_APPLICATION_SETTINGS));
+            }
+        });
+        builder.setNegativeButton("取消", new OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        noticeDialog = builder.create();
+        noticeDialog.show();
+    }
+
     /**
      * 显示下载对话框
      */
-    private void showDownloadDialog() {
+    public void showDownloadDialog() {
         AlertDialog.Builder builder = new Builder(mContext);
         builder.setTitle("正在下载新版本");
 
@@ -364,13 +392,18 @@ public class UpdateManager {
      * 安装apk
      */
     private void installApk() {
-        File apkfile = new File(apkFilePath);
-        if (!apkfile.exists()) {
+        File file = new File(apkFilePath);
+        if (!file.exists())
             return;
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        if (Build.VERSION.SDK_INT >= 24) {
+            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            Uri contentUri = FileProvider.getUriForFile(mContext, "net.oschina.app.provider", file);
+            intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
+        } else {
+            intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
-        Intent i = new Intent(Intent.ACTION_VIEW);
-        i.setDataAndType(Uri.parse("file://" + apkfile.toString()), "application/vnd.android" +
-                ".package-archive");
-        mContext.startActivity(i);
+        mContext.startActivity(intent);
     }
 }

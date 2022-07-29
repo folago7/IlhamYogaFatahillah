@@ -1,8 +1,10 @@
 package net.oschina.gitapp.ui;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.view.MenuItemCompat;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -30,6 +32,7 @@ import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.FileUtils;
 import net.oschina.gitapp.common.UIHelper;
+import net.oschina.gitapp.common.UpdateManager;
 import net.oschina.gitapp.dialog.ProjectRefSelectDialog;
 import net.oschina.gitapp.photoBrowse.PhotoBrowseActivity;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
@@ -49,13 +52,15 @@ import java.util.Stack;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import butterknife.OnClick;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
 
 /**
  * 仓库代码
  * Created by 火蚁 on 15/4/21.
  */
 public class ProjectCodeActivity extends BaseActivity implements View.OnClickListener,
-        AdapterView.OnItemClickListener {
+        AdapterView.OnItemClickListener, EasyPermissions.PermissionCallbacks {
 
     private static final String TAG = "ProjectCodeActivity";
     @InjectView(R.id.tv_paths)
@@ -477,51 +482,77 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
                 () {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                GitOSCApi.downloadFile(project, codeTree, getPath(), refName, new HttpCallback() {
-                    @Override
-                    public void onSuccessInAsync(byte[] t) {
-                        super.onSuccessInAsync(t);
-                        downloadFile(codeTree.getName(), t);
-                    }
-
-                    @Override
-                    public void onPreStart() {
-                        super.onPreStart();
-                        isLoading = true;
-                        if (optionsMenu != null)
-                            MenuItemCompat.setActionView(optionsMenu.findItem(0), R.layout
-                                    .actionbar_indeterminate_progress);
-                    }
-
-                    @Override
-                    public void onFailure(int errorNo, String strMsg) {
-                        super.onFailure(errorNo, strMsg);
-                        isLoading = false;
-
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        super.onFinish();
-                        isLoading = false;
-                        if (isDownload) {
-                            DialogHelp.getOpenFileDialog(ProjectCodeActivity.this, "文件已经保存在" + AppConfig.DEFAULT_SAVE_FILE_PATH, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    UIHelper.showOpenFileActivity(ProjectCodeActivity.this, AppConfig.DEFAULT_SAVE_FILE_PATH + "/" + codeTree.getName(), CodeTree.getMIME(codeTree.getName()));
-                                }
-                            }).show();
-                        } else {
-                            T.showToastShort(ProjectCodeActivity.this, "下载文件失败");
-                        }
-                        isDownload = false;
-                        if (optionsMenu != null) {
-                            MenuItemCompat.setActionView(optionsMenu.findItem(0), null);
-                        }
-                    }
-                });
+                mCodeTree = codeTree;
             }
 
         }).show();
+    }
+
+    private static final int RC_EXTERNAL_STORAGE = 0x04;//存储权限
+    private CodeTree mCodeTree;
+    @AfterPermissionGranted(RC_EXTERNAL_STORAGE)
+    public void requestExternalStorage() {
+        if (EasyPermissions.hasPermissions(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            GitOSCApi.downloadFile(project, mCodeTree, getPath(), refName, new HttpCallback() {
+                @Override
+                public void onSuccessInAsync(byte[] t) {
+                    super.onSuccessInAsync(t);
+                    downloadFile(mCodeTree.getName(), t);
+                }
+
+                @Override
+                public void onPreStart() {
+                    super.onPreStart();
+                    isLoading = true;
+                    if (optionsMenu != null)
+                        MenuItemCompat.setActionView(optionsMenu.findItem(0), R.layout
+                                .actionbar_indeterminate_progress);
+                }
+
+                @Override
+                public void onFailure(int errorNo, String strMsg) {
+                    super.onFailure(errorNo, strMsg);
+                    isLoading = false;
+
+                }
+
+                @Override
+                public void onFinish() {
+                    super.onFinish();
+                    isLoading = false;
+                    if (isDownload) {
+                        DialogHelp.getOpenFileDialog(ProjectCodeActivity.this, "文件已经保存在" + AppConfig.DEFAULT_SAVE_FILE_PATH, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                UIHelper.showOpenFileActivity(ProjectCodeActivity.this, AppConfig.DEFAULT_SAVE_FILE_PATH + "/" + mCodeTree.getName(), CodeTree.getMIME(mCodeTree.getName()));
+                            }
+                        }).show();
+                    } else {
+                        T.showToastShort(ProjectCodeActivity.this, "下载文件失败");
+                    }
+                    isDownload = false;
+                    if (optionsMenu != null) {
+                        MenuItemCompat.setActionView(optionsMenu.findItem(0), null);
+                    }
+                }
+            });
+        } else {
+            EasyPermissions.requestPermissions(this, "", RC_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE);
+        }
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> perms) {
+
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+        UpdateManager.getUpdateManager().showNotPermissionDialog();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 }
