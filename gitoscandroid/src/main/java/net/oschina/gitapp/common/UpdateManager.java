@@ -156,7 +156,7 @@ public class UpdateManager {
         try {
             PackageInfo info = mContext.getPackageManager().getPackageInfo(mContext
                     .getPackageName(), 0);
-            curVersionCode = 153;
+            curVersionCode = info.versionCode;
         } catch (NameNotFoundException e) {
             e.printStackTrace(System.err);
         }
