@@ -4,8 +4,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.1.0'
-        //classpath fileTree(dir: '/Users/yanghonghe/Downloads/gradle-sdk-plugin-1.0.7/plugin', include: ['*.jar'])
+        classpath 'com.android.tools.build:gradle:2.2.3'
     }
 }
 
