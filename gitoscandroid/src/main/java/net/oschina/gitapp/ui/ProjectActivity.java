@@ -174,8 +174,7 @@ public class ProjectActivity extends BaseActivity implements
         initForkMess();
 
         // 记录项目的地址链接：
-        url_link = GitOSCApi.NO_API_BASE_URL + mProject.getOwner().getUsername() + "/" + mProject
-                .getPath();
+        url_link = GitOSCApi.NO_API_BASE_URL + mProject.getPathWithNamespace();
 
         // 截取屏幕
         Handler mHandler = new Handler();
