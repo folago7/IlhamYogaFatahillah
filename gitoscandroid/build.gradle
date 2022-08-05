@@ -8,8 +8,8 @@ android {
         applicationId "net.oschina.gitapp"
         minSdkVersion 12
         targetSdkVersion 23
-        versionCode 155
-        versionName "1.5.6 (1706011004)"
+        versionCode 156
+        versionName "1.5.6(1706011431)"
     }
 
     buildTypes {
@@ -24,9 +24,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
-
-
 
     packagingOptions {
         exclude 'META-INF/ASL2.0'
