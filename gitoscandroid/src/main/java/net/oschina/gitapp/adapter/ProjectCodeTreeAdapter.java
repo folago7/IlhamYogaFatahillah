@@ -5,7 +5,7 @@ import android.widget.TextView;
 
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.CodeTree;
-import net.oschina.gitapp.util.TypefaceUtils;
+import net.oschina.gitapp.utils.TypefaceUtils;
 
 /**
  * 项目代码树列表适配器

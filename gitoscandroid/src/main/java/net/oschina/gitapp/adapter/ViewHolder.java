@@ -13,7 +13,7 @@ import com.kymjs.core.bitmap.client.BitmapCore;
 
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.common.StringUtils;
-import net.oschina.gitapp.util.TypefaceUtils;
+import net.oschina.gitapp.utils.TypefaceUtils;
 
 
 /**

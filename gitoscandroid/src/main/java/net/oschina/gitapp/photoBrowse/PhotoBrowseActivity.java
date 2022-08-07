@@ -19,7 +19,7 @@ import com.kymjs.rxvolley.client.HttpCallback;
 
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
-import net.oschina.gitapp.util.TypefaceUtils;
+import net.oschina.gitapp.utils.TypefaceUtils;
 
 import java.io.File;
 import java.io.FileNotFoundException;

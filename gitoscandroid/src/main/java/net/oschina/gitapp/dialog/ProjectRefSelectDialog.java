@@ -13,8 +13,8 @@ import net.oschina.gitapp.adapter.ViewHolder;
 import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.Branch;
 import net.oschina.gitapp.common.UIHelper;
-import net.oschina.gitapp.util.JsonUtils;
-import net.oschina.gitapp.util.TypefaceUtils;
+import net.oschina.gitapp.utils.JsonUtils;
+import net.oschina.gitapp.utils.TypefaceUtils;
 
 import java.util.ArrayList;
 import java.util.List;

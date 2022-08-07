@@ -10,7 +10,7 @@ import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
-import net.oschina.gitapp.util.TypefaceUtils;
+import net.oschina.gitapp.utils.TypefaceUtils;
 
 import java.util.Date;
 

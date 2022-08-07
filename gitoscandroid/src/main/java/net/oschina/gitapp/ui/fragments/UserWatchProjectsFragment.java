@@ -11,7 +11,7 @@ import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.basefragment.BaseSwipeRefreshFragment;
-import net.oschina.gitapp.util.JsonUtils;
+import net.oschina.gitapp.utils.JsonUtils;
 
 import java.util.List;
 

@@ -54,7 +54,7 @@ import net.oschina.gitapp.ui.ProjectReadMeActivity;
 import net.oschina.gitapp.ui.ProjectSomeInfoListActivity;
 import net.oschina.gitapp.ui.SearchActivity;
 import net.oschina.gitapp.ui.UserInfoActivity;
-import net.oschina.gitapp.util.T;
+import net.oschina.gitapp.utils.T;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;

@@ -18,7 +18,7 @@ import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
-import net.oschina.gitapp.util.JsonUtils;
+import net.oschina.gitapp.utils.JsonUtils;
 import net.oschina.gitapp.widget.EnhanceListView;
 import net.oschina.gitapp.widget.TipInfoLayout;
 

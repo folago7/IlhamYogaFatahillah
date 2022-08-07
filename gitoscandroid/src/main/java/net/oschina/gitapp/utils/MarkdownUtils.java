@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package net.oschina.gitapp.util;
+package net.oschina.gitapp.utils;
 
 import static java.util.Locale.US;
 import android.text.TextUtils;

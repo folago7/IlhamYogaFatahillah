@@ -31,7 +31,7 @@ import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.Update;
 import net.oschina.gitapp.dialog.LightProgressDialog;
-import net.oschina.gitapp.util.JsonUtils;
+import net.oschina.gitapp.utils.JsonUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
