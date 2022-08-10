@@ -36,10 +36,10 @@ import net.oschina.gitapp.common.UpdateManager;
 import net.oschina.gitapp.dialog.ProjectRefSelectDialog;
 import net.oschina.gitapp.photoBrowse.PhotoBrowseActivity;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
-import net.oschina.gitapp.util.DialogHelp;
-import net.oschina.gitapp.util.JsonUtils;
-import net.oschina.gitapp.util.T;
-import net.oschina.gitapp.util.TypefaceUtils;
+import net.oschina.gitapp.utils.DialogHelp;
+import net.oschina.gitapp.utils.JsonUtils;
+import net.oschina.gitapp.utils.T;
+import net.oschina.gitapp.utils.TypefaceUtils;
 import net.oschina.gitapp.widget.TipInfoLayout;
 
 import java.io.File;

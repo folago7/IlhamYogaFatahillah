@@ -6,7 +6,7 @@ import android.widget.TextView;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.bean.Issue;
 import net.oschina.gitapp.common.StringUtils;
-import net.oschina.gitapp.util.TypefaceUtils;
+import net.oschina.gitapp.utils.TypefaceUtils;
 
 /**
  * 项目Issues列表适配器

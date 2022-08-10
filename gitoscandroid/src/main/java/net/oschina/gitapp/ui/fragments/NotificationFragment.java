@@ -25,7 +25,7 @@ import net.oschina.gitapp.bean.ProjectNotification;
 import net.oschina.gitapp.bean.ProjectNotificationArray;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.basefragment.BaseFragment;
-import net.oschina.gitapp.util.JsonUtils;
+import net.oschina.gitapp.utils.JsonUtils;
 
 import java.util.ArrayList;
 import java.util.List;

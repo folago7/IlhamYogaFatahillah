@@ -5,11 +5,8 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
@@ -21,10 +18,9 @@ import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.UpLoadFile;
 import net.oschina.gitapp.common.ImageUtils;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
-import net.oschina.gitapp.util.JsonUtils;
+import net.oschina.gitapp.utils.JsonUtils;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package net.oschina.gitapp.util;
+package net.oschina.gitapp.utils;
 
 import static net.oschina.gitapp.common.Contanst.CHARSET_UTF8;
 import java.io.UnsupportedEncodingException;

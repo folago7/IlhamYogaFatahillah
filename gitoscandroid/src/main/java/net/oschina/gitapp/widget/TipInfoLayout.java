@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.common.StringUtils;
-import net.oschina.gitapp.util.TypefaceUtils;
+import net.oschina.gitapp.utils.TypefaceUtils;
 
 /**
  * 一些提示信息显示，包含有加载过程的显示

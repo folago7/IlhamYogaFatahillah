@@ -1,4 +1,4 @@
-package net.oschina.gitapp.util;
+package net.oschina.gitapp.utils;
 
 import android.content.Context;
 import android.view.View;

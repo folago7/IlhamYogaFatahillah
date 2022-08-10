@@ -28,8 +28,8 @@ import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.dialog.LightProgressDialog;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
-import net.oschina.gitapp.util.JsonUtils;
-import net.oschina.gitapp.util.TypefaceUtils;
+import net.oschina.gitapp.utils.JsonUtils;
+import net.oschina.gitapp.utils.TypefaceUtils;
 import net.oschina.gitapp.widget.TipInfoLayout;
 
 import java.util.Map;

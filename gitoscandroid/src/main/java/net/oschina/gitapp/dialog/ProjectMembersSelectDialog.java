@@ -13,7 +13,7 @@ import net.oschina.gitapp.adapter.ViewHolder;
 import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.ProjectMember;
 import net.oschina.gitapp.common.UIHelper;
-import net.oschina.gitapp.util.JsonUtils;
+import net.oschina.gitapp.utils.JsonUtils;
 
 import java.util.List;
 import java.util.Map;

@@ -18,7 +18,7 @@ import net.oschina.gitapp.bean.CommitDiff;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
-import net.oschina.gitapp.util.SourceEditor;
+import net.oschina.gitapp.utils.SourceEditor;
 import net.oschina.gitapp.widget.TipInfoLayout;
 
 import java.util.Map;

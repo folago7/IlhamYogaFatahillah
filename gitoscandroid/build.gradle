@@ -47,4 +47,5 @@ dependencies {
     compile 'com.kymjs.rxvolley:okhttp:1.0.7'
     compile 'com.kymjs.rxvolley:bitmapcore:1.0.7'
     compile project(':crash')
+    compile files('libs/libammsdk.jar')
 }

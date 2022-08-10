@@ -23,11 +23,11 @@ import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.FileUtils;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
-import net.oschina.gitapp.util.DialogHelp;
-import net.oschina.gitapp.util.JsonUtils;
-import net.oschina.gitapp.util.MarkdownUtils;
-import net.oschina.gitapp.util.SourceEditor;
-import net.oschina.gitapp.util.T;
+import net.oschina.gitapp.utils.DialogHelp;
+import net.oschina.gitapp.utils.JsonUtils;
+import net.oschina.gitapp.utils.MarkdownUtils;
+import net.oschina.gitapp.utils.SourceEditor;
+import net.oschina.gitapp.utils.T;
 import net.oschina.gitapp.widget.TipInfoLayout;
 
 import java.util.Map;

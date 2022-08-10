@@ -1,4 +1,4 @@
-package net.oschina.gitapp.util;
+package net.oschina.gitapp.utils;
 
 import org.apache.commons.io.IOUtils;
 import org.codehaus.jackson.map.DeserializationConfig;

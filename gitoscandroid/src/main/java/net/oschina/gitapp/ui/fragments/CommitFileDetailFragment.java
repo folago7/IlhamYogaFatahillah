@@ -22,7 +22,7 @@ import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.interfaces.OnStatusListener;
 import net.oschina.gitapp.ui.basefragment.BaseFragment;
-import net.oschina.gitapp.util.JsonUtils;
+import net.oschina.gitapp.utils.JsonUtils;
 
 import java.util.ArrayList;
 import java.util.List;

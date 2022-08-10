@@ -12,7 +12,7 @@ import net.oschina.gitapp.bean.Event;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.HtmlRegexpUtils;
 import net.oschina.gitapp.common.UIHelper;
-import net.oschina.gitapp.util.RecyclerList;
+import net.oschina.gitapp.utils.RecyclerList;
 
 import java.text.SimpleDateFormat;
 import java.util.List;

@@ -1,4 +1,4 @@
-package net.oschina.gitapp.util;
+package net.oschina.gitapp.utils;
 
 import android.app.ProgressDialog;
 import android.content.Context;

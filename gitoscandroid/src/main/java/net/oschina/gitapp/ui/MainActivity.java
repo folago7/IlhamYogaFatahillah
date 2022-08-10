@@ -32,7 +32,7 @@ import net.oschina.gitapp.common.UpdateManager;
 import net.oschina.gitapp.interfaces.DrawerMenuCallBack;
 import net.oschina.gitapp.ui.fragments.ExploreViewPagerFragment;
 import net.oschina.gitapp.ui.fragments.MySelfViewPagerFragment;
-import net.oschina.gitapp.util.JsonUtils;
+import net.oschina.gitapp.utils.JsonUtils;
 
 import java.util.List;
 import java.util.Map;
