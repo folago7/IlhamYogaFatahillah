@@ -20,17 +20,6 @@ import android.text.style.StyleSpan;
 import android.view.View;
 import android.widget.Toast;
 
-import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.controller.UMServiceFactory;
-import com.umeng.socialize.controller.UMSocialService;
-import com.umeng.socialize.media.QQShareContent;
-import com.umeng.socialize.media.SinaShareContent;
-import com.umeng.socialize.media.UMImage;
-import com.umeng.socialize.sso.SinaSsoHandler;
-import com.umeng.socialize.sso.UMQQSsoHandler;
-import com.umeng.socialize.weixin.controller.UMWXHandler;
-import com.umeng.socialize.weixin.media.CircleShareContent;
-import com.umeng.socialize.weixin.media.WeiXinShareContent;
 
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.bean.Commit;
@@ -533,74 +522,79 @@ public class UIHelper {
         context.startActivity(intent);
     }
 
-    /**
-     * 显示分享操作
-     *
-     * @param context
-     * @param shareContent
-     * @param shareImage
-     */
+    @SuppressWarnings("unused")
     public static void showShareOption(Activity context, String title,
-                                       String url, String shareContent, Bitmap shareImage) {
-        UMImage mUMImgBitmap = new UMImage(context, shareImage);
-        // 首先在您的Activity中添加如下成员变量
-        final UMSocialService mController = UMServiceFactory
-                .getUMSocialService("com.umeng.share");
-
-        // appID是你在微信开发平台注册应用的AppID, 这里需要替换成你注册的AppID
-        String appID = "wx850b854f6aad6764";
-        // 添加微信平台
-        UMWXHandler wxHandler = new UMWXHandler(context, appID);
-        wxHandler.addToSocialSDK();
-        // 设置分享到微信的内容
-        WeiXinShareContent weixinContent = new WeiXinShareContent(mUMImgBitmap);
-        weixinContent.setShareContent(shareContent);
-        weixinContent.setTitle(title);
-        weixinContent.setTargetUrl(url);
-        weixinContent.setShareImage(mUMImgBitmap);
-        wxHandler.mShareMedia = weixinContent;
-        mController.setShareMedia(weixinContent);
-
-        // 支持微信朋友圈
-        UMWXHandler wxCircleHandler = new UMWXHandler(context, appID);
-        // 设置朋友圈分享的内容
-        CircleShareContent circleMedia = new CircleShareContent();
-        circleMedia.setShareContent(shareContent);
-        circleMedia.setShareImage(mUMImgBitmap);
-        circleMedia.setTargetUrl(url);
-        circleMedia.setTitle(title);
-        wxCircleHandler.mShareMedia = circleMedia;
-        mController.setShareMedia(circleMedia);
-        wxCircleHandler.setToCircle(true);
-        wxCircleHandler.addToSocialSDK();
-
-        // 参数1为当前Activity，参数2为开发者在QQ互联申请的APP ID，参数3为开发者在QQ互联申请的APP kEY.
-        UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(context, "1101982202",
-                "GJxJGse5cu9iH4NM");
-        QQShareContent qqShareContent = new QQShareContent();
-        qqShareContent.setTitle(title);
-        qqShareContent.setShareContent(shareContent);
-        qqShareContent.setShareImage(mUMImgBitmap);
-        qqShareContent.setTargetUrl(url);
-        qqSsoHandler.mShareMedia = mUMImgBitmap;
-        mController.setShareMedia(qqShareContent);
-        qqSsoHandler.addToSocialSDK();
-
-        SinaSsoHandler sinaSsoHandler = new SinaSsoHandler();
-        SinaShareContent sinaShareContent = new SinaShareContent();
-        String form = "  分享自GitOSC移动客户端，好项目尽在https://git.oschina.net";
-        sinaShareContent.setShareContent(shareContent + " " + url + form);
-        sinaShareContent.setTargetUrl(url);
-        sinaShareContent.setShareImage(mUMImgBitmap);
-        sinaShareContent.setTitle(title);
-        mController.setShareMedia(sinaShareContent);
-        mController.getConfig().setSsoHandler(sinaSsoHandler);
-        // 移除人人分享操作
-        mController.getConfig().removePlatform(SHARE_MEDIA.RENREN,
-                SHARE_MEDIA.DOUBAN, SHARE_MEDIA.TENCENT);
-
-        mController.openShare(context, false);
+                                      String url, String shareContent, Bitmap shareImage) {
+        // TODO: 2017/6/12  
     }
+//    /**
+//     * 显示分享操作
+//     *
+//     * @param context
+//     * @param shareContent
+//     * @param shareImage
+//     */
+//    public static void showShareOption(Activity context, String title,
+//                                       String url, String shareContent, Bitmap shareImage) {
+//        UMImage mUMImgBitmap = new UMImage(context, shareImage);
+//        // 首先在您的Activity中添加如下成员变量
+//        final UMSocialService mController = UMServiceFactory
+//                .getUMSocialService("com.umeng.share");
+//
+//        // appID是你在微信开发平台注册应用的AppID, 这里需要替换成你注册的AppID
+//        String appID = "wx850b854f6aad6764";
+//        // 添加微信平台
+//        UMWXHandler wxHandler = new UMWXHandler(context, appID);
+//        wxHandler.addToSocialSDK();
+//        // 设置分享到微信的内容
+//        WeiXinShareContent weixinContent = new WeiXinShareContent(mUMImgBitmap);
+//        weixinContent.setShareContent(shareContent);
+//        weixinContent.setTitle(title);
+//        weixinContent.setTargetUrl(url);
+//        weixinContent.setShareImage(mUMImgBitmap);
+//        wxHandler.mShareMedia = weixinContent;
+//        mController.setShareMedia(weixinContent);
+//
+//        // 支持微信朋友圈
+//        UMWXHandler wxCircleHandler = new UMWXHandler(context, appID);
+//        // 设置朋友圈分享的内容
+//        CircleShareContent circleMedia = new CircleShareContent();
+//        circleMedia.setShareContent(shareContent);
+//        circleMedia.setShareImage(mUMImgBitmap);
+//        circleMedia.setTargetUrl(url);
+//        circleMedia.setTitle(title);
+//        wxCircleHandler.mShareMedia = circleMedia;
+//        mController.setShareMedia(circleMedia);
+//        wxCircleHandler.setToCircle(true);
+//        wxCircleHandler.addToSocialSDK();
+//
+//        // 参数1为当前Activity，参数2为开发者在QQ互联申请的APP ID，参数3为开发者在QQ互联申请的APP kEY.
+//        UMQQSsoHandler qqSsoHandler = new UMQQSsoHandler(context, "1101982202",
+//                "GJxJGse5cu9iH4NM");
+//        QQShareContent qqShareContent = new QQShareContent();
+//        qqShareContent.setTitle(title);
+//        qqShareContent.setShareContent(shareContent);
+//        qqShareContent.setShareImage(mUMImgBitmap);
+//        qqShareContent.setTargetUrl(url);
+//        qqSsoHandler.mShareMedia = mUMImgBitmap;
+//        mController.setShareMedia(qqShareContent);
+//        qqSsoHandler.addToSocialSDK();
+//
+//        SinaSsoHandler sinaSsoHandler = new SinaSsoHandler();
+//        SinaShareContent sinaShareContent = new SinaShareContent();
+//        String form = "  分享自GitOSC移动客户端，好项目尽在https://git.oschina.net";
+//        sinaShareContent.setShareContent(shareContent + " " + url + form);
+//        sinaShareContent.setTargetUrl(url);
+//        sinaShareContent.setShareImage(mUMImgBitmap);
+//        sinaShareContent.setTitle(title);
+//        mController.setShareMedia(sinaShareContent);
+//        mController.getConfig().setSsoHandler(sinaSsoHandler);
+//        // 移除人人分享操作
+//        mController.getConfig().removePlatform(SHARE_MEDIA.RENREN,
+//                SHARE_MEDIA.DOUBAN, SHARE_MEDIA.TENCENT);
+//
+//        mController.openShare(context, false);
+//    }
 
     /**
      * 获得屏幕的截图
