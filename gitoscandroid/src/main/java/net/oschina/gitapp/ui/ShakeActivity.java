@@ -140,8 +140,7 @@ public class ShakeActivity extends BaseActivity implements OnClickListener {
             UIHelper.getDialog(ShakeActivity.this, "温馨提示", "请先摇一摇再分享吧", "知道了").show();
         } else {
             String title = "摇项目，等你来！";
-            String url = GitOSCApi.NO_API_BASE_URL + mProject.getOwner().getUsername() + "/" +
-                    mProject.getName();
+            String url = GitOSCApi.NO_API_BASE_URL + mProject.getPathWithNamespace();
             String shareContent = "我在Git@OSC客户端中摇到《" + mProject.getOwner().getName() + "的项目" +
                     mProject.getName() + "》你也来试试手气吧";
             UIHelper.showShareOption(ShakeActivity.this, title, url, shareContent, mBitmap);
