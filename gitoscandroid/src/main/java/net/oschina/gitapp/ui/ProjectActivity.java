@@ -336,6 +336,7 @@ public class ProjectActivity extends BaseActivity implements
         });
     }
 
+    @Deprecated
     private void loadProjectForName(String userName, String projectName) {
         if (StringUtils.isEmpty(userName) || StringUtils.isEmpty(projectName)) {
             setProjectNotFound();

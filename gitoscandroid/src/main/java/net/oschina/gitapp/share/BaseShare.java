@@ -7,62 +7,76 @@ import android.graphics.Bitmap;
  * base share
  * Created by huanghaibin on 2017/6/12.
  */
-
+@SuppressWarnings("unused")
 public abstract class BaseShare {
-    protected Activity mActivity;
-    protected String title;
-    protected String content;
-    protected int resId;
-    protected String url;
-    protected String imageUrl;
-    protected Bitmap bitmap;
+    Builder mBuilder;
 
-
-    public String getTitle() {
-        return title;
+    BaseShare(Builder mBuilder) {
+        this.mBuilder = mBuilder;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    public abstract boolean share();
 
-    public String getContent() {
-        return content;
-    }
+    public static final class Builder{
+        private Activity mActivity;
+        private String title;
+        private String content;
+        private int resId;
+        private String url;
+        private String imageUrl;
+        private Bitmap bitmap;
+        private boolean isShareApp;
 
-    public void setContent(String content) {
-        this.content = content;
-    }
+        private int itemIcon;//显示的分享项图标
+        private String itemTitle;//显示的分享项名称
 
-    public int getResId() {
-        return resId;
-    }
+        public Builder(Activity mActivity) {
+            this.mActivity = mActivity;
+        }
 
-    public void setResId(int resId) {
-        this.resId = resId;
-    }
+        public Builder resId(int resId){
+            this.resId = resId;
+            return this;
+        }
 
-    public String getUrl() {
-        return url;
-    }
+        public Builder itemIcon(int itemIcon){
+            this.itemIcon = itemIcon;
+            return this;
+        }
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
+        public Builder itemTitle(String itemTitle){
+            this.itemTitle = itemTitle;
+            return this;
+        }
 
-    public String getImageUrl() {
-        return imageUrl;
-    }
+        public Builder title(String title){
+            this.title = title;
+            return this;
+        }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
+        public Builder url(String url){
+            this.url = url;
+            return this;
+        }
 
-    public Bitmap getBitmap() {
-        return bitmap;
-    }
+        public Builder imageUrl(String imageUrl){
+            this.imageUrl = imageUrl;
+            return this;
+        }
 
-    public void setBitmap(Bitmap bitmap) {
-        this.bitmap = bitmap;
+        public Builder content(String content){
+            this.content = content;
+            return this;
+        }
+
+        public Builder bitmap(Bitmap bitmap){
+            this.bitmap = bitmap;
+            return this;
+        }
+
+        public Builder isShareApp(boolean isShareApp){
+            this.isShareApp = isShareApp;
+            return this;
+        }
     }
 }
