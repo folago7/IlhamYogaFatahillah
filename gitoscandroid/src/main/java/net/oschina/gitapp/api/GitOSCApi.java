@@ -397,7 +397,7 @@ public class GitOSCApi {
      * @param callback
      */
     public static void downloadFile(Project project, CodeTree codeTree, String path, String refName, HttpCallback callback) {
-        String uri = GitOSCApi.NO_API_BASE_URL + project.getOwner().getUsername() + "/" + project.getName() + "/raw/" + refName + "/" + path + codeTree.getName() + "?private_token=" + AppContext.getToken();
+        String uri = GitOSCApi.NO_API_BASE_URL + project.getPathWithNamespace() + "/raw/" + refName + "/" + path + codeTree.getName() + "?private_token=" + AppContext.getToken();
         get(uri, callback);
     }
 }

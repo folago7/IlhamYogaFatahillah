@@ -1,6 +1,7 @@
 package net.oschina.gitapp.ui;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -62,7 +63,6 @@ import pub.devrel.easypermissions.EasyPermissions;
 public class ProjectCodeActivity extends BaseActivity implements View.OnClickListener,
         AdapterView.OnItemClickListener, EasyPermissions.PermissionCallbacks {
 
-    private static final String TAG = "ProjectCodeActivity";
     @InjectView(R.id.tv_paths)
     TextView tvPaths;
 
@@ -380,6 +380,7 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
         return super.onKeyDown(keyCode, event);
     }
 
+    @SuppressWarnings("unused")
     public void onPathClick(String path, int index) {
         codeTreeAdapter.clear();
 
@@ -395,7 +396,7 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
     }
 
     class PathString extends SpannableString {
-        public PathString(String text) {
+         PathString(String text) {
             super(text);
             setup(text);
         }
@@ -422,7 +423,7 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
             private final String mPath;
             private final int mIndex;
 
-            public Clickable(String path, int index) {
+             Clickable(String path, int index) {
                 mPath = path;
                 mIndex = index;
             }
@@ -483,6 +484,7 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 mCodeTree = codeTree;
+                requestExternalStorage();
             }
 
         }).show();
@@ -490,6 +492,7 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
 
     private static final int RC_EXTERNAL_STORAGE = 0x04;//存储权限
     private CodeTree mCodeTree;
+    @SuppressLint("InlinedApi")
     @AfterPermissionGranted(RC_EXTERNAL_STORAGE)
     public void requestExternalStorage() {
         if (EasyPermissions.hasPermissions(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {

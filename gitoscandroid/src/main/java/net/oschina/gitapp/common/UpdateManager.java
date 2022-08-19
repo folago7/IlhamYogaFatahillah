@@ -398,7 +398,7 @@ public class UpdateManager {
         Intent intent = new Intent(Intent.ACTION_VIEW);
         if (Build.VERSION.SDK_INT >= 24) {
             intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            Uri contentUri = FileProvider.getUriForFile(mContext, "net.oschina.app.provider", file);
+            Uri contentUri = FileProvider.getUriForFile(mContext, "net.oschina.gitapp.provider", file);
             intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
         } else {
             intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
