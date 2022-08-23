@@ -47,21 +47,14 @@
 
 -keep class net.oschina.gitapp.bean.** { *; }
 -keep class net.oschina.gitapp.util.SourceEditor { *; }
--keep class uk.co.senab.photoview.** { *; } 
--keep class com.umeng.** { *; }
+-keep class uk.co.senab.photoview.** { *; }
 -keep class com.facebook.** { *; }
 -keep class com.blueware.agent.** { *; }
--keep class com.tencent.weibo.** { *; }
--keep class com.kymjs.crash.** { *; }
 -keep class com.fasterxml.jackson.** { *; } 
 -keep class org.codehaus.jackson.** { *; }
 
 -dontwarn uk.co.senab.photoview.**
--dontwarn com.umeng.**
--dontwarn com.facebook.**
 -dontwarn com.blueware.agent.**
--dontwarn com.tencent.weibo.**
--dontwarn com.kymjs.crash.**
 -dontwarn com.fasterxml.jackson.**
 -dontwarn org.codehaus.jackson.**
 

@@ -5,7 +5,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.media.AudioManager;
 
-import com.kymjs.crash.CustomActivityOnCrash;
 import com.kymjs.okhttp.OkHttpStack;
 import com.kymjs.rxvolley.RxVolley;
 import com.kymjs.rxvolley.http.RequestQueue;
@@ -67,7 +66,6 @@ public class AppContext extends Application {
     public void onCreate() {
         super.onCreate();
         // 注册App异常崩溃处理器
-        CustomActivityOnCrash.install(this);
         File cacheFolder = getCacheDir();
         RxVolley.setRequestQueue(RequestQueue.newRequestQueue(cacheFolder, new
                 OkHttpStack(new OkHttpClient())));

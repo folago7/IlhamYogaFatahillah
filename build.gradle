@@ -14,3 +14,12 @@ allprojects {
         mavenCentral()
     }
 }
+ext {
+    compileSdkVersion = 23
+    buildToolsVersion = "23.0.2"
+    applicationId = "net.oschina.gitapp"
+    minSdkVersion = 12
+    targetSdkVersion = 23
+    versionCode = 156
+    versionName = "v1.5.6(1706011431)"
+}
