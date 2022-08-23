@@ -27,6 +27,7 @@ import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.dialog.LightProgressDialog;
+import net.oschina.gitapp.dialog.ShareDialog;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 import net.oschina.gitapp.utils.JsonUtils;
 import net.oschina.gitapp.utils.TypefaceUtils;
@@ -243,9 +244,11 @@ public class ProjectActivity extends BaseActivity implements
         int id = item.getItemId();
         switch (id) {
             case R.id.share:
-                UIHelper.showShareOption(ProjectActivity.this, mProject.getName(), url_link,
-                        "我在关注《" + mProject.getOwner().getName() + "的项目" + mProject.getName() +
-                                "》" + "，你也来瞧瞧呗！", bitmap);
+                new ShareDialog(ProjectActivity.this)
+                        .init(this, mProject.getName(), url_link,
+                                "我在关注《" + mProject.getOwner().getName() + "的项目" + mProject.getName() +
+                                        "》" + "，你也来瞧瞧呗！", bitmap)
+                        .show();
                 break;
             case R.id.copy:
                 ClipboardManager cbm = (ClipboardManager) getSystemService(Context

@@ -15,22 +15,22 @@ import net.oschina.gitapp.utils.T;
  * Created by huanghaibin on 2017/6/12.
  */
 
-public class QZoneShare extends BaseShare implements IUiListener {
+public class TencentQQShare extends BaseShare implements IUiListener {
+
     private static final String APP_ID = "1101982202";
     private Tencent tencent;
 
-    public QZoneShare(Builder mBuilder) {
+    public TencentQQShare(Builder mBuilder) {
         super(mBuilder);
         tencent = Tencent.createInstance(APP_ID, mBuilder.mActivity.getApplicationContext());
     }
 
     @Override
     public boolean share() {
-        Bundle bundle = initShare();
-        bundle.putInt(QQShare.SHARE_TO_QQ_EXT_INT, QQShare.SHARE_TO_QQ_FLAG_QZONE_AUTO_OPEN);
-        tencent.shareToQQ(mBuilder.mActivity, bundle, this);
+        tencent.shareToQQ(mBuilder.mActivity, initShare(), this);
         return true;
     }
+
 
     private Bundle initShare() {
         Bundle params = new Bundle();
@@ -45,6 +45,7 @@ public class QZoneShare extends BaseShare implements IUiListener {
         }
         return params;
     }
+
 
     @Override
     public void onComplete(Object o) {

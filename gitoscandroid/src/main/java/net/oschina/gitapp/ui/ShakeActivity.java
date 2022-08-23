@@ -34,6 +34,7 @@ import net.oschina.gitapp.bean.LuckMsg;
 import net.oschina.gitapp.bean.RandomProject;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
+import net.oschina.gitapp.dialog.ShareDialog;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 import net.oschina.gitapp.utils.JsonUtils;
 import net.oschina.gitapp.utils.ShakeListener;
@@ -143,7 +144,10 @@ public class ShakeActivity extends BaseActivity implements OnClickListener {
             String url = GitOSCApi.NO_API_BASE_URL + mProject.getPathWithNamespace();
             String shareContent = "我在Git@OSC客户端中摇到《" + mProject.getOwner().getName() + "的项目" +
                     mProject.getName() + "》你也来试试手气吧";
-            UIHelper.showShareOption(ShakeActivity.this, title, url, shareContent, mBitmap);
+            //UIHelper.showShareOption(ShakeActivity.this, title, url, shareContent, mBitmap);
+            new ShareDialog(this)
+                    .init(ShakeActivity.this, title, url, shareContent, mBitmap)
+                    .show();
         }
     }
 
@@ -364,8 +368,13 @@ public class ShakeActivity extends BaseActivity implements OnClickListener {
                         public void onClick(DialogInterface dialog, int which) {
                             String url = "http://t.cn/RhLDd4k";
                             Bitmap bitmap = UIHelper.takeScreenShot(ShakeActivity.this);
-                            UIHelper.showShareOption(ShakeActivity.this, "我摇到奖品啦", url, mProject
-                                    .getMsg(), bitmap);
+//                            UIHelper.showShareOption(ShakeActivity.this, "我摇到奖品啦", url, mProject
+//                                    .getMsg(), bitmap);
+                            new ShareDialog(ShakeActivity.this)
+                                    .init(ShakeActivity.this, "我摇到奖品啦", url, mProject
+                                            .getMsg(), bitmap)
+
+                                    .show();
                         }
                     });
                     dialog.show();
