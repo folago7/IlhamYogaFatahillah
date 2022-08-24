@@ -18,7 +18,7 @@ import net.oschina.gitapp.R;
 
 public class SinaShare extends BaseShare{
 
-    private static final String APP_KEY = "3616966952";
+    private static final String APP_KEY = "3645105737";
     private IWeiboShareAPI mAPI;
 
     public SinaShare(Builder mBuilder) {
@@ -34,30 +34,23 @@ public class SinaShare extends BaseShare{
     }
 
     private void toShare(){
-        WebpageObject webpageObject = new WebpageObject();
 
+        WebpageObject webpageObject = new WebpageObject();
         webpageObject.identify = Utility.generateGUID();
         webpageObject.title = mBuilder.title;
         webpageObject.description = mBuilder.content;
-        if (mBuilder.bitmap == null) {
-            mBuilder.bitmap = BitmapFactory.decodeResource(mBuilder.mActivity.getResources(), R.drawable.icon_logo);
-        }
-
-
-        // 设置 Bitmap 类型的图片到视频对象里         最好设置缩略图。 注意：最终压缩过的缩略图大小不得超过 32kb。
+        mBuilder.bitmap = BitmapFactory.decodeResource(mBuilder.mActivity.getResources(), R.drawable.icon_logo);
         webpageObject.setThumbImage(mBuilder.bitmap);
         webpageObject.actionUrl = mBuilder.url;
         webpageObject.defaultText = mBuilder.content;
 
-
         WeiboMultiMessage weiboMessage = new WeiboMultiMessage();
 
         weiboMessage.mediaObject = webpageObject;
-        // 2. 初始化从第三方到微博的消息请求
+
         SendMultiMessageToWeiboRequest request = new SendMultiMessageToWeiboRequest();
-        // 用transaction唯一标识一个请求
         request.transaction = String.valueOf(System.currentTimeMillis());
         request.multiMessage = weiboMessage;
-        boolean isTrue = mAPI.sendRequest(mBuilder.mActivity, request);
+        mAPI.sendRequest(mBuilder.mActivity, request);
     }
 }
