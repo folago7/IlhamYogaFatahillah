@@ -78,5 +78,4 @@ dependencies {
     compile 'com.kymjs.rxvolley:okhttp:1.0.7'
     compile 'com.kymjs.rxvolley:bitmapcore:1.0.7'
     compile 'com.android.support:design:23.3.0'
-    compile files('libs/libammsdk.jar')
 }

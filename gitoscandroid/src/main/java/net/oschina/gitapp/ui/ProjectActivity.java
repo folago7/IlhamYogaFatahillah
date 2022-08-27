@@ -535,10 +535,4 @@ public class ProjectActivity extends BaseActivity implements
     public boolean onMenuOpened(int featureId, Menu menu) {
         return mProject != null && super.onMenuOpened(featureId, menu);
     }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        System.gc();
-    }
 }

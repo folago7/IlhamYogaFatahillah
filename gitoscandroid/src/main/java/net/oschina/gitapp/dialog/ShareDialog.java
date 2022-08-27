@@ -17,9 +17,9 @@ import android.view.WindowManager;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.share.BaseShare;
 import net.oschina.gitapp.share.MomentsShare;
-import net.oschina.gitapp.share.TencentQQShare;
 import net.oschina.gitapp.share.QZoneShare;
 import net.oschina.gitapp.share.SinaShare;
+import net.oschina.gitapp.share.TencentQQShare;
 import net.oschina.gitapp.share.WeChatShare;
 
 /**
