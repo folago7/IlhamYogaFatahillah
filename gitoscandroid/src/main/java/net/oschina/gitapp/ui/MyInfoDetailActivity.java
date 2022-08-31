@@ -90,29 +90,52 @@ public class MyInfoDetailActivity extends BaseActivity implements View.OnClickLi
 
     private void initData() {
         mUser = AppContext.getInstance().getLoginInfo();
-        if (mUser != null) {
-            tvName.setText(mUser.getName());
-            if (TextUtils.isEmpty(mUser.getBio())) {
-                tvDescription.setText("暂无填写");
-            } else {
-                tvDescription.setText(mUser.getBio());
+        if (mUser == null)
+            return;
+        GitOSCApi.getUserInfo(mUser.getId(), new HttpCallback() {
+            @Override
+            public void onSuccess(Map<String, String> headers, byte[] t) {
+                super.onSuccess(headers, t);
+                try {
+                    User user = JsonUtils.toBean(User.class, t);
+                    initUserInfo(user);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
-            tvJointime.setText(mUser.getCreated_at().substring(0, 10));
-
-            String portrait = mUser.getPortrait() == null || mUser.getPortrait().equals("null") ?
-                    "" : mUser.getPortrait();
-            if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
-                ivPortrait.setImageResource(R.drawable.mini_avatar);
-            } else {
-                new BitmapCore.Builder().url(mUser.getNew_portrait()).view(ivPortrait).doTask();
+            @Override
+            public void onFailure(int errorNo, String strMsg) {
+                super.onFailure(errorNo, strMsg);
+                if (mUser != null) {
+                    initUserInfo(mUser);
+                }
             }
+        });
+    }
 
-            tvFollowers.setText(mUser.getFollow().getFollowers() + "");
-            tvStared.setText(mUser.getFollow().getStarred() + "");
-            tvFollowing.setText(mUser.getFollow().getFollowing() + "");
-            tvWatched.setText(mUser.getFollow().getWatched() + "");
+    private void initUserInfo(User mUser) {
+        tvName.setText(mUser.getName());
+        if (TextUtils.isEmpty(mUser.getBio())) {
+            tvDescription.setText("暂无填写");
+        } else {
+            tvDescription.setText(mUser.getBio());
         }
+
+        tvJointime.setText(mUser.getCreated_at().substring(0, 10));
+
+        String portrait = mUser.getPortrait() == null || mUser.getPortrait().equals("null") ?
+                "" : mUser.getPortrait();
+        if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
+            ivPortrait.setImageResource(R.drawable.mini_avatar);
+        } else {
+            new BitmapCore.Builder().url(mUser.getNew_portrait()).view(ivPortrait).doTask();
+        }
+
+        tvFollowers.setText(mUser.getFollow().getFollowers() + "");
+        tvStared.setText(mUser.getFollow().getStarred() + "");
+        tvFollowing.setText(mUser.getFollow().getFollowing() + "");
+        tvWatched.setText(mUser.getFollow().getWatched() + "");
     }
 
     @Override

@@ -74,13 +74,13 @@ public class GitOSCApi {
     public static void getStarProjects(String uid, int page, HttpCallback handler) {
         HttpParams params = AsyncHttpHelp.getHttpParams();
         params.put("page", page);
-        get(USER + uid + "/stared_projects",params, handler);
+        get(USER + uid + "/stared_projects", params, handler);
     }
 
     public static void getWatchProjects(String uid, int page, HttpCallback handler) {
         HttpParams params = AsyncHttpHelp.getHttpParams();
         params.put("page", page);
-        get(USER + uid + "/watched_projects",params, handler);
+        get(USER + uid + "/watched_projects", params, handler);
     }
 
     public static void getProject(String pId, HttpCallback handler) {
@@ -109,6 +109,14 @@ public class GitOSCApi {
         HttpParams params = AsyncHttpHelp.getHttpParams();
         params.put("page", page);
         get(EVENT + "user" + "/" + uid, params, handler);
+    }
+
+    /**
+     * 获取用户信息
+     */
+    public static void getUserInfo(String uid, HttpCallback callback) {
+        HttpParams params = AsyncHttpHelp.getHttpParams();
+        get("http://git.oschina.net/api/v3/users/"  + uid, params, callback);
     }
 
     public static void getProjectCommits(String pId, int page, String refName, HttpCallback
