@@ -39,9 +39,10 @@ public class QZoneShare extends BaseShare implements IUiListener {
         params.putString(QQShare.SHARE_TO_QQ_SUMMARY, mBuilder.content);
         params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, mBuilder.url);
         params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, mBuilder.imageUrl);
+        params.putInt(QQShare.SHARE_TO_QQ_IMAGE_LOCAL_URL, R.drawable.ic_share_logo);
         if (mBuilder.isShareApp) {
             params.putString(QQShare.SHARE_TO_QQ_APP_NAME, mBuilder.title);
-            params.putInt(QQShare.SHARE_TO_QQ_IMAGE_LOCAL_URL, R.drawable.icon_logo);
+            params.putInt(QQShare.SHARE_TO_QQ_IMAGE_LOCAL_URL, R.drawable.ic_share_logo);
         }
         return params;
     }
