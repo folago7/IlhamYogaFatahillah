@@ -1,6 +1,5 @@
 package net.oschina.gitapp.share;
 
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.tencent.mm.sdk.modelbase.BaseReq;
