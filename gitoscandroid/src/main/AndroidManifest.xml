@@ -82,7 +82,10 @@
             </intent-filter>
 
         </activity>
-        <activity android:name=".ui.ProjectReadMeActivity" />
+        <activity
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="sensor"
+            android:name=".ui.ProjectReadMeActivity" />
         <activity
             android:name=".ui.ProjectCodeActivity"
             android:screenOrientation="portrait" />
@@ -100,6 +103,8 @@
             android:label="摇一摇"
             android:screenOrientation="portrait" />
         <activity
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="sensor"
             android:name=".ui.CodeFileDetailActivity"
             android:launchMode="singleTask" />
         <activity
