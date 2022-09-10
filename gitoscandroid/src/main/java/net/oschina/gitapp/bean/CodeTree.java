@@ -138,7 +138,22 @@ public class CodeTree extends Entity {
                         ".thm",
                         ".tex",
                         ".bst",
-                        ".config"
+                        ".config",
+                        "Podfile",
+                        "Podfile.lock",
+                        ".plist",
+                        ".storyboard",
+                        "gradlew",
+                        ".gradle",
+                        ".pro",
+                        ".pbxproj",
+                        ".xcscheme",
+                        ".proto",
+                        ".wxss",
+                        ".wxml",
+                        ".vi",
+                        ".ctl",
+                        ".ts"
                 };
         for (String string : codeFileSuffix) {
             if (fileName.equalsIgnoreCase(string)) {
