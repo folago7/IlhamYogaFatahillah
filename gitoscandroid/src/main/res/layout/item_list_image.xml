@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<net.oschina.gitapp.media.SquareLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:oscAccordTo="width">
+
+    <ImageView
+        android:id="@+id/iv_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#dadada"
+        android:clickable="false"
+        android:contentDescription="@string/app_name"
+        android:focusable="false"
+        android:scaleType="centerCrop" />
+
+    <View
+        android:id="@+id/lay_mask"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:clickable="false"
+        android:focusable="false"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/cb_selected"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="top|right"
+        android:layout_margin="4dp"
+        android:clickable="false"
+        android:contentDescription="@string/app_name"
+        android:focusable="false"
+        android:scaleType="centerInside"
+        android:src="@drawable/cb_image_selector"
+        tools:ignore="RtlHardcoded" />
+
+    <ImageView
+        android:id="@+id/iv_is_gif"
+        android:layout_width="30dp"
+        android:layout_height="18dp"
+        android:layout_gravity="right|bottom"
+        android:contentDescription="@string/app_name"
+        android:padding="2dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/gif"
+        android:visibility="gone"
+        tools:ignore="RtlHardcoded" />
+</net.oschina.gitapp.media.SquareLayout>

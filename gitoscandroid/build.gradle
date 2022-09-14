@@ -69,13 +69,21 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
+    //noinspection GradleDependency
     compile 'com.jakewharton:butterknife:6.1.0'
+    //noinspection GradleDependency
     compile 'com.github.chrisbanes.photoview:library:1.2.3'
+    //noinspection GradleDependency
     compile 'com.umeng.analytics:analytics:5.5.2'
+    //noinspection GradleDependency
     compile 'com.android.support:appcompat-v7:23.1.1'
+    //noinspection GradleDependency
     compile 'pub.devrel:easypermissions:0.1.7'
     compile 'com.kymjs.rxvolley:rxvolley:1.0.7'
     compile 'com.kymjs.rxvolley:okhttp:1.0.7'
     compile 'com.kymjs.rxvolley:bitmapcore:1.0.7'
+    //noinspection GradleDependency
     compile 'com.android.support:design:23.3.0'
+    //noinspection GradleDependency
+    compile 'com.github.bumptech.glide:glide:3.7.0'
 }

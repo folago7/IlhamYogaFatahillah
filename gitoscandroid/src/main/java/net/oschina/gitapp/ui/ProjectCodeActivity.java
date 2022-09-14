@@ -35,7 +35,8 @@ import net.oschina.gitapp.common.FileUtils;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.common.UpdateManager;
 import net.oschina.gitapp.dialog.ProjectRefSelectDialog;
-import net.oschina.gitapp.photoBrowse.PhotoBrowseActivity;
+import net.oschina.gitapp.media.ImageGalleryActivity;
+import net.oschina.gitapp.media.Util;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 import net.oschina.gitapp.utils.DialogHelp;
 import net.oschina.gitapp.utils.JsonUtils;
@@ -298,8 +299,7 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
         for (int i = 0; i < codeTrees.size(); i++) {
             CodeTree codeTree = codeTrees.get(i);
             if (codeTree.isImage(codeTree.getName())) {
-                String url = GitOSCApi.NO_API_BASE_URL + project.getOwner().getUsername() + "/" +
-                        project.getPath() + "/" + "raw" + "/" + refName + "/" + URLEncoder.encode
+                String url = GitOSCApi.NO_API_BASE_URL + project.getPathWithNamespace() + "/" + "raw" + "/" + refName + "/" + URLEncoder.encode
                         (getPath() + codeTree.getName()) + "?private_token=" + AppContext
                         .getToken();
                 images.add(url);
@@ -308,8 +308,7 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
                 index = i;
             }
         }
-        String[] urls = new String[images.size()];
-        PhotoBrowseActivity.showPhotoBrowse(this, images.toArray(urls), index);
+        ImageGalleryActivity.show(this, Util.listToArray(images),index);
     }
 
     @Override

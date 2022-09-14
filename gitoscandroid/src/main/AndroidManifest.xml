@@ -83,9 +83,9 @@
 
         </activity>
         <activity
+            android:name=".ui.ProjectReadMeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="sensor"
-            android:name=".ui.ProjectReadMeActivity" />
+            android:screenOrientation="sensor" />
         <activity
             android:name=".ui.ProjectCodeActivity"
             android:screenOrientation="portrait" />
@@ -103,10 +103,10 @@
             android:label="摇一摇"
             android:screenOrientation="portrait" />
         <activity
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="sensor"
             android:name=".ui.CodeFileDetailActivity"
-            android:launchMode="singleTask" />
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask"
+            android:screenOrientation="sensor" />
         <activity
             android:name=".ui.CommitDetailActivity"
             android:launchMode="singleTask" />
@@ -186,15 +186,22 @@
             android:windowSoftInputMode="adjustPan|stateHidden" />
 
         <activity
+            android:name=".wxapi.WXEntryActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateHidden"
-            android:name=".wxapi.WXEntryActivity"/>
+            android:windowSoftInputMode="adjustPan|stateHidden" />
 
         <activity
             android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"
             android:configChanges="keyboardHidden|orientation"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".media.CropActivity"
+            android:theme="@style/ThemeFullscreen" />
+        <activity
+            android:name=".media.ImageGalleryActivity"
+            android:theme="@style/ThemeFullscreen" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"

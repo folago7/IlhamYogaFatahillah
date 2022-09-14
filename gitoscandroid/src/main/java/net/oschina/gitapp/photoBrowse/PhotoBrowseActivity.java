@@ -127,7 +127,7 @@ public class PhotoBrowseActivity extends BaseActivity implements View.OnClickLis
 
         private List<PhotoFragment> fragments;
 
-        public PhotoAdapter(FragmentManager fm) {
+         PhotoAdapter(FragmentManager fm) {
             super(fm);
             fragments = new ArrayList<>();
         }
