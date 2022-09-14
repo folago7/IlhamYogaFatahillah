@@ -25,14 +25,11 @@ public class AboutActivity extends BaseActivity {
         setTitle("关于码云");
 
 
-
-
-
         //获取客户端版本信息
         try {
             PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
             TextView mVersion = (TextView) findViewById(R.id.about_version);
-            mVersion.setText("V " + info.versionName);
+            mVersion.setText(info.versionName);
         } catch (NameNotFoundException e) {
             e.printStackTrace(System.err);
         }
