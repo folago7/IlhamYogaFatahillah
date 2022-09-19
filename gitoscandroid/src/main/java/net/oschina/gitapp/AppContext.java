@@ -164,6 +164,23 @@ public class AppContext extends Application {
         return isAudioNormal() && isVoice();
     }
 
+
+    /**
+     * 设置是否开启传感器
+     */
+    public void setConfigSensor(boolean openSensor) {
+        setProperty(AppConfig.CONF_OPEN_SENSOR, String.valueOf(openSensor));
+    }
+
+    /**
+     * 是否开启传感器
+     */
+    public boolean isOpenSensor() {
+        String perf_open_sensor = getProperty(AppConfig.CONF_OPEN_SENSOR);
+        // 默认是开启
+        return StringUtils.isEmpty(perf_open_sensor) || StringUtils.toBool(perf_open_sensor);
+    }
+
     /**
      * 是否接收通知
      */

@@ -33,7 +33,9 @@ public class AppConfig {
 	public final static String CONF_VOICE = "perf_voice";
 	
 	public final static String CONF_CHECKUP = "perf_checkup";
-	
+
+	public final static String CONF_OPEN_SENSOR = "perf_sensor";
+
 	public final static String CONF_FRIST_START = "isFristStart";
 	
 	//默认存放图片的路径

@@ -14,35 +14,42 @@
         android:background="@color/white"
         android:paddingTop="1dp">
 
-        <ImageButton
+        <FrameLayout
             android:id="@+id/ib_back"
             android:layout_width="52dp"
-            android:layout_height="52dp"
-            android:background="@drawable/bg_material"
-            android:contentDescription="@string/back_exit_tips"
-            android:scaleType="centerInside"
-            android:tint="@color/black"
-            android:src="@drawable/ic_back" />
+            android:layout_height="match_parent"
+            android:layout_gravity="center">
+
+            <ImageButton
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:background="@drawable/bg_material"
+                android:contentDescription="@string/back_exit_tips"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_back"
+                android:tint="@color/black" />
+        </FrameLayout>
 
         <FrameLayout
             android:id="@+id/fl_folder"
-            android:background="@drawable/bg_material"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
+            android:background="@drawable/bg_material"
             android:paddingBottom="4dp"
             android:paddingTop="4dp">
 
             <ImageView
-                android:contentDescription="@string/app_name"
                 android:id="@+id/iv_arrow"
                 android:layout_width="14dp"
                 android:layout_height="14dp"
                 android:layout_gravity="right|center_vertical"
-                android:tint="@color/black"
+                android:contentDescription="@string/app_name"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_arrow_bottom"
+                android:tint="@color/black"
                 tools:ignore="RtlHardcoded,RtlSymmetry" />
 
             <TextView
