@@ -3,6 +3,7 @@ package net.oschina.gitapp.ui;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -100,6 +101,8 @@ public class CodeFileDetailActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // 设置actionbar加载动态
+        if (!AppContext.getInstance().isOpenSensor())
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_code_file_view);
         ButterKnife.inject(this);
         mContext = AppContext.getInstance();
@@ -226,11 +229,11 @@ public class CodeFileDetailActivity extends BaseActivity {
         super.onConfigurationChanged(newConfig);
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             ActionBar bar = getSupportActionBar();
-            if(bar != null)
+            if (bar != null)
                 bar.hide();
         } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
             ActionBar bar = getSupportActionBar();
-            if(bar != null)
+            if (bar != null)
                 bar.show();
         }
     }
