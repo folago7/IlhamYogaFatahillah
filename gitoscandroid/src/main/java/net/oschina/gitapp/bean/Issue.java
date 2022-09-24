@@ -22,7 +22,7 @@ public class Issue extends Entity {
 	
 	@JsonProperty("iid")
 	private int _iid;
-	
+
 	@JsonProperty("project_id")
 	private int _projectId;
 	
@@ -142,6 +142,8 @@ public class Issue extends Entity {
 	}
 
     public int getStateRes() {
+		if(_state == null)
+			return R.string.oct_issues;
         if (_state.equals(StateClosed)) {
             return R.string.oct_issues_closed;
         }
