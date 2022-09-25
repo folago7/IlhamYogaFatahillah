@@ -155,7 +155,8 @@ public class CodeTree extends Entity {
                         ".ctl",
                         ".ts",
                         ".kt",
-                        ".vue"
+                        ".vue",
+                        ".babelrc"
                 };
         for (String string : codeFileSuffix) {
             if (fileName.equalsIgnoreCase(string)) {
