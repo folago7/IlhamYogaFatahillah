@@ -139,6 +139,8 @@ public class CommitFileDetailFragment extends BaseFragment implements
             @Override
             public void onSuccess(Map<String, String> headers, byte[] t) {
                 super.onSuccess(headers, t);
+                if (isDestroy())
+                    return;
                 List<CommitDiff> commitDiffList = JsonUtils.getList(CommitDiff[].class, t);
                 if (commitDiffList != null) {
                     mLoading.setVisibility(View.GONE);
@@ -160,6 +162,8 @@ public class CommitFileDetailFragment extends BaseFragment implements
             @Override
             public void onFailure(int errorNo, String strMsg) {
                 super.onFailure(errorNo, strMsg);
+                if (isDestroy())
+                    return;
                 UIHelper.toastMessage(getActivity(), "获取commit详情失败");
             }
         });

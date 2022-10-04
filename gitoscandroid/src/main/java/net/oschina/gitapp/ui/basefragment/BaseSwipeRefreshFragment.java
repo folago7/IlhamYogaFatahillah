@@ -71,12 +71,16 @@ public abstract class BaseSwipeRefreshFragment<T extends Entity>
         @Override
         public void onSuccessInAsync(byte[] t) {
             super.onSuccessInAsync(t);
+            if (isDestroy())
+                return;
             datas = getDatas(t);
         }
 
         @Override
         public void onSuccess(Map<String, String> headers, byte[] t) {
             super.onSuccess(headers, t);
+            if (isDestroy())
+                return;
             mTipInfo.setHiden();
             mSwipeRefreshLayout.setVisibility(View.VISIBLE);
             loadDataSuccess(datas);
@@ -86,6 +90,8 @@ public abstract class BaseSwipeRefreshFragment<T extends Entity>
         @Override
         public void onFailure(int errorNo, String strMsg) {
             super.onFailure(errorNo, strMsg);
+            if (isDestroy())
+                return;
             mTipInfo.setLoadError();
         }
 
@@ -101,6 +107,8 @@ public abstract class BaseSwipeRefreshFragment<T extends Entity>
         @Override
         public void onFinish() {
             super.onFinish();
+            if (isDestroy())
+                return;
             setSwipeRefreshLoadedState();
         }
     };

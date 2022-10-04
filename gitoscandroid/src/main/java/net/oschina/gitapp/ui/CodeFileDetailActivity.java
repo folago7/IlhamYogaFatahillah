@@ -193,6 +193,8 @@ public class CodeFileDetailActivity extends BaseActivity {
             @Override
             public void onSuccess(Map<String, String> headers, byte[] t) {
                 super.onSuccess(headers, t);
+                if (isDestroy())
+                    return;
                 webview.setVisibility(View.VISIBLE);
                 CodeFile codeFile = JsonUtils.toBean(CodeFile.class, t);
                 mCodeFile = codeFile;
@@ -205,6 +207,8 @@ public class CodeFileDetailActivity extends BaseActivity {
             @Override
             public void onFailure(int errorNo, String strMsg) {
                 super.onFailure(errorNo, strMsg);
+                if (isDestroy())
+                    return;
                 webview.setVisibility(View.GONE);
                 tipInfo.setLoadError();
             }
@@ -219,6 +223,8 @@ public class CodeFileDetailActivity extends BaseActivity {
             @Override
             public void onFinish() {
                 super.onFinish();
+                if (isDestroy())
+                    return;
                 tipInfo.setHiden();
             }
         });
