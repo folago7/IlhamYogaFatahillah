@@ -101,16 +101,16 @@ public class NotificationAdapter extends BaseExpandableListAdapter {
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded,
                              View convertView, ViewGroup parent) {
-        GroupViewHolder holder = null;
+        GroupViewHolder holder ;
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.list_group_item_notification, null);
 
             holder = new GroupViewHolder();
 
-            holder.mGroupFace = (ImageView) convertView.findViewById(R.id.group_face);
-            holder.mGroupUserName = (TextView) convertView.findViewById(R.id.group_username);
-            holder.mGroupCount = (TextView) convertView.findViewById(R.id.group_count);
-            holder.mGroupName = (TextView) convertView.findViewById(R.id.group_name);
+            holder.mGroupFace = convertView.findViewById(R.id.group_face);
+            holder.mGroupUserName =convertView.findViewById(R.id.group_username);
+            holder.mGroupCount = convertView.findViewById(R.id.group_count);
+            holder.mGroupName =  convertView.findViewById(R.id.group_name);
 
             convertView.setTag(holder);
         } else {
@@ -120,7 +120,7 @@ public class NotificationAdapter extends BaseExpandableListAdapter {
         ProjectNotification pn = mGroups.get(groupPosition);
 
         // 加载头像
-        String portrait = pn.getOwner().getPortrait() == null ? "" : pn.getOwner().getPortrait();
+        String portrait = pn.getOwner() == null ? "" : pn.getOwner().getPortrait();
         if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
             holder.mGroupFace.setImageResource(R.drawable.mini_avatar);
         } else {
@@ -129,7 +129,7 @@ public class NotificationAdapter extends BaseExpandableListAdapter {
                     .mini_avatar).doTask();
         }
 
-        holder.mGroupUserName.setText(pn.getOwner().getName());
+        holder.mGroupUserName.setText(pn.getOwner() == null ? "" : pn.getOwner().getName());
 
         holder.mGroupName.setText(pn.getName());
 
@@ -150,16 +150,16 @@ public class NotificationAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int groupPosition, int childPosition,
                              boolean isLastChild, View convertView, ViewGroup parent) {
-        ChildViewHolder holder = null;
+        ChildViewHolder holder ;
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.list_item_notification, null);
 
             holder = new ChildViewHolder();
 
-            holder.face = (ImageView) convertView.findViewById(R.id.notification_listitem_userface);
-            holder.user_name = (TextView) convertView.findViewById(R.id.notification_listitem_name);
-            holder.title = (TextView) convertView.findViewById(R.id.notification_listitem_title);
-            holder.date = (TextView) convertView.findViewById(R.id.notification_listitem_date);
+            holder.face = convertView.findViewById(R.id.notification_listitem_userface);
+            holder.user_name = convertView.findViewById(R.id.notification_listitem_name);
+            holder.title = convertView.findViewById(R.id.notification_listitem_title);
+            holder.date = convertView.findViewById(R.id.notification_listitem_date);
 
             convertView.setTag(holder);
         } else {
@@ -169,7 +169,7 @@ public class NotificationAdapter extends BaseExpandableListAdapter {
         final Notification notification = getChild(groupPosition, childPosition);
 
         // 1.加载头像
-        String portrait = notification.getUserinfo().getPortrait() == null ? "" : notification
+        String portrait = notification.getUserinfo() == null ? "" : notification
                 .getUserinfo().getPortrait();
         if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
             holder.face.setImageResource(R.drawable.mini_avatar);
@@ -191,7 +191,7 @@ public class NotificationAdapter extends BaseExpandableListAdapter {
             }
         });
 
-        holder.user_name.setText(notification.getUserinfo().getName());
+        holder.user_name.setText(notification.getUserinfo() == null ? ""  :notification.getUserinfo().getName());
 
         holder.title.setText(notification.getTitle());
 

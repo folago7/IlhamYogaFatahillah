@@ -97,7 +97,6 @@ public class MainActivity extends AppCompatActivity implements
         AppManager.getAppManager().addActivity(this);
 
         BlueWare.withApplicationToken("A97669647CD7FA558E6076201E5F97B322").start(getApplicationContext());
-        MobclickAgent.updateOnlineConfig(this);
     }
 
     @Override

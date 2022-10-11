@@ -2,6 +2,13 @@
 buildscript {
     repositories {
         jcenter()
+        maven {
+            url 'https://dl.bintray.com/umsdk/release'
+        }
+        maven {
+            url 'https://maven.google.com/'
+            name 'Google'
+        }
     }
     dependencies {
         //noinspection GradleDependency
@@ -13,14 +20,35 @@ allprojects {
     repositories {
         jcenter()
         mavenCentral()
+        maven {
+            url "https://oss.sonatype.org/content/repositories/snapshots"
+        }
+        maven {
+            url 'https://dl.bintray.com/umsdk/release'
+        }
+        maven {
+            url "https://dl.bintray.com"
+        }
+        maven {
+            url "https://jitpack.io"
+        }
+        maven {
+            url "https://dl.bintray.com/thelasterstar/maven/"
+        }
+        maven {
+            url 'https://maven.google.com/'
+            name 'Google'
+        }
     }
 }
 ext {
-    compileSdkVersion = 26
+    compileSdkVersion = 29
     buildToolsVersion = "24.0.3"
     applicationId = "net.oschina.gitapp"
     minSdkVersion = 21
-    targetSdkVersion = 26
-    versionCode = 160
-    versionName = "v1.6.0(1905088000)"
+    targetSdkVersion = 29
+    versionCode = 161
+    versionName = "v1.6.1(1912010800)"
+    supportVersion = '24.3.0'
+
 }

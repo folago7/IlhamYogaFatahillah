@@ -1,12 +1,16 @@
 package net.oschina.gitapp.media;
 
 
+import android.annotation.SuppressLint;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -27,10 +31,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import net.oschina.gitapp.R;
+import net.oschina.gitapp.utils.FileHelper;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ImagePickerFragment extends Fragment implements Contract.View, View.OnClickListener,
         BaseRecyclerAdapter.OnItemClickListener {
@@ -84,12 +91,12 @@ public class ImagePickerFragment extends Fragment implements Contract.View, View
     }
 
     private void initView() {
-        mContentView = (RecyclerView) mRootView.findViewById(R.id.rv_image);
-        mTextFolder = (TextView) mRootView.findViewById(R.id.tv_folder_name);
-        mImageArrow = (ImageView) mRootView.findViewById(R.id.iv_arrow);
-        mLayoutBack = (FrameLayout) mRootView.findViewById(R.id.ib_back);
-        mTextDone = (TextView) mRootView.findViewById(R.id.btn_done);
-        mTextPreviewView = (TextView) mRootView.findViewById(R.id.btn_preview);
+        mContentView = mRootView.findViewById(R.id.rv_image);
+        mTextFolder = mRootView.findViewById(R.id.tv_folder_name);
+        mImageArrow = mRootView.findViewById(R.id.iv_arrow);
+        mLayoutBack = mRootView.findViewById(R.id.ib_back);
+        mTextDone = mRootView.findViewById(R.id.btn_done);
+        mTextPreviewView = mRootView.findViewById(R.id.btn_preview);
         mToolbar = mRootView.findViewById(R.id.toolbar);
         mRootView.findViewById(R.id.fl_folder).setOnClickListener(this);
         mLayoutBack.setOnClickListener(this);
@@ -157,7 +164,7 @@ public class ImagePickerFragment extends Fragment implements Contract.View, View
 
     @Override
     public void onOpenCameraSuccess() {
-        toOpenCamera();
+        openCamera();
     }
 
     @Override
@@ -248,6 +255,37 @@ public class ImagePickerFragment extends Fragment implements Contract.View, View
         mFolderPopupWindow.showAsDropDown(mToolbar);
     }
 
+    private void openCamera(){
+        if(Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.Q){
+            toOpenCamera();
+        }else {
+
+            Uri photoUri = createImageUri();
+            Intent captureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (photoUri != null) {
+                mCamImageName = photoUri.toString();
+                captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                captureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                captureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                startActivityForResult(captureIntent, 0x03);
+            }
+        }
+
+
+    }
+
+    /**
+     * 创建图片地址uri,用于保存拍照后的照片 Android 10以后使用这种方法
+     */
+    private Uri createImageUri() {
+        String status = Environment.getExternalStorageState();
+        if (status.equals(Environment.MEDIA_MOUNTED)) {
+            return getContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, new ContentValues());
+        } else {
+            return getContext().getContentResolver().insert(MediaStore.Images.Media.INTERNAL_CONTENT_URI, new ContentValues());
+        }
+    }
+
     /**
      * 打开相机
      */
@@ -277,10 +315,11 @@ public class ImagePickerFragment extends Fragment implements Contract.View, View
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         Uri uri;
         if (Build.VERSION.SDK_INT >= 24) {
-            uri = FileProvider.getUriForFile(getContext(), "com.denglin.moji.provider", out);
+            uri = FileProvider.getUriForFile(getContext(), "net.oschina.gitapp.provider", out);
         } else {
             uri = Uri.fromFile(out);
         }
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
         startActivityForResult(intent,
                 0x03);
@@ -291,10 +330,21 @@ public class ImagePickerFragment extends Fragment implements Contract.View, View
         if (resultCode == AppCompatActivity.RESULT_OK) {
             switch (requestCode) {
                 case 0x03:
-                    if (mCamImageName == null) return;
-                    Uri localUri = Uri.fromFile(new File(Util.getCameraPath() + mCamImageName));
-                    Intent localIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, localUri);
-                    getActivity().sendBroadcast(localIntent);
+                    if (mCamImageName == null || mCursorLoader == null){
+                        return;
+                    }
+                    if(Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q){
+                        getLoaderManager().initLoader(0, null, mCursorLoader);
+                    }else {
+                        String[] paths = new String[]{Util.getCameraPath() + mCamImageName};
+                        MediaScannerConnection.scanFile(getContext(), paths, null, new MediaScannerConnection.OnScanCompletedListener() {
+                            @Override
+                            public void onScanCompleted(String path, Uri uri) {
+
+                            }
+                        });
+                    }
+
                     break;
                 case 0x04:
                     if (data == null) return;
@@ -305,14 +355,17 @@ public class ImagePickerFragment extends Fragment implements Contract.View, View
         }
     }
 
+    @SuppressLint("InlinedApi")
+    private static final String[] IMAGE_PROJECTION = {
+            MediaStore.Images.Media.DATA,
+            MediaStore.Images.Media.DISPLAY_NAME,
+            MediaStore.Images.Media._ID,
+            MediaStore.Images.Media.BUCKET_ID,
+            MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
+            MediaStore.Images.Media.DATE_ADDED};
+
     private class LoaderListener implements LoaderManager.LoaderCallbacks<Cursor> {
-        private final String[] IMAGE_PROJECTION = {
-                MediaStore.Images.Media.DATA,
-                MediaStore.Images.Media.DISPLAY_NAME,
-                MediaStore.Images.Media.DATE_ADDED,
-                MediaStore.Images.Media._ID,
-                MediaStore.Images.Media.MINI_THUMB_MAGIC,
-                MediaStore.Images.Media.BUCKET_DISPLAY_NAME};
+
 
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -320,93 +373,125 @@ public class ImagePickerFragment extends Fragment implements Contract.View, View
                 //数据库光标加载器
                 return new CursorLoader(getContext(),
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI, IMAGE_PROJECTION,
-                        null, null, IMAGE_PROJECTION[2] + " DESC");
+                        null, null, IMAGE_PROJECTION[5] + " DESC");
             }
             return null;
         }
 
+        @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
         @Override
         public void onLoadFinished(Loader<Cursor> loader, final Cursor data) {
-            if (data != null) {
+            if (data != null && data.getCount() > 0) {
 
                 final ArrayList<Image> images = new ArrayList<>();
-                final List<Folder> imageFolders = new ArrayList<>();
-
+                //final List<Folder> imageFolders = new ArrayList<>();
+                final Map<String, Folder> imageFolders = new HashMap<>();
                 final Folder defaultFolder = new Folder();
                 defaultFolder.setName("全部照片");
                 defaultFolder.setPath("");
-                imageFolders.add(defaultFolder);
+                //imageFolders.add(defaultFolder);
 
-                int count = data.getCount();
-                if (count > 0) {
-                    data.moveToFirst();
-                    do {
-                        String path = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[0]));
-                        String name = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[1]));
-                        int id = data.getInt(data.getColumnIndexOrThrow(IMAGE_PROJECTION[3]));
 
-                        Image image = new Image();
-                        image.setPath(path);
-                        image.setName(name);
-                        //image.setDate(dateTime);
-                        image.setId(id);
-//                        image.setThumbPath(thumbPath);
-//                        image.setFolderName(bucket);
+                boolean isFirst = true;
+                data.moveToFirst();
+                do {
+                    String path = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[0]));
+                    String name = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[1]));
+                    String folderPath = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[2]));
+                    String folderName = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[3]));
+                    int id = data.getInt(data.getColumnIndexOrThrow(IMAGE_PROJECTION[5]));
+                    //适配Android Q
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        path = MediaStore.Images.Media
+                                .EXTERNAL_CONTENT_URI
+                                .buildUpon()
+                                .appendPath(String.valueOf(id)).build().toString();
+                    }
 
-                        images.add(image);
+                    Image image = new Image();
+                    image.setPath(path);
+                    image.setName(name);
+                    image.setId(1);
 
-                        //如果是新拍的照片
-                        if (mCamImageName != null && mCamImageName.equals(image.getName())) {
+                    if (isFirst) {
+                        isFirst = false;
+                        defaultFolder.setAlbumPath(image.getPath());
+                    }
+
+                    images.add(image);
+
+                    //如果是新拍的照片
+                    if (mCamImageName != null) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && path.equalsIgnoreCase(mCamImageName)) {
                             image.setSelect(true);
                             mSelectedImage.add(image);
+                            mCamImageName = null;
+                        }else if(mCamImageName.equals(image.getName())){
+                            image.setSelect(true);
+                            mSelectedImage.add(image);
+                            mCamImageName = null;
                         }
 
-                        //如果是被选中的图片
-                        if (mSelectedImage.size() > 0) {
-                            for (Image i : mSelectedImage) {
-                                if (i.getPath().equals(image.getPath())) {
-                                    image.setSelect(true);
-                                }
+                    }
+
+                    //如果是被选中的图片
+                    if (mSelectedImage != null && mSelectedImage.size() > 0) {
+                        for (Image i : mSelectedImage) {
+                            if (i.getPath().equals(image.getPath())) {
+                                image.setSelect(true);
                             }
                         }
-
-                        File imageFile = new File(path);
-                        File folderFile = imageFile.getParentFile();
-                        Folder folder = new Folder();
-                        folder.setName(folderFile.getName());
-                        folder.setPath(folderFile.getAbsolutePath());
-                        if (!imageFolders.contains(folder)) {
-                            folder.getImages().add(image);
-                            folder.setAlbumPath(image.getPath());//默认相册封面
-                            imageFolders.add(folder);
-                        } else {
-                            // 更新
-                            Folder f = imageFolders.get(imageFolders.indexOf(folder));
-                            f.getImages().add(image);
-                        }
+                    }
 
 
-                    } while (data.moveToNext());
-                }
-                addImagesToAdapter(images);
+                    Folder folder;
+                    if (!imageFolders.containsKey(folderPath)) {
+                        folder = new Folder();
+                        folder.getImages().add(image);
+                        folder.setName(folderName);
+                        folder.setPath(folderPath);
+                        folder.setAlbumPath(image.getPath());//默认相册封面
+                        imageFolders.put(folderPath, folder);
+                    } else {
+                        // 更新
+                        Folder f = imageFolders.get(folderPath);
+                        f.getImages().add(image);
+                    }
+
+                } while (data.moveToNext());
+
                 defaultFolder.getImages().addAll(images);
+                List<Folder> folderList = new ArrayList<>();
+                folderList.add(defaultFolder);
+                for (String key : imageFolders.keySet()) {
+                    folderList.add(imageFolders.get(key));
+                }
+
+                addImagesToAdapter(images);
+
                 if (mOption.isHasCam()) {
                     defaultFolder.setAlbumPath(images.size() > 1 ? images.get(1).getPath() : null);
                 } else {
                     defaultFolder.setAlbumPath(images.size() > 0 ? images.get(0).getPath() : null);
                 }
-                mImageFolderAdapter.resetItem(imageFolders);
+                mImageFolderAdapter.resetItem(folderList);
 
                 //删除掉不存在的，在于用户选择了相片，又去相册删除
                 if (mSelectedImage.size() > 0) {
                     List<Image> rs = new ArrayList<>();
                     for (Image i : mSelectedImage) {
-                        File f = new File(i.getPath());
-                        if (!f.exists()) {
-                            rs.add(i);
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            if (FileHelper.isAndroidQFileExists(getContext(), i.getPath())) {
+                                rs.add(i);
+                            }
+                        } else {
+                            if (FileHelper.exists(i.getPath())) {
+                                rs.add(i);
+                            }
                         }
+
                     }
-                    mSelectedImage.removeAll(rs);
+                    //mSelectedImage.removeAll(rs);
                 }
 
                 if (mOption.getSelectCount() == 1 && mCamImageName != null) {

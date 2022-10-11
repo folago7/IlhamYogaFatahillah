@@ -37,6 +37,8 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 
 import net.oschina.gitapp.R;
+import net.oschina.gitapp.utils.FileHelper;
+import net.oschina.gitapp.utils.UI;
 
 import java.io.File;
 import java.util.List;
@@ -113,15 +115,15 @@ public class ImageGalleryActivity extends AppCompatActivity implements ViewPager
     private void initWidget() {
         getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
         setTitle("");
-        mImageSave = (ImageView) findViewById(R.id.iv_save);
+        mImageSave = findViewById(R.id.iv_save);
         mImageSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 saveToFileByPermission();
             }
         });
-        mImagePager = (PreviewerViewPager) findViewById(R.id.vp_image);
-        mIndexText = (TextView) findViewById(R.id.tv_index);
+        mImagePager = findViewById(R.id.vp_image);
+        mIndexText = findViewById(R.id.tv_index);
         mImagePager.addOnPageChangeListener(this);
     }
 
@@ -163,7 +165,16 @@ public class ImageGalleryActivity extends AppCompatActivity implements ViewPager
     public void saveToFileByPermission() {
         String[] permissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
         if (EasyPermissions.hasPermissions(this, permissions)) {
-            saveToFile();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        saveToFile();
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
         } else {
             EasyPermissions.requestPermissions(this, "请授予保存图片权限", PERMISSION_ID, permissions);
         }
@@ -179,18 +190,72 @@ public class ImageGalleryActivity extends AppCompatActivity implements ViewPager
 
     }
 
+    private void saveToFile() throws Exception{
+        if(mLoader == null){
+            mLoader = Glide.with(this);
+        }
+
+        String path = mImageSources[mCurPosition];
+
+        Object urlOrPath;
+        // Do load
+        urlOrPath = path;
+
+        // In this save max image size is source
+        final Future<File> future = mLoader
+                .load(urlOrPath)
+                .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
+
+        //适配Android Q
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            saveAndroidQ(future);
+        } else {
+            saveAndroidCustom();
+        }
+    }
+
+    private void saveAndroidQ(Future<File> future) throws Exception {
+        File sourceFile = future.get();
+        if (sourceFile == null || !sourceFile.exists())
+            return;
+        String extension = FileHelper.getExtension(sourceFile.getAbsolutePath());
+        String fileName = String.format("gitee_%s.%s", System.currentTimeMillis(), extension);
+        final boolean result = FileHelper.saveImageWithMediaStore(this,
+                sourceFile, fileName, "gitee/");
+
+        UI.runOnMainThread(new Runnable() {
+            @Override
+            public void run() {
+                if (isDestroyed()) {
+                    return;
+                }
+                if(result){
+                    Toast.makeText(ImageGalleryActivity.this, "保存成功", Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(ImageGalleryActivity.this, "保存失败", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    private void saveToFile() {
+    private void saveAndroidCustom() {
         if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            Toast.makeText(this, "没有外部存储", Toast.LENGTH_SHORT).show();
+            UI.runOnMainThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(ImageGalleryActivity.this, "没有外部存储", Toast.LENGTH_SHORT).show();
+                }
+            });
             return;
         }
-        final String extDir = mOptions.getSavePath();
+        String extDir = mOptions.getSavePath();
         File file = new File(extDir);
         if (!file.exists()) {
             file.mkdirs();
-//            Toast.makeText(this, "没有指定存储路径", Toast.LENGTH_SHORT).show();
-//            return;
+            //Toast.makeText(this, "没有指定存储路径", Toast.LENGTH_SHORT).show();
+            return;
         }
 
         String path = mImageSources[mCurPosition];
@@ -207,32 +272,28 @@ public class ImageGalleryActivity extends AppCompatActivity implements ViewPager
                 .load(urlOrPath)
                 .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL);
 
-        new Thread(){
-            @Override
-            public void run() {
-                try {
-                    File sourceFile = future.get();
-                    if (sourceFile == null || !sourceFile.exists())
-                        return;
-                    String extension = Util.getExtension(sourceFile.getAbsolutePath());
-                    File extDirFile = new File(extDir);
-                    if (!extDirFile.exists()) {
-                        if (!extDirFile.mkdirs()) {
-                            // If mk dir error
-                            callSaveStatus(false, null);
-                            return;
-                        }
-                    }
-                    final File saveFile = new File(extDirFile, String.format("IMG_%s.%s", System.currentTimeMillis(), extension));
-                    final boolean isSuccess = Util.copyFile(sourceFile, saveFile);
-                    callSaveStatus(isSuccess, saveFile);
-                } catch (Exception e) {
-                    e.printStackTrace();
+        try {
+            File sourceFile = future.get();
+            if (sourceFile == null || !sourceFile.exists())
+                return;
+            String extension = Util.getExtension(sourceFile.getAbsolutePath());
+            File extDirFile = new File(extDir);
+            if (!extDirFile.exists()) {
+                if (!extDirFile.mkdirs()) {
+                    // If mk dir error
                     callSaveStatus(false, null);
+                    return;
                 }
             }
-        }.start();
+            final File saveFile = new File(extDirFile, String.format("IMG_%s.%s", System.currentTimeMillis(), extension));
+            final boolean isSuccess = Util.copyFile(sourceFile, saveFile);
+            callSaveStatus(isSuccess, saveFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+            callSaveStatus(false, null);
+        }
     }
+
 
 
     private void callSaveStatus(final boolean success, final File savePath) {
@@ -315,13 +376,13 @@ public class ImageGalleryActivity extends AppCompatActivity implements ViewPager
         public Object instantiateItem(ViewGroup container, int position) {
             View view = LayoutInflater.from(container.getContext())
                     .inflate(R.layout.lay_gallery_page_item_contener, container, false);
-            ImagePreviewView previewView = (ImagePreviewView) view.findViewById(R.id.iv_preview);
+            ImagePreviewView previewView = view.findViewById(R.id.iv_preview);
             previewView.setOnReachBorderListener(this);
-            ImageView defaultView = (ImageView) view.findViewById(R.id.iv_default);
+            ImageView defaultView = view.findViewById(R.id.iv_default);
             mLoader.load(mImageSources[position])
                     .fitCenter()
                     .into(previewView);
-            ProgressBar loading = (ProgressBar) view.findViewById(R.id.progressBar);
+            ProgressBar loading = view.findViewById(R.id.progressBar);
 
             if (mOptions.getHeaders() != null)
                 loadImage(position, getGlideUrlByUser(mImageSources[position]),

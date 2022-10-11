@@ -21,9 +21,9 @@ import net.oschina.gitapp.common.BroadcastController;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.dialog.LightProgressDialog;
+import net.oschina.gitapp.media.ImageGalleryActivity;
 import net.oschina.gitapp.media.ImagePickerActivity;
 import net.oschina.gitapp.media.SelectOptions;
-import net.oschina.gitapp.photoBrowse.PhotoBrowseActivity;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 import net.oschina.gitapp.utils.JsonUtils;
 import net.oschina.gitapp.widget.CircleImageView;
@@ -117,7 +117,6 @@ public class MyInfoDetailActivity extends BaseActivity implements View.OnClickLi
 //            new BitmapCore.Builder().url(mUser.getNew_portrait()).view(ivPortrait).doTask();
 //        }
 
-        Log.e("pot",mUser.getNew_portrait() + "   " + mUser.getPortrait() + "   --   " + AppContext.getInstance().getProperty(""));
         Glide.with(this)
                 .load(mUser.getNew_portrait())
                 .asBitmap()
@@ -140,7 +139,7 @@ public class MyInfoDetailActivity extends BaseActivity implements View.OnClickLi
         }
         switch (v.getId()) {
             case R.id.iv_portrait:
-                PhotoBrowseActivity.showPhotoBrowse(this, new String[]{mUser.getNew_portrait()}, 0);
+                ImageGalleryActivity.show(this,new String[]{mUser.getNew_portrait()},0);
                 break;
             case R.id.ll_user_portrait:
                 ImagePickerActivity.show(this, new SelectOptions.Callback() {
