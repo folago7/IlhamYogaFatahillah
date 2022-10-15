@@ -28,7 +28,6 @@ public class UserInfoViewPageFragment extends BaseViewPagerFragment {
 		Bundle args = getArguments();
 		if (args != null) {
 			mUser = (User) args.getSerializable(Contanst.USER);
-			args.putSerializable(Contanst.USER,mUser);
 		}
 		String[] title = getResources().getStringArray(R.array.userinfo_title_array);
 		

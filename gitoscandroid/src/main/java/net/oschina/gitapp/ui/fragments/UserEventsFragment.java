@@ -41,6 +41,7 @@ public class UserEventsFragment extends BaseSwipeRefreshFragment<Event> {
 		Bundle args = getArguments();
 		if (args != null) {
 			mUser = (User) args.getSerializable(Contanst.USER);
+			requestData();
 		}
 	}
 
