@@ -50,6 +50,14 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified" />
+
+        <activity
+            android:name=".ui.WebActivity"
+            android:label="用户协议"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustUnspecified" />
+
         <activity android:name=".ui.ProjectActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
