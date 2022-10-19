@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="22dp"
+    android:layout_marginRight="22dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ll_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="22dp"
+            android:layout_marginTop="22dp"
+            android:includeFontPadding="false"
+            android:gravity="left"
+            android:textColor="#333333"
+            android:paddingLeft="22dp"
+            android:paddingRight="22dp"
+            android:text="用户协议和隐私政策"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/tv_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:includeFontPadding="false"
+            android:lineSpacingExtra="8dp"
+            android:textColor="#4f4f4f"
+            android:paddingLeft="22dp"
+            android:paddingRight="22dp"
+            android:textSize="15sp"
+            android:text="感谢您信任并使用GiteeAPP\n我们将依据《Gitee用户协议》和《隐私政策》来帮助您了解我们在收集、使用、存储等您的相关信息情况以及您享有的相关权利。我们会采用业内领先的安全技术来保护您的个人信息。"
+            tools:ignore="HardcodedText" />
+
+        <TextView
+            android:id="@+id/tv_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:includeFontPadding="false"
+            android:lineSpacingExtra="8dp"
+            android:textColor="#4f4f4f"
+            android:paddingLeft="22dp"
+            android:paddingRight="22dp"
+            android:textSize="15sp"
+            android:layout_marginTop="22dp"
+            android:text="您可阅读《Gitee用户协议》和《隐私政策》来了解详细的信息。"
+            tools:ignore="HardcodedText" />
+
+        <LinearLayout
+            android:id="@+id/ll_button"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="22dp"
+            android:gravity="end"
+            android:orientation="horizontal"
+            tools:ignore="RtlHardcoded">
+
+            <TextView
+                android:id="@+id/tv_cancel"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:includeFontPadding="false"
+                android:letterSpacing="0.16"
+                android:gravity="center"
+                android:text="不同意"
+                android:textColor="@color/gray"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_sure"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:includeFontPadding="false"
+                android:letterSpacing="0.16"
+                android:gravity="center"
+                android:text="同意"
+                android:textColor="@color/listitem_blue"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                tools:ignore="HardcodedText" />
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

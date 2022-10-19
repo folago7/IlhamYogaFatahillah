@@ -96,7 +96,7 @@
                         android:layout_marginLeft="15dip"
                         android:autoLink="web"
                         android:gravity="left"
-                        android:text="注册请前往https://git.oschina.net"
+                        android:text="注册请前往https://gitee.com/"
                         android:textColor="@color/gray"
                         android:textSize="12sp"
                         tools:ignore="HardcodedText,RtlHardcoded" />
@@ -109,20 +109,46 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="登录即代表您同意码云用户协议"
+        android:text="登录即代表您同意"
         android:textColor="@color/gray"
         android:textSize="11sp"
         tools:ignore="HardcodedText,SmallSp" />
 
-    <TextView
-        android:id="@+id/tv_help"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="《码云用户协议》"
+    <LinearLayout
         android:layout_marginTop="6dp"
-        android:layout_marginBottom="16dp"
-        android:textColor="@color/listitem_blue"
         android:layout_gravity="center_horizontal"
-        android:textSize="11sp"
-        tools:ignore="HardcodedText,SmallSp" />
+        android:layout_marginBottom="16dp"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tv_help"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="《Gitee用户协议》"
+            android:textColor="@color/listitem_blue"
+            android:layout_gravity="center_horizontal"
+            android:textSize="11sp"
+            tools:ignore="HardcodedText,SmallSp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="和"
+            android:textColor="@color/gray"
+            android:layout_gravity="center_horizontal"
+            android:textSize="11sp"
+            tools:ignore="HardcodedText,SmallSp" />
+
+        <TextView
+            android:id="@+id/tv_protocol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="《隐私政策》"
+            android:textColor="@color/listitem_blue"
+            android:layout_gravity="center_horizontal"
+            android:textSize="11sp"
+            tools:ignore="HardcodedText,SmallSp" />
+    </LinearLayout>
 </LinearLayout>

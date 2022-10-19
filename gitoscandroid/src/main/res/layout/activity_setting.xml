@@ -166,12 +166,31 @@
         android:layout_height="0.5dp" />
 
     <LinearLayout
+        android:id="@+id/ll_protocol"
+        style="@style/setting_item"
+        android:padding="15dp">
+
+        <TextView
+            android:text="隐私政策"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <View
+        android:background="@color/gray"
+        android:layout_marginLeft="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp" />
+
+    <LinearLayout
         android:id="@+id/ll_about"
         style="@style/setting_item"
         android:padding="15dp">
 
         <TextView
-            android:text="关于码云"
+            android:text="关于Gitee"
             android:layout_weight="1"
             android:layout_width="0dp"
             android:layout_height="wrap_content" />

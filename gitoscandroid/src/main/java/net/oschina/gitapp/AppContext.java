@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.media.AudioManager;
+import android.text.TextUtils;
 
 import com.kymjs.okhttp.OkHttpStack;
 import com.kymjs.rxvolley.RxVolley;
@@ -122,15 +123,25 @@ public class AppContext extends Application {
     /**
      * 是否是第一次启动App
      */
-    public boolean isFristStart() {
+    public boolean isFirstStart() {
         boolean res = false;
         String perf_frist = getProperty(AppConfig.CONF_FRIST_START);
         // 默认是http
-        if (StringUtils.isEmpty(perf_frist)) {
+        if (TextUtils.isEmpty(perf_frist)) {
             res = true;
-            setProperty(AppConfig.CONF_FRIST_START, "false");
         }
         return res;
+    }
+
+    /**
+     * 是否是第一次启动App
+     */
+    public void setFirstStart(boolean isFirstStart) {
+        if(isFirstStart){
+            removeProperty(AppConfig.CONF_FRIST_START);
+            return;
+        }
+        setProperty(AppConfig.CONF_FRIST_START, String.valueOf(isFirstStart));
     }
 
     /**

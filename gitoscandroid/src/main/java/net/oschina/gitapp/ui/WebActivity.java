@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
+import com.blueware.com.google.gson.internal.P;
+
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 import net.oschina.gitapp.widget.MWebView;
@@ -25,12 +27,22 @@ public class WebActivity extends BaseActivity implements
     @InjectView(R.id.ll_root)
     LinearLayout mLinearRoot;
     private String mUrl;
+    private String mTitle;
 
     public static void show(Context context, String url) {
         if (TextUtils.isEmpty(url))
             return;
         Intent intent = new Intent(context, WebActivity.class);
         intent.putExtra("url", url);
+        context.startActivity(intent);
+    }
+
+    public static void show(Context context, String url,String title) {
+        if (TextUtils.isEmpty(url))
+            return;
+        Intent intent = new Intent(context, WebActivity.class);
+        intent.putExtra("url", url);
+        intent.putExtra("title", title);
         context.startActivity(intent);
     }
 
@@ -52,6 +64,10 @@ public class WebActivity extends BaseActivity implements
         mUrl = getIntent().getStringExtra("url");
         mWebView.setOnFinishFinish(this);
         mWebView.loadUrl(mUrl);
+        mTitle = getIntent().getStringExtra("title");
+        if(!TextUtils.isEmpty(mTitle)){
+            setTitle(mTitle);
+        }
     }
 
 
