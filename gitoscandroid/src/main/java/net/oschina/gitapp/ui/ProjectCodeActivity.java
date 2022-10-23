@@ -499,7 +499,8 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
     @SuppressLint("InlinedApi")
     @AfterPermissionGranted(RC_EXTERNAL_STORAGE)
     public void requestExternalStorage() {
-        if (EasyPermissions.hasPermissions(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+        if (EasyPermissions.hasPermissions(this, Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             GitOSCApi.downloadFile(project, mCodeTree, getPath(), refName, new HttpCallback() {
                 @Override
                 public void onSuccessInAsync(byte[] t) {
@@ -544,7 +545,8 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
                 }
             });
         } else {
-            EasyPermissions.requestPermissions(this, "", RC_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE);
+            EasyPermissions.requestPermissions(this, "", RC_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
     }
 
