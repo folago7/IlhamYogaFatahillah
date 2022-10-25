@@ -423,4 +423,13 @@ public class GitOSCApi {
         String uri = GitOSCApi.NO_API_BASE_URL + project.getPathWithNamespace() + "/raw/" + refName + "/" + path + fileName + "?private_token=" + AppContext.getToken();
         get(uri, callback);
     }
+
+    public static void downloadFile(String projectId, String file_path, String ref,
+                                         HttpCallback handler) {
+        HttpParams params = AsyncHttpHelp.getHttpParams();
+        params.put("file_path", file_path);
+        params.put("ref", ref);
+        get(PROJECTS + projectId + "/repository/files", params, handler);
+    }
+
 }

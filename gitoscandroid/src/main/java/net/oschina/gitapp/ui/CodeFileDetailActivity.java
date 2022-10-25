@@ -258,7 +258,7 @@ public class CodeFileDetailActivity extends BaseActivity implements EasyPermissi
     public void requestExternalStorage() {
         if (EasyPermissions.hasPermissions(this, Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            GitOSCApi.downloadFile(mProject, mFileName, mPath, mRef, new HttpCallback() {
+            GitOSCApi.downloadFile(mProject.getId(), mPath, mRef, new HttpCallback() {
                 @Override
                 public void onSuccessInAsync(byte[] t) {
                     super.onSuccessInAsync(t);
@@ -269,9 +269,6 @@ public class CodeFileDetailActivity extends BaseActivity implements EasyPermissi
                 public void onPreStart() {
                     super.onPreStart();
                     isLoading = true;
-                    if (optionsMenu != null)
-                        MenuItemCompat.setActionView(optionsMenu.findItem(0), R.layout
-                                .actionbar_indeterminate_progress);
                 }
 
                 @Override
@@ -296,9 +293,6 @@ public class CodeFileDetailActivity extends BaseActivity implements EasyPermissi
                         T.showToastShort(CodeFileDetailActivity.this, "下载文件失败");
                     }
                     isDownload = false;
-                    if (optionsMenu != null) {
-                        MenuItemCompat.setActionView(optionsMenu.findItem(0), null);
-                    }
                 }
             });
         } else {
