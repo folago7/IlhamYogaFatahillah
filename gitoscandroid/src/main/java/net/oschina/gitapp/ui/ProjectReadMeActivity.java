@@ -1,7 +1,9 @@
 package net.oschina.gitapp.ui;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.view.View;
 import android.webkit.WebView;
 
@@ -93,5 +95,19 @@ public class ProjectReadMeActivity extends BaseActivity {
                 webView.setVisibility(View.GONE);
             }
         });
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            ActionBar bar = getSupportActionBar();
+            if(bar != null)
+                bar.hide();
+        } else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            ActionBar bar = getSupportActionBar();
+            if(bar != null)
+                bar.show();
+        }
     }
 }
