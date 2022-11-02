@@ -153,7 +153,8 @@ public class CodeTree extends Entity {
                         ".wxml",
                         ".vi",
                         ".ctl",
-                        ".ts"
+                        ".ts",
+                        ".kt"
                 };
         for (String string : codeFileSuffix) {
             if (fileName.equalsIgnoreCase(string)) {
