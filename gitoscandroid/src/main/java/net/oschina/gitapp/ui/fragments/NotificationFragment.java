@@ -177,9 +177,11 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
                 boolean isEmpty = true;
                 if (notificationArrays.size() != 0) {
                     isEmpty = false;
+                    mGroups.clear();
+                    mData.clear();
                     for (ProjectNotificationArray pna : notificationArrays) {
                         mGroups.add(pna.getProject());
-                        List<Notification> ns = new ArrayList<Notification>();
+                        List<Notification> ns = new ArrayList<>();
                         ns.addAll(pna.getProject().getNotifications());
                         mData.add(ns);
                     }
