@@ -1,23 +1,20 @@
 package net.oschina.gitapp.photoBrowse;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.kymjs.core.bitmap.client.BitmapCore;
-import com.kymjs.rxvolley.client.HttpCallback;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.common.UIHelper;
-
-
-import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -64,43 +61,28 @@ public class PhotoFragment extends Fragment {
     }
 
     private void loadImage() {
-        if (imageUrl != null && !TextUtils.isEmpty(imageUrl)) {
-            new BitmapCore.Builder().url(imageUrl).view(image).callback(new HttpCallback() {
-                @Override
-                public void onPreStart() {
-                    if (loading != null) {
-                        loading.setVisibility(View.VISIBLE);
-                    }
-                }
-
-                @Override
-                public void onFailure(int errorNo, String strMsg) {
-                    super.onFailure(errorNo, strMsg);
-                    if (loading != null) {
-                        loading.setVisibility(View.GONE);
-                    }
-                    UIHelper.toastMessage(getContext(), "加载图片失败");
-                }
-
-                @Override
-                public void onSuccess(Map<String, String> headers, Bitmap bitmap) {
-                    super.onSuccess(headers, bitmap);
-                    if (loading != null) {
-                        loading.setVisibility(View.GONE);
-                    }
-                    if (image != null) {
-                        attacher = new PhotoViewAttacher(image);
-                        attacher.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
-                            @Override
-                            public void onPhotoTap(View view, float v, float v2) {
-                                getActivity().finish();
-                            }
-                        });
-                        attacher.update();
-                    }
-                }
-            }).doTask();
+        if (loading != null) {
+            loading.setVisibility(View.VISIBLE);
         }
+        Glide.with(getContext())
+                .load(imageUrl)
+                .listener(new RequestListener<String, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        UIHelper.toastMessage(getContext(), "加载图片失败");
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        if (loading != null) {
+                            loading.setVisibility(View.GONE);
+                        }
+                        return false;
+                    }
+                })
+                .fitCenter()
+                .into(image);
     }
 
     @Override
