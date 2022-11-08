@@ -155,7 +155,7 @@ public class FeedbackActivity extends BaseActivity{
             @Override
             public void onSuccess(String t) {
                 super.onSuccess(t);
-                Toast.makeText(AppContext.getInstance(), "我们已经收到你的建~(≧▽≦)/~", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AppContext.getInstance(), "感谢您的反馈", Toast.LENGTH_SHORT).show();
             }
 
             @Override
