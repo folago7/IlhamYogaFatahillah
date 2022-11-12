@@ -196,6 +196,9 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
+        <activity android:name=".media.ImagePickerActivity"
+            android:theme="@style/MainTheme"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".media.CropActivity"
             android:theme="@style/ThemeFullscreen" />

@@ -82,6 +82,7 @@ public class LoginActivity extends BaseActivity
             //将输入法隐藏
             InputMethodManager imm = (InputMethodManager) getSystemService(
                     Context.INPUT_METHOD_SERVICE);
+            assert imm != null;
             imm.hideSoftInputFromWindow(etPassword.getWindowToken(), 0);
             return true;
         }

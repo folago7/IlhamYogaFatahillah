@@ -38,6 +38,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     CheckBox cbNoticeVioce;
     @InjectView(R.id.cb_check_update_start)
     CheckBox cbCheckUpdateStart;
+    @InjectView(R.id.cb_check_sensor)
+    CheckBox cbCheckSensor;
     @InjectView(R.id.tv_cache_size)
     TextView tvCacheSize;
 
@@ -56,14 +58,14 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         cbReceiveNotice.setChecked(appContext.isReceiveNotice());
         cbNoticeVioce.setChecked(appContext.isVoice());
         cbCheckUpdateStart.setChecked(appContext.isCheckUp());
-
+        cbCheckSensor.setChecked(appContext.isOpenSensor());
         tvCacheSize.setText(calCache());
 
         cbReceiveNotice.setOnCheckedChangeListener(this);
     }
 
     @Override
-    @OnClick({R.id.ll_receive_notice, R.id.ll_notice_voice, R.id.ll_check_update_start,
+    @OnClick({R.id.ll_receive_notice, R.id.ll_notice_voice, R.id.ll_check_update_start, R.id.ll_check_sensor,
             R.id.ll_clear_cache, R.id.ll_check_update, R.id.ll_about})
     public void onClick(View v) {
         switch (v.getId()) {
@@ -71,11 +73,13 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 updateReceiveNotice();
                 break;
             case R.id.ll_notice_voice:
-
                 updateNoticeVoice();
                 break;
             case R.id.ll_check_update_start:
                 updateCheckUpdateStart();
+                break;
+            case R.id.ll_check_sensor:
+                updateCheckSensor();
                 break;
             case R.id.ll_clear_cache:
                 onCache();
@@ -112,6 +116,15 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             cbNoticeVioce.setChecked(true);
         }
         appContext.setConfigVoice(cbNoticeVioce.isChecked());
+    }
+
+    private void updateCheckSensor(){
+        if(cbCheckSensor.isChecked()){
+            cbCheckSensor.setChecked(false);
+        }else {
+            cbCheckSensor.setChecked(true);
+        }
+        appContext.setConfigSensor(cbCheckSensor.isChecked());
     }
 
     private void updateCheckUpdateStart() {

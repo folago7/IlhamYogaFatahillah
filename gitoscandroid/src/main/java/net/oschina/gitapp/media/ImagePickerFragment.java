@@ -21,7 +21,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,7 +38,7 @@ public class ImagePickerFragment extends Fragment implements Contract.View, View
     RecyclerView mContentView;
     TextView mTextFolder;
     ImageView mImageArrow;
-    ImageButton mBtnBack;
+    FrameLayout mLayoutBack;
     View mToolbar;
     TextView mTextDone;
     TextView mTextPreviewView;
@@ -87,12 +87,12 @@ public class ImagePickerFragment extends Fragment implements Contract.View, View
         mContentView = (RecyclerView) mRootView.findViewById(R.id.rv_image);
         mTextFolder = (TextView) mRootView.findViewById(R.id.tv_folder_name);
         mImageArrow = (ImageView) mRootView.findViewById(R.id.iv_arrow);
-        mBtnBack = (ImageButton) mRootView.findViewById(R.id.ib_back);
+        mLayoutBack = (FrameLayout) mRootView.findViewById(R.id.ib_back);
         mTextDone = (TextView) mRootView.findViewById(R.id.btn_done);
         mTextPreviewView = (TextView) mRootView.findViewById(R.id.btn_preview);
         mToolbar = mRootView.findViewById(R.id.toolbar);
         mRootView.findViewById(R.id.fl_folder).setOnClickListener(this);
-        mBtnBack.setOnClickListener(this);
+        mLayoutBack.setOnClickListener(this);
         mTextDone.setOnClickListener(this);
         mTextPreviewView.setOnClickListener(this);
     }

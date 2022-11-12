@@ -73,6 +73,30 @@
 
     <View
         android:background="@color/gray"
+        android:layout_marginLeft="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp" />
+
+    <LinearLayout
+        android:descendantFocusability="beforeDescendants"
+        android:id="@+id/ll_check_sensor"
+        style="@style/setting_item">
+
+        <TextView
+            android:text="详情自动旋转"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+
+        <CheckBox
+            android:id="@+id/cb_check_sensor"
+            android:clickable="false"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <View
+        android:background="@color/gray"
         android:layout_width="match_parent"
         android:layout_marginLeft="10dp"
         android:layout_height="0.5dp" />

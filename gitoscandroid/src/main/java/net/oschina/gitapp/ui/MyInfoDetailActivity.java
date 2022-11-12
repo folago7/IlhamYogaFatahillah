@@ -1,18 +1,15 @@
 package net.oschina.gitapp.ui;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.kymjs.core.bitmap.client.BitmapCore;
+import com.bumptech.glide.Glide;
 import com.kymjs.rxvolley.client.HttpCallback;
 
 import net.oschina.gitapp.AppContext;
@@ -22,15 +19,13 @@ import net.oschina.gitapp.bean.UpLoadFile;
 import net.oschina.gitapp.bean.User;
 import net.oschina.gitapp.common.BroadcastController;
 import net.oschina.gitapp.common.Contanst;
-import net.oschina.gitapp.common.FileUtils;
-import net.oschina.gitapp.common.ImageUtils;
-import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.dialog.LightProgressDialog;
+import net.oschina.gitapp.media.ImagePickerActivity;
+import net.oschina.gitapp.media.SelectOptions;
 import net.oschina.gitapp.photoBrowse.PhotoBrowseActivity;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 import net.oschina.gitapp.utils.JsonUtils;
-import net.oschina.gitapp.widget.ActionSheet;
 import net.oschina.gitapp.widget.CircleImageView;
 
 import java.io.File;
@@ -41,16 +36,11 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 
 /**
- * Created by 火蚁 on 15/5/4.
+ * Created by 火蚁
+ * on 15/5/4.
  */
 public class MyInfoDetailActivity extends BaseActivity implements View.OnClickListener {
 
-    private final static String FILE_SAVEPATH = Environment
-            .getExternalStorageDirectory().getAbsolutePath()
-            + "/OSChina/Git/Portrait/";
-
-    public static final int LOCAL_PIC_CODE = 0;
-    public static final int PHOTO_CODE = 1;
 
     @InjectView(R.id.iv_portrait)
     CircleImageView ivPortrait;
@@ -72,13 +62,6 @@ public class MyInfoDetailActivity extends BaseActivity implements View.OnClickLi
     Button btnLogout;
 
     private User mUser;
-
-    private final static int CROP = 400;
-    private Uri origUri;
-    private Uri cropUri;
-    private File protraitFile;
-    private Bitmap protraitBitmap;
-    private String protraitPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +97,7 @@ public class MyInfoDetailActivity extends BaseActivity implements View.OnClickLi
         });
     }
 
+    @SuppressLint("SetTextI18n")
     private void initUserInfo(User mUser) {
         tvName.setText(mUser.getName());
         if (TextUtils.isEmpty(mUser.getBio())) {
@@ -124,13 +108,21 @@ public class MyInfoDetailActivity extends BaseActivity implements View.OnClickLi
 
         tvJointime.setText(mUser.getCreated_at().substring(0, 10));
 
-        String portrait = mUser.getPortrait() == null || mUser.getPortrait().equals("null") ?
-                "" : mUser.getPortrait();
-        if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
-            ivPortrait.setImageResource(R.drawable.mini_avatar);
-        } else {
-            new BitmapCore.Builder().url(mUser.getNew_portrait()).view(ivPortrait).doTask();
-        }
+        // 加载用户头像
+//        String portrait = mUser.getNew_portrait() == null || mUser.getNew_portrait().equals("null")
+//                ? "" : mUser.getNew_portrait();
+//        if (portrait.endsWith("portrait.gif") || StringUtils.isEmpty(portrait)) {
+//            ivPortrait.setImageResource(R.drawable.mini_avatar);
+//        } else {
+//            new BitmapCore.Builder().url(mUser.getNew_portrait()).view(ivPortrait).doTask();
+//        }
+
+        Log.e("pot",mUser.getNew_portrait() + "   " + mUser.getPortrait() + "   --   " + AppContext.getInstance().getProperty(""));
+        Glide.with(this)
+                .load(mUser.getNew_portrait())
+                .asBitmap()
+                .fitCenter()
+                .into(ivPortrait);
 
         tvFollowers.setText(mUser.getFollow().getFollowers() + "");
         tvStared.setText(mUser.getFollow().getStarred() + "");
@@ -151,9 +143,12 @@ public class MyInfoDetailActivity extends BaseActivity implements View.OnClickLi
                 PhotoBrowseActivity.showPhotoBrowse(this, new String[]{mUser.getNew_portrait()}, 0);
                 break;
             case R.id.ll_user_portrait:
-                CharSequence[] items = {getString(R.string.img_from_album), getString(R.string
-                        .img_from_camera)};
-                imageChooseItem(items);
+                ImagePickerActivity.show(this, new SelectOptions.Callback() {
+                    @Override
+                    public void doSelected(String[] images) {
+                        uploadNewPhoto(new File(images[0]));
+                    }
+                }, true);
                 break;
             case R.id.btn_logout:
                 loginOut();
@@ -163,165 +158,31 @@ public class MyInfoDetailActivity extends BaseActivity implements View.OnClickLi
         }
     }
 
-    private void imageChooseItem(CharSequence[] items) {
-        setTheme(R.style.ActionSheetStyleIOS7);
-        ActionSheet.createBuilder(getApplicationContext(), getSupportFragmentManager())
-                .setCancelButtonTitle(R.string.cancle)
-                .setOtherButtonTitles(getString(R.string.img_from_album), getString(R.string
-                        .img_from_camera))
-                .setCancelableOnTouchOutside(true)
-                .setListener(new ActionSheet.ActionSheetListener() {
-                    @Override
-                    public void onOtherButtonClick(ActionSheet actionSheet,
-                                                   int index) {
-                        switch (index) {
-                            case LOCAL_PIC_CODE: // 本地相册.
-                                startImagePick();
-                                break;
-                            case PHOTO_CODE: // 照相.
-                                startActionCamera();
-                                break;
-                        }
-                    }
 
-                    @Override
-                    public void onDismiss(ActionSheet actionSheet,
-                                          boolean isCancel) {
-                    }
-                }).show();
-    }
-
-    /**
-     * 选择相册中的图片
-     */
-    private void startImagePick() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("image/*");
-        startActivityForResult(Intent.createChooser(intent, "选择图片"),
-                ImageUtils.REQUEST_CODE_GETIMAGE_BYCROP);
-    }
-
-    /**
-     * 相机拍照
-     */
-    private void startActionCamera() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, this.getCameraTempFile());
-        startActivityForResult(intent,
-                ImageUtils.REQUEST_CODE_GETIMAGE_BYCAMERA);
-    }
-
-    // 拍照保存的绝对路径
-    private Uri getCameraTempFile() {
-        String storageState = Environment.getExternalStorageState();
-        if (storageState.equals(Environment.MEDIA_MOUNTED)) {
-            File savedir = new File(FILE_SAVEPATH);
-            if (!savedir.exists()) {
-                savedir.mkdirs();
-            }
-        } else {
-            UIHelper.toastMessage(AppContext.getInstance(), "无法保存上传的头像，请检查SD卡是否挂载");
-            return null;
-        }
-        String timeStamp = System.currentTimeMillis() + "";
-        // 照片命名
-        String cropFileName = "osc_camera_" + timeStamp + ".jpeg";
-        // 裁剪头像的绝对路径
-        protraitPath = FILE_SAVEPATH + cropFileName;
-        protraitFile = new File(protraitPath);
-        cropUri = Uri.fromFile(protraitFile);
-        this.origUri = this.cropUri;
-        return this.cropUri;
-    }
-
-    // 裁剪头像的绝对路径
-    private Uri getUploadTempFile(Uri uri) {
-        String storageState = Environment.getExternalStorageState();
-        if (storageState.equals(Environment.MEDIA_MOUNTED)) {
-            File savedir = new File(FILE_SAVEPATH);
-            if (!savedir.exists()) {
-                savedir.mkdirs();
-            }
-        } else {
-            UIHelper.toastMessage(AppContext.getInstance(), "无法保存上传的头像，请检查SD卡是否挂载");
-            return null;
-        }
-        String timeStamp = System.currentTimeMillis() + "";
-        String thePath = ImageUtils.getAbsolutePathFromNoStandardUri(uri);
-
-        // 如果是标准Uri
-        if (StringUtils.isEmpty(thePath)) {
-            thePath = ImageUtils.getAbsoluteImagePath(this, uri);
-        }
-        String ext = FileUtils.getFileFormat(thePath);
-        ext = StringUtils.isEmpty(ext) ? "jpeg" : ext;
-        // 照片命名
-        String cropFileName = "osc_crop_" + timeStamp + "." + ext;
-        // 裁剪头像的绝对路径
-        protraitPath = FILE_SAVEPATH + cropFileName;
-        protraitFile = new File(protraitPath);
-
-        cropUri = Uri.fromFile(protraitFile);
-        return this.cropUri;
-    }
-
-    /**
-     * 拍照后裁剪
-     *
-     * @param data 原始图片
-     *             裁剪后图片
-     */
-    private void startActionCrop(Uri data) {
-        Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setDataAndType(data, "image/*");
-        intent.putExtra("output", this.getUploadTempFile(data));
-        intent.putExtra("crop", "true");
-        intent.putExtra("aspectX", 1);// 裁剪框比例
-        intent.putExtra("aspectY", 1);
-        intent.putExtra("outputX", CROP);// 输出图片大小
-        intent.putExtra("outputY", CROP);
-        intent.putExtra("scale", true);// 去黑边
-        intent.putExtra("scaleUpIfNeeded", true);// 去黑边
-        startActivityForResult(intent,
-                ImageUtils.REQUEST_CODE_GETIMAGE_BYSDCARD);
-    }
-
-    @Override
-    protected void onActivityResult(final int requestCode,
-                                    final int resultCode, final Intent data) {
-        if (resultCode != RESULT_OK)
-            return;
-        switch (requestCode) {
-            case ImageUtils.REQUEST_CODE_GETIMAGE_BYCAMERA:
-                startActionCrop(origUri);// 拍照后裁剪
-                break;
-            case ImageUtils.REQUEST_CODE_GETIMAGE_BYCROP:
-                startActionCrop(data.getData());// 选图后裁剪
-                break;
-            case ImageUtils.REQUEST_CODE_GETIMAGE_BYSDCARD:
-                uploadNewPhoto();// 上传新照片
-                break;
-        }
-    }
-
-    private void uploadNewPhoto() {
+    private void uploadNewPhoto(final File file) {
         final AlertDialog loading = LightProgressDialog.create(this, "正在上传头像...");
         loading.setCanceledOnTouchOutside(false);
         try {
-            GitOSCApi.upLoadFile(protraitFile, new HttpCallback() {
+            GitOSCApi.upLoadFile(file, new HttpCallback() {
                 @Override
                 public void onSuccess(Map<String, String> headers, byte[] t) {
                     super.onSuccess(headers, t);
                     UpLoadFile upLoadFile = JsonUtils.toBean(UpLoadFile.class, t);
                     if (upLoadFile != null && upLoadFile.isSuccess()) {
                         final String protraitUrl = upLoadFile.getFiles().get(0).getUrl();
-                        GitOSCApi.updateUserProtrait(protraitUrl, new HttpCallback() {
+                        Log.e("po0", protraitUrl);
+                        GitOSCApi.updateUserProtrait(protraitUrl.replace("https","http"), new HttpCallback() {
                             @Override
                             public void onSuccess(Map<String, String> headers, byte[] t) {
                                 super.onSuccess(headers, t);
+                                if (ivPortrait == null)
+                                    return;
+                                Log.e("onSuccess", protraitUrl);
                                 UIHelper.toastMessage(MyInfoDetailActivity.this, "头像已更新");
-                                ivPortrait.setImageBitmap(protraitBitmap);
+                                Glide.with(MyInfoDetailActivity.this)
+                                        .load(protraitUrl)
+                                        .asBitmap()
+                                        .into(ivPortrait);
                                 AppContext.getInstance().setProperty(Contanst
                                         .PROP_KEY_NEWPORTRAIT, protraitUrl);
                                 BroadcastController.sendUserChangeBroadcase(MyInfoDetailActivity
@@ -331,6 +192,8 @@ public class MyInfoDetailActivity extends BaseActivity implements View.OnClickLi
                             @Override
                             public void onFailure(int errorNo, String strMsg) {
                                 super.onFailure(errorNo, strMsg);
+                                if (ivPortrait == null)
+                                    return;
                                 UIHelper.toastMessage(MyInfoDetailActivity.this, errorNo +
                                         "更新头像失败");
                             }
@@ -338,12 +201,16 @@ public class MyInfoDetailActivity extends BaseActivity implements View.OnClickLi
                             @Override
                             public void onFinish() {
                                 super.onFinish();
+                                if (ivPortrait == null)
+                                    return;
                                 loading.dismiss();
                             }
 
                             @Override
                             public void onPreStart() {
                                 super.onPreStart();
+                                if (ivPortrait == null)
+                                    return;
                                 loading.setMessage("正在更新头像...");
                             }
                         });

@@ -1,6 +1,7 @@
 package net.oschina.gitapp.ui;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -390,6 +391,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private static final int RC_EXTERNAL_STORAGE = 0x04;//存储权限
 
+    @SuppressLint("InlinedApi")
     @AfterPermissionGranted(RC_EXTERNAL_STORAGE)
     public void requestExternalStorage() {
         if (EasyPermissions.hasPermissions(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
