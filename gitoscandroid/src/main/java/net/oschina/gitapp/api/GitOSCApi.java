@@ -10,6 +10,7 @@ import net.oschina.gitapp.bean.ShippingAddress;
 import net.oschina.gitapp.common.ImageUtils;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import static net.oschina.gitapp.api.AsyncHttpHelp.get;
@@ -37,8 +38,17 @@ public class GitOSCApi {
     public static void login(String account, String passwod, HttpCallback handler) {
         HttpParams params = AsyncHttpHelp.getHttpParams();
         params.put("email", account);
-        params.put("password", passwod);
+        params.put("password", urlEncode(passwod));
         AsyncHttpHelp.post(BASE_URL + "session", params, handler);
+    }
+
+    private static String urlEncode(String value) {
+        try {
+            return URLEncoder.encode(value, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public static void getExploreLatestProject(int page, HttpCallback handler) {
