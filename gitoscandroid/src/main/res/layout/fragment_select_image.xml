@@ -18,13 +18,14 @@
             android:id="@+id/ib_back"
             android:layout_width="52dp"
             android:layout_height="match_parent"
+            android:background="@drawable/bg_material"
             android:layout_gravity="center">
 
-            <ImageButton
+            <ImageView
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center"
-                android:background="@drawable/bg_material"
+                android:background="#00000000"
                 android:contentDescription="@string/back_exit_tips"
                 android:scaleType="centerInside"
                 android:src="@drawable/ic_back"
