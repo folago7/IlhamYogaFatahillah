@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 apply from: '../config/git_config.gradle'
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion;
+    compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
@@ -75,7 +75,7 @@ dependencies {
     compile 'com.github.chrisbanes.photoview:library:1.2.3'
     //noinspection GradleDependency
     compile 'com.umeng.analytics:analytics:5.5.2'
-    //noinspection GradleDependency
+    //noinspection GradleCompatible,GradleDependency
     compile 'com.android.support:appcompat-v7:23.1.1'
     //noinspection GradleDependency
     compile 'pub.devrel:easypermissions:0.1.7'
