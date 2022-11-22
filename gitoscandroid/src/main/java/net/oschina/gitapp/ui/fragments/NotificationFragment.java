@@ -172,6 +172,8 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
             @Override
             public void onSuccess(Map<String, String> headers, byte[] t) {
                 super.onSuccess(headers, t);
+                if (isDestroy())
+                    return;
                 List<ProjectNotificationArray> notificationArrays = JsonUtils.getList
                         (ProjectNotificationArray[].class, t);
                 boolean isEmpty = true;

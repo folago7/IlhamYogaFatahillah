@@ -25,6 +25,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected String mTitle;
 
     protected String mSubTitle;
+    private boolean isDestroy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +90,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        isDestroy = true;
         AppManager.getAppManager().removeActivity(this);
+    }
+
+    protected boolean isDestroy() {
+        return isDestroy;
     }
 }

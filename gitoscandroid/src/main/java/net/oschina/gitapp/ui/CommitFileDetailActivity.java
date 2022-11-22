@@ -102,6 +102,8 @@ public class CommitFileDetailActivity extends BaseActivity {
             @Override
             public void onSuccess(Map<String, String> headers, byte[] t) {
                 super.onSuccess(headers, t);
+                if (isDestroy())
+                    return;
                 String body = new String(t);
                 if (!TextUtils.isEmpty(body)) {
                     webview.setVisibility(View.VISIBLE);
@@ -112,6 +114,8 @@ public class CommitFileDetailActivity extends BaseActivity {
             @Override
             public void onFailure(int errorNo, String strMsg) {
                 super.onFailure(errorNo, strMsg);
+                if (isDestroy())
+                    return;
                 if (errorNo == 404) {
                     tipInfo.setLoadError("读取失败，文件可能已被删除");
                 } else {
@@ -129,6 +133,8 @@ public class CommitFileDetailActivity extends BaseActivity {
             @Override
             public void onFinish() {
                 super.onFinish();
+                if (isDestroy())
+                    return;
                 tipInfo.setHiden();
             }
         });
