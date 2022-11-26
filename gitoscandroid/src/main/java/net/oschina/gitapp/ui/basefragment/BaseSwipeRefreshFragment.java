@@ -154,14 +154,14 @@ public abstract class BaseSwipeRefreshFragment<T extends Entity>
     }
 
     private void initView(View view) {
-        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swiperefreshlayout);
-        mListView = (ListView) view.findViewById(R.id.listView);
+        mSwipeRefreshLayout = view.findViewById(R.id.swiperefreshlayout);
+        mListView = view.findViewById(R.id.listView);
 
         mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.swiperefresh_color1,
                 R.color.swiperefresh_color2, R.color.swiperefresh_color3,
                 R.color.swiperefresh_color4);
-        mTipInfo = (TipInfoLayout) view.findViewById(R.id.tip_info);
+        mTipInfo = view.findViewById(R.id.tip_info);
         mTipInfo.setOnClick(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

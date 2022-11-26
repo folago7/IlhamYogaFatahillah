@@ -41,6 +41,7 @@ public class UserEventsFragment extends BaseSwipeRefreshFragment<Event> {
 		Bundle args = getArguments();
 		if (args != null) {
 			mUser = (User) args.getSerializable(Contanst.USER);
+			requestData();
 		}
 	}
 
@@ -56,6 +57,9 @@ public class UserEventsFragment extends BaseSwipeRefreshFragment<Event> {
 
     @Override
     public void requestData() {
+		if(mUser == null){
+			return;
+		}
         GitOSCApi.getUserEvents(mUser.getId(), mCurrentPage, mHandler);
     }
 

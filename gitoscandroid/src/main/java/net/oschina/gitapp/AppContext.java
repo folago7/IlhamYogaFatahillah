@@ -4,10 +4,13 @@ import android.app.Application;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.media.AudioManager;
+import android.text.TextUtils;
 
 import com.kymjs.okhttp.OkHttpStack;
 import com.kymjs.rxvolley.RxVolley;
 import com.kymjs.rxvolley.http.RequestQueue;
+import com.sina.weibo.sdk.WbSdk;
+import com.sina.weibo.sdk.auth.AuthInfo;
 import com.squareup.okhttp.OkHttpClient;
 
 import net.oschina.gitapp.api.AsyncHttpHelp;
@@ -17,6 +20,7 @@ import net.oschina.gitapp.common.BroadcastController;
 import net.oschina.gitapp.common.CyptoUtils;
 import net.oschina.gitapp.common.MethodsCompat;
 import net.oschina.gitapp.common.StringUtils;
+import net.oschina.gitapp.share.SinaShare;
 
 import java.io.File;
 import java.util.Properties;
@@ -65,6 +69,9 @@ public class AppContext extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        WbSdk.install(this,
+                new AuthInfo(this, SinaShare.APP_KEY,
+                        "http://www.sina.com", SinaShare.APP_SECRET));
         // 注册App异常崩溃处理器
         File cacheFolder = getCacheDir();
         RxVolley.setRequestQueue(RequestQueue.newRequestQueue(cacheFolder, new
@@ -92,6 +99,7 @@ public class AppContext extends Application {
     }
 
 
+
     public void setProperties(Properties ps) {
         AppConfig.getAppConfig(this).set(ps);
     }
@@ -115,15 +123,25 @@ public class AppContext extends Application {
     /**
      * 是否是第一次启动App
      */
-    public boolean isFristStart() {
+    public boolean isFirstStart() {
         boolean res = false;
         String perf_frist = getProperty(AppConfig.CONF_FRIST_START);
         // 默认是http
-        if (StringUtils.isEmpty(perf_frist)) {
+        if (TextUtils.isEmpty(perf_frist)) {
             res = true;
-            setProperty(AppConfig.CONF_FRIST_START, "false");
         }
         return res;
+    }
+
+    /**
+     * 是否是第一次启动App
+     */
+    public void setFirstStart(boolean isFirstStart) {
+        if(isFirstStart){
+            removeProperty(AppConfig.CONF_FRIST_START);
+            return;
+        }
+        setProperty(AppConfig.CONF_FRIST_START, String.valueOf(isFirstStart));
     }
 
     /**

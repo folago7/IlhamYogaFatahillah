@@ -1,11 +1,16 @@
 package net.oschina.gitapp.ui;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.text.ClipboardManager;
 import android.view.Menu;
@@ -33,10 +38,13 @@ import net.oschina.gitapp.utils.SourceEditor;
 import net.oschina.gitapp.utils.T;
 import net.oschina.gitapp.widget.TipInfoLayout;
 
+import java.util.List;
 import java.util.Map;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
 
 /**
  * 代码文件详情
@@ -45,7 +53,7 @@ import butterknife.InjectView;
  * @created 2014-06-04
  */
 @SuppressWarnings("deprecation")
-public class CodeFileDetailActivity extends BaseActivity {
+public class CodeFileDetailActivity extends BaseActivity implements EasyPermissions.PermissionCallbacks{
 
     @InjectView(R.id.webview)
     WebView webview;
@@ -68,22 +76,6 @@ public class CodeFileDetailActivity extends BaseActivity {
     private String mRef;
 
     private String url_link = null;
-
-    private void downloadFile() {
-        final String path = AppConfig.DEFAULT_SAVE_FILE_PATH;
-        boolean res = FileUtils.writeFile(mCodeFile.getContent().getBytes(),
-                path, mFileName);
-        if (res) {
-            DialogHelp.getOpenFileDialog(this, "文件已经保存在" + AppConfig.DEFAULT_SAVE_FILE_PATH, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    UIHelper.showOpenFileActivity(CodeFileDetailActivity.this, path + "/" + mFileName, CodeTree.getMIME(mFileName));
-                }
-            }).show();
-        } else {
-            T.showToastShort(mContext, "保存文件失败");
-        }
-    }
 
     private void showEditCodeFileActivity() {
         Intent intent = new Intent(CodeFileDetailActivity.this,
@@ -181,7 +173,7 @@ public class CodeFileDetailActivity extends BaseActivity {
                 UIHelper.openBrowser(CodeFileDetailActivity.this, url_link);
                 break;
             case R.id.download:
-                downloadFile();
+                requestExternalStorage();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -242,5 +234,86 @@ public class CodeFileDetailActivity extends BaseActivity {
             if (bar != null)
                 bar.show();
         }
+    }
+
+
+
+    private boolean isDownload = false;
+    private void downloadFile(String fileName, byte[] data) {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+            isDownload = FileUtils.writeFileAndroidQ(this,data,fileName);
+        }else {
+            String path = AppConfig.DEFAULT_SAVE_FILE_PATH;
+            isDownload = FileUtils.writeFile(data,
+                    path, fileName);
+        }
+
+    }
+
+
+    private static final int RC_EXTERNAL_STORAGE = 0x04;//存储权限
+    private boolean isLoading;
+    @SuppressLint("InlinedApi")
+    @AfterPermissionGranted(RC_EXTERNAL_STORAGE)
+    public void requestExternalStorage() {
+        if (EasyPermissions.hasPermissions(this, Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            GitOSCApi.downloadFile(mProject.getId(), mPath, mRef, new HttpCallback() {
+                @Override
+                public void onSuccessInAsync(byte[] t) {
+                    super.onSuccessInAsync(t);
+                    downloadFile(mFileName, t);
+                }
+
+                @Override
+                public void onPreStart() {
+                    super.onPreStart();
+                    isLoading = true;
+                }
+
+                @Override
+                public void onFailure(int errorNo, String strMsg) {
+                    super.onFailure(errorNo, strMsg);
+                    isLoading = false;
+
+                }
+
+                @Override
+                public void onFinish() {
+                    super.onFinish();
+                    isLoading = false;
+                    if (isDownload) {
+                        DialogHelp.getOpenFileDialog(CodeFileDetailActivity.this, "文件已经保存在" + AppConfig.DEFAULT_SAVE_FILE_PATH, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                UIHelper.showOpenFileActivity(CodeFileDetailActivity.this, AppConfig.DEFAULT_SAVE_FILE_PATH + "/" + mFileName, CodeTree.getMIME(mFileName));
+                            }
+                        }).show();
+                    } else {
+                        T.showToastShort(CodeFileDetailActivity.this, "下载文件失败");
+                    }
+                    isDownload = false;
+                }
+            });
+        } else {
+            EasyPermissions.requestPermissions(this, "", RC_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+    }
+
+
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> perms) {
+
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 }

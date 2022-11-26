@@ -178,10 +178,20 @@ public class LoginActivity extends BaseActivity
     }
 
     @Override
-    @OnClick(R.id.bt_login)
+    @OnClick({R.id.bt_login, R.id.tv_help, R.id.tv_protocol})
     public void onClick(View v) {
-        imm.hideSoftInputFromWindow(etPassword.getWindowToken(), 0);
-        checkLogin();
+        switch (v.getId()) {
+            case R.id.bt_login:
+                imm.hideSoftInputFromWindow(etPassword.getWindowToken(), 0);
+                checkLogin();
+                break;
+            case R.id.tv_help:
+                WebActivity.show(this, "https://gitee.com/terms");
+                break;
+            case R.id.tv_protocol:
+                WebActivity.show(this,"file:///android_asset/gitee_protocol.html","隐私政策");
+                break;
+        }
     }
 
     @Override

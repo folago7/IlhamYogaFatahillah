@@ -20,7 +20,6 @@ import android.view.View;
 
 import com.blueware.agent.android.BlueWare;
 import com.kymjs.rxvolley.client.HttpCallback;
-import com.umeng.analytics.MobclickAgent;
 
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.AppManager;
@@ -30,6 +29,7 @@ import net.oschina.gitapp.bean.ProjectNotificationArray;
 import net.oschina.gitapp.common.DoubleClickExitHelper;
 import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.common.UpdateManager;
+import net.oschina.gitapp.dialog.ConfirmDialog;
 import net.oschina.gitapp.interfaces.DrawerMenuCallBack;
 import net.oschina.gitapp.ui.fragments.ExploreViewPagerFragment;
 import net.oschina.gitapp.ui.fragments.MySelfViewPagerFragment;
@@ -97,7 +97,49 @@ public class MainActivity extends AppCompatActivity implements
         AppManager.getAppManager().addActivity(this);
 
         BlueWare.withApplicationToken("A97669647CD7FA558E6076201E5F97B322").start(getApplicationContext());
-        MobclickAgent.updateOnlineConfig(this);
+
+        if(AppContext.getInstance().isFirstStart()) {
+            showProtocol();
+        }
+    }
+
+    private void showProtocol(){
+        new ProtocolDialog(this)
+                .setSureListener(new ProtocolDialog.OnDialogClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        AppContext.getInstance().setFirstStart(false);
+                    }
+                })
+                .setCancelListener(new ProtocolDialog.OnDialogClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        showCancelDialog();
+                    }
+                })
+                .show();
+    }
+
+    private void showCancelDialog(){
+
+        new ConfirmDialog(this)
+                .setTitleText("温馨提醒")
+                .setMessageText("您需要同意用户协议与隐私政策才能使用Gitee\n如果您不同意，很遗憾我们将无法为您提供服务。")
+                .setSureButtonText("我再想想")
+                .setCancelButtonText("不同意并退出")
+                .setSureListener(new ConfirmDialog.OnDialogClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        showProtocol();
+                    }
+                })
+                .setCancelListener(new ConfirmDialog.OnDialogClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        AppContext.getInstance().setFirstStart(true);
+                        finish();
+                    }
+                }).show();
     }
 
     @Override
@@ -126,7 +168,7 @@ public class MainActivity extends AppCompatActivity implements
 
         mDoubleClickExitHelper = new DoubleClickExitHelper(this);
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout = findViewById(R.id.drawer_layout);
         mDrawerLayout.setDrawerListener(new DrawerMenuListener());
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, null, 0, 0);
 

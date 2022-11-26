@@ -6,14 +6,22 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import android.annotation.SuppressLint;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Environment;
 import android.os.StatFs;
+import android.provider.MediaStore;
 import android.util.Log;
+
+import net.oschina.gitapp.utils.IO;
 
 /**
  * 文件操作工具包
@@ -120,6 +128,48 @@ public class FileUtils {
 		}
 
 		return writeSucc;
+	}
+
+	/**
+	 * 向手机写文件
+	 *
+	 * @param buffer
+	 * @param fileName
+	 * @return boolean
+	 */
+	@SuppressLint("NewApi")
+	public static boolean writeFileAndroidQ(Context context,byte[] buffer,
+									String fileName) {
+
+		ContentValues values = new ContentValues();
+		values.put(MediaStore.Downloads.DISPLAY_NAME, fileName);
+		values.put(MediaStore.Downloads.MIME_TYPE, "*/*");
+		values.put(MediaStore.Downloads.RELATIVE_PATH, "Download/Gitee/" );
+		Uri external = MediaStore.Downloads.EXTERNAL_CONTENT_URI;
+		ContentResolver resolver = context.getContentResolver();
+
+		Uri insertUri = resolver.insert(external, values);
+		if(insertUri == null) {
+			return false;
+		}
+
+		insertUri.toString();
+
+		OutputStream os = null;
+		try {
+			os = resolver.openOutputStream(insertUri);
+			if(os == null){
+				return false;
+			}
+			os.write(buffer);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		finally {
+			IO.close(os);
+		}
+		return true;
 	}
 
 	/**

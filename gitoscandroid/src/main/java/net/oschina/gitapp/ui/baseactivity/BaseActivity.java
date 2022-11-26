@@ -2,18 +2,15 @@ package net.oschina.gitapp.ui.baseactivity;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.View;
-import android.view.Window;
 
 import com.umeng.analytics.MobclickAgent;
 
 import net.oschina.gitapp.AppManager;
 import net.oschina.gitapp.common.StringUtils;
 
-import java.lang.reflect.Method;
 
 public abstract class BaseActivity extends AppCompatActivity {
 

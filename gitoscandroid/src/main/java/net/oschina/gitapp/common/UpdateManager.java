@@ -5,6 +5,8 @@ import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
@@ -17,8 +19,11 @@ import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.provider.Settings;
+import android.support.annotation.RequiresApi;
 import android.support.v4.content.FileProvider;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -31,14 +36,15 @@ import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.Update;
 import net.oschina.gitapp.dialog.LightProgressDialog;
+import net.oschina.gitapp.utils.IO;
 import net.oschina.gitapp.utils.JsonUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.Map;
@@ -108,7 +114,11 @@ public class UpdateManager {
                     break;
                 case DOWN_OVER:
                     downloadDialog.dismiss();
-                    installApk();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        installAndroidQApk();
+                    } else {
+                        installApk();
+                    }
                     break;
                 case DOWN_NOSDCARD:
                     downloadDialog.dismiss();
@@ -272,8 +282,8 @@ public class UpdateManager {
 
         final LayoutInflater inflater = LayoutInflater.from(mContext);
         View v = inflater.inflate(R.layout.update_progress, null);
-        mProgress = (ProgressBar) v.findViewById(R.id.update_progress);
-        mProgressText = (TextView) v.findViewById(R.id.update_progress_text);
+        mProgress = v.findViewById(R.id.update_progress);
+        mProgressText = v.findViewById(R.id.update_progress_text);
 
         builder.setView(v);
         builder.setNegativeButton("取消", new OnClickListener() {
@@ -300,85 +310,165 @@ public class UpdateManager {
     private Runnable mdownApkRunnable = new Runnable() {
         @Override
         public void run() {
-            try {
-                String apkName = "OSChinaApp_" + mUpdate.getVersion() + ".apk";
-                String tmpApk = "OSChinaApp_" + mUpdate.getVersion() + ".tmp";
-                //判断是否挂载了SD卡
-                String storageState = Environment.getExternalStorageState();
-                if (storageState.equals(Environment.MEDIA_MOUNTED)) {
-                    savePath = Environment.getExternalStorageDirectory().getAbsolutePath() +
-                            "/OSChina/Update/";
-                    File file = new File(savePath);
-                    if (!file.exists()) {
-                        file.mkdirs();
-                    }
-                    apkFilePath = savePath + apkName;
-                    tmpFilePath = savePath + tmpApk;
-                }
-
-                //没有挂载SD卡，无法下载文件
-                if (apkFilePath == null || apkFilePath == "") {
-                    mHandler.sendEmptyMessage(DOWN_NOSDCARD);
-                    return;
-                }
-
-                File ApkFile = new File(apkFilePath);
-
-                //是否已下载更新文件
-                if (ApkFile.exists()) {
-                    downloadDialog.dismiss();
-                    installApk();
-                    return;
-                }
-
-                //输出临时下载文件
-                File tmpFile = new File(tmpFilePath);
-                FileOutputStream fos = new FileOutputStream(tmpFile);
-
-                URL url = new URL(apkUrl);
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.connect();
-                int length = conn.getContentLength();
-                InputStream is = conn.getInputStream();
-
-                //显示文件大小格式：2个小数点显示
-                DecimalFormat df = new DecimalFormat("0.00");
-                //进度条下面显示的总文件大小
-                apkFileSize = df.format((float) length / 1024 / 1024) + "MB";
-
-                int count = 0;
-                byte buf[] = new byte[1024];
-
-                do {
-                    int numread = is.read(buf);
-                    count += numread;
-                    //进度条下面显示的当前下载文件大小
-                    tmpFileSize = df.format((float) count / 1024 / 1024) + "MB";
-                    //当前进度值
-                    progress = (int) (((float) count / length) * 100);
-                    //更新进度
-                    mHandler.sendEmptyMessage(DOWN_UPDATE);
-                    if (numread <= 0) {
-                        //下载完成 - 将临时下载文件转成APK文件
-                        if (tmpFile.renameTo(ApkFile)) {
-                            //通知安装
-                            mHandler.sendEmptyMessage(DOWN_OVER);
-                        }
-                        break;
-                    }
-                    fos.write(buf, 0, numread);
-                } while (!interceptFlag);//点击取消就停止下载
-
-                fos.close();
-                is.close();
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                downloadAndroidQ();
+            } else {
+                downloadCustom();
             }
-
         }
     };
+
+
+    private String mFileName;
+    private String mFilePath;
+
+    private void downloadAndroidQ() {
+        new Thread() {
+            @RequiresApi(api = 29)
+            @Override
+            public void run() {
+                HttpURLConnection httpConnection = null;
+                InputStream is = null;
+                OutputStream fos = null;
+                try {
+
+                    mFileName = System.currentTimeMillis() + mUpdate.getVersion() + ".apk";
+                    ContentValues values = new ContentValues();
+                    values.put(MediaStore.Downloads.DISPLAY_NAME, mFileName);
+                    values.put(MediaStore.Downloads.MIME_TYPE, "application/vnd.android.package-archive");
+                    values.put(MediaStore.Downloads.RELATIVE_PATH, "Download/");
+
+                    Uri external = MediaStore.Downloads.EXTERNAL_CONTENT_URI;
+                    ContentResolver resolver = mContext.getContentResolver();
+
+                    Uri insertUri = resolver.insert(external, values);
+                    if (insertUri != null) {
+                        mFilePath = insertUri.toString();
+                    }
+                    URL url = new URL(apkUrl);
+                    httpConnection = (HttpURLConnection) url.openConnection();
+                    httpConnection.connect();
+                    int length = httpConnection.getContentLength();
+
+                    is = httpConnection.getInputStream();
+                    fos = resolver.openOutputStream(insertUri);
+
+
+                    //显示文件大小格式：2个小数点显示
+                    DecimalFormat df = new DecimalFormat("0.00");
+                    //进度条下面显示的总文件大小
+                    apkFileSize = df.format((float) length / 1024 / 1024) + "MB";
+
+                    int count = 0;
+                    byte buf[] = new byte[1024];
+
+                    do {
+                        int numread = is.read(buf);
+                        count += numread;
+                        //进度条下面显示的当前下载文件大小
+                        tmpFileSize = df.format((float) count / 1024 / 1024) + "MB";
+                        //当前进度值
+                        progress = (int) (((float) count / length) * 100);
+                        //更新进度
+                        mHandler.sendEmptyMessage(DOWN_UPDATE);
+                        if (numread <= 0) {
+                            //下载完成 - 将临时下载文件转成APK文件
+                            mHandler.sendEmptyMessage(DOWN_OVER);
+                            break;
+                        }
+                        fos.write(buf, 0, numread);
+                    } while (!interceptFlag);//点击取消就停止下载
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    if (httpConnection != null) {
+                        httpConnection.disconnect();
+                    }
+                    IO.close(is, fos);
+                }
+            }
+
+
+        }.start();
+    }
+
+    private void downloadCustom() {
+        try {
+            String apkName = "OSChinaApp_" + mUpdate.getVersion() + ".apk";
+            String tmpApk = "OSChinaApp_" + mUpdate.getVersion() + ".tmp";
+            //判断是否挂载了SD卡
+            String storageState = Environment.getExternalStorageState();
+            if (storageState.equals(Environment.MEDIA_MOUNTED)) {
+                savePath = Environment.getExternalStorageDirectory().getAbsolutePath() +
+                        "/OSChina/Update/";
+                File file = new File(savePath);
+                if (!file.exists()) {
+                    file.mkdirs();
+                }
+                apkFilePath = savePath + apkName;
+                tmpFilePath = savePath + tmpApk;
+            }
+
+            //没有挂载SD卡，无法下载文件
+            if (apkFilePath == null || apkFilePath == "") {
+                mHandler.sendEmptyMessage(DOWN_NOSDCARD);
+                return;
+            }
+
+            File ApkFile = new File(apkFilePath);
+
+            //是否已下载更新文件
+            if (ApkFile.exists()) {
+                downloadDialog.dismiss();
+                installApk();
+                return;
+            }
+
+            //输出临时下载文件
+            File tmpFile = new File(tmpFilePath);
+            FileOutputStream fos = new FileOutputStream(tmpFile);
+
+            URL url = new URL(apkUrl);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.connect();
+            int length = conn.getContentLength();
+            InputStream is = conn.getInputStream();
+
+            //显示文件大小格式：2个小数点显示
+            DecimalFormat df = new DecimalFormat("0.00");
+            //进度条下面显示的总文件大小
+            apkFileSize = df.format((float) length / 1024 / 1024) + "MB";
+
+            int count = 0;
+            byte buf[] = new byte[1024];
+
+            do {
+                int numread = is.read(buf);
+                count += numread;
+                //进度条下面显示的当前下载文件大小
+                tmpFileSize = df.format((float) count / 1024 / 1024) + "MB";
+                //当前进度值
+                progress = (int) (((float) count / length) * 100);
+                //更新进度
+                mHandler.sendEmptyMessage(DOWN_UPDATE);
+                if (numread <= 0) {
+                    //下载完成 - 将临时下载文件转成APK文件
+                    if (tmpFile.renameTo(ApkFile)) {
+                        //通知安装
+                        mHandler.sendEmptyMessage(DOWN_OVER);
+                    }
+                    break;
+                }
+                fos.write(buf, 0, numread);
+            } while (!interceptFlag);//点击取消就停止下载
+
+            fos.close();
+            is.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * 下载apk
@@ -386,6 +476,14 @@ public class UpdateManager {
     private void downloadApk() {
         downLoadThread = new Thread(mdownApkRunnable);
         downLoadThread.start();
+    }
+
+    private void installAndroidQApk() {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(Uri.parse(mFilePath), "application/vnd.android.package-archive");
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        mContext.startActivity(intent);
     }
 
     /**
@@ -399,10 +497,13 @@ public class UpdateManager {
         if (Build.VERSION.SDK_INT >= 24) {
             intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             Uri contentUri = FileProvider.getUriForFile(mContext, "net.oschina.gitapp.provider", file);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
         } else {
             intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         }
         mContext.startActivity(intent);
     }

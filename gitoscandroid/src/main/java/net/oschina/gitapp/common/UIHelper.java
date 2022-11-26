@@ -9,9 +9,11 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.content.FileProvider;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.AbsoluteSizeSpan;
@@ -469,19 +471,32 @@ public class UIHelper {
      */
     public static void showOpenFileActivity(Context context,String filePath,String mime) {
         File file = new File(filePath);
-        if (file != null) {
-            try{
-                Intent intent = new Intent();
+        try{
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(Uri.parse(filePath), mime);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                context.startActivity(intent);
+                return;
+            }
+            Intent intent = new Intent();
+            if (Build.VERSION.SDK_INT >= 24) {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.setAction(Intent.ACTION_VIEW);
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                 intent.setDataAndType(Uri.fromFile(file), mime);
-                context.startActivity(intent);
-            }catch (Exception e){
-                e.printStackTrace();
-                T.showToastShort(context, "没有应用程序可打开该文件");
+
+            } else {
+                intent.setDataAndType(Uri.fromFile(file), mime);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setAction(Intent.ACTION_VIEW);
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             }
-        }else {
-            T.showToastShort(context,"打开失败");
+            context.startActivity(intent);
+        }catch (Exception e){
+            e.printStackTrace();
+            T.showToastShort(context, "没有应用程序可打开该文件");
         }
     }
 

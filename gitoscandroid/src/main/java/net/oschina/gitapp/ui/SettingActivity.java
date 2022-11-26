@@ -27,6 +27,7 @@ import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
 /**
+ * 设置界面
  * Created by 火蚁 on 15/4/29.
  */
 public class SettingActivity extends BaseActivity implements View.OnClickListener,
@@ -66,7 +67,8 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
     @Override
     @OnClick({R.id.ll_receive_notice, R.id.ll_notice_voice, R.id.ll_check_update_start, R.id.ll_check_sensor,
-            R.id.ll_clear_cache, R.id.ll_check_update, R.id.ll_about})
+            R.id.ll_clear_cache, R.id.ll_check_update,R.id.ll_terms,
+            R.id.ll_protocol,R.id.ll_about})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ll_receive_notice:
@@ -91,6 +93,12 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                         requestExternalStorage();
                     }
                 }, true);
+                break;
+            case R.id.ll_terms:
+                WebActivity.show(this,"https://gitee.com/terms");
+                break;
+            case R.id.ll_protocol:
+                WebActivity.show(this,"file:///android_asset/gitee_protocol.html","隐私政策");
                 break;
             case R.id.ll_about:
                 showAbout();
@@ -185,10 +193,10 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
 
     @AfterPermissionGranted(RC_EXTERNAL_STORAGE)
     public void requestExternalStorage() {
-        if (EasyPermissions.hasPermissions(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+        if (EasyPermissions.hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             UpdateManager.getUpdateManager().showDownloadDialog();
         } else {
-            EasyPermissions.requestPermissions(this, "", RC_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE);
+            EasyPermissions.requestPermissions(this, "", RC_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
     }
 

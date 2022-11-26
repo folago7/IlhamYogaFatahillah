@@ -1,5 +1,6 @@
 package net.oschina.gitapp.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -47,7 +48,7 @@ public class UserInfoActivity extends BaseActivity {
 		// 拿到传过来的project对象
 		Intent intent = getIntent();
 		mUser = (User) intent.getSerializableExtra(Contanst.USER);
-		mLoading = (ProgressBar) findViewById(R.id.userinfo_loading);
+		mLoading =  findViewById(R.id.userinfo_loading);
 		
 		if (mUser == null) {
 			loadData();
@@ -66,6 +67,7 @@ public class UserInfoActivity extends BaseActivity {
 	}
 	
 	// 数据加载
+	@SuppressLint("StaticFieldLeak")
 	private void loadData() {
     	new AsyncTask<Void, Void, Message>() {
 

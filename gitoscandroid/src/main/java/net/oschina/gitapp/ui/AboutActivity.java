@@ -22,13 +22,13 @@ public class AboutActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.about);
-        setTitle("关于码云");
+        setTitle("关于Gitee");
 
 
         //获取客户端版本信息
         try {
             PackageInfo info = getPackageManager().getPackageInfo(getPackageName(), 0);
-            TextView mVersion = (TextView) findViewById(R.id.about_version);
+            TextView mVersion =  findViewById(R.id.about_version);
             mVersion.setText(info.versionName);
         } catch (NameNotFoundException e) {
             e.printStackTrace(System.err);

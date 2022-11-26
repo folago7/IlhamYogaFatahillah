@@ -4,9 +4,8 @@ import android.graphics.BitmapFactory;
 
 import com.sina.weibo.sdk.api.WebpageObject;
 import com.sina.weibo.sdk.api.WeiboMultiMessage;
-import com.sina.weibo.sdk.api.share.IWeiboShareAPI;
-import com.sina.weibo.sdk.api.share.SendMultiMessageToWeiboRequest;
-import com.sina.weibo.sdk.api.share.WeiboShareSDK;
+
+import com.sina.weibo.sdk.share.WbShareHandler;
 import com.sina.weibo.sdk.utils.Utility;
 
 import net.oschina.gitapp.R;
@@ -18,13 +17,15 @@ import net.oschina.gitapp.R;
 
 public class SinaShare extends BaseShare{
 
-    private static final String APP_KEY = "3645105737";
-    private IWeiboShareAPI mAPI;
+    public static final String APP_KEY = "3645105737";
+    public static final String APP_SECRET = "3645105737";
+    private WbShareHandler shareHandler;
 
     public SinaShare(Builder mBuilder) {
         super(mBuilder);
-        mAPI = WeiboShareSDK.createWeiboAPI(mBuilder.mActivity, APP_KEY, false);
-        mAPI.registerApp();
+        shareHandler = new WbShareHandler(mBuilder.mActivity);
+        shareHandler.registerApp();
+        shareHandler.setProgressColor(0xff33b5e5);
     }
 
     @Override
@@ -47,10 +48,6 @@ public class SinaShare extends BaseShare{
         WeiboMultiMessage weiboMessage = new WeiboMultiMessage();
 
         weiboMessage.mediaObject = webpageObject;
-
-        SendMultiMessageToWeiboRequest request = new SendMultiMessageToWeiboRequest();
-        request.transaction = String.valueOf(System.currentTimeMillis());
-        request.multiMessage = weiboMessage;
-        mAPI.sendRequest(mBuilder.mActivity, request);
+        shareHandler.shareMessage(weiboMessage, false);
     }
 }

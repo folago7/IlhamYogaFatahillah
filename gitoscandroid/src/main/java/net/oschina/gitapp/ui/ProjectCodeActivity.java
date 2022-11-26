@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.MenuItemCompat;
@@ -471,9 +472,13 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void downloadFile(String fileName, byte[] data) {
-        String path = AppConfig.DEFAULT_SAVE_FILE_PATH;
-        isDownload = FileUtils.writeFile(data,
-                path, fileName);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+            isDownload = FileUtils.writeFileAndroidQ(this,data,fileName);
+        }else {
+            String path = AppConfig.DEFAULT_SAVE_FILE_PATH;
+            isDownload = FileUtils.writeFile(data,
+                    path, fileName);
+        }
 
     }
 
@@ -494,7 +499,8 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
     @SuppressLint("InlinedApi")
     @AfterPermissionGranted(RC_EXTERNAL_STORAGE)
     public void requestExternalStorage() {
-        if (EasyPermissions.hasPermissions(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+        if (EasyPermissions.hasPermissions(this, Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             GitOSCApi.downloadFile(project, mCodeTree, getPath(), refName, new HttpCallback() {
                 @Override
                 public void onSuccessInAsync(byte[] t) {
@@ -539,7 +545,8 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
                 }
             });
         } else {
-            EasyPermissions.requestPermissions(this, "", RC_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE);
+            EasyPermissions.requestPermissions(this, "", RC_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE);
         }
     }
 
