@@ -105,7 +105,7 @@
             android:name=".ui.CodeFileDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleTask"
-            android:screenOrientation="sensor" />
+            android:screenOrientation="unspecified" />
         <activity
             android:name=".ui.CommitDetailActivity"
             android:launchMode="singleTask" />
