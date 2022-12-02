@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -58,8 +57,7 @@ public class MyInfoDetailActivity extends BaseActivity implements View.OnClickLi
     TextView tvFollowing;
     @InjectView(R.id.tv_watched)
     TextView tvWatched;
-    @InjectView(R.id.btn_logout)
-    Button btnLogout;
+
 
     private User mUser;
 
@@ -174,7 +172,7 @@ public class MyInfoDetailActivity extends BaseActivity implements View.OnClickLi
                             @Override
                             public void onSuccess(Map<String, String> headers, byte[] t) {
                                 super.onSuccess(headers, t);
-                                if (ivPortrait == null)
+                                if (isDestroyed())
                                     return;
                                 Log.e("onSuccess", protraitUrl);
                                 UIHelper.toastMessage(MyInfoDetailActivity.this, "头像已更新");
@@ -191,7 +189,7 @@ public class MyInfoDetailActivity extends BaseActivity implements View.OnClickLi
                             @Override
                             public void onFailure(int errorNo, String strMsg) {
                                 super.onFailure(errorNo, strMsg);
-                                if (ivPortrait == null)
+                                if (isDestroyed())
                                     return;
                                 UIHelper.toastMessage(MyInfoDetailActivity.this, errorNo +
                                         "更新头像失败");
@@ -200,7 +198,7 @@ public class MyInfoDetailActivity extends BaseActivity implements View.OnClickLi
                             @Override
                             public void onFinish() {
                                 super.onFinish();
-                                if (ivPortrait == null)
+                                if (isDestroyed())
                                     return;
                                 loading.dismiss();
                             }
@@ -208,7 +206,7 @@ public class MyInfoDetailActivity extends BaseActivity implements View.OnClickLi
                             @Override
                             public void onPreStart() {
                                 super.onPreStart();
-                                if (ivPortrait == null)
+                                if (isDestroyed())
                                     return;
                                 loading.setMessage("正在更新头像...");
                             }

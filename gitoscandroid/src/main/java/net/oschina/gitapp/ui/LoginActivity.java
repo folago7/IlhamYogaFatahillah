@@ -119,6 +119,7 @@ public class LoginActivity extends BaseActivity
     }
 
     // 登录验证
+    @SuppressWarnings("deprecation")
     private void login(final String account, final String passwd) {
         if (mLoginProgressDialog == null) {
             mLoginProgressDialog = new ProgressDialog(this);
