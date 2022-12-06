@@ -158,6 +158,7 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
+    @SuppressWarnings("deprecation")
     private void initView(Bundle savedInstanceState) {
 
         mActionBar = getSupportActionBar();
@@ -277,6 +278,7 @@ public class MainActivity extends AppCompatActivity implements
                 || super.onOptionsItemSelected(item);
     }
 
+    @SuppressWarnings("all")
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {

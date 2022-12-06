@@ -174,6 +174,7 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
                 }
             }
 
+            @SuppressWarnings("deprecation")
             @Override
             public void onPreStart() {
                 super.onPreStart();
@@ -187,6 +188,7 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
                 }
             }
 
+            @SuppressWarnings("deprecation")
             @Override
             public void onFinish() {
                 super.onFinish();
@@ -285,7 +287,7 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
         final String fileName = codeTree.getName();
 
         if (codeTree.isCodeTextFile(fileName)) {
-            showDetail(fileName, refName);
+            CodeFileDetailActivity.show(this, project, fileName, refName, getPath() + fileName);
         } else if (codeTree.isImage(fileName)) {
             showImageView(codeTree);
         } else {
@@ -293,6 +295,7 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
         }
     }
 
+    @SuppressWarnings("deprecation")
     private void showImageView(CodeTree currenCodeTree) {
         List<CodeTree> codeTrees = codeTreeAdapter.getDatas();
         List<String> images = new ArrayList<>();
@@ -309,9 +312,10 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
                 index = i;
             }
         }
-        ImageGalleryActivity.show(this, Util.listToArray(images),index);
+        ImageGalleryActivity.show(this, Util.listToArray(images), index);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         optionsMenu = menu;
@@ -343,19 +347,6 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
         loadCode("", true);
     }
 
-    /**
-     * 查看代码文件详情
-     */
-    private void showDetail(String fileName, String ref) {
-        Intent intent = new Intent(AppContext.getInstance(), CodeFileDetailActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(Contanst.PROJECT, project);
-        bundle.putString("fileName", fileName);
-        bundle.putString("path", getPath() + fileName);
-        bundle.putString("ref", ref);
-        intent.putExtras(bundle);
-        startActivity(intent);
-    }
 
     @Override
     public boolean onSupportNavigateUp() {
@@ -396,7 +387,7 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
     }
 
     class PathString extends SpannableString {
-         PathString(String text) {
+        PathString(String text) {
             super(text);
             setup(text);
         }
@@ -423,7 +414,7 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
             private final String mPath;
             private final int mIndex;
 
-             Clickable(String path, int index) {
+            Clickable(String path, int index) {
                 mPath = path;
                 mIndex = index;
             }
@@ -472,9 +463,9 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void downloadFile(String fileName, byte[] data) {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
-            isDownload = FileUtils.writeFileAndroidQ(this,data,fileName);
-        }else {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            isDownload = FileUtils.writeFileAndroidQ(this, data, fileName);
+        } else {
             String path = AppConfig.DEFAULT_SAVE_FILE_PATH;
             isDownload = FileUtils.writeFile(data,
                     path, fileName);
@@ -496,6 +487,7 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
 
     private static final int RC_EXTERNAL_STORAGE = 0x04;//存储权限
     private CodeTree mCodeTree;
+
     @SuppressLint("InlinedApi")
     @AfterPermissionGranted(RC_EXTERNAL_STORAGE)
     public void requestExternalStorage() {
@@ -508,6 +500,7 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
                     downloadFile(mCodeTree.getName(), t);
                 }
 
+                @SuppressWarnings("deprecation")
                 @Override
                 public void onPreStart() {
                     super.onPreStart();
@@ -524,6 +517,7 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
 
                 }
 
+                @SuppressWarnings("deprecation")
                 @Override
                 public void onFinish() {
                     super.onFinish();

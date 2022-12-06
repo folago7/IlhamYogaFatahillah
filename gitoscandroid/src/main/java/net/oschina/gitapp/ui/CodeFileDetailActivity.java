@@ -10,7 +10,6 @@ import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.text.ClipboardManager;
 import android.view.Menu;
@@ -77,16 +76,15 @@ public class CodeFileDetailActivity extends BaseActivity implements EasyPermissi
 
     private String url_link = null;
 
-    private void showEditCodeFileActivity() {
-        Intent intent = new Intent(CodeFileDetailActivity.this,
-                CodeFileEditActivity.class);
+    public static void show(Context context,Project project,String fileName, String ref,String path){
+        Intent intent = new Intent(AppContext.getInstance(), CodeFileDetailActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putSerializable(Contanst.CODE_FILE, mCodeFile);
-        bundle.putSerializable(Contanst.PROJECT, mProject);
-        bundle.putString(Contanst.BRANCH, mRef);
-        bundle.putString(Contanst.PATH, mPath);
+        bundle.putSerializable(Contanst.PROJECT, project);
+        bundle.putString("fileName", fileName);
+        bundle.putString("path", path);
+        bundle.putString("ref", ref);
         intent.putExtras(bundle);
-        startActivity(intent);
+        context.startActivity(intent);
     }
 
     @Override
@@ -158,6 +156,9 @@ public class CodeFileDetailActivity extends BaseActivity implements EasyPermissi
             case R.id.copy:
                 ClipboardManager cbm = (ClipboardManager) getSystemService(Context
                         .CLIPBOARD_SERVICE);
+                if(cbm == null){
+                    return super.onOptionsItemSelected(item);
+                }
                 cbm.setText(url_link);
                 UIHelper.toastMessage(this, "复制成功");
                 break;
@@ -188,8 +189,7 @@ public class CodeFileDetailActivity extends BaseActivity implements EasyPermissi
                 if (isDestroy())
                     return;
                 webview.setVisibility(View.VISIBLE);
-                CodeFile codeFile = JsonUtils.toBean(CodeFile.class, t);
-                mCodeFile = codeFile;
+                mCodeFile = JsonUtils.toBean(CodeFile.class, t);
                 editor.setMarkdown(MarkdownUtils.isMarkdown(mPath));
                 editor.setSource(mPath, mCodeFile);
 
@@ -252,7 +252,7 @@ public class CodeFileDetailActivity extends BaseActivity implements EasyPermissi
 
 
     private static final int RC_EXTERNAL_STORAGE = 0x04;//存储权限
-    private boolean isLoading;
+
     @SuppressLint("InlinedApi")
     @AfterPermissionGranted(RC_EXTERNAL_STORAGE)
     public void requestExternalStorage() {
@@ -268,20 +268,17 @@ public class CodeFileDetailActivity extends BaseActivity implements EasyPermissi
                 @Override
                 public void onPreStart() {
                     super.onPreStart();
-                    isLoading = true;
                 }
 
                 @Override
                 public void onFailure(int errorNo, String strMsg) {
                     super.onFailure(errorNo, strMsg);
-                    isLoading = false;
 
                 }
 
                 @Override
                 public void onFinish() {
                     super.onFinish();
-                    isLoading = false;
                     if (isDownload) {
                         DialogHelp.getOpenFileDialog(CodeFileDetailActivity.this, "文件已经保存在" + AppConfig.DEFAULT_SAVE_FILE_PATH, new DialogInterface.OnClickListener() {
                             @Override

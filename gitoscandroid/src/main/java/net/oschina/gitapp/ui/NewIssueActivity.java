@@ -36,8 +36,10 @@ import butterknife.InjectView;
 import butterknife.OnClick;
 
 /**
+ * issue
  * Created by 火蚁 on 15/4/23.
  */
+@SuppressWarnings("unused")
 public class NewIssueActivity extends BaseActivity implements View.OnClickListener {
 
     @InjectView(R.id.et_tile)
