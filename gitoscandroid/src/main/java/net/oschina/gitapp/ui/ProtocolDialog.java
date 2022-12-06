@@ -62,7 +62,7 @@ public class ProtocolDialog extends Dialog implements View.OnClickListener {
         mTextItem = findViewById(R.id.tv_item);
         mTextSure.setOnClickListener(this);
         mTextCancel.setOnClickListener(this);
-        SpannableStringBuilder sb = new SpannableStringBuilder("您可阅读《Gitee用户协议》和《隐私政策》来了解详细的信息。");
+        SpannableStringBuilder sb = new SpannableStringBuilder("您可阅读《码云用户协议》和《隐私政策》来了解详细的信息。");
 
 
 
@@ -72,18 +72,18 @@ public class ProtocolDialog extends Dialog implements View.OnClickListener {
             public void onClick(View widget) {
                 WebActivity.show(mActivity,"https://gitee.com/terms");
             }
-        },4,11,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        },4,12,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         sb.setSpan(new ClickableSpan() {
             @Override
             public void onClick(View widget) {
                 WebActivity.show(mActivity,"file:///android_asset/gitee_protocol.html","隐私政策");
             }
-        },13,18,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        },13,19,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 
-        sb.setSpan(new ForegroundColorSpan(0xFF4183c4),4,11, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        sb.setSpan(new ForegroundColorSpan(0xFF4183c4),13,18, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        sb.setSpan(new ForegroundColorSpan(0xFF4183c4),4,12, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        sb.setSpan(new ForegroundColorSpan(0xFF4183c4),13,19, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         mTextItem.setText(sb);
     }
 

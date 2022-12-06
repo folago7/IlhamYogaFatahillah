@@ -114,6 +114,13 @@ public class CodeFileDetailActivity extends BaseActivity implements EasyPermissi
                 loadCode(mProject.getId(), mPath, mRef);
             }
         });
+
+        if( AppContext.getInstance().isOpenSensor()){
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        }else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//竖屏
+        }
+
     }
 
     private void init() {

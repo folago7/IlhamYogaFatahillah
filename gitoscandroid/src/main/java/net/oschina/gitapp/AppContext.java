@@ -196,7 +196,7 @@ public class AppContext extends Application {
     public boolean isOpenSensor() {
         String perf_open_sensor = getProperty(AppConfig.CONF_OPEN_SENSOR);
         // 默认是开启
-        return StringUtils.isEmpty(perf_open_sensor) || StringUtils.toBool(perf_open_sensor);
+        return StringUtils.toBool(perf_open_sensor);
     }
 
     /**

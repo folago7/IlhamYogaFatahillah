@@ -31,6 +31,7 @@
 
         <activity
             android:name=".WelcomePage"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -43,6 +44,7 @@
             android:name=".ui.MainActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:theme="@style/MainActivityTheme" />
         <activity
             android:name=".ui.LoginActivity"
@@ -84,18 +86,22 @@
         <activity
             android:name=".ui.ProjectReadMeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="sensor" />
+            android:screenOrientation="unspecified" />
         <activity
             android:name=".ui.ProjectCodeActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".ui.ProjectSomeInfoListActivity" />
-        <activity android:name=".ui.NotificationActivity" />
+        <activity android:name=".ui.ProjectSomeInfoListActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.NotificationActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.SearchActivity"
             android:label="项目搜索"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask" />
         <activity
             android:name=".ui.LanguageActivity"
+            android:screenOrientation="portrait"
             android:label="编程语言" />
         <activity
             android:name=".ui.ShakeActivity"
@@ -108,28 +114,35 @@
             android:screenOrientation="unspecified" />
         <activity
             android:name=".ui.CommitDetailActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask" />
         <activity
             android:name=".ui.CommitFileDetailActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask" />
         <activity
             android:name=".ui.IssueDetailActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask" />
         <activity
             android:name=".ui.IssueCommentActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask" />
         <activity
             android:name=".ui.NewIssueActivity"
             android:configChanges="keyboardHidden|orientation"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".ui.MyInfoDetailActivity"
             android:label="个人信息"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask" />
         <activity
             android:name=".ui.UserInfoActivity"
             android:label="用户信息"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask" />
         <activity
             android:name=".ui.SettingActivity"
@@ -139,15 +152,18 @@
         <activity
             android:name=".ui.CodeFileEditActivity"
             android:label="编辑"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask" />
         <activity
             android:name=".ui.AboutActivity"
             android:label="关于git"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask" />
         <activity
             android:name=".ui.ShippingAddressActivity"
             android:configChanges="keyboardHidden|orientation"
             android:label="收货信息"
+            android:screenOrientation="portrait"
             android:launchMode="singleTask" />
         <activity
             android:name=".photoBrowse.PhotoBrowseActivity"
