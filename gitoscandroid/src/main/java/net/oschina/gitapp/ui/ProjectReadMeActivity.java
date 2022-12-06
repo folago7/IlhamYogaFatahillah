@@ -1,6 +1,7 @@
 package net.oschina.gitapp.ui;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -10,6 +11,7 @@ import android.webkit.WebView;
 
 import com.kymjs.rxvolley.client.HttpCallback;
 
+import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.GitOSCApi;
 import net.oschina.gitapp.bean.Project;
@@ -51,6 +53,11 @@ public class ProjectReadMeActivity extends BaseActivity {
             mProject = (Project) intent.getSerializableExtra(Contanst.PROJECT);
             mTitle = "README.md";
             mActionBar.setTitle(mTitle);
+        }
+        if( AppContext.getInstance().isOpenSensor()){
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+        }else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//竖屏
         }
         initView();
         loadData();

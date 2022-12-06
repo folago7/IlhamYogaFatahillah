@@ -156,7 +156,17 @@ public class CodeTree extends Entity {
                         ".ts",
                         ".kt",
                         ".vue",
-                        ".babelrc"
+                        ".babelrc",
+                        ".ashx",
+                        ".asm",
+                        ".cc",
+                        ".rkt",
+                        ".lisp",
+                        ".hs",
+                        ".props",
+                        ".editorconfig",
+                        ".dockerignore",
+                        ".gitattributes"
                 };
         for (String string : codeFileSuffix) {
             if (fileName.equalsIgnoreCase(string)) {
