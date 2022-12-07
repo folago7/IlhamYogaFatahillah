@@ -21,6 +21,7 @@ import net.oschina.gitapp.common.CyptoUtils;
 import net.oschina.gitapp.common.MethodsCompat;
 import net.oschina.gitapp.common.StringUtils;
 import net.oschina.gitapp.share.SinaShare;
+import net.oschina.gitapp.utils.CodeFileUtils;
 
 import java.io.File;
 import java.util.Properties;
@@ -69,6 +70,7 @@ public class AppContext extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        CodeFileUtils.init();
         WbSdk.install(this,
                 new AuthInfo(this, SinaShare.APP_KEY,
                         "http://www.sina.com", SinaShare.APP_SECRET));
