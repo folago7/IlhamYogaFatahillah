@@ -8,7 +8,7 @@ public final class CodeFileUtils {
     private static final String[] codeFileSuffix = new String[]{
             ".java", ".confg", ".ini", ".xml", ".json", ".txt", ".go", ".php", ".php3", ".php4", ".php5",
             ".js", ".css", ".html", ".properties", ".c", ".hpp", ".h", ".hh", ".cpp", ".cfg", ".rb", ".example",
-            ".gitignore", ".project", ".classpath", ".m", ".md", ".rst", ".vm", ".cl", ".py", ".pl", ".haml",
+            ".gitignore", ".project", ".classpath", ".m", ".md", ".rst", ".vm", ".cl", ".py", ".pl",
             ".erb", ".scss", ".bat", ".coffee", ".as", ".sh", ".m", ".pas", ".cs", ".groovy", ".scala",
             ".sql", ".bas", ".xml", ".vb", ".xsl", ".swift", ".ftl", ".yml", ".ru", ".jsp", ".markdown",
             ".cshap", ".apsx", ".sass", ".less", ".ftl", ".haml", ".log", ".tx", ".csproj", ".sln", ".clj",

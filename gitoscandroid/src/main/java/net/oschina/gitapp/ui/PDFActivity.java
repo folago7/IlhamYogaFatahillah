@@ -5,8 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.github.barteksc.pdfviewer.PDFView;
-import com.github.barteksc.pdfviewer.listener.OnPageChangeListener;
 import com.kymjs.rxvolley.client.HttpCallback;
 
 import net.oschina.gitapp.AppContext;
@@ -25,8 +23,8 @@ import butterknife.InjectView;
 
 public class PDFActivity extends BaseActivity {
 
-    @InjectView(R.id.pdfView)
-    PDFView mPDFView;
+//    @InjectView(R.id.pdfView)
+//    PDFView mPDFView;
 
     private CodeFile mCodeFile;
 
@@ -111,24 +109,24 @@ public class PDFActivity extends BaseActivity {
         if (new File(AppContext.getInstance().getFilesDir() + "/pdf_cache/" + mFileName).exists()) {
             Log.e("bbbb","bbbb");
         }
-        mPDFView.fromFile(new File(AppContext.getInstance().getFilesDir() + "/pdf_cache/" + mFileName))
-                .enableSwipe(true) // allows to block changing pages using swipe
-                .swipeHorizontal(true)
-                .spacing(16)
-                .pageSnap(true)
-                .pageFling(true)
-                .onPageChange(new OnPageChangeListener() {
-                    @Override
-                    public void onPageChanged(int page, int pageCount) {
-                        if (isDestroyed()) {
-                            return;
-                        }
-//                        mTextCount.setVisibility(View.VISIBLE);
-//                        mTextCount.removeCallbacks(this);
-//                        mTextCount.setText(String.format("%s/%s", i + 1, i1));
-//                        mTextCount.postDelayed(this, 1600);
-                    }
-                })
-                .load();
+//        mPDFView.fromFile(new File(AppContext.getInstance().getFilesDir() + "/pdf_cache/" + mFileName))
+//                .enableSwipe(true) // allows to block changing pages using swipe
+//                .swipeHorizontal(true)
+//                .spacing(16)
+//                .pageSnap(true)
+//                .pageFling(true)
+//                .onPageChange(new OnPageChangeListener() {
+//                    @Override
+//                    public void onPageChanged(int page, int pageCount) {
+//                        if (isDestroyed()) {
+//                            return;
+//                        }
+////                        mTextCount.setVisibility(View.VISIBLE);
+////                        mTextCount.removeCallbacks(this);
+////                        mTextCount.setText(String.format("%s/%s", i + 1, i1));
+////                        mTextCount.postDelayed(this, 1600);
+//                    }
+//                })
+//                .load();
     }
 }
