@@ -13,6 +13,7 @@ import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,6 +40,7 @@ import net.oschina.gitapp.dialog.ProjectRefSelectDialog;
 import net.oschina.gitapp.media.ImageGalleryActivity;
 import net.oschina.gitapp.media.Util;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
+import net.oschina.gitapp.utils.CodeFileUtils;
 import net.oschina.gitapp.utils.DialogHelp;
 import net.oschina.gitapp.utils.JsonUtils;
 import net.oschina.gitapp.utils.T;
@@ -286,11 +288,20 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
 
         final String fileName = codeTree.getName();
 
-        if (codeTree.isCodeTextFile(fileName)) {
+        if (CodeFileUtils.isCodeTextFile(fileName)) {
             CodeFileDetailActivity.show(this, project, fileName, refName, getPath() + fileName);
-        } else if (codeTree.isImage(fileName)) {
+        } else if (CodeFileUtils.isImage(fileName)) {
             showImageView(codeTree);
-        } else {
+//        } else if (CodeFileUtils.isPDF(fileName)) {
+//            //PDFActivity.show(this, project, fileName, refName, getPath() + fileName);
+//            Log.e("aaaa",  GitOSCApi.NO_API_BASE_URL + project.getPathWithNamespace() + "/" + "raw" + "/" + refName + "/" + URLEncoder.encode
+//                    (getPath() + codeTree.getName()) + "?private_token=" + AppContext
+//                    .getToken());
+//            WebActivity.show(this,GitOSCApi.NO_API_BASE_URL + project.getPathWithNamespace() + "/" + "raw" + "/" + refName + "/" + URLEncoder.encode
+//                    (getPath() + codeTree.getName()) + "?private_token=" + AppContext
+//                    .getToken(),fileName);
+//        } else {
+        }else {
             showDownload(codeTree);
         }
     }
@@ -302,7 +313,7 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
         int index = 0;
         for (int i = 0; i < codeTrees.size(); i++) {
             CodeTree codeTree = codeTrees.get(i);
-            if (codeTree.isImage(codeTree.getName())) {
+            if (CodeFileUtils.isImage(codeTree.getName())) {
                 String url = GitOSCApi.NO_API_BASE_URL + project.getPathWithNamespace() + "/" + "raw" + "/" + refName + "/" + URLEncoder.encode
                         (getPath() + codeTree.getName()) + "?private_token=" + AppContext
                         .getToken();

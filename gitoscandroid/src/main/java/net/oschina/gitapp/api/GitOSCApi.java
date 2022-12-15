@@ -182,7 +182,12 @@ public class GitOSCApi {
     public static void getCodeFileDetail(String projectId, String file_path, String ref,
                                          HttpCallback handler) {
         HttpParams params = AsyncHttpHelp.getHttpParams();
-        params.put("file_path", file_path);
+        try {
+            params.put("file_path", URLEncoder.encode(file_path,"utf-8"));
+        }catch (Exception e){
+            e.printStackTrace();
+            params.put("file_path", file_path);
+        }
         params.put("ref", ref);
         get(PROJECTS + projectId + "/repository/files", params, handler);
     }
@@ -207,7 +212,13 @@ public class GitOSCApi {
     public static void getCommitFileDetail(String projectId, String commitId, String filePath,
                                            HttpCallback handler) {
         HttpParams params = AsyncHttpHelp.getHttpParams();
-        params.put("filepath", filePath);
+
+        try {
+            params.put("filepath", URLEncoder.encode(filePath,"utf-8"));
+        }catch (Exception e){
+            e.printStackTrace();
+            params.put("filepath", filePath);
+        }
         get(PROJECTS + projectId + "/repository/commits/" + commitId + "/blob", params, handler);
     }
 
@@ -427,7 +438,13 @@ public class GitOSCApi {
     public static void downloadFile(String projectId, String file_path, String ref,
                                          HttpCallback handler) {
         HttpParams params = AsyncHttpHelp.getHttpParams();
-        params.put("file_path", file_path);
+
+        try {
+            params.put("file_path", URLEncoder.encode(file_path,"utf-8"));
+        }catch (Exception e){
+            e.printStackTrace();
+            params.put("file_path", file_path);
+        }
         params.put("ref", ref);
         get(PROJECTS + projectId + "/repository/files", params, handler);
     }

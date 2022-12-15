@@ -68,7 +68,7 @@ public class SourceEditor {
                 settings.setDisplayZoomControls(false);
             }
         } catch (NumberFormatException e) {
-
+            e.printStackTrace();
         }
         settings.setUseWideViewPort(true);
         view.addJavascriptInterface(SourceEditor.this, "SourceEditor");

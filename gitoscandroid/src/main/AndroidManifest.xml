@@ -90,6 +90,11 @@
         <activity
             android:name=".ui.ProjectCodeActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.PDFActivity"
+            android:label="PDF预览"
+            android:screenOrientation="portrait" />
+
         <activity android:name=".ui.ProjectSomeInfoListActivity"
             android:screenOrientation="portrait"/>
         <activity android:name=".ui.NotificationActivity"

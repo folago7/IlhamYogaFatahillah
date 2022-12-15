@@ -21,6 +21,7 @@ import android.os.StatFs;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.utils.IO;
 
 /**
@@ -120,11 +121,31 @@ public class FileUtils {
 			e.printStackTrace();
 			writeSucc = false;
 		} finally {
-			try {
-				out.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			IO.close(out);
+		}
+
+		return writeSucc;
+	}
+
+	@SuppressWarnings("ResultOfMethodCallIgnored")
+	public static boolean writePDFFile(byte[] buffer,
+									   String fileName) {
+		boolean writeSucc ;
+		File fileDir = new File(AppContext.getInstance().getFilesDir() +"/pdf_cache/");
+		if (!fileDir.exists()) {
+			fileDir.mkdirs();
+		}
+		File file = new File(AppContext.getInstance().getFilesDir() +"/pdf_cache/" + fileName);
+		FileOutputStream out = null;
+		try {
+			out = new FileOutputStream(file);
+			out.write(buffer);
+			writeSucc = true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			writeSucc = false;
+		} finally {
+			IO.close(out);
 		}
 
 		return writeSucc;
