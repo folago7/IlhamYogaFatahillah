@@ -24,9 +24,9 @@ import static net.oschina.gitapp.api.AsyncHttpHelp.post;
  */
 public class GitOSCApi {
 
-    public final static String HOST = "git.oschina.net/";
+    public final static String HOST = "gitee.com/";
     private static final String API_VERSION = "api/v3/";// API版本
-    public final static String HTTP = "http://";
+    public final static String HTTP = "https://";
     public final static String BASE_URL = HTTP + HOST + API_VERSION;
     public final static String NO_API_BASE_URL = HTTP + HOST;
     public final static String PROJECTS = BASE_URL + "projects/";
@@ -47,7 +47,7 @@ public class GitOSCApi {
             return URLEncoder.encode(value, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-            return null;
+            return value;
         }
     }
 
