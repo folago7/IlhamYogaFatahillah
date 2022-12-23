@@ -13,7 +13,6 @@ import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -119,7 +118,9 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
         codeTreeAdapter = new ProjectCodeTreeAdapter(this, R.layout.list_item_projectcodetree);
         listView.setAdapter(codeTreeAdapter);
         listView.setOnItemClickListener(this);
-        loadCode(path, false);
+
+        //loadCode(path, false);
+        getBranchAndCode();
         tvPaths.setMovementMethod(new LinkMovementMethod());
     }
 
@@ -224,7 +225,7 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
         if (paths.isEmpty()) {
             return "";
         }
-        StringBuilder pathString = new StringBuilder("");
+        StringBuilder pathString = new StringBuilder();
         for (int i = 0; i < paths.size(); i++) {
             pathString.append(paths.get(i));
             if (i != 0) {
@@ -259,12 +260,8 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
     @Override
     @OnClick({R.id.rl_branch})
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.rl_branch:
-                loadBranchAndTag();
-                break;
-            default:
-                break;
+        if (v.getId() == R.id.rl_branch) {
+            loadBranchAndTag();
         }
     }
 
@@ -292,16 +289,7 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
             CodeFileDetailActivity.show(this, project, fileName, refName, getPath() + fileName);
         } else if (CodeFileUtils.isImage(fileName)) {
             showImageView(codeTree);
-//        } else if (CodeFileUtils.isPDF(fileName)) {
-//            //PDFActivity.show(this, project, fileName, refName, getPath() + fileName);
-//            Log.e("aaaa",  GitOSCApi.NO_API_BASE_URL + project.getPathWithNamespace() + "/" + "raw" + "/" + refName + "/" + URLEncoder.encode
-//                    (getPath() + codeTree.getName()) + "?private_token=" + AppContext
-//                    .getToken());
-//            WebActivity.show(this,GitOSCApi.NO_API_BASE_URL + project.getPathWithNamespace() + "/" + "raw" + "/" + refName + "/" + URLEncoder.encode
-//                    (getPath() + codeTree.getName()) + "?private_token=" + AppContext
-//                    .getToken(),fileName);
-//        } else {
-        }else {
+        } else {
             showDownload(codeTree);
         }
     }
@@ -341,11 +329,8 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
-        switch (id) {
-            case 0:
-                refresh();
-                break;
-
+        if (id == 0) {
+            refresh();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -431,12 +416,12 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
             }
 
             @Override
-            public void onClick(View widget) {
+            public void onClick(@NonNull View widget) {
                 onPathClick(mPath, mIndex);
             }
 
             @Override
-            public void updateDrawState(TextPaint ds) {
+            public void updateDrawState(@NonNull TextPaint ds) {
                 super.updateDrawState(ds);
                 ds.setColor(ds.linkColor);
                 ds.setUnderlineText(false);
@@ -465,6 +450,48 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
             setBranchInfo();
         }
     };
+
+    /**
+     * 先加载分支再判断有没有master，没有的话选第一个
+     */
+    private void getBranchAndCode() {
+        GitOSCApi.getProjectBranchs(project.getId(), new HttpCallback() {
+            @Override
+            public void onSuccess(Map<String, String> headers, byte[] t) {
+                super.onSuccess(headers, t);
+                if(isDestroyed()){
+                    return;
+                }
+                List<Branch> branches = JsonUtils.getList(Branch[].class, t);
+                if (branches == null || branches.isEmpty()) {
+                    T.showToastShort(ProjectCodeActivity.this,"该文件夹下面暂无文件");
+                    return;
+                }
+                String defaultBranch ;
+                for (Branch b : branches) {
+                    b.setType(Branch.TYPE_BRANCH);
+                    if("master".equalsIgnoreCase(b.getName())){
+                        loadCode("",false);
+                        return;
+                    }
+                }
+                defaultBranch = branches.get(0).getName();
+                refName = defaultBranch;
+                setBranchInfo();
+                loadCode("",false);
+            }
+
+            @Override
+            public void onFailure(int errorNo, String strMsg) {
+                super.onFailure(errorNo, strMsg);
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
+            }
+        });
+    }
 
     private void loadBranchAndTag() {
         if (refSelectDialog == null) {
