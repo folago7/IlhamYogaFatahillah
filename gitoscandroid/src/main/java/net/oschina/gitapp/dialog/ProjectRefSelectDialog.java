@@ -3,6 +3,8 @@ package net.oschina.gitapp.dialog;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.text.TextUtils;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.kymjs.rxvolley.client.HttpCallback;
@@ -26,7 +28,7 @@ import java.util.Map;
 public class ProjectRefSelectDialog {
 
     public interface CallBack {
-        public void onCallBack(Branch branch);
+         void onCallBack(Branch branch);
     }
 
     private Context context;
@@ -51,7 +53,7 @@ public class ProjectRefSelectDialog {
     }
 
     public void load(final String branch) {
-        final AlertDialog loading = LightProgressDialog.create(context, "加载分支和标签中...");
+        final AlertDialog loading = LightProgressDialog.create(context, "加载分支和标签中 ...");
         loading.show();
 
         GitOSCApi.getProjectBranchs(pId, new HttpCallback() {
@@ -101,10 +103,14 @@ public class ProjectRefSelectDialog {
         });
     }
 
+    private String mBranchName;
     public void show(final String branch) {
         if (branches == null || branches.isEmpty()) {
             load(branch);
             return;
+        }
+        if(TextUtils.isEmpty(mBranchName)){
+            mBranchName = branch;
         }
         if (adapter == null || dialog == null) {
             adapter = new CommonAdapter<Branch>(context, R.layout.list_item_ref) {
@@ -113,6 +119,8 @@ public class ProjectRefSelectDialog {
                     vh.setText(R.id.tv_flag, item.getIconRes());
                     TypefaceUtils.setOcticons((TextView) vh.getView(R.id.tv_flag));
                     vh.setText(R.id.tv_name, item.getName());
+                    RadioButton rb = vh.getView(R.id.rb_selected);
+                    rb.setChecked(item.getName().equalsIgnoreCase(mBranchName));
                 }
             };
             adapter.addItem(branches);
@@ -124,17 +132,19 @@ public class ProjectRefSelectDialog {
                 break;
             }
         }
-
         dialog.setSingleChoiceItems(adapter, index, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-                if (adapter.getItem(which).getName().equals(branch)) {
+                if (adapter.getItem(which).getName().equalsIgnoreCase(branch)) {
                     return;
                 }
+                mBranchName = adapter.getItem(which).getName();
                 callBack.onCallBack(adapter.getItem(which));
+                adapter.notifyDataSetChanged();
             }
         });
+        adapter.notifyDataSetChanged();
         dialog.show();
     }
 }
