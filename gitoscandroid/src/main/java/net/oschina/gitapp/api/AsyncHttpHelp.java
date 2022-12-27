@@ -9,6 +9,9 @@ import com.kymjs.rxvolley.client.HttpParams;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.common.CyptoUtils;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 
 /**
  * 获取一个httpClient
@@ -24,6 +27,15 @@ public class AsyncHttpHelp {
 
     public static void get(String url, HttpParams params, HttpCallback handler) {
         new RxVolley.Builder().shouldCache(false).url(url).params(params).callback(handler).doTask();
+    }
+
+    private static String urlEncode(String value) {
+        try {
+            return URLEncoder.encode(value, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return value;
+        }
     }
 
     public static void post(String url, HttpParams params, HttpCallback handler) {

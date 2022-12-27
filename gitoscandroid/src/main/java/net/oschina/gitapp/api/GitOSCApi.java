@@ -24,15 +24,15 @@ import static net.oschina.gitapp.api.AsyncHttpHelp.post;
  */
 public class GitOSCApi {
 
-    public final static String HOST = "gitee.com/";
+    private final static String HOST = "gitee.com/";
     private static final String API_VERSION = "api/v3/";// API版本
-    public final static String HTTP = "https://";
-    public final static String BASE_URL = HTTP + HOST + API_VERSION;
+    private final static String HTTP = "https://";
+    private final static String BASE_URL = HTTP + HOST + API_VERSION;
     public final static String NO_API_BASE_URL = HTTP + HOST;
-    public final static String PROJECTS = BASE_URL + "projects/";
+    private final static String PROJECTS = BASE_URL + "projects/";
     public final static String USER = BASE_URL + "user/";
     public final static String EVENT = BASE_URL + "events/";
-    public final static String NOTIFICATION = USER + "notifications/";
+    private final static String NOTIFICATION = USER + "notifications/";
     public final static String VERSION = BASE_URL + "app_version/new/android";
 
     public static void login(String account, String passwod, HttpCallback handler) {
@@ -106,7 +106,7 @@ public class GitOSCApi {
     public static void searchProjects(String query, int page, HttpCallback handler) {
         HttpParams params = AsyncHttpHelp.getHttpParams();
         params.put("page", page);
-        get(PROJECTS + "search/" + URLEncoder.encode(query), params, handler);
+        get(PROJECTS + "search/" + urlEncode(query), params, handler);
     }
 
     public static void getUserProjects(String uid, int page, HttpCallback handler) {
@@ -126,7 +126,7 @@ public class GitOSCApi {
      */
     public static void getUserInfo(String uid, HttpCallback callback) {
         HttpParams params = AsyncHttpHelp.getHttpParams();
-        get("http://git.oschina.net/api/v3/users/"  + uid, params, callback);
+        get("https://gitee.com//api/v3/users/"  + uid, params, callback);
     }
 
     public static void getProjectCommits(String pId, int page, String refName, HttpCallback
@@ -140,7 +140,7 @@ public class GitOSCApi {
     public static void getProjectCodeTree(String pId, String path, String refName, HttpCallback
             handler) {
         HttpParams params = AsyncHttpHelp.getHttpParams();
-        params.put("path", path);
+        params.put("path", urlEncode(path));
         params.put("ref_name", refName);
         get(PROJECTS + pId + "/repository/tree", params, handler);
     }
@@ -175,19 +175,14 @@ public class GitOSCApi {
     public static void pubIssueComment(String pId, String issueId, String body, HttpCallback
             handler) {
         HttpParams params = AsyncHttpHelp.getHttpParams();
-        params.put("body", body);
+        params.put("body", urlEncode(body));
         post(PROJECTS + pId + "/issues/" + issueId + "/notes", params, handler);
     }
 
     public static void getCodeFileDetail(String projectId, String file_path, String ref,
                                          HttpCallback handler) {
         HttpParams params = AsyncHttpHelp.getHttpParams();
-        try {
-            params.put("file_path", URLEncoder.encode(file_path,"utf-8"));
-        }catch (Exception e){
-            e.printStackTrace();
-            params.put("file_path", file_path);
-        }
+        params.put("file_path", urlEncode(file_path));
         params.put("ref", ref);
         get(PROJECTS + projectId + "/repository/files", params, handler);
     }
@@ -213,12 +208,7 @@ public class GitOSCApi {
                                            HttpCallback handler) {
         HttpParams params = AsyncHttpHelp.getHttpParams();
 
-        try {
-            params.put("filepath", URLEncoder.encode(filePath,"utf-8"));
-        }catch (Exception e){
-            e.printStackTrace();
-            params.put("filepath", filePath);
-        }
+        params.put("filepath", urlEncode(filePath));
         get(PROJECTS + projectId + "/repository/commits/" + commitId + "/blob", params, handler);
     }
 
@@ -241,10 +231,10 @@ public class GitOSCApi {
     public static void pubCreateIssue(String projectId, String title, String description, String
             assignee_id, String milestone_id, HttpCallback handler) {
         HttpParams params = AsyncHttpHelp.getHttpParams();
-        params.put("description", description);
-        params.put("title", title);
-        params.put("assignee_id", assignee_id);
-        params.put("milestone_id", milestone_id);
+        params.put("description", urlEncode(description));
+        params.put("title", urlEncode(title));
+        params.put("assignee_id", urlEncode(assignee_id));
+        params.put("milestone_id", urlEncode(milestone_id));
         post(PROJECTS + projectId + "/issues", params, handler);
     }
 
@@ -253,9 +243,9 @@ public class GitOSCApi {
      */
     public static void upLoadFile(File file, HttpCallback handler) throws Exception {
         HttpParams params = AsyncHttpHelp.getHttpParams();
-        String suffix = file.getName().substring(file.getName().lastIndexOf(".") + 1, file.getName().length()).toLowerCase();
+        String suffix = file.getName().substring(file.getName().lastIndexOf(".") + 1).toLowerCase();
         params.put("files", ImageUtils.fileToByteArray(file), "image/" + suffix, file.getName());
-        post("https://git.oschina.net/upload", params, handler);
+        post("https://gitee.com/upload", params, handler);
     }
 
     /***
@@ -263,23 +253,19 @@ public class GitOSCApi {
      */
     public static void updateUserProtrait(String protraitUrl, HttpCallback handler) {
         HttpParams params = AsyncHttpHelp.getHttpParams();
-        params.put("path", protraitUrl);
+        params.put("path", urlEncode(protraitUrl));
         post(USER + "portrait", params, handler);
     }
 
     /***
      * 获取通知
      *
-     * @param filter
-     * @param all
-     * @param projectId
-     * @param handler
      */
-    public static void getNotification(String filter, String all, String projectId, HttpCallback
+    public static void getNotification(String filter, String all, HttpCallback
             handler) {
         HttpParams params = getPrivateTokenWithParams();
-        params.put("filter", filter);
-        params.put("all", all);
+        params.put("filter", urlEncode(filter));
+        params.put("all", urlEncode(all));
         get(NOTIFICATION, params, handler);
     }
 
@@ -347,11 +333,11 @@ public class GitOSCApi {
                                              String branch_name, String content, String
                                                      commit_message, HttpCallback handler) {
         HttpParams params = getPrivateTokenWithParams();
-        params.put("ref", ref);
-        params.put("file_path", file_path);
-        params.put("branch_name", branch_name);
-        params.put("content", content);
-        params.put("commit_message", commit_message);
+        params.put("ref", urlEncode(ref));
+        params.put("file_path", urlEncode(file_path));
+        params.put("branch_name", urlEncode(branch_name));
+        params.put("content", urlEncode(content));
+        params.put("commit_message", urlEncode(commit_message));
         post(PROJECTS + projectId + "/repository/files", params, handler);
     }
 
@@ -384,10 +370,10 @@ public class GitOSCApi {
     public static void updateUserShippingAddress(String uid, ShippingAddress shippingAddress,
                                                  HttpCallback handler) {
         HttpParams params = getPrivateTokenWithParams();
-        params.put("name", shippingAddress.getName());
-        params.put("tel", shippingAddress.getTel());
-        params.put("address", shippingAddress.getAddress());
-        params.put("comment", shippingAddress.getComment());
+        params.put("name", urlEncode(shippingAddress.getName()));
+        params.put("tel", urlEncode(shippingAddress.getTel()));
+        params.put("address", urlEncode(shippingAddress.getAddress()));
+        params.put("comment", urlEncode(shippingAddress.getComment()));
         post(BASE_URL + "users/" + uid, params, handler);
     }
 
@@ -403,14 +389,11 @@ public class GitOSCApi {
     /**
      * 用户反馈,其实就是发了个issue
      *
-     * @param message
-     * @param title
-     * @param callback
      */
     public static void feedback(String title, String message, HttpCallback callback) {
         HttpParams params = AsyncHttpHelp.getHttpParams();
-        params.put("description", message);
-        params.put("title", title);
+        params.put("description", urlEncode(message));
+        params.put("title", urlEncode(title));
         params.put("assignee_id", 355540);
         params.put("milestone_id", "");
         post(PROJECTS + "142148/issues", params, callback);
@@ -419,11 +402,6 @@ public class GitOSCApi {
     /**
      * 下载二进制文件
      *
-     * @param project
-     * @param codeTree
-     * @param path
-     * @param refName
-     * @param callback
      */
     public static void downloadFile(Project project, CodeTree codeTree, String path, String refName, HttpCallback callback) {
         String uri = GitOSCApi.NO_API_BASE_URL + project.getPathWithNamespace() + "/raw/" + refName + "/" + path + codeTree.getName() + "?private_token=" + AppContext.getToken();
@@ -439,12 +417,7 @@ public class GitOSCApi {
                                          HttpCallback handler) {
         HttpParams params = AsyncHttpHelp.getHttpParams();
 
-        try {
-            params.put("file_path", URLEncoder.encode(file_path,"utf-8"));
-        }catch (Exception e){
-            e.printStackTrace();
-            params.put("file_path", file_path);
-        }
+        params.put("file_path", urlEncode(file_path));
         params.put("ref", ref);
         get(PROJECTS + projectId + "/repository/files", params, handler);
     }

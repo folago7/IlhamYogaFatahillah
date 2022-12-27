@@ -1,5 +1,6 @@
 package net.oschina.gitapp.ui.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.view.LayoutInflater;
@@ -79,6 +80,7 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
         setHasOptionsMenu(true);
     }
 
+    @SuppressLint("InflateParams")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -94,12 +96,12 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
     }
 
     private void initView(View view) {
-        mProgressBar = (ProgressBar) view.findViewById(R.id.notification_fragment_loading);
+        mProgressBar = view.findViewById(R.id.notification_fragment_loading);
         mEmpty = view.findViewById(R.id.notification_fragment_empty);
-        mListView = (ExpandableListView) view.findViewById(R.id.notification_fragment_list);
+        mListView = view.findViewById(R.id.notification_fragment_list);
 
-        mEmptyImage = (ImageView) view.findViewById(R.id.notification_empty_img);
-        mEmptyMsg = (TextView) view.findViewById(R.id.notification_empty_msg);
+        mEmptyImage = view.findViewById(R.id.notification_empty_img);
+        mEmptyMsg = view.findViewById(R.id.notification_empty_msg);
     }
 
     protected void initData() {
@@ -109,16 +111,16 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
         }
         if (mAction == ACTION_UNREAD) {
             mEmptyMsg.setText("没有未读的通知");
-            loadData("", "", "");
+            loadData("", "");
         } else {
             mEmptyMsg.setText("没有已读的通知");
-            loadData("", "1", "");
+            loadData("", "1");
         }
     }
 
     private void steupList() {
-        mData = new ArrayList<List<Notification>>();
-        mGroups = new ArrayList<ProjectNotification>();
+        mData = new ArrayList<>();
+        mGroups = new ArrayList<>();
         adapter = new NotificationAdapter(getActivity(), mData, mGroups);
         mListView.setAdapter(adapter);
 
@@ -143,7 +145,7 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
         switch (menuId) {
             case MENU_REFRESH_ID:
                 String all = mAction == ACTION_UNREAD ? "" : "1";
-                loadData("", all, "");
+                loadData("", all);
                 break;
 
             default:
@@ -167,8 +169,8 @@ public class NotificationFragment extends BaseFragment implements OnClickListene
         }
     }
 
-    private void loadData(final String filter, final String all, final String project_id) {
-        GitOSCApi.getNotification(filter, all, project_id, new HttpCallback() {
+    private void loadData(final String filter, final String all) {
+        GitOSCApi.getNotification(filter, all, new HttpCallback() {
             @Override
             public void onSuccess(Map<String, String> headers, byte[] t) {
                 super.onSuccess(headers, t);
