@@ -207,7 +207,7 @@ public class MainActivity extends AppCompatActivity implements
      * 轮询通知信息
      */
     private void foreachUserNotice() {
-        GitOSCApi.getNotification("", "", "", noticeHandler);
+        GitOSCApi.getNotification("", "",  noticeHandler);
         final boolean isLogin = mContext.isLogin();
         new Thread() {
             public void run() {

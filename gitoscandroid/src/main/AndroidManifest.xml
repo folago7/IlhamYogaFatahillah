@@ -68,7 +68,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <data
-                    android:host="git.oschina.net"
+                    android:host="gitee.com"
                     android:scheme="http" />
             </intent-filter>
             <intent-filter>
