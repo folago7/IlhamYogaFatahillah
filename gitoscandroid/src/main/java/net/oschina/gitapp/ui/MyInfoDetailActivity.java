@@ -22,7 +22,6 @@ import net.oschina.gitapp.common.UIHelper;
 import net.oschina.gitapp.dialog.LightProgressDialog;
 import net.oschina.gitapp.media.ImageGalleryActivity;
 import net.oschina.gitapp.media.ImagePickerActivity;
-import net.oschina.gitapp.media.SelectOptions;
 import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 import net.oschina.gitapp.utils.JsonUtils;
 import net.oschina.gitapp.widget.CircleImageView;
@@ -140,12 +139,7 @@ public class MyInfoDetailActivity extends BaseActivity implements View.OnClickLi
                 ImageGalleryActivity.show(this,new String[]{mUser.getNew_portrait()},0);
                 break;
             case R.id.ll_user_portrait:
-                ImagePickerActivity.show(this, new SelectOptions.Callback() {
-                    @Override
-                    public void doSelected(String[] images) {
-                        uploadNewPhoto(new File(images[0]));
-                    }
-                }, true);
+                ImagePickerActivity.show(this, images -> uploadNewPhoto(new File(images[0])), true);
                 break;
             case R.id.btn_logout:
                 loginOut();

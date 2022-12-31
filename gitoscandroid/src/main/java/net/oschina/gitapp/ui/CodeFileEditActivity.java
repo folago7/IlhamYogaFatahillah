@@ -78,9 +78,9 @@ public class CodeFileEditActivity extends BaseActivity implements OnClickListene
     }
 
     private void initView() {
-        mEditContent = (EditText) findViewById(R.id.codefile_edit);
-        mCommitMsg = (EditText) findViewById(R.id.codefile_edit_msg);
-        mCodeFilePub = (Button) findViewById(R.id.codefile_edit_pub);
+        mEditContent = findViewById(R.id.codefile_edit);
+        mCommitMsg = findViewById(R.id.codefile_edit_msg);
+        mCodeFilePub = findViewById(R.id.codefile_edit_pub);
 
         mEditContent.addTextChangedListener(mTextWatcher);
         mCommitMsg.addTextChangedListener(mTextWatcher);
@@ -119,7 +119,7 @@ public class CodeFileEditActivity extends BaseActivity implements OnClickListene
                     @Override
                     public void onSuccess(Map<String, String> headers, byte[] t) {
                         super.onSuccess(headers, t);
-                        if (t != null && t.length != 0) {
+                        if (t.length != 0) {
                             UIHelper.toastMessage(mAppContext, "提交成功");
                             CodeFileEditActivity.this.finish();
                         } else {
@@ -150,13 +150,8 @@ public class CodeFileEditActivity extends BaseActivity implements OnClickListene
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        switch (id) {
-            case R.id.codefile_edit_pub:
-                pubCommitCodeFile();
-                break;
-
-            default:
-                break;
+        if (id == R.id.codefile_edit_pub) {
+            pubCommitCodeFile();
         }
     }
 

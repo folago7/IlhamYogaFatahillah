@@ -1,5 +1,6 @@
 package net.oschina.gitapp.ui;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -136,22 +137,18 @@ public class ProjectActivity extends BaseActivity implements
 
         // set font icon
         TypefaceUtils.setFontAwsome((TextView) findView(R.id.fi_time));
-        TypefaceUtils.setSemantic((TextView) findView(R.id.fi_ower), (TextView) findView(R.id
+        TypefaceUtils.setSemantic( findView(R.id.fi_ower),  findView(R.id
                         .fi_language),
-                (TextView) findView(R.id.fi_lock), (TextView) findView(R.id.fi_fork), (TextView)
+                 findView(R.id.fi_lock),  findView(R.id.fi_fork),
                         findView(R.id.fi_ll_fork));
-        TypefaceUtils.setOcticons((TextView) findView(R.id.fi_readme), (TextView) findView(R.id
+        TypefaceUtils.setOcticons( findView(R.id.fi_readme),  findView(R.id
                         .fi_code),
-                (TextView) findView(R.id.fi_commit), (TextView) findView(R.id.fi_issue));
+                 findView(R.id.fi_commit),  findView(R.id.fi_issue));
 
-        tipInfo.setOnClick(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadProject(ACTION_LOAD_PROJECT, projectId);
-            }
-        });
+        tipInfo.setOnClick(v -> loadProject(ACTION_LOAD_PROJECT, projectId));
     }
 
+    @SuppressLint("SetTextI18n")
     private void initData() {
         mActionBar.setTitle(mProject.getName());
         mActionBar.setSubtitle(mProject.getOwner().getName());
@@ -179,13 +176,9 @@ public class ProjectActivity extends BaseActivity implements
 
         // 截取屏幕
         Handler mHandler = new Handler();
-        mHandler.postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                if (bitmap == null) {
-                    bitmap = UIHelper.takeScreenShot(ProjectActivity.this);
-                }
+        mHandler.postDelayed(() -> {
+            if (bitmap == null) {
+                bitmap = UIHelper.takeScreenShot(ProjectActivity.this);
             }
         }, 500);
     }

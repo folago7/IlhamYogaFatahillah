@@ -105,18 +105,8 @@ public class MainActivity extends AppCompatActivity implements
 
     private void showProtocol(){
         new ProtocolDialog(this)
-                .setSureListener(new ProtocolDialog.OnDialogClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        AppContext.getInstance().setFirstStart(false);
-                    }
-                })
-                .setCancelListener(new ProtocolDialog.OnDialogClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        showCancelDialog();
-                    }
-                })
+                .setSureListener(view -> AppContext.getInstance().setFirstStart(false))
+                .setCancelListener(view -> showCancelDialog())
                 .show();
     }
 
@@ -127,18 +117,10 @@ public class MainActivity extends AppCompatActivity implements
                 .setMessageText("您需要同意用户协议与隐私政策才能使用Gitee\n如果您不同意，很遗憾我们将无法为您提供服务。")
                 .setSureButtonText("我再想想")
                 .setCancelButtonText("不同意并退出")
-                .setSureListener(new ConfirmDialog.OnDialogClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        showProtocol();
-                    }
-                })
-                .setCancelListener(new ConfirmDialog.OnDialogClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        AppContext.getInstance().setFirstStart(true);
-                        finish();
-                    }
+                .setSureListener(view -> showProtocol())
+                .setCancelListener(view -> {
+                    AppContext.getInstance().setFirstStart(true);
+                    finish();
                 }).show();
     }
 
@@ -236,12 +218,7 @@ public class MainActivity extends AppCompatActivity implements
 
         // 检查新版本
         if (mContext.isCheckUp()) {
-            UpdateManager.getUpdateManager().checkAppUpdate(this, new UpdateManager.OnPermissionCallback() {
-                @Override
-                public void onPermissionCallback() {
-                    requestExternalStorage();
-                }
-            }, false);
+            UpdateManager.getUpdateManager().checkAppUpdate(this, this::requestExternalStorage, false);
         }
         // 启动轮询获取通知信息
         if (mContext.isReceiveNotice()) {
@@ -278,7 +255,7 @@ public class MainActivity extends AppCompatActivity implements
                 || super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("all")
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -388,17 +365,17 @@ public class MainActivity extends AppCompatActivity implements
 
     private class DrawerMenuListener implements DrawerLayout.DrawerListener {
         @Override
-        public void onDrawerOpened(View drawerView) {
+        public void onDrawerOpened(@NonNull View drawerView) {
             mDrawerToggle.onDrawerOpened(drawerView);
         }
 
         @Override
-        public void onDrawerClosed(View drawerView) {
+        public void onDrawerClosed(@NonNull View drawerView) {
             mDrawerToggle.onDrawerClosed(drawerView);
         }
 
         @Override
-        public void onDrawerSlide(View drawerView, float slideOffset) {
+        public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
             mDrawerToggle.onDrawerSlide(drawerView, slideOffset);
         }
 

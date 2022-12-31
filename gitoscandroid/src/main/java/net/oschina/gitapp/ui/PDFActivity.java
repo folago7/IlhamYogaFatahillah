@@ -10,7 +10,6 @@ import com.kymjs.rxvolley.client.HttpCallback;
 import net.oschina.gitapp.AppContext;
 import net.oschina.gitapp.R;
 import net.oschina.gitapp.api.GitOSCApi;
-import net.oschina.gitapp.bean.CodeFile;
 import net.oschina.gitapp.bean.Project;
 import net.oschina.gitapp.common.Contanst;
 import net.oschina.gitapp.common.FileUtils;
@@ -19,14 +18,10 @@ import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 import java.io.File;
 
 import butterknife.ButterKnife;
-import butterknife.InjectView;
 
 public class PDFActivity extends BaseActivity {
 
-//    @InjectView(R.id.pdfView)
-//    PDFView mPDFView;
 
-    private CodeFile mCodeFile;
 
     private Project mProject;
 
@@ -36,7 +31,7 @@ public class PDFActivity extends BaseActivity {
 
     private String mRef;
 
-    private String url_link = null;
+
 
     public static void show(Context context, Project project, String fileName, String ref, String path) {
         Intent intent = new Intent(AppContext.getInstance(), PDFActivity.class);
@@ -81,7 +76,6 @@ public class PDFActivity extends BaseActivity {
                 if (isDestroyed()) {
                     return;
                 }
-                Log.e("aaaa","aaaa");
                 FileUtils.writePDFFile(t, mFileName);
                 loadPdf();
             }
@@ -94,8 +88,6 @@ public class PDFActivity extends BaseActivity {
             @Override
             public void onFailure(int errorNo, String strMsg) {
                 super.onFailure(errorNo, strMsg);
-                Log.e("cccc","cccc");
-
             }
 
             @Override

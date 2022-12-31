@@ -66,20 +66,12 @@ public class LanguageActivity extends BaseActivity implements
         mActionBar.setListNavigationCallbacks(mLanguageAdapter, this);
         listView.setAdapter(mProjectAdapter);
         listView.setOnItemClickListener(this);
-        listView.setOnLoadMoreListener(new EnhanceListView.OnLoadMoreListener() {
-            @Override
-            public void onLoadMore(int pageNum, int pageSize) {
-                loadProjects(mLanguageId, pageNum);
-            }
-        });
-        tipInfo.setOnClick(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mLanguageAdapter.getCount() == 0) {
-                    loadLanguagesList();
-                } else {
-                    loadProjects(mLanguageId, 1);
-                }
+        listView.setOnLoadMoreListener((pageNum, pageSize) -> loadProjects(mLanguageId, pageNum));
+        tipInfo.setOnClick(v -> {
+            if (mLanguageAdapter.getCount() == 0) {
+                loadLanguagesList();
+            } else {
+                loadProjects(mLanguageId, 1);
             }
         });
         loadLanguagesList();

@@ -86,12 +86,8 @@ public class CommitFileDetailActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         int id = item.getItemId();
-        switch (id) {
-            case R.id.refresh:
-                loadCode(mProject.getId(), mCommit.getId(), mCommitDiff.getNew_path());
-                break;
-            default:
-                break;
+        if (id == R.id.refresh) {
+            loadCode(mProject.getId(), mCommit.getId(), mCommitDiff.getNew_path());
         }
         return super.onOptionsItemSelected(item);
     }

@@ -2,7 +2,6 @@ package net.oschina.gitapp.ui;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -109,12 +108,7 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
         }
         tipInfo.setLoading();
         setBranchInfo();
-        tipInfo.setOnClick(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadCode(path, false);
-            }
-        });
+        tipInfo.setOnClick(v -> loadCode(path, false));
         codeTreeAdapter = new ProjectCodeTreeAdapter(this, R.layout.list_item_projectcodetree);
         listView.setAdapter(codeTreeAdapter);
         listView.setOnItemClickListener(this);
@@ -512,14 +506,9 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void showDownload(final CodeTree codeTree) {
-        DialogHelp.getDownloadDialog(this, "该文件不支持在线预览，是否下载?", new DialogInterface.OnClickListener
-                () {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                mCodeTree = codeTree;
-                requestExternalStorage();
-            }
-
+        DialogHelp.getDownloadDialog(this, "该文件不支持在线预览，是否下载?", (dialogInterface, i) -> {
+            mCodeTree = codeTree;
+            requestExternalStorage();
         }).show();
     }
 
@@ -561,12 +550,7 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
                     super.onFinish();
                     isLoading = false;
                     if (isDownload) {
-                        DialogHelp.getOpenFileDialog(ProjectCodeActivity.this, "文件已经保存在" + AppConfig.DEFAULT_SAVE_FILE_PATH, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                UIHelper.showOpenFileActivity(ProjectCodeActivity.this, AppConfig.DEFAULT_SAVE_FILE_PATH + "/" + mCodeTree.getName(), CodeTree.getMIME(mCodeTree.getName()));
-                            }
-                        }).show();
+                        DialogHelp.getOpenFileDialog(ProjectCodeActivity.this, "文件已经保存在" + AppConfig.DEFAULT_SAVE_FILE_PATH, (dialog, which) -> UIHelper.showOpenFileActivity(ProjectCodeActivity.this, AppConfig.DEFAULT_SAVE_FILE_PATH + "/" + mCodeTree.getName(), CodeTree.getMIME(mCodeTree.getName()))).show();
                     } else {
                         T.showToastShort(ProjectCodeActivity.this, "下载文件失败");
                     }

@@ -61,12 +61,12 @@ public class ShippingAddressActivity extends BaseActivity implements View.OnClic
 
     private void initView() {
         mContent = findViewById(R.id.shipping_address_content);
-        mLoading = (ProgressBar) findViewById(R.id.shipping_address_loading);
-        mName = (TextView) findViewById(R.id.name);
-        mTel = (TextView) findViewById(R.id.tell);
-        mAddress = (TextView) findViewById(R.id.address);
-        mComment = (TextView) findViewById(R.id.comment);
-        mPub = (Button) findViewById(R.id.shipping_address_pub);
+        mLoading = findViewById(R.id.shipping_address_loading);
+        mName = findViewById(R.id.name);
+        mTel = findViewById(R.id.tell);
+        mAddress = findViewById(R.id.address);
+        mComment = findViewById(R.id.comment);
+        mPub = findViewById(R.id.shipping_address_pub);
 
         TextWatcher mWatcher = new TextWatcher() {
             @Override
@@ -149,10 +149,8 @@ public class ShippingAddressActivity extends BaseActivity implements View.OnClic
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        switch (id) {
-            case R.id.shipping_address_pub:
-                pubShippingAddress();
-                break;
+        if (id == R.id.shipping_address_pub) {
+            pubShippingAddress();
         }
     }
 
