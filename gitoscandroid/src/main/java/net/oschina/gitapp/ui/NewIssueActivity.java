@@ -148,12 +148,8 @@ public class NewIssueActivity extends BaseActivity implements View.OnClickListen
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.send:
-                pubNewIssue();
-                break;
-            default:
-                break;
+        if (item.getItemId() == R.id.send) {
+            pubNewIssue();
         }
         return super.onOptionsItemSelected(item);
     }

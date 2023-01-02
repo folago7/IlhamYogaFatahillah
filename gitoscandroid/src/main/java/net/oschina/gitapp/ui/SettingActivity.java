@@ -87,12 +87,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 onCache();
                 break;
             case R.id.ll_check_update:
-                UpdateManager.getUpdateManager().checkAppUpdate(this, new UpdateManager.OnPermissionCallback() {
-                    @Override
-                    public void onPermissionCallback() {
-                        requestExternalStorage();
-                    }
-                }, true);
+                UpdateManager.getUpdateManager().checkAppUpdate(this, () -> requestExternalStorage(), true);
                 break;
             case R.id.ll_terms:
                 WebActivity.show(this,"https://gitee.com/terms");

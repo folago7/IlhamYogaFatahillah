@@ -16,6 +16,19 @@ android {
             //设置支持的SO库架构
             abiFilters 'armeabi-v7a'
         }
+        javaCompileOptions {
+            annotationProcessorOptions {
+                includeCompileClasspath = true
+            }
+        }
+        configurations {
+            all*.exclude group: 'com.android.support', module: 'support-v4'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     buildTypes {
@@ -74,36 +87,32 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    //noinspection GradleCompatible,GradleDependency
-    compile 'com.android.support:appcompat-v7:26.1.0'
+    //noinspection GradleCompatible
+    implementation 'com.android.support:appcompat-v7:28.0.0'
+    implementation 'com.android.support:design:28.0.0'
     //noinspection GradleDependency
-    compile 'com.android.support:design:26.1.0'
+    implementation 'com.android.support:cardview-v7:28.0.0'
     //noinspection GradleDependency
-    compile 'com.android.support:cardview-v7:26.1.0'
+    implementation 'com.jakewharton:butterknife:6.1.0'
     //noinspection GradleDependency
-    compile 'com.jakewharton:butterknife:6.1.0'
+    implementation 'com.github.chrisbanes.photoview:library:1.2.3'
     //noinspection GradleDependency
-    compile 'com.github.chrisbanes.photoview:library:1.2.3'
+    implementation 'com.umeng.analytics:analytics:latest.integration'
     //noinspection GradleDependency
-    compile 'com.umeng.analytics:analytics:latest.integration'
-    //noinspection GradleDependency
-    compile 'pub.devrel:easypermissions:0.1.7'
+    implementation 'pub.devrel:easypermissions:0.1.7'
     //    compile 'com.android.support:multidex:1.0.3'
-    compile 'com.kymjs.rxvolley:rxvolley:1.0.7'
-    compile 'com.kymjs.rxvolley:okhttp:1.0.7'
-    compile 'com.kymjs.rxvolley:bitmapcore:1.0.7'
+    implementation 'com.kymjs.rxvolley:rxvolley:1.0.7'
+    implementation 'com.kymjs.rxvolley:okhttp:1.0.7'
+    implementation 'com.kymjs.rxvolley:bitmapcore:1.0.7'
     //noinspection GradleDependency
-    compile 'com.android.support:design:23.3.0'
-    //noinspection GradleDependency
-    compile 'com.github.bumptech.glide:glide:3.7.0'
+    implementation 'com.github.bumptech.glide:glide:3.7.0'
     //noinspection GradleDynamicVersion
-    compile 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
-//    compile('com.github.barteksc:android-pdf-viewer:3.1.0-beta.1') {
-//        exclude group: 'com.android.support'
-//    }
-    compile 'com.sina.weibo.sdk:core:4.3.7:openDefaultRelease@aar'
+    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
+
+    implementation 'com.sina.weibo.sdk:core:4.3.7:openDefaultRelease@aar'
+    testImplementation 'junit:junit:4.12'
 }

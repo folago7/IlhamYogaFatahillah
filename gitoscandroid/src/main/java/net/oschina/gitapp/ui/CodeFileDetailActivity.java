@@ -3,7 +3,6 @@ package net.oschina.gitapp.ui;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -108,12 +107,7 @@ public class CodeFileDetailActivity extends BaseActivity implements EasyPermissi
                 + "/" + mProject.getPath() + "/"
                 + "blob" + "/" + mRef + "/" + mPath;
 
-        tipInfo.setOnClick(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadCode(mProject.getId(), mPath, mRef);
-            }
-        });
+        tipInfo.setOnClick(v -> loadCode(mProject.getId(), mPath, mRef));
 
         if( AppContext.getInstance().isOpenSensor()){
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
@@ -287,12 +281,7 @@ public class CodeFileDetailActivity extends BaseActivity implements EasyPermissi
                 public void onFinish() {
                     super.onFinish();
                     if (isDownload) {
-                        DialogHelp.getOpenFileDialog(CodeFileDetailActivity.this, "文件已经保存在" + AppConfig.DEFAULT_SAVE_FILE_PATH, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                UIHelper.showOpenFileActivity(CodeFileDetailActivity.this, AppConfig.DEFAULT_SAVE_FILE_PATH + "/" + mFileName, CodeTree.getMIME(mFileName));
-                            }
-                        }).show();
+                        DialogHelp.getOpenFileDialog(CodeFileDetailActivity.this, "文件已经保存在" + AppConfig.DEFAULT_SAVE_FILE_PATH, (dialog, which) -> UIHelper.showOpenFileActivity(CodeFileDetailActivity.this, AppConfig.DEFAULT_SAVE_FILE_PATH + "/" + mFileName, CodeTree.getMIME(mFileName))).show();
                     } else {
                         T.showToastShort(CodeFileDetailActivity.this, "下载文件失败");
                     }

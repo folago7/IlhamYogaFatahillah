@@ -153,34 +153,34 @@ public class ShakeActivity extends BaseActivity implements OnClickListener {
 
     private void initView() {
 
-        mLuckMsg = (TextView) findViewById(R.id.shake_luck_msg);
+        mLuckMsg = findViewById(R.id.shake_luck_msg);
 
-        mImgUp = (RelativeLayout) findViewById(R.id.shakeImgUp);
-        mImgDn = (RelativeLayout) findViewById(R.id.shakeImgDown);
+        mImgUp = findViewById(R.id.shakeImgUp);
+        mImgDn = findViewById(R.id.shakeImgDown);
 
-        mLoaging = (LinearLayout) findViewById(R.id.shake_loading);
+        mLoaging = findViewById(R.id.shake_loading);
 
-        mShakeResProject = (RelativeLayout) findViewById(R.id.shakeres_paroject);
+        mShakeResProject = findViewById(R.id.shakeres_paroject);
 
-        mProjectFace = (ImageView) findViewById(R.id.iv_portrait);
+        mProjectFace = findViewById(R.id.iv_portrait);
 
-        mProjectTitle = (TextView) findViewById(R.id.tv_title);
+        mProjectTitle = findViewById(R.id.tv_title);
 
-        mProjectDescription = (TextView) findViewById(R.id.tv_description);
+        mProjectDescription = findViewById(R.id.tv_description);
 
-        mProjectLanguage = (TextView) findViewById(R.id.tv_lanuage);
+        mProjectLanguage = findViewById(R.id.tv_lanuage);
 
-        mProjectWatchNums = (TextView) findViewById(R.id.tv_watch);
+        mProjectWatchNums = findViewById(R.id.tv_watch);
 
-        mProjectStarNums = (TextView) findViewById(R.id.tv_star);
+        mProjectStarNums = findViewById(R.id.tv_star);
 
-        mProjectForkNums = (TextView) findViewById(R.id.tv_fork);
+        mProjectForkNums = findViewById(R.id.tv_fork);
 
-        mShakeResAward = (RelativeLayout) findViewById(R.id.shakeres_award);
+        mShakeResAward = findViewById(R.id.shakeres_award);
 
-        mShakeResAwardImg = (ImageView) findViewById(R.id.shake_award_img);
+        mShakeResAwardImg = findViewById(R.id.shake_award_img);
 
-        mShakeResAwardMsg = (TextView) findViewById(R.id.shake_award_msg);
+        mShakeResAwardMsg = findViewById(R.id.shake_award_msg);
 
         mShakeResProject.setOnClickListener(this);
     }

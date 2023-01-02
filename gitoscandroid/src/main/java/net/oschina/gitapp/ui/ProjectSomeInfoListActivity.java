@@ -93,11 +93,8 @@ public class ProjectSomeInfoListActivity extends BaseActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
-		switch (id) {
-		case MENU_CREATE_ID:
-			// 新增issue
+		if (id == MENU_CREATE_ID) {// 新增issue
 			UIHelper.showIssueEditOrCreate(AppContext.getInstance(), mProject, null);
-			break;
 		}
 		return super.onOptionsItemSelected(item); 
 	}

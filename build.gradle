@@ -1,18 +1,21 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     repositories {
-        jcenter()
-        maven {
-            url 'https://dl.bintray.com/umsdk/release'
-        }
         maven {
             url 'https://maven.google.com/'
             name 'Google'
         }
+        jcenter()
+        maven {
+            url 'https://dl.bintray.com/umsdk/release'
+        }
+
     }
     dependencies {
         //noinspection GradleDependency
-        classpath 'com.android.tools.build:gradle:2.2.3'
+        classpath 'com.android.tools.build:gradle:3.3.0'
+        classpath 'me.tatarka:gradle-retrolambda:3.2.5'
+        classpath 'me.tatarka.retrolambda.projectlombok:lombok.ast:0.2.3.a2'
     }
 }
 
@@ -43,12 +46,12 @@ allprojects {
 }
 ext {
     compileSdkVersion = 29
-    buildToolsVersion = "24.0.3"
+    buildToolsVersion = "28.0.3"
     applicationId = "net.oschina.gitapp"
     minSdkVersion = 21
     targetSdkVersion = 29
-    versionCode = 166
-    versionName = "v1.6.6(2020091100)"
-    supportVersion = '24.3.0'
+    versionCode = 167
+    versionName = "v1.6.7(2020092400)"
+    supportVersion = '28.3.0'
 
 }

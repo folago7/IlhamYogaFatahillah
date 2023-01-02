@@ -64,12 +64,7 @@ public class ProjectReadMeActivity extends BaseActivity {
     }
 
     private void initView() {
-        tipInfo.setOnClick(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadData();
-            }
-        });
+        tipInfo.setOnClick(v -> loadData());
     }
 
     private void loadData() {

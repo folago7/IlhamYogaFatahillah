@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
-import android.view.View;
 
 import com.kymjs.rxvolley.client.HttpCallback;
 
@@ -18,7 +17,6 @@ import net.oschina.gitapp.ui.baseactivity.BaseActivity;
 import net.oschina.gitapp.ui.fragments.IssueDetailViewPagerFragment;
 import net.oschina.gitapp.utils.JsonUtils;
 import net.oschina.gitapp.widget.TipInfoLayout;
-
 
 import java.util.Map;
 
@@ -62,12 +60,7 @@ public class IssueDetailActivity extends BaseActivity {
         } else {
             initData();
         }
-        tipInfo.setOnClick(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadIssueAndProject(projectId, issueId);
-            }
-        });
+        tipInfo.setOnClick(v -> loadIssueAndProject(projectId, issueId));
     }
 
     private void initData() {
