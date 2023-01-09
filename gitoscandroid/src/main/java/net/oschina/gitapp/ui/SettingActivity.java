@@ -1,6 +1,7 @@
 package net.oschina.gitapp.ui;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -87,7 +88,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 onCache();
                 break;
             case R.id.ll_check_update:
-                UpdateManager.getUpdateManager().checkAppUpdate(this, () -> requestExternalStorage(), true);
+                UpdateManager.getUpdateManager().checkAppUpdate(this, this::requestExternalStorage, true);
                 break;
             case R.id.ll_terms:
                 WebActivity.show(this,"https://gitee.com/terms");
@@ -139,6 +140,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         appContext.setConfigCheckUp(cbCheckUpdateStart.isChecked());
     }
 
+    @SuppressLint("SetTextI18n")
     private void onCache() {
         UIHelper.clearAppCache(SettingActivity.this);
         tvCacheSize.setText("OKB");
@@ -187,7 +189,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     private static final int RC_EXTERNAL_STORAGE = 0x04;//存储权限
 
     @AfterPermissionGranted(RC_EXTERNAL_STORAGE)
-    public void requestExternalStorage() {
+    private void requestExternalStorage() {
         if (EasyPermissions.hasPermissions(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             UpdateManager.getUpdateManager().showDownloadDialog();
         } else {

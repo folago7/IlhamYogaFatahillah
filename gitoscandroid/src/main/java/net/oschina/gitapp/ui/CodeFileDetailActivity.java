@@ -51,7 +51,7 @@ import pub.devrel.easypermissions.EasyPermissions;
  * @created 2014-06-04
  */
 @SuppressWarnings("deprecation")
-public class CodeFileDetailActivity extends BaseActivity implements EasyPermissions.PermissionCallbacks{
+public class CodeFileDetailActivity extends BaseActivity implements EasyPermissions.PermissionCallbacks {
 
     @InjectView(R.id.webview)
     WebView webview;
@@ -75,7 +75,7 @@ public class CodeFileDetailActivity extends BaseActivity implements EasyPermissi
 
     private String url_link = null;
 
-    public static void show(Context context,Project project,String fileName, String ref,String path){
+    public static void show(Context context, Project project, String fileName, String ref, String path) {
         Intent intent = new Intent(AppContext.getInstance(), CodeFileDetailActivity.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable(Contanst.PROJECT, project);
@@ -109,9 +109,9 @@ public class CodeFileDetailActivity extends BaseActivity implements EasyPermissi
 
         tipInfo.setOnClick(v -> loadCode(mProject.getId(), mPath, mRef));
 
-        if( AppContext.getInstance().isOpenSensor()){
+        if (AppContext.getInstance().isOpenSensor()) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-        }else {
+        } else {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);//竖屏
         }
 
@@ -157,7 +157,7 @@ public class CodeFileDetailActivity extends BaseActivity implements EasyPermissi
             case R.id.copy:
                 ClipboardManager cbm = (ClipboardManager) getSystemService(Context
                         .CLIPBOARD_SERVICE);
-                if(cbm == null){
+                if (cbm == null) {
                     return super.onOptionsItemSelected(item);
                 }
                 cbm.setText(url_link);
@@ -238,12 +238,14 @@ public class CodeFileDetailActivity extends BaseActivity implements EasyPermissi
     }
 
 
-
     private boolean isDownload = false;
+    private String mSavePath;
+
     private void downloadFile(String fileName, byte[] data) {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
-            isDownload = FileUtils.writeFileAndroidQ(this,data,fileName);
-        }else {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            isDownload = true;
+            mSavePath = FileUtils.writeFileAndroidQ(this, data, fileName);
+        } else {
             String path = AppConfig.DEFAULT_SAVE_FILE_PATH;
             isDownload = FileUtils.writeFile(data,
                     path, fileName);
@@ -281,7 +283,12 @@ public class CodeFileDetailActivity extends BaseActivity implements EasyPermissi
                 public void onFinish() {
                     super.onFinish();
                     if (isDownload) {
-                        DialogHelp.getOpenFileDialog(CodeFileDetailActivity.this, "文件已经保存在" + AppConfig.DEFAULT_SAVE_FILE_PATH, (dialog, which) -> UIHelper.showOpenFileActivity(CodeFileDetailActivity.this, AppConfig.DEFAULT_SAVE_FILE_PATH + "/" + mFileName, CodeTree.getMIME(mFileName))).show();
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                            DialogHelp.getOpenFileDialog(CodeFileDetailActivity.this, "文件已经保存在Download/Gitee/文件夹", (dialog, which) -> UIHelper.showOpenFileActivity(CodeFileDetailActivity.this, mSavePath, CodeTree.getMIME(mFileName))).show();
+                        } else {
+                            DialogHelp.getOpenFileDialog(CodeFileDetailActivity.this, "文件已经保存在" + AppConfig.DEFAULT_SAVE_FILE_PATH, (dialog, which) -> UIHelper.showOpenFileActivity(CodeFileDetailActivity.this, AppConfig.DEFAULT_SAVE_FILE_PATH + "/" + mFileName, CodeTree.getMIME(mFileName))).show();
+                        }
+
                     } else {
                         T.showToastShort(CodeFileDetailActivity.this, "下载文件失败");
                     }

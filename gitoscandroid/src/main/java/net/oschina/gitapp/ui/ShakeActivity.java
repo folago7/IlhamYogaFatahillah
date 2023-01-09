@@ -1,5 +1,6 @@
 package net.oschina.gitapp.ui;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
@@ -88,6 +89,7 @@ public class ShakeActivity extends BaseActivity implements OnClickListener {
     private RandomProject mProject;
 
     private SoundPool sndPool;
+    @SuppressLint("UseSparseArrays")
     private HashMap<Integer, Integer> soundPoolMap = new HashMap<>();
 
     private Bitmap mBitmap;
@@ -336,12 +338,7 @@ public class ShakeActivity extends BaseActivity implements OnClickListener {
                     }
 
                     Handler handle = new Handler();
-                    handle.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            mBitmap = UIHelper.takeScreenShot(ShakeActivity.this);
-                        }
-                    }, 500);
+                    handle.postDelayed(() -> mBitmap = UIHelper.takeScreenShot(ShakeActivity.this), 500);
 
                 } else if (mProject != null) {
                     mShakeListener.stop();
@@ -355,27 +352,20 @@ public class ShakeActivity extends BaseActivity implements OnClickListener {
                     dialog.setTitle("恭喜您，摇到奖品啦！！！");
                     dialog.setMessage(Html.fromHtml("获得：" + mProject.getMsg() +
                             "<br><br>温馨提示：<br>请完善您的收货信息，方便我们给您邮寄奖品"));
-                    dialog.setNegativeButton("我知道了", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            mShakeListener.start();
-                            showShippingAddressActivity();
-                        }
+                    dialog.setNegativeButton("我知道了", (dialog1, which) -> {
+                        mShakeListener.start();
+                        showShippingAddressActivity();
                     });
-                    dialog.setPositiveButton("分享", new DialogInterface.OnClickListener() {
-
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            String url = "http://t.cn/RhLDd4k";
-                            Bitmap bitmap = UIHelper.takeScreenShot(ShakeActivity.this);
+                    dialog.setPositiveButton("分享", (dialog12, which) -> {
+                        String url = "http://t.cn/RhLDd4k";
+                        Bitmap bitmap = UIHelper.takeScreenShot(ShakeActivity.this);
 //                            UIHelper.showShareOption(ShakeActivity.this, "我摇到奖品啦", url, mProject
 //                                    .getMsg(), bitmap);
-                            new ShareDialog(ShakeActivity.this)
-                                    .init(ShakeActivity.this, "我摇到奖品啦", url, mProject
-                                            .getMsg(), bitmap)
+                        new ShareDialog(ShakeActivity.this)
+                                .init(ShakeActivity.this, "我摇到奖品啦", url, mProject
+                                        .getMsg(), bitmap)
 
-                                    .show();
-                        }
+                                .show();
                     });
                     dialog.show();
                 }

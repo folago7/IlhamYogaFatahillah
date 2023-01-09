@@ -494,9 +494,11 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
         refSelectDialog.show(refName);
     }
 
+    private String mSavePath;
     private void downloadFile(String fileName, byte[] data) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            isDownload = FileUtils.writeFileAndroidQ(this, data, fileName);
+            isDownload = true;
+            mSavePath = FileUtils.writeFileAndroidQ(this, data, fileName);
         } else {
             String path = AppConfig.DEFAULT_SAVE_FILE_PATH;
             isDownload = FileUtils.writeFile(data,
@@ -550,7 +552,11 @@ public class ProjectCodeActivity extends BaseActivity implements View.OnClickLis
                     super.onFinish();
                     isLoading = false;
                     if (isDownload) {
-                        DialogHelp.getOpenFileDialog(ProjectCodeActivity.this, "文件已经保存在" + AppConfig.DEFAULT_SAVE_FILE_PATH, (dialog, which) -> UIHelper.showOpenFileActivity(ProjectCodeActivity.this, AppConfig.DEFAULT_SAVE_FILE_PATH + "/" + mCodeTree.getName(), CodeTree.getMIME(mCodeTree.getName()))).show();
+                        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q){
+                            DialogHelp.getOpenFileDialog(ProjectCodeActivity.this, "文件已经保存在Download/Gitee/文件夹", (dialog, which) -> UIHelper.showOpenFileActivity(ProjectCodeActivity.this, mSavePath, CodeTree.getMIME(mCodeTree.getName()))).show();
+                        }else {
+                            DialogHelp.getOpenFileDialog(ProjectCodeActivity.this, "文件已经保存在" + AppConfig.DEFAULT_SAVE_FILE_PATH, (dialog, which) -> UIHelper.showOpenFileActivity(ProjectCodeActivity.this, AppConfig.DEFAULT_SAVE_FILE_PATH + "/" + mCodeTree.getName(), CodeTree.getMIME(mCodeTree.getName()))).show();
+                        }
                     } else {
                         T.showToastShort(ProjectCodeActivity.this, "下载文件失败");
                     }

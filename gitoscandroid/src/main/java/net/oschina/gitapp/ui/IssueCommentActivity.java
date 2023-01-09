@@ -50,8 +50,8 @@ public class IssueCommentActivity extends BaseActivity implements OnClickListene
     }
 
     private void initView() {
-        mCommentContent = (EditText) findViewById(R.id.issue_comment_content);
-        mCommentPub = (Button) findViewById(R.id.issue_comment_pub);
+        mCommentContent = findViewById(R.id.issue_comment_content);
+        mCommentPub = findViewById(R.id.issue_comment_pub);
         TextWatcher mTextWatcher = new TextWatcher() {
 
             @Override
@@ -95,13 +95,8 @@ public class IssueCommentActivity extends BaseActivity implements OnClickListene
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        switch (id) {
-            case R.id.issue_comment_pub:
-                pubComment();
-                break;
-
-            default:
-                break;
+        if (id == R.id.issue_comment_pub) {
+            pubComment();
         }
     }
 

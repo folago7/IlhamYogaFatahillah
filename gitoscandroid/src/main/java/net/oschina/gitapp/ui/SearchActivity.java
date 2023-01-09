@@ -65,12 +65,7 @@ public class SearchActivity extends BaseActivity implements
         searchView.setOnQueryTextListener(this);
         searchView.setIconifiedByDefault(false);
         tipInfo.setHiden();
-        tipInfo.setOnClick(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                load(mKey, 1);
-            }
-        });
+        tipInfo.setOnClick(v -> load(mKey, 1));
     }
 
     private void steupList() {
@@ -79,12 +74,7 @@ public class SearchActivity extends BaseActivity implements
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
         listView.setPageSize(15);
-        listView.setOnLoadMoreListener(new EnhanceListView.OnLoadMoreListener() {
-            @Override
-            public void onLoadMore(int pageNum, int pageSize) {
-                load(mKey, pageNum);
-            }
-        });
+        listView.setOnLoadMoreListener((pageNum, pageSize) -> load(mKey, pageNum));
     }
 
     @Override

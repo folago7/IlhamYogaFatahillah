@@ -50,8 +50,8 @@ ext {
     applicationId = "net.oschina.gitapp"
     minSdkVersion = 21
     targetSdkVersion = 29
-    versionCode = 167
-    versionName = "v1.6.7(2020092400)"
+    versionCode = 168
+    versionName = "v1.6.8(2012220800)"
     supportVersion = '28.3.0'
 
 }
