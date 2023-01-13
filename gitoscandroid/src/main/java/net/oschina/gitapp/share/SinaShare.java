@@ -40,7 +40,7 @@ public class SinaShare extends BaseShare{
         webpageObject.identify = Utility.generateGUID();
         webpageObject.title = mBuilder.title;
         webpageObject.description = mBuilder.content;
-        mBuilder.bitmap = BitmapFactory.decodeResource(mBuilder.mActivity.getResources(), R.drawable.ic_share_logo);
+        mBuilder.bitmap = BitmapFactory.decodeResource(mBuilder.mActivity.getResources(), R.drawable.ic_launcher);
         webpageObject.setThumbImage(mBuilder.bitmap);
         webpageObject.actionUrl = mBuilder.url;
         webpageObject.defaultText = mBuilder.content;

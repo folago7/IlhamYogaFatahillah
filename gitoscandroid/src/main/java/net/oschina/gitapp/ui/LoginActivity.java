@@ -190,7 +190,7 @@ public class LoginActivity extends BaseActivity
                 WebActivity.show(this, "https://gitee.com/terms");
                 break;
             case R.id.tv_protocol:
-                WebActivity.show(this,"file:///android_asset/gitee_protocol.html","隐私政策");
+                WebActivity.show(this,"https://gitee.com/terms/privacy_terms","隐私政策");
                 break;
         }
     }

@@ -2,6 +2,7 @@ package net.oschina.gitapp.ui;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -87,6 +88,11 @@ public class MainActivity extends AppCompatActivity implements
     private AppContext mContext;
 
     private String mTitle;// actionbar标题
+
+    public static void show(Context context){
+        Intent intent = new Intent(context, MainActivity.class);
+        context.startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

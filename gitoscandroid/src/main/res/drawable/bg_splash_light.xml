@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item >
+        <bitmap
+            android:src="@drawable/git_start" />
+    </item>
+
+    <item android:bottom="70dp">
+        <bitmap
+            android:gravity="center"
+            android:src="@drawable/ic_launcher_round" />
+    </item>
+
+    <item android:bottom="52dp">
+        <bitmap
+            android:gravity="center_horizontal|bottom"
+            android:src="@drawable/ic_name" />
+    </item>
+</layer-list>

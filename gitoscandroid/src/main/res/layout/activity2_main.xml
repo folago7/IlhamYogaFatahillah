@@ -20,7 +20,7 @@
 			android:layout_width="0dp"
 			android:layout_height="match_parent"
 			android:layout_weight="1"
-			android:background="@drawable/icon_logo"
+			android:background="@drawable/ic_launcher"
 			android:button="@null"/>
 
 		<RadioButton
@@ -28,7 +28,7 @@
 			android:layout_width="0dp"
 			android:layout_height="match_parent"
 			android:layout_weight="1"
-			android:background="@drawable/icon_logo"
+			android:background="@drawable/ic_launcher"
 			android:button="@null"/>
 
 		<RadioButton
@@ -36,7 +36,7 @@
 			android:layout_width="0dp"
 			android:layout_height="match_parent"
 			android:layout_weight="1"
-			android:background="@drawable/icon_logo"
+			android:background="@drawable/ic_launcher"
 			android:button="@null"/>
 	</RadioGroup>
 
