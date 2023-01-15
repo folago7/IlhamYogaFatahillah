@@ -12,6 +12,13 @@
         <!-- Only needed for pre-L -->
     </style>
 
+    <style name="SplashTheme" parent="Theme">
+<!--        <item name="windowActionBar">@null</item>-->
+<!--        <item name="windowNoTitle">true</item>-->
+<!--        <item name="android:background">@drawable/bg_splash_light</item>-->
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
+
     <style name="AppBaseTheme" parent="Theme">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>

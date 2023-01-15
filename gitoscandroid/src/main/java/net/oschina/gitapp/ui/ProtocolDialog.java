@@ -62,7 +62,7 @@ public class ProtocolDialog extends Dialog implements View.OnClickListener {
         mTextItem = findViewById(R.id.tv_item);
         mTextSure.setOnClickListener(this);
         mTextCancel.setOnClickListener(this);
-        SpannableStringBuilder sb = new SpannableStringBuilder("您可阅读《码云用户协议》和《隐私政策》来了解详细的信息。");
+        SpannableStringBuilder sb = new SpannableStringBuilder("您可阅读《Gitee用户协议》和《隐私政策》来了解详细的信息。");
 
 
 
@@ -77,7 +77,7 @@ public class ProtocolDialog extends Dialog implements View.OnClickListener {
         sb.setSpan(new ClickableSpan() {
             @Override
             public void onClick(View widget) {
-                WebActivity.show(mActivity,"file:///android_asset/gitee_protocol.html","隐私政策");
+                WebActivity.show(mActivity,"https://gitee.com/terms/privacy_terms","隐私政策");
             }
         },13,19,Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 

@@ -61,7 +61,7 @@ public class WeChatShare extends BaseShare implements IWXAPIEventHandler {
         WXWebpageObject webpage = new WXWebpageObject();
         webpage.webpageUrl = mBuilder.url;
         final WXMediaMessage msg = new WXMediaMessage(webpage);
-        msg.setThumbImage(BitmapFactory.decodeResource(mBuilder.mActivity.getResources(), R.drawable.ic_share_logo));
+        msg.setThumbImage(BitmapFactory.decodeResource(mBuilder.mActivity.getResources(), R.drawable.ic_launcher));
         msg.title = mBuilder.title;
         msg.description = mBuilder.content;
 

@@ -94,7 +94,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                 WebActivity.show(this,"https://gitee.com/terms");
                 break;
             case R.id.ll_protocol:
-                WebActivity.show(this,"file:///android_asset/gitee_protocol.html","隐私政策");
+                WebActivity.show(this,"https://gitee.com/terms/privacy_terms","隐私政策");
                 break;
             case R.id.ll_about:
                 showAbout();

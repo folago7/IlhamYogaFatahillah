@@ -116,7 +116,7 @@
             android:layout_height="88dip"
             android:layout_margin="10dip"
             android:contentDescription="@string/img_description"
-            android:src="@drawable/icon_logo" />
+            android:src="@drawable/ic_launcher" />
 
         <TextView
             android:id="@+id/shake_award_msg"

@@ -1,4 +1,4 @@
-### 码云 Gitee 安卓[客户端](http://http://git.oschina.net/appclient)
+### Gitee Gitee 安卓[客户端](http://http://git.oschina.net/appclient)
 
 android studio最近势头好猛，jar管理以及一些开源库的引用确实方便了好多，所以从1.2版本开始此项目开始转移到as进行开发
 
